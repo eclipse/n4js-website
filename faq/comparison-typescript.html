@@ -4,10 +4,9 @@
 <meta charset="UTF-8">
 <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="generator" content="Asciidoctor 1.5.5">
+<meta name="generator" content="Asciidoctor 1.5.7.1">
 <title>N4JS and TypeScript</title>
-<link rel="stylesheet" href="../../res/styles/asciidoctor.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <!-- ************* Meta ************* -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
@@ -162,7 +161,7 @@ This so-called <strong>dynamic type modifier</strong> allows for accessing arbit
 <div class="paragraph">
 <p>While <code>any+</code> resembles TypeScript&#8217;s behavior of <code>any</code>, it is still more restrictive: <code>any+</code> will never be used as a default, it has to be declared explicitly; and a value of type <code>any+</code> still cannot be assigned to variables of other types except <code>any</code>.</p>
 </div>
-<table class="tableblock frame-all grid-all spread">
+<table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 20%;">
 <col style="width: 20%;">
@@ -195,7 +194,7 @@ This so-called <strong>dynamic type modifier</strong> allows for accessing arbit
 <th class="tableblock halign-left valign-top"><p class="tableblock"><code>any</code></p></th>
 <th class="tableblock halign-left valign-top"><p class="tableblock">yes</p></th>
 <th class="tableblock halign-left valign-top"><p class="tableblock">yes</p></th>
-<td class="tableblock halign-left valign-top"><p class="tableblock">• <sup class="footnote">[<a id="_footnoteref_1" class="footnote" href="#_footnote_1" title="View footnote.">1</a>]</sup></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">• <sup class="footnote">[<a id="_footnoteref_1" class="footnote" href="#_footnotedef_1" title="View footnote.">1</a>]</sup></p></td>
 </tr>
 </tbody>
 </table>
@@ -269,7 +268,7 @@ class C extends B { fc() {} }</code></pre>
 <div class="ulist">
 <ul>
 <li>
-<p>the parameter types of overriding methods need to be contra-variant - the type of the parameters of <code>N</code> need to be super types <sup class="footnote">[<a id="_footnoteref_2" class="footnote" href="#_footnote_2" title="View footnote.">2</a>]</sup> of the types of the parameters of <code>M</code></p>
+<p>the parameter types of overriding methods need to be contra-variant - the type of the parameters of <code>N</code> need to be super types <sup class="footnote">[<a id="_footnoteref_2" class="footnote" href="#_footnotedef_2" title="View footnote.">2</a>]</sup> of the types of the parameters of <code>M</code></p>
 </li>
 <li>
 <p>the return type of overriding methods need to be co-variant, that is the type of the parameters of <code>N</code> need to be a sub type of the return type of <code>M</code></p>
@@ -520,7 +519,7 @@ If one type has all the properties of another type, it is considered to be a sub
 <p>As a significant difference between the two languages, N4JS also supports <strong>nominal types</strong> and nominal typing <strong>is the default</strong>.
 Thus, structural types have to be explicitly annotated as being structural, using the <code>~</code> or <code>~~</code> type constructors.</p>
 </div>
-<table class="tableblock frame-all grid-all spread">
+<table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -533,7 +532,7 @@ Thus, structural types have to be explicitly annotated as being structural, usin
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><div><div class="listingblock">
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
 <div class="content">
 <pre class="highlight"><code class="language-n4js" data-lang="n4js">export public interface~Point {
     x: number;
@@ -558,7 +557,7 @@ p = p3d;
 p3d = p; // error</code></pre>
 </div>
 </div></div></td>
-<td class="tableblock halign-left valign-top"><div><div class="listingblock">
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
 <div class="content">
 <pre class="highlight"><code class="language-javascript" data-lang="javascript">interface Point {
     x: number;
@@ -637,10 +636,10 @@ type definition, can seamlessly be used in N4JS.</p>
 </div>
 <div id="footnotes">
 <hr>
-<div class="footnote" id="_footnote_1">
+<div class="footnote" id="_footnotedef_1">
 <a href="#_footnoteref_1">1</a>. In TypeScript, implicit usage of <code>any</code> can be disallowed by means of a compiler flag.
 </div>
-<div class="footnote" id="_footnote_2">
+<div class="footnote" id="_footnotedef_2">
 <a href="#_footnoteref_2">2</a>. Super and sub type relation is reflexive here.
 </div>
 </div>
@@ -665,6 +664,7 @@ type definition, can seamlessly be used in N4JS.</p>
       <li><a href="http://n4js.blogspot.de/">Blog</a></li>
       <li><a href="https://dev.eclipse.org/mailman/listinfo/n4js-dev">Mailing List</a></li>
       <li><a href="https://projects.eclipse.org/projects/technology.n4js">Eclipse Project Page</a></li>
+      <li><a href="https://twitter.com/n4jsdev">Tweets by n4jsdev</a></li>
     </ul>
   </div>
   <div class="Cell Cell--2-12 m-Cell--withMargin">
@@ -676,10 +676,6 @@ type definition, can seamlessly be used in N4JS.</p>
       <li><a href="http://www.eclipse.org/legal/copyright.php">Copyright Agent</a></li>
       <li><a href="http://www.eclipse.org/legal/">Legal</a></li>
     </ul>
-  </div>
-  <div style="float:right;">
-    <a class="twitter-timeline" data-width="380" data-height="210" href="https://twitter.com/n4jsdev">Tweets by n4jsdev</a>
-    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
   </div>
   <div style="clear: both; height: 0; overflow: hidden;"></div>
 </div>
