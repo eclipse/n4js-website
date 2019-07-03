@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="generator" content="Asciidoctor 1.5.8">
+<meta name="generator" content="Asciidoctor 2.0.10">
 <title>Overview</title>
 <style>
 @import url("backtotop.css");
@@ -1306,7 +1306,7 @@ h3 {padding-top: 1rem}
 <h2 id="_source_code">Source code</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The Redux-based version of the chess app in hosted on the branch <a href="https://github.com/NumberFour/n4js-tutorial-chess/tree/chess-app-react-redux"><code>chess-app-react-redux</code></a> of the corresponding repository.</p>
+<p>The source code of the chess application can be found at <a href="https://github.com/Eclipse/n4js-tutorials/tree/master/chess-react-redux"><code>n4js-tutorials/chess-react-redux^</code></a>.</p>
 </div>
 </div>
 </div>
@@ -1316,8 +1316,10 @@ h3 {padding-top: 1rem}
 <div class="paragraph">
 <p>In this section, we will review several key concepts of Redux when used with React. You should consult official Redux documentation for more details. When using React with Redux, we normally store the application state in Redux store instead of React components' state. As a result, React components become stateless UI elements and they simply render the UI using the data retrieved from the Redux store. In a Redux architecture, data flows strictly in one direction. The following diagram graphically depicts the action/data flow in a React + Redux app.</p>
 </div>
-<div class="paragraph">
-<p><span class="image"><img src="images/redux-architecture.svg" alt="Redux architecture"></span></p>
+<div class="imageblock text-center">
+<div class="content">
+<img src="images/redux-architecture.svg" alt="Redux architecture" width="70%">
+</div>
 </div>
 <div class="paragraph">
 <p>The action/data flow in the diagram can be roughly understood as follows:</p>
@@ -1350,8 +1352,10 @@ h3 {padding-top: 1rem}
 <p>In particular, when the user interaction is triggered on a React component, we need to turn this user interaction into actions that are then processed by reducers to create a new application state in the Redux store. Conversely, when the application state in the Redux store is changed, we need to inform the React components that are interested in the change so that they can re-render.
 Fortunately, the npm library react-redux can establish exactly this connection for us.</p>
 </div>
-<div class="paragraph">
-<p><span class="image"><img src="images/react-redux-connection.svg" alt="Redux architecture"></span></p>
+<div class="imageblock text-center">
+<div class="content">
+<img src="images/react-redux-connection.svg" alt="Redux architecture" width="70%">
+</div>
 </div>
 </div>
 </div>
@@ -1519,7 +1523,7 @@ export public function reducer(state: StoreState, action: ReduxAction): StoreSta
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-05-15 16:11:28 +0200
+Last updated 2019-07-02 11:38:07 +0200
 </div>
 </div>
 </body>

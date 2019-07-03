@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="generator" content="Asciidoctor 1.5.8">
+<meta name="generator" content="Asciidoctor 2.0.10">
 <title>Overview</title>
 <style>
 @import url("backtotop.css");
@@ -1319,7 +1319,7 @@ In this tutorial, we will develop a simple and yet fun (!) chess game with N4JS 
 </div>
 <div class="paragraph">
 <p>
-<iframe src="chess.html" width="100%" height="600"></iframe>
+<iframe src="chess.html" width="100%" height="620" frameBorder="0"></iframe>
 </p>
 </div>
 </div>
@@ -1328,54 +1328,78 @@ In this tutorial, we will develop a simple and yet fun (!) chess game with N4JS 
 <h2 id="_repository">Repository</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The source code of the chess application can be found at <a href="https://github.com/NumberFour/n4js-tutorial-chess" target="_blank" rel="noopener">n4js-tutorial-chess</a>.</p>
+<p>The source code of the chess application can be found at <a href="https://github.com/Eclipse/n4js-tutorials/tree/master/chess-react" target="_blank" rel="noopener">n4js-tutorials/chess-react</a>.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_run_the_application">Run the application</h2>
+<h2 id="_developer_setup_and_generate_folder_src_gen">Developer Setup and generate folder <code>src-gen</code></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>In the root folder of the project <code>n4js-tutorial-chess</code>, execute the following command to install all dependencies.</p>
+<p>Follow the following steps to import the app into N4JS IDE.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Step 1</dt>
+<dd>
+<p>Download the latest N4JS IDE from the <a href="https://www.eclipse.org/n4js/downloads.html">N4JS Download Page</a> for your operating system.</p>
+</dd>
+<dt class="hdlist1">Step 2</dt>
+<dd>
+<p>The project is already an Eclipse project with the <code>.project</code> file in the root <code>chess-react</code> folder.
+Hence, you can simply import it into the N4JS IDE workspace via <code>File &#8658; Import &#8658; Existing Projects into Workspace</code>.
+The IDE may complain that npm dependencies declared in <code>package.json</code> are missing.
+Use the quickfix <code>run npm/yarn in this project</code> to fix this issue.</p>
+<div class="paragraph">
+<p>Alternativily, the following command can be executed in the root folder of the project <code>chess-react</code> to install all dependencies:</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight"><code class="language-bash" data-lang="bash">npm install</code></pre>
 </div>
 </div>
+</dd>
+<dt class="hdlist1">Step 3</dt>
+<dd>
+<p>In the N4JS IDE, open the library manager (N4JS IDE &#8658; Preferences&#8230;&#8203; &#8658; N4JS &#8658; N4JS External Libraries) and click on the button <code>Re-Build node_modules</code>.</p>
+</dd>
+<dt class="hdlist1">Step 4</dt>
+<dd>
+<p>Clean &amp; Build the project. After this step, the project has no compilation errors anymore.</p>
+</dd>
+</dl>
+</div>
 <div class="paragraph">
-<p>In <code>package.json</code>, a <code>start</code> script for starting the Webpack Dev Server serving the application is defined. To start the application, run</p>
+<p>Now, the folder <code>src-gen</code> should have been created and populated with <code>.js</code> files of the project.
+The <code>.js</code> files will be used in the next step by webpack.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_create_the_application">Create the application</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <code>package.json</code> defines a script <code>build</code> to run webpack and create the application <code>chess-app.js</code>.
+Run it with:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">npm build</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_start_local_web_server">Start local web server</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <code>package.json</code> defines a script <code>start</code> for starting the Webpack Dev Server serving the application to a browser on <code><a href="http://localhost:8080" class="bare">http://localhost:8080</a></code>.
+To start the web server, run:</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight"><code class="language-bash" data-lang="bash">npm start</code></pre>
 </div>
-</div>
-<div class="paragraph">
-<p>The chess web app is served at port 8080.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_developer_setup">Developer Setup</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Follow the following steps to import the app into N4JS IDE.</p>
-</div>
-<div class="paragraph">
-<p>Step 1: Download the <a href="https://projects.eclipse.org/projects/technology.n4js/downloads" target="_blank" rel="noopener">latest N4JS IDE</a> for your operating system.</p>
-</div>
-<div class="paragraph">
-<p>Step 2: The project is already an Eclipse with the <code>.project</code> file in the root <code>chess</code>. Hence, you can simply import it into the N4JS IDE workspace via <code>File &#8658; Import &#8658; Existing Projects into Workspace</code>.</p>
-</div>
-<div class="paragraph">
-<p>The IDE may complain that npm dependencies declared in <code>package.json</code> are missing. Use the quickfix <code>run npm/yarn in this project</code> to fix this issue.</p>
-</div>
-<div class="paragraph">
-<p>Step 3: Open the library manager dialog and choose <code>Re-Build node_modules</code>.</p>
-</div>
-<div class="paragraph">
-<p>Step 4: Clean &amp; Build the project. After this step, the project should has no compilation errors anymore.</p>
 </div>
 </div>
 </div>
@@ -1455,9 +1479,9 @@ export public enum Piece {
 <div class="paragraph">
 <p>As typical with React applications, we need to decide how the UI of our chess game should be structured as a tree of React components. In this example, we have opted for the following structure.</p>
 </div>
-<div class="imageblock">
+<div class="imageblock text-center">
 <div class="content">
-<img src="images/chess-react-components.svg" alt="Chess React components tree">
+<img src="images/chess-react-components.svg" alt="Chess React components tree" width="90%">
 </div>
 </div>
 <div class="paragraph">
@@ -1556,8 +1580,10 @@ export public function Square(props: SquareProps): React.Element&lt;?&gt; {
 <div class="paragraph">
 <p>The <code>Board</code> React component represents the chess board. Even though it does not have state, we define it as a class because it contains helper methods. The most important <em>prop</em> needed by this React component is <code>squares</code> that is an 8x8 array of <code>Piece</code> containing an arrangement of pieces on the board. To avoid tiring mental calculation, we use the browser&#8217;s coordinate system, i.e. the top left square has the coordinate <code>(0,0)</code> while the bottom right&#8217;s coordinate is <code>(7,7)</code>. Note that the coordinates of the 8x8 <code>Pieace</code> array is different from that of <a href="https://en.wikipedia.org/wiki/Algebraic_notation_(chess)" target="_blank" rel="noopener">algebraic chess notation</a>.</p>
 </div>
-<div class="paragraph">
-<p><span class="image"><img src="images/chess-board-coordinate-system.svg" alt="Chess board coordinate system"></span></p>
+<div class="imageblock text-center">
+<div class="content">
+<img src="images/chess-board-coordinate-system.svg" alt="Chess board coordinate system" width="70%">
+</div>
 </div>
 <div class="paragraph">
 <p>In addition to 8x8 black/white squares, we should also display the conventional board&#8217;s coordinates because these coordinates are used for displaying the game history.</p>
@@ -1567,8 +1593,10 @@ export public function Square(props: SquareProps): React.Element&lt;?&gt; {
 In particular, the board is defined as a <em>flex container</em> with <code>flex-wrap: wrap</code>.
 The squares displaying chess pieces and coordinates in algebraic chess notation are <em>flex items</em>. Together with squares displaying coordinates (called <em>coordinate squares</em> in this implementation), there are 10 x 10 squares inside the <code>Board</code> component in total. As a result, each square occupies 10% width and 10% height of the board&#8217;s width and height. The following diagram graphically depicts this.</p>
 </div>
-<div class="paragraph">
-<p><span class="image"><img src="images/chess-board-flexbox.svg" alt="Chess board with flexbox"></span></p>
+<div class="imageblock text-center">
+<div class="content">
+<img src="images/chess-board-flexbox.svg" alt="Chess board with flexbox" width="60%">
+</div>
 </div>
 <div class="paragraph">
 <p>Since we have to deal a lot with coordinates, we define the <code>Coordinate</code> data structure to represent (row,column) coordinates.</p>
@@ -1653,8 +1681,10 @@ export public interface ~BoardProps extends React.ComponentProps {
 <div class="paragraph">
 <p>The following screenshot graphically depicts a chess board in which the square <code>(3,7)</code> containing a white knight is picked by the player. The picked square is visually recognizable via the green color. Additionally, all valid destinations of the white knight are highlighted in yellow color.</p>
 </div>
-<div class="paragraph">
-<p><span class="image"><img src="images/chess-picked-square.png" alt="Picked square"></span></p>
+<div class="imageblock text-center">
+<div class="content">
+<img src="images/chess-picked-square.png" alt="Picked square" width="50%">
+</div>
 </div>
 <div class="paragraph">
 <p>The class <code>Board</code>, as any class representing a React component, must extend <code>React.Component</code> and override the <code>render()</code> method.</p>
@@ -1875,8 +1905,12 @@ interface ~GameState {
 </ul>
 </div>
 <div class="paragraph">
-<p>The following screenshot shows an example highlighting valid destinations for the white bishop.
-<span class="image"><img src="images/bishop-attacking-squares.png" alt="Squares attacked by bishop"></span></p>
+<p>The following screenshot shows an example highlighting valid destinations for the white bishop.</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="images/bishop-attacking-squares.png" alt="Squares attacked by bishop" width="40%">
+</div>
 </div>
 <div class="paragraph">
 <p>There are certainly tons of ways to calculate the set of squares/destinations attacked by a bishop in particular, and by a piece in general. In this tutorial, we have opted for a simple imperative implementation: starting from the current position, we iterate 4 different directions: north west, north east, south east, south west. In each direction, we keep moving forwards as far as possible. The implementation is as follows:</p>
@@ -1967,8 +2001,10 @@ private calculateWinner(squares: Array&lt;Array&lt;Piece&gt;&gt;): string {
 <div class="paragraph">
 <p>We use Webpack to bundle all JavaScript files of the application, including dependencies such as React, into a single JavaScript file. Webpack is configured in <code>webpack.config.js</code>. The following diagram graphically depicts the build process with the help of Webpack.</p>
 </div>
-<div class="paragraph">
-<p><span class="image"><img src="images/react-build-process.svg" alt="Build process"></span></p>
+<div class="imageblock text-center">
+<div class="content">
+<img src="images/react-build-process.svg" alt="Build process">
+</div>
 </div>
 <div class="paragraph">
 <p>The entry file used by Webpack to calculate the dependency graph is <code>src-gen/main.js</code> which depends on <code>react-dom</code> and  <code>src-gen/Game.js</code> which depends on &#8230;&#8203; etc. The bundled JavaScript is stored in <code>public/dist/chess-app.js</code> which is then included in <code>index.html</code>.</p>
@@ -2036,7 +2072,7 @@ module.exports = {
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-05-10 15:02:13 +0200
+Last updated 2019-07-02 15:05:02 +0200
 </div>
 </div>
 </body>
