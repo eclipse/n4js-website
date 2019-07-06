@@ -60,31 +60,59 @@
 
       <div class="Cell Cell--12-12 GettingStarted-u-paddingLeft">
         <h2 id ="_eclipse_installer">Nightly Builds</h2>
+        <p>If you just want to use the Eclipse N4JS IDE, you probably want to download the product directly.</p>
         <p>Since the Eclipse N4JS project is in incubation phase, we do not provide release versions yet. You can find links to nightly builds (update site and products for Windows, Linux and macos) at the
           <a href="https://projects.eclipse.org/projects/technology.n4js/downloads">N4JS Eclipse project's download page</a>.
         </p>
-        <br/>
+        <p>
+        In order to run the product, i.e. the Eclipse N4JS IDE, you need Java (version 11), to be installed on your machine.
+        </p>
+        <p />
       </div>
 
       <div class="Cell Cell--12-12 GettingStarted-u-paddingLeft">
+        <p/>
         <h2 id ="_eclipse_installer">Eclipse Installer (Oomph)</h2>
         <p>For developing extensions for the N4JS language (or simply to fix bugs ;-) ), the recommended way to install the Eclipse IDE and set up the N4JS Java sources in a developer workspace is to use the Eclipse Installer. This installer is available from <a href="https://wiki.eclipse.org/Eclipse_Installer">Eclipse.org</a>. Run the installer and follow these steps:
-
+        </p>    
         <ol>
-          <li>Switch to <b>Advanced Mode</b> via the menu located in the upper-right corner</li>
-          <li>Select a product, e.g. "Eclipse IDE for Eclipse Committers" with a product version (Neon is recommended)</li>
-          <li>Double-click the entry <b>Eclipse Projects/N4JS</b> so that it is shown in the catalog view</li>
-          <li>On the next page, configure your desired paths for the installation and workspace directories</li>
+          <li><a href="images/oomph/eclipseInstallerMode.png"><img src="images/oomph/eclipseInstallerMode.png" alt="Screenshot 1" title="Screenshot Eclipse Installer, Select Mode (Click to see large version)" style="width:100px;float:right" /></a>
+          Switch to <b>Advanced Mode</b> via the menu located in the upper-right corner. This will let you select the product with version and a specific project (N4JS).
+          </li>
+          <li><a href="images/oomph/eclipseInstallerProductSelection.png"><img src="images/oomph/eclipseInstallerProductSelection.png" alt="Screenshot 2" title="Screenshot Eclipse Installer, Select Product (Click to see large version)" style="width:100px;height:50px;float:right" /></a>
+            Select a product, e.g. "Eclipse IDE for Eclipse Committers" with a product version (usually latest version)
+          </li>
+          <li><a href="images/oomph/eclipseInstallerProjectSelection.png"><img src="images/oomph/eclipseInstallerProjectSelection.png" alt="Screenshot 3" title="Screenshot Eclipse Installer, Select Project (Click to see large version)" style="width:100px;height:50px;float:right" /></a>
+          Double-click the entry <b>Eclipse Projects/N4JS</b> so that it is shown in the catalog view
+          </li>
+          <li>On the next page, configure your desired paths for the installation and workspace directories. You may want to use git with https instead of ssh</li>
           <li>Begin installation</li>
         </ol>
+        <p> 
+        Once Eclipse with all plugins is downloaded, it is automatically started by the installer.
+        The Eclipse installer application is the finished, but additional installer scripts are run within the downloaded and automatically started IDE. You can see the installer scripts by clicking on the icon next to the startup tasks report in the status bar.
+        <a href="images/oomph/ideExecutingStartupTasks.png"><img src="images/oomph/ideExecutingStartupTasks.png" alt="Screenshot 4" title="Screenshot Installer Scripts (Click to see large version)" style="width:100px;float:right" /></a>
+        </p>
+        <p>
+        The workspace is configured automatically. This includes fetching the necessary git repository. If you have selected git with SSH you may run into problems. In this case you can re-run the scripts and select HTTPS instead, this should work in any case.
+        </p>
+        <p>
+        <a href="images/oomph/ideInstallerFinished.png"><img src="images/oomph/ideInstallerFinished.png" alt="Screenshot 5" title="Screenshot Installer Scripts Done (Click to see large version)" style="width:100px;height:50px;float:right" /></a>
+        Eventually the installer scripts are done, that means the git repository has been cloned and the workspace has been configured (including the project set setup).
+        </p>
+        <p>
+        Now the automatical build kicks in as you can see in the status bar.
+        <a href="images/oomph/ideBuild.png"><img src="images/oomph/ideBuild.png" alt="Screenshot 6" title="Screenshot Automatic Build (Click to see large version)" style="width:100px;float:right" /></a>
+        </p>
 
-        The installer will guide you through the rest of the installation process. 
-        The workspace and all plug-ins are downloaded and configured automatically. The necessary git repository is also fetched and configured in the workspace.
+        <p>
+        The build will show a lot of erros while still working. Eventually the whole project should have been compiled without any errors. Unfortunately, due to a <a href="https://github.com/eclipse/n4js/issues/1373">known issue</a>,
+        two problems exists. Please have a look at the linked issue on how to fix that (it is quite easy).
         </p>
       </div>
 
       <div class="Cell Cell--12-12 Downloads-u-paddingLeft Downloads-u-paddingRight">
-        <p class="SystemRequirements">System Requirements: In all cases, <a href="http://www.oracle.com/technetwork/java/javase/downloads/index.html">Java 8</a> is required to be installed on your system. <a href="https://nodejs.org/en/download/">Node.js version 8+</a> is also required. The N4JS plugins require the <a href="https://www.eclipse.org/downloads/">Eclipse Oxygen release (4.7)</a>.</p>
+        <p class="SystemRequirements">System Requirements: In all cases, <a href="http://www.oracle.com/technetwork/java/javase/downloads/index.html">Java 11</a> is required to be installed on your system. <a href="https://nodejs.org/en/download/">Node.js version 10+</a> is also required. The N4JS plugins require the <a href="https://www.eclipse.org/downloads/">Eclipse 2019-06 release</a>.</p>
       </div>
     </article>
   </div>
