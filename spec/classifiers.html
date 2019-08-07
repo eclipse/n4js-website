@@ -5,7 +5,7 @@
 <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 1.5.5">
-<meta name="author" content="2019-08-07 15:02:40 CEST">
+<meta name="author" content="2019-08-08 13:15:33 CEST">
 <title>N4JS Language Specification</title>
 <link rel="stylesheet" href="styles/spec.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
@@ -47,7 +47,7 @@
 <div id="header">
 <h1>N4JS Language Specification</h1>
 <div class="details">
-<span id="author" class="author">2019-08-07 15:02:40 CEST</span><br>
+<span id="author" class="author">2019-08-08 13:15:33 CEST</span><br>
 <span id="revnumber">version 0.9</span>
 </div>
 <div id="toc" class="toc2">
@@ -1201,7 +1201,7 @@ It is also similar to default implementations in Java 8 [<a href="appendix_c_bib
 In Java, however, more constraints exist, (for example, methods of interfaces must be public).</p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 29. Simple Class</div>
+<div class="title">Example 30. Simple Class</div>
 <div class="content">
 <div class="paragraph">
 <p>This first example shows a very simple class with a field, a constructor and a method.</p>
@@ -1222,7 +1222,7 @@ In Java, however, more constraints exist, (for example, methods of interfaces mu
 </div>
 </div>
 <div class="exampleblock">
-<div class="title">Example 30. Extend and implement</div>
+<div class="title">Example 31. Extend and implement</div>
 <div class="content">
 <div class="paragraph">
 <p>The following example demonstrate how a class can extend a superclass and implement an interface.</p>
@@ -1607,7 +1607,7 @@ constant data fields are an often-used technique there and they can be modeled i
 <math xmlns="http://www.w3.org/1998/Math/MathML"><mo>∀</mo><mi>m</mi><mo>∈</mo><mi>I</mi><mo>.</mo><mi>o</mi><mi>w</mi><mi>n</mi><mi>e</mi><mi>d</mi><mi>M</mi><mi>e</mi><mi>t</mi><mi>h</mi><mi>o</mi><mi>d</mi><mi>s</mi><mi>:</mi><mi>m</mi><mo>.</mo><mi>n</mi><mi>a</mi><mi>m</mi><mi>e</mi><msup><mo>≠</mo><mi>'</mi></msup><mi>c</mi><mi>o</mi><mi>n</mi><mi>s</mi><mi>t</mi><mi>r</mi><mi>u</mi><mi>c</mi><mi>t</mi><mi>o</mi><msup><mi>r</mi><mi>'</mi></msup></math>.</p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 31. Simple Interfaces</div>
+<div class="title">Example 32. Simple Interfaces</div>
 <div class="content">
 <div class="paragraph">
 <p>The following example shows the syntax for defining interfaces.
@@ -1765,7 +1765,7 @@ If a type variable is used in <code>typearg</code> to bound a type variable of a
 </div>
 </div>
 <div class="exampleblock">
-<div class="title">Example 32. Generic Type Definition and Usage as Type of Variable</div>
+<div class="title">Example 33. Generic Type Definition and Usage as Type of Variable</div>
 <div class="content">
 <div class="paragraph">
 <p>This example demonstrates how to define a generic type and how to refer to it in a variable definition.</p>
@@ -1803,7 +1803,7 @@ var s: string = stringContainer.getItem();</code></pre>
 <p>In line 3, the type variable <code>T</code> of the generic class <code>Container</code> is bound to <code>string</code>.</p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 33. Binding of type variables with multiple types</div>
+<div class="title">Example 34. Binding of type variables with multiple types</div>
 <div class="content">
 <div class="paragraph">
 <p>For a given generic class <code>G</code></p>
@@ -2038,7 +2038,7 @@ interface Consumer&lt;in T&gt; { // contravariance
 </div>
 </div>
 <div id="ex:use-site-declaration-variance" class="exampleblock">
-<div class="title">Example 34. Use-site declaration of variance</div>
+<div class="title">Example 35. Use-site declaration of variance</div>
 <div class="content">
 <div class="paragraph">
 <p>For illustration purposes, let’s compare use-site and definition-site declaration of variance.
@@ -2618,7 +2618,7 @@ Because static methods can be overridden in subclasses (which is different to Ja
 <p>Default methods in interfaces, cf. <a href="#_default-methods-in-interfaces">Default Methods in Interfaces</a>, may also be declared <code>@Final</code>.</p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 35. Final Methods in Interfaces</div>
+<div class="title">Example 36. Final Methods in Interfaces</div>
 <div class="content">
 <div class="paragraph">
 <p>If a method in an interface is provided with a body, it may be declared final.
@@ -2935,7 +2935,7 @@ This is marked as an error in the subclass.</p>
 </div>
 </div>
 <div class="exampleblock">
-<div class="title">Example 36. Field name conflicts with structural member name</div>
+<div class="title">Example 37. Field name conflicts with structural member name</div>
 <div class="content">
 <div class="paragraph">
 <p>The situation described in <a href="#Req-IDE-58">[Req-IDE-58]</a> is demonstrated in the following code fragment:</p>
@@ -3145,7 +3145,7 @@ console.log(b.fb); // !!</code></pre>
 <p>The following examples illustrate further details of other use cases of spec constructors.</p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 37. Anonymous Interface in Constructor</div>
+<div class="title">Example 38. Anonymous Interface in Constructor</div>
 <div class="content">
 <div class="paragraph">
 <p>The base class <code>A</code> in the examples redefines the constructor already defined in <code>N4Object</code>. This is not
@@ -3171,7 +3171,7 @@ class B extends A {
 </div>
 </div>
 <div class="exampleblock">
-<div class="title">Example 38. Spec Object and Subclasses</div>
+<div class="title">Example 39. Spec Object and Subclasses</div>
 <div class="content">
 <div class="listingblock">
 <div class="content">
@@ -3230,7 +3230,7 @@ In this example, the field <code>n</code> should not have been defined as requir
 </div>
 </div>
 <div class="exampleblock">
-<div class="title">Example 39. Superfluous Properties in @Spec Constructors</div>
+<div class="title">Example 40. Superfluous Properties in @Spec Constructors</div>
 <div class="content">
 <div class="paragraph">
 <p>Each non-<math xmlns="http://www.w3.org/1998/Math/MathML"><mstyle mathvariant="monospace"><mtext>public</mtext></mstyle></math> field has to be set in the constructor via the <math xmlns="http://www.w3.org/1998/Math/MathML"><mstyle mathvariant="monospace"><mtext>with</mtext></mstyle></math> to the parameter otherwise properties are <em>not</em> used to set non-<math xmlns="http://www.w3.org/1998/Math/MathML"><mstyle mathvariant="monospace"><mtext>public</mtext></mstyle></math> fields.</p>
@@ -3282,7 +3282,7 @@ In particular, fields of an interface declared in a <code>n4jsd</code> file  can
 <p>The following example illustrates this restriction.</p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 40. Interface fields that cannot be initialized via @Spec constructors</div>
+<div class="title">Example 41. Interface fields that cannot be initialized via @Spec constructors</div>
 <div class="content">
 <div class="listingblock">
 <div class="title">Inf.n4jsd</div>
@@ -3450,7 +3450,7 @@ Using notation <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>m</mi><mfenc
 It shows a small class hierarchy using covariant constructors, <code>Cls</code> and <code>Cls2</code>, together with a helper function <code>createAnother</code> that creates and returns a new instance of the same type as its argument <code>value</code>.</p>
 </div>
 <div id="ex:covariant_constructors" class="exampleblock">
-<div class="title">Example 41. Covariant Constructors</div>
+<div class="title">Example 42. Covariant Constructors</div>
 <div class="content">
 <div class="listingblock">
 <div class="content">
@@ -3489,7 +3489,7 @@ If we removed the <code>@CovariantConstructor</code> annotation on <code>Cls</co
 <p>The next example illustrates how to use <code>@CovariantConstructor</code> with interfaces and shows a behavior that might be surprising at first sight.</p>
 </div>
 <div id="ex:covariant-constructors-in-interfaces" class="exampleblock">
-<div class="title">Example 42. Covariant Constructors in Interfaces</div>
+<div class="title">Example 43. Covariant Constructors in Interfaces</div>
 <div class="content">
 <div class="listingblock">
 <div class="content">
@@ -3804,7 +3804,7 @@ N4SetterDeclaration &lt;Yield&gt;:
 <p>Notes with regard to syntax: Although ECMAScript 6 does not define fields in classes, it defines getter and setter methods similarly (cf. [<a href="appendix_c_bibliography.html#ECMA15a">ECMA15a(p.S13.3, p.p.209)</a>]).</p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 43. Getter and Setter</div>
+<div class="title">Example 44. Getter and Setter</div>
 <div class="content">
 <div class="paragraph">
 <p>The getter and setter implementations usually reference data fields internally.
@@ -4427,7 +4427,7 @@ In the list above, only the first line can be used when assigning values to a fi
 <p>It is even possible to call a static field accessor or method of a class using dynamic polymorphism, as demonstrated in the following example:</p>
 </div>
 <div id="ex:Polymorphism_and_static_methods" class="exampleblock">
-<div class="title">Example 44. Static members of classes, inheritance and polymorphism</div>
+<div class="title">Example 45. Static members of classes, inheritance and polymorphism</div>
 <div class="content">
 <div class="listingblock">
 <div class="content">
@@ -4467,7 +4467,7 @@ B.bar(); // will print "B#foo"</code></pre>
 depending on the declared type of the receiver (and not its value):</p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 45. Static members in Java</div>
+<div class="title">Example 46. Static members in Java</div>
 <div class="content">
 <div class="listingblock">
 <div class="content">
@@ -4535,7 +4535,7 @@ Static methods and field accessors of interfaces, therefore, always have to prov
 Compare the following example to <a href="types.html#_polymorphism-and-static-methods">Static Polymorphism</a> for classes above:</p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 46. Static members of interfaces</div>
+<div class="title">Example 47. Static members of interfaces</div>
 <div class="content">
 <div class="listingblock">
 <div class="content">
@@ -4913,7 +4913,7 @@ In these cases, the implementor has to redefine the members in order to be aware
 We always use the <code>@Override</code> annotation.</p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 47. Method Consumption</div>
+<div class="title">Example 48. Method Consumption</div>
 <div class="content">
 <div class="paragraph">
 <p><a href="#tab:methodConsumption">Consumption of methods</a> shows simple examples of above rules.
@@ -5000,7 +5000,7 @@ If the method is defined in class <code>C</code>, and if this method is printed 
 </dl>
 </div>
 <div class="exampleblock">
-<div class="title">Example 48. Field and Field Initializer Consumption</div>
+<div class="title">Example 49. Field and Field Initializer Consumption</div>
 <div class="content">
 <div class="listingblock">
 <div class="content">
@@ -5195,7 +5195,7 @@ defined type must not be inherited from</p>
 </div>
 </div>
 <div class="exampleblock">
-<div class="title">Example 49. Declaration Site Structural Typing</div>
+<div class="title">Example 50. Declaration Site Structural Typing</div>
 <div class="content">
 <div class="paragraph">
 <p>The following snippet demonstrates the effect of definition-site structural types by comparing them to
@@ -5300,7 +5300,7 @@ In the example, the datafield <code>a.field</code> has the nested structural typ
 Nested structural types are evaluated on the fly when doing subtype checks.</p>
 </div>
 <div id="ex:nested-structural-typing-strategies" class="exampleblock">
-<div class="title">Example 50. Nested Structural Typing Strategies</div>
+<div class="title">Example 51. Nested Structural Typing Strategies</div>
 <div class="content">
 <div class="listingblock">
 <div class="content">
@@ -5319,7 +5319,7 @@ var a : ~i~A; // ST2</code></pre>
 <p>The following example demonstrates the effect of the structural type modifiers:</p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 51. Effect of structural type modifiers on use-site</div>
+<div class="title">Example 52. Effect of structural type modifiers on use-site</div>
 <div class="content">
 <div class="paragraph">
 <p>Let’s assume the type defined on the left.
@@ -5473,7 +5473,6 @@ interface ~i~I {
 </tr>
 </tbody>
 </table>
-<div style="page-break-after: always;"></div>
 <div class="paragraph">
 <p>Note that even if a type is defined without the structural modifier, it is not possible to use <code>instanceof</code> for variables declared as structural, as shown in the next example:</p>
 </div>
@@ -5526,6 +5525,16 @@ foo(c: ~~C, i: ~~I) {
 </tr>
 </tbody>
 </table>
+</div>
+</div>
+<div class="openblock requirement">
+<div class="content">
+<div class="paragraph">
+<p><a id="Req-IDE-78701"></a><strong>Req. IDE-78701:</strong> <a href="#Req-IDE-78701">Nominal and structural typing spec attributes</a> (ver. 1)</p>
+</div>
+<div class="paragraph">
+<p>Within this spec, we define the following attributes of a type reference <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>T</mi></math>:</p>
+</div>
 <div class="ulist">
 <ul>
 <li>
@@ -5542,6 +5551,14 @@ foo(c: ~~C, i: ~~I) {
 </li>
 <li>
 <p>If a type is referenced with the structural initializer field type modifier <code>~i~</code>, then the property <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>T</mi><mo>.</mo><mi>r</mi><mi>e</mi><mi>f</mi><mi>S</mi><mi>t</mi><mi>r</mi><mi>u</mi><mi>c</mi><mi>t</mi><mi>u</mi><mi>r</mi><mi>a</mi><mi>l</mi><mi>I</mi><mi>n</mi><mi>i</mi><mi>t</mi><mi>F</mi><mi>i</mi><mi>e</mi><mi>l</mi><mi>d</mi></math> is true.</p>
+</li>
+<li>
+<p>We use <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>T</mi><mo>.</mo><mi>i</mi><mi>s</mi><mi>S</mi><mi>t</mi><mi>r</mi><mi>u</mi><mi>c</mi><mi>t</mi><mi>u</mi><mi>r</mi><mi>a</mi><mi>l</mi></math> to simply refer any structural typing, i.e.+
+<math xmlns="http://www.w3.org/1998/Math/MathML"><mi>T</mi><mo>.</mo><mi>i</mi><mi>s</mi><mi>S</mi><mi>t</mi><mi>r</mi><mi>u</mi><mi>c</mi><mi>t</mi><mi>u</mi><mi>r</mi><mi>a</mi><mi>l</mi><mo>=</mo><mi>T</mi><mo>.</mo><mi>r</mi><mi>e</mi><mi>f</mi><mi>S</mi><mi>t</mi><mi>r</mi><mi>u</mi><mi>c</mi><mi>t</mi><mi>u</mi><mi>r</mi><mi>a</mi><mi>l</mi><mo>∨</mo><mi>T</mi><mo>.</mo><mi>r</mi><mi>e</mi><mi>f</mi><mi>S</mi><mi>t</mi><mi>r</mi><mi>u</mi><mi>c</mi><mi>t</mi><mi>u</mi><mi>r</mi><mi>a</mi><mi>l</mi><mi>F</mi><mi>i</mi><mi>e</mi><mi>l</mi><mi>d</mi><mo>∨</mo></math>T.refStructuralReadOnlyField \lor T.refStructuralWriteOnlyField || T.refStructuralInitField || T.defStructural$</p>
+</li>
+<li>
+<p>We use <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>T</mi><mo>.</mo><mi>i</mi><mi>s</mi><mi>N</mi><mi>o</mi><mi>m</mi><mi>i</mi><mi>n</mi><mi>a</mi><mi>l</mi></math> as the opposite of <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>T</mi><mo>.</mo><mi>i</mi><mi>s</mi><mi>S</mi><mi>t</mi><mi>r</mi><mi>u</mi><mi>c</mi><mi>t</mi><mi>u</mi><mi>r</mi><mi>a</mi><mi>l</mi></math>, i.e.<br>
+<math xmlns="http://www.w3.org/1998/Math/MathML"><mi>T</mi><mo>.</mo><mi>i</mi><mi>s</mi><mi>N</mi><mi>o</mi><mi>m</mi><mi>i</mi><mi>n</mi><mi>a</mi><mi>l</mi><mo>=</mo><mo>¬</mo><mi>T</mi><mo>.</mo><mi>i</mi><mi>s</mi><mi>S</mi><mi>t</mi><mi>r</mi><mi>u</mi><mi>c</mi><mi>t</mi><mi>u</mi><mi>r</mi><mi>a</mi><mi>l</mi></math></p>
 </li>
 </ul>
 </div>
@@ -5706,7 +5723,7 @@ use-site structural typing (<a href="#Req-IDE-76">[Req-IDE-76]</a>) are
 applied.</p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 52. Use-Site Structural Typing</div>
+<div class="title">Example 53. Use-Site Structural Typing</div>
 <div class="content">
 <div class="paragraph">
 <p>The following example demonstrates the effect of the structural (field) modifier, used in this case for function parameters.</p>
@@ -5729,7 +5746,7 @@ g({x:10});      // ok: object literal provides all fields of I</code></pre>
 </div>
 </div>
 <div class="exampleblock">
-<div class="title">Example 53. Structural types variable and instanceof operator</div>
+<div class="title">Example 54. Structural types variable and instanceof operator</div>
 <div class="content">
 <div class="paragraph">
 <p>It is possible to use a variable typed with a structural version of a type on the left hand side of the <code>instanceof</code> operator, as demonstrated in this example:</p>
@@ -5858,7 +5875,7 @@ All public member fields with <code>@Final</code> annotation are considered to b
 The already-initialized <code>@Final</code> fields can be either omitted from, or can be re-initialized via, an initializer field typing <code>@Spec</code> style constructor.</p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 54. Subtype relationship between structural field typing</div>
+<div class="title">Example 55. Subtype relationship between structural field typing</div>
 <div class="content">
 <div class="listingblock">
 <div class="content">
@@ -6322,7 +6339,7 @@ Data fields with an initializer are treated as optional in the initializer field
 <p>It is important to note that it is valid to use the <code>ProvidesInitializer</code> annotation for setters in <code>n4js</code> files and not only definition files.</p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 55. Setters with <code>@ProvidesInitializer</code> treated as optional</div>
+<div class="title">Example 56. Setters with <code>@ProvidesInitializer</code> treated as optional</div>
 <div class="content">
 <div class="listingblock">
 <div class="content">
@@ -6357,7 +6374,7 @@ well. To ensure the overall type safety, the semantics of optionality (e.g. on o
 visibility.</p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 56. Access modifier in structural typing</div>
+<div class="title">Example 57. Access modifier in structural typing</div>
 <div class="content">
 <div class="listingblock">
 <div class="content">
@@ -6469,7 +6486,7 @@ Consider the following example:</p>
 </div>
 </div>
 <div class="exampleblock">
-<div class="title">Example 57. Additional optional members in structural typing</div>
+<div class="title">Example 58. Additional optional members in structural typing</div>
 <div class="content">
 <div class="listingblock">
 <div class="content">
@@ -6491,7 +6508,7 @@ c2 = { f1:42 };  // ok!!</code></pre>
 Hence, type variables must not be augmented with additional structural members like in the following example.</p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 58. Forbidden additional structural members on type variables</div>
+<div class="title">Example 59. Forbidden additional structural members on type variables</div>
 <div class="content">
 <div class="listingblock">
 <div class="content">
@@ -6507,7 +6524,7 @@ Hence, type variables must not be augmented with additional structural members l
 However, constraints like this should be rather stated using an explicit interface like in the example below.</p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 59. Use explicitly defined Interfaces</div>
+<div class="title">Example 60. Use explicitly defined Interfaces</div>
 <div class="content">
 <div class="listingblock">
 <div class="content">
@@ -6530,7 +6547,7 @@ interface II&lt;T extends J&gt; {
 <div id="footer">
 <div id="footer-text">
 Version 0.9<br>
-Last updated 2019-08-07 15:02:40 CEST
+Last updated 2019-08-08 13:15:33 CEST
 </div>
 </div>
 <!-- ************* docinfo-footer *************************************************************** -->

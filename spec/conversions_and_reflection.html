@@ -5,7 +5,7 @@
 <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 1.5.5">
-<meta name="author" content="2019-08-07 15:02:40 CEST">
+<meta name="author" content="2019-08-08 13:15:33 CEST">
 <title>N4JS Language Specification</title>
 <link rel="stylesheet" href="styles/spec.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
@@ -47,7 +47,7 @@
 <div id="header">
 <h1>N4JS Language Specification</h1>
 <div class="details">
-<span id="author" class="author">2019-08-07 15:02:40 CEST</span><br>
+<span id="author" class="author">2019-08-08 13:15:33 CEST</span><br>
 <span id="revnumber">version 0.9</span>
 </div>
 <div id="toc" class="toc2">
@@ -984,7 +984,7 @@ The same auto-conversion rules defined for JavaScript <code>Object</code> theref
 That is, in most cases, no extra hint is passed to <code>DefaultValue</code>. Thus <code>valueOf</code> usually takes precedence over toString as demonstrated in the following example:</p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 70. Auto-Conversion</div>
+<div class="title">Example 71. Auto-Conversion</div>
 <div class="content">
 <div class="paragraph">
 <p>Assume some classes and corresponding instances defined as follows:</p>
@@ -1160,7 +1160,7 @@ Using structural types on the right-hand side of <code>instancesof</code> constr
 <p>In order to avoid errors at runtime, the <code>instanceof</code> operator defines appropriate constraints, see <a href="expressions.html#_relational-expression">Relational Expression</a> for details.</p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 71. Type Check Example</div>
+<div class="title">Example 72. Type Check Example</div>
 <div class="content">
 <div class="paragraph">
 <p>Given the following classes and variable:</p>
@@ -1263,7 +1263,7 @@ constructor. This also allows to retrieve meta-information directly for an insta
 the constructor of <code>C</code> available, for example because the constructor is not accessible.</p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 72. Reflection with <code>N4class</code></div>
+<div class="title">Example 73. Reflection with <code>N4class</code></div>
 <div class="content">
 <div class="paragraph">
 <p>This example demonstrates how these reflective features are accessed:</p>
@@ -1299,7 +1299,7 @@ N4BuiltInClasses.N4Class</code></pre>
 They are not defined in a module, thus their <a href="appendix_a_acronyms.html#_acronyms">FQN</a> returns only their simple name.</p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 73. Reflection with Built-In Types</div>
+<div class="title">Example 74. Reflection with Built-In Types</div>
 <div class="content">
 <div class="listingblock">
 <div class="content">
@@ -1337,7 +1337,7 @@ console.log('B.n4class.fqn:             ' + B.n4class.fqn)</code></pre>
 </div>
 </div>
 <div class="exampleblock">
-<div class="title">Example 74. N4Class.of</div>
+<div class="title">Example 75. N4Class.of</div>
 <div class="content">
 <div class="paragraph">
 <p>The type has a method to retrieve the meta-information from instances (i.e. or enumeration literals using )
@@ -1505,7 +1505,7 @@ Implicit handling states true <math xmlns="http://www.w3.org/1998/Math/MathML"><
 <div id="footer">
 <div id="footer-text">
 Version 0.9<br>
-Last updated 2019-08-07 15:02:40 CEST
+Last updated 2019-08-08 13:15:33 CEST
 </div>
 </div>
 <!-- ************* docinfo-footer *************************************************************** -->

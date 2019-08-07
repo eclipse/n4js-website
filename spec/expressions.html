@@ -5,7 +5,7 @@
 <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 1.5.5">
-<meta name="author" content="2019-08-07 15:02:40 CEST">
+<meta name="author" content="2019-08-08 13:15:33 CEST">
 <title>N4JS Language Specification</title>
 <link rel="stylesheet" href="styles/spec.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
@@ -47,7 +47,7 @@
 <div id="header">
 <h1>N4JS Language Specification</h1>
 <div class="details">
-<span id="author" class="author">2019-08-07 15:02:40 CEST</span><br>
+<span id="author" class="author">2019-08-08 13:15:33 CEST</span><br>
 <span id="revnumber">version 0.9</span>
 </div>
 <div id="toc" class="toc2">
@@ -937,7 +937,7 @@ Also see [<a href="appendix_c_bibliography.html#West06a">West06a</a>] and <a hre
 Type inference heuristics and explanations are provided in the next section.</p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 75. This in Unrestricted Mode</div>
+<div class="title">Example 76. This in Unrestricted Mode</div>
 <div class="content">
 <div class="paragraph">
 <p>In unrestricted mode, <code>this</code> is bound to the receiver.
@@ -969,7 +969,7 @@ var ol2 = {
 </div>
 </div>
 <div class="exampleblock">
-<div class="title">Example 76. This in strict mode</div>
+<div class="title">Example 77. This in strict mode</div>
 <div class="content">
 <div class="paragraph">
 <p>In strict mode, <code>this</code> is bound to the receiver.
@@ -1003,7 +1003,7 @@ var ol2 = {
 </div>
 </div>
 <div class="exampleblock">
-<div class="title">Example 77. This in N4JS mode</div>
+<div class="title">Example 78. This in N4JS mode</div>
 <div class="content">
 <div class="paragraph">
 <p>As in strict mode, <code>this</code> is bound to the receiver and if there is no receiver, it is bound to <code>undefined</code>. So the example above is also true for N4JS mode.
@@ -1169,7 +1169,7 @@ This is indicated by the nominal modifier <math xmlns="http://www.w3.org/1998/Ma
 </div>
 </div>
 <div class="exampleblock">
-<div class="title">Example 78. Effect of Nominal This Type</div>
+<div class="title">Example 79. Effect of Nominal This Type</div>
 <div class="content">
 <div class="paragraph">
 <p>Given the following declaration</p>
@@ -1209,7 +1209,7 @@ omitted in error messages, leading to</p>
 </div>
 </div>
 <div class="exampleblock">
-<div class="title">Example 79. This and Function Declaration</div>
+<div class="title">Example 80. This and Function Declaration</div>
 <div class="content">
 <div class="paragraph">
 <p>This example demonstrates the usage of functions annotated with <code>@This</code>.
@@ -1238,7 +1238,7 @@ logger.apply( new B(),[]) // prints "~ B was logged ~"</code></pre>
 </div>
 </div>
 <div class="exampleblock">
-<div class="title">Example 80. This and Function Expressions</div>
+<div class="title">Example 81. This and Function Expressions</div>
 <div class="content">
 <div class="paragraph">
 <p>In this example a function is created via a function expression.
@@ -1623,7 +1623,7 @@ For many use cases the behavior is similar though, as the members of a union typ
 <p>Note that <code>typeof [1,2,3]</code> does not return <code>Array&lt;number&gt;</code> (as ECMAScript is not aware of the generic array type), but <code>Object</code>.</p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 81. Array Type Inference</div>
+<div class="title">Example 82. Array Type Inference</div>
 <div class="content">
 <div class="paragraph">
 <p>The type for all variables declared in this example is inferred to <code>Array&lt;string&gt;</code>:</p>
@@ -1905,7 +1905,7 @@ If <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>E</mi></math> is not typ
 <div class="sect4">
 <h5 id="_scoping-and-linking"><a class="anchor" href="#_scoping-and-linking"></a><a class="link" href="#_scoping-and-linking">8.1.5.2. Scoping and linking</a></h5>
 <div class="exampleblock">
-<div class="title">Example 82. Scoping and linking</div>
+<div class="title">Example 83. Scoping and linking</div>
 <div class="content">
 <div class="listingblock">
 <div class="content">
@@ -1982,7 +1982,7 @@ The type if a parenthesized expression <math xmlns="http://www.w3.org/1998/Math/
 </div>
 </div>
 <div class="exampleblock">
-<div class="title">Example 83. Parenthesized Expression Type Examples</div>
+<div class="title">Example 84. Parenthesized Expression Type Examples</div>
 <div class="content">
 <div class="paragraph">
 <p>In the following listing, the type of the plain expressions is equivalent to the parenthesized versions:</p>
@@ -2198,7 +2198,7 @@ then the receiver must be a subtype of the declared <code>@This</code> type.</p>
 <p>Although index access is very limited, it is still possible to use immediate instances of <code>Object</code> in terms of a map (but this applies only to index access, not the dot notation):</p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 84. Object as Map</div>
+<div class="title">Example 85. Object as Map</div>
 <div class="content">
 <div class="listingblock">
 <div class="content">
@@ -2362,7 +2362,7 @@ Or in other words: Only instantiable classes have an inferred type of <math xmln
 <p>to <a href="#new-expression-3">3</a> It is not possible to refer to union or intersection at that location. So this is not explicitly denied here since it is not possible anyway.</p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 85. Abstract classes and construction</div>
+<div class="title">Example 86. Abstract classes and construction</div>
 <div class="content">
 <div class="paragraph">
 <p>The following examples demonstrates the usage of abstract classes and constructor types, to make the first two constraints more clearer:</p>
@@ -2531,7 +2531,7 @@ In that case, the type variable defined in the generic method declaration is exp
 See <a href="#_property-accessors">Property Accessors</a> for semantics and type inference.</p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 86. Generic Method Invocation</div>
+<div class="title">Example 87. Generic Method Invocation</div>
 <div class="content">
 <div class="paragraph">
 <p>This examples demonstrate how to explicitly
@@ -2859,7 +2859,7 @@ mathematical addition and the result is a number. In other cases the 'plus' is i
 <p>Adding two integers (int) leads to a number, since the result may not be represented as an (JavaScript) int anymore.</p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 87. Type of addition expression</div>
+<div class="title">Example 88. Type of addition expression</div>
 <div class="content">
 <div class="listingblock">
 <div class="content">
@@ -3056,7 +3056,7 @@ Use-site structural typing is also not possible since <code>~</code> would be in
 The compiler rewrites the code to make this work.</p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 88. <code>instanceof</code> with Interface</div>
+<div class="title">Example 89. <code>instanceof</code> with Interface</div>
 <div class="content">
 <div class="paragraph">
 <p>The following example demonstrates the use of the operator with an interface.
@@ -3322,7 +3322,7 @@ The ECMAScript operation <code>ToBoolean</code> [<a href="appendix_c_bibliograph
 </div>
 </div>
 <div class="exampleblock">
-<div class="title">Example 89. Type of Conditional Expressions</div>
+<div class="title">Example 90. Type of Conditional Expressions</div>
 <div class="content">
 <div class="paragraph">
 <p>Given the following declarations:</p>
@@ -3502,7 +3502,7 @@ Since the type of the latter is the right-hand side, we can define:</p>
 <p>All expressions will be evaluated even though only the value of the last expression will be the result.</p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 90. Comma Expression</div>
+<div class="title">Example 91. Comma Expression</div>
 <div class="content">
 <div class="paragraph">
 <p>Assignment expressions preceed comma expressions:</p>
@@ -3544,7 +3544,7 @@ b =  12, 34, true ; // error, b=12 is invalid</code></pre>
 there are two use cases for keyword <code>super</code>: super member access and super constructor calls.</p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 91. Super Keyword</div>
+<div class="title">Example 92. Super Keyword</div>
 <div class="content">
 <div class="paragraph">
 <p>Two use cases for keyword super:</p>
@@ -3730,7 +3730,7 @@ This is assured by the standard rules for binding identifiers.</p>
 This is important in particular for static methods as demonstrated in the following example:</p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 92. Super Call in Static Methods</div>
+<div class="title">Example 93. Super Call in Static Methods</div>
 <div class="content">
 <div class="listingblock">
 <div class="content">
@@ -4014,7 +4014,7 @@ inside an expression at these locations.</p>
 <div id="footer">
 <div id="footer-text">
 Version 0.9<br>
-Last updated 2019-08-07 15:02:40 CEST
+Last updated 2019-08-08 13:15:33 CEST
 </div>
 </div>
 <!-- ************* docinfo-footer *************************************************************** -->

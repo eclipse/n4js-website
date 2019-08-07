@@ -5,7 +5,7 @@
 <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 1.5.5">
-<meta name="author" content="2019-08-07 15:02:40 CEST">
+<meta name="author" content="2019-08-08 13:15:33 CEST">
 <title>N4JS Language Specification</title>
 <link rel="stylesheet" href="styles/spec.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
@@ -47,7 +47,7 @@
 <div id="header">
 <h1>N4JS Language Specification</h1>
 <div class="details">
-<span id="author" class="author">2019-08-07 15:02:40 CEST</span><br>
+<span id="author" class="author">2019-08-08 13:15:33 CEST</span><br>
 <span id="revnumber">version 0.9</span>
 </div>
 <div id="toc" class="toc2">
@@ -841,7 +841,7 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph center">
-<p><strong>Last Updated: 2019-08-07</strong></p>
+<p><strong>Last Updated: 2019-08-08</strong></p>
 </div>
 <div class="paragraph center">
 <p><strong>Authors:</strong><br>
@@ -4902,27 +4902,129 @@ This virtual subclass also explains why only one single class may be contained i
 </div>
 </li>
 <li>
-<p>Only one class must be contained in the intersection type:</p>
+<p>Only one nominally typed class must be contained in the intersection type:</p>
 <div class="openblock">
 <div class="content">
-<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mfenced close=")" open="("><mrow><mo>∃</mo><mi>C</mi><mo>∈</mo><mi>I</mi><mo>.</mo><mi>t</mi><mi>y</mi><mi>p</mi><mi>e</mi><mi>R</mi><mi>e</mi><mi>f</mi><mi>s</mi><mi>:</mi><mi>μ</mi><mfenced close=")" open="("><mi>C</mi></mfenced><mo>=</mo><mstyle mathvariant="monospace"><mtext>Class</mtext></mstyle></mrow></mfenced><mo>→</mo><mo>∄</mo><mi>T</mi><mo>∈</mo><mi>I</mi><mo>.</mo><mi>t</mi><mi>y</mi><mi>p</mi><mi>e</mi><mi>R</mi><mi>e</mi><mi>f</mi><mi>s</mi><mo>∖</mo><mfenced close="}" open="{"><mi>C</mi></mfenced><mi>:</mi><mi>μ</mi><mfenced close=")" open="("><mi>T</mi></mfenced><mo>=</mo><mstyle mathvariant="monospace"><mtext>Class</mtext></mstyle></math>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mfenced close=")" open="("><mrow><mo>∃</mo><mi>C</mi><mo>∈</mo><mi>I</mi><mo>.</mo><mi>t</mi><mi>y</mi><mi>p</mi><mi>e</mi><mi>R</mi><mi>e</mi><mi>f</mi><mi>s</mi><mi>:</mi><mi>μ</mi><mfenced close=")" open="("><mi>C</mi></mfenced><mo>=</mo><mstyle mathvariant="monospace"><mtext>Class</mtext></mstyle><mo>∧</mo><mi>C</mi><mo>.</mo><mi>i</mi><mi>s</mi><mi>S</mi><mi>t</mi><mi>r</mi><mi>u</mi><mi>c</mi><mi>t</mi><mi>u</mi><mi>r</mi><mi>a</mi><mi>l</mi></mrow></mfenced><mo>→</mo><mo>∄</mo><mi>T</mi><mo>∈</mo><mi>I</mi><mo>.</mo><mi>t</mi><mi>y</mi><mi>p</mi><mi>e</mi><mi>R</mi><mi>e</mi><mi>f</mi><mi>s</mi><mo>∖</mo><mfenced close="}" open="{"><mi>C</mi></mfenced><mi>:</mi><mi>μ</mi><mfenced close=")" open="("><mi>T</mi></mfenced><mo>=</mo><mstyle mathvariant="monospace"><mtext>Class</mtext></mstyle><mo>∧</mo><mi>T</mi><mo>.</mo><mi>i</mi><mi>s</mi><mi>S</mi><mi>t</mi><mi>r</mi><mi>u</mi><mi>c</mi><mi>t</mi><mi>u</mi><mi>r</mi><mi>a</mi><mi>l</mi></math>
 </div>
 </div>
 <div class="paragraph">
-<p>For the time being, only a warning is produced when more than one class is contained in the intersection type .</p>
+<p>A warning is produced when more than one nominal class is contained in the intersection type, since
+only undefined (or null) can be assigned to a type reference of this type.</p>
 </div>
 </li>
 <li>
 <p>Non-optional elements:</p>
-</li>
-</ol>
-</div>
 <div class="openblock">
 <div class="content">
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mo>∀</mo><mi>T</mi><mo>∈</mo><mi>I</mi><mo>.</mo><mi>t</mi><mi>y</mi><mi>p</mi><mi>e</mi><mi>R</mi><mi>e</mi><mi>f</mi><mi>s</mi><mo>→</mo><mo>¬</mo><mi>T</mi><mo>.</mo><mi>o</mi><mi>p</mi><mi>t</mi></math>
 </div>
 </div>
+</li>
+<li>
+<p>If the intersection contains multiple references to the same generic type, a warning is produced if only undefined (or null) can be assigned to a type reference of this type. There are some rare cases in which this does not happen. This is true if for all type arguments one of the following conditions hold:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>a type argument corresponding to a type parameter without def-site variance is a wildcard with an upper bound (use "extends" or no bound) or a type argument not defining an upper bound corresponds to a covariant (out) type parameter, and this constraint (IDE-27) holds for an intersection created from the upper bounds of the type argument (or the lower bound of the type parameter).</p>
+</li>
+<li>
+<p>a type argument is a wildcard with lower bounds (since Object would be a solution)</p>
+</li>
+</ul>
 </div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>Definition of structural typing attributes see <a href="#Req-ID-78701">[Req-ID-78701]</a>.</p>
+</div>
+<div class="paragraph">
+<p>The combination of intersection types and generics is a bit tricky. The following example demonstrates that:</p>
+</div>
+<div class="exampleblock">
+<div class="title">Example 20. Intersection and generics</div>
+<div class="content">
+<div class="paragraph">
+<p>Given the following types:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>class G&lt;T&gt; {
+     private T: t
+	set(t: T) { this.t = t;}
+	get(): T { return this.t; }
+}
+class C { public y; }
+class D { public x; }
+interface I {}</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We use the generic with the getter and setter here only to demonstrate co- and contra variance effects.</p>
+</div>
+<div class="paragraph">
+<p>Let</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>let g1: G&lt;C&gt; &amp; G&lt;D&gt;;</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>be a variable. We can only assign undefined to g1, since any other value would not be confirm to the intersection.
+If we for example would assign</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>let gc = new G&lt;C&gt;()
+g1 = gc;</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>we would run into contra-variance problems:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>gc.set(new C());</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This would implicitly also set a <code>C</code> in <code>g1</code>, which would not be compatible with <code>D</code>. This would lead to a problem in the following lines:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>let gd: G&lt;D&gt; = g1;
+let d: D = gd.get();</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This is the typical contra variance problem.</p>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>Similar problems arise even with structural types.</p>
+</div>
+<div class="paragraph">
+<p>Note that in theory more warnings could be produced, in particular in combination with
+structural types (and the fact that N4JS classes must explicitly implement even
+structural interfaces). We omit these kind of warnings for two reasons:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>performance</p>
+</li>
+<li>
+<p>anticipated slight changes in semantics (e.g. we may remove the requirement of explicitly implementing structural interfaces)</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Since problems caused by not instanceable type references will be detected by programmers before runtime anyway, we do not need to be strict here. They are merely convenience features and they do not affect the correctness of the type system.</p>
 </div>
 <div class="openblock requirement">
 <div class="content">
@@ -4999,7 +5101,7 @@ The aforementioned constraints must hold.
 We also implicitly use this representation in this specification.</p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 20. Subtyping with intersection type</div>
+<div class="title">Example 21. Subtyping with intersection type</div>
 <div class="content">
 <div class="paragraph">
 <p>Let A, B, and C be defined as in the chapter beginning (<math xmlns="http://www.w3.org/1998/Math/MathML"><mi>C</mi><mo>&lt;</mo><mi>:</mi><mi>B</mi><mo>&lt;</mo><mi>:</mi><mi>A</mi></math>)</p>
@@ -5558,7 +5660,7 @@ A constructor type with a wildcard is never a subtype of a constructor type with
 <li>
 <p>Overriding of static methods is possible and by using the constructor or classifier type, polymorphism for static methods is possible as well.</p>
 <div id="_polymorphism-and-static-methods" class="exampleblock">
-<div class="title">Example 21. Static Polymorphism</div>
+<div class="title">Example 22. Static Polymorphism</div>
 <div class="content">
 <div class="listingblock">
 <div class="content">
@@ -5582,7 +5684,7 @@ B.bar(); // will return "B", as foo() is called polymorphical</code></pre>
 <p>It is even possible to refer to the constructor of an abstract class.
 The abstract class itself cannot provide this constructor (it only provides a type..), that is to say only concrete subclasses can provide constructors compatible to the constructor.</p>
 <div class="exampleblock">
-<div class="title">Example 22. Constructor of Abstract Class</div>
+<div class="title">Example 23. Constructor of Abstract Class</div>
 <div class="content">
 <div class="listingblock">
 <div class="content">
@@ -5685,7 +5787,7 @@ referenced type has a covariant constructor, cf. <a href="#_covariant-construct
 code shown in <a href="#ex-constructors-and-prototypes">Constructors and Prototypes</a>.</p>
 </div>
 <div id="ex-constructors-and-prototypes" class="exampleblock">
-<div class="title">Example 23. Constructors and Prototypes</div>
+<div class="title">Example 24. Constructors and Prototypes</div>
 <div class="content">
 <div class="listingblock">
 <div class="content">
@@ -5807,7 +5909,7 @@ The <code>this</code> keyword refers to the type of instances of the class in ca
 See <a href="#_this-keyword">This Keyword</a> for details.</p>
 </div>
 <div id="ex:this-keyword-and-type-in-instance-and-static-context" class="exampleblock">
-<div class="title">Example 24. This keyword and type in instance and static context</div>
+<div class="title">Example 25. This keyword and type in instance and static context</div>
 <div class="content">
 <div class="paragraph">
 <p>Note that the following code is not working, because some usages below are
@@ -5907,7 +6009,7 @@ To refer to the this-classifier (static type) the construct <code>type{this}</co
 </div>
 <div style="page-break-after: always;"></div>
 <div class="exampleblock">
-<div class="title">Example 25. This type in function-type-expression</div>
+<div class="title">Example 26. This type in function-type-expression</div>
 <div class="content">
 <div class="listingblock">
 <div class="content">
@@ -5927,7 +6029,7 @@ To refer to the this-classifier (static type) the construct <code>type{this}</co
 In the following example the problem is sketched up. <sup class="footnote">[<a id="_footnoteref_26" class="footnote" href="#_footnote_26" title="View footnote.">26</a>]</sup></p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 26. Problems with this type and type arguments</div>
+<div class="title">Example 27. Problems with this type and type arguments</div>
 <div class="content">
 <div class="listingblock">
 <div class="content">
@@ -6153,7 +6255,7 @@ public object N4Enum {
 </div>
 </div>
 <div class="exampleblock">
-<div class="title">Example 27. Enumeration List</div>
+<div class="title">Example 28. Enumeration List</div>
 <div class="content">
 <div class="paragraph">
 <p>Due to the common base type <code>N4Enum</code> it is possible to define generics accepting only enumeration, as shown in this example:</p>
@@ -6269,7 +6371,7 @@ value, as in</p>
 </ol>
 </div>
 <div class="exampleblock">
-<div class="title">Example 28. WebIDL example</div>
+<div class="title">Example 29. WebIDL example</div>
 <div class="content">
 <div class="listingblock">
 <div class="title">Gecko-Engine webIDL XMLHttpRequestResponseType as taken from [<a href="#W3C:Steen:14:XL">W3C:Steen:14:XL</a>]</div>
@@ -6795,7 +6897,7 @@ It is also similar to default implementations in Java 8 [<a href="#Gosling15a">G
 In Java, however, more constraints exist, (for example, methods of interfaces must be public).</p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 29. Simple Class</div>
+<div class="title">Example 30. Simple Class</div>
 <div class="content">
 <div class="paragraph">
 <p>This first example shows a very simple class with a field, a constructor and a method.</p>
@@ -6816,7 +6918,7 @@ In Java, however, more constraints exist, (for example, methods of interfaces mu
 </div>
 </div>
 <div class="exampleblock">
-<div class="title">Example 30. Extend and implement</div>
+<div class="title">Example 31. Extend and implement</div>
 <div class="content">
 <div class="paragraph">
 <p>The following example demonstrate how a class can extend a superclass and implement an interface.</p>
@@ -7201,7 +7303,7 @@ constant data fields are an often-used technique there and they can be modeled i
 <math xmlns="http://www.w3.org/1998/Math/MathML"><mo>∀</mo><mi>m</mi><mo>∈</mo><mi>I</mi><mo>.</mo><mi>o</mi><mi>w</mi><mi>n</mi><mi>e</mi><mi>d</mi><mi>M</mi><mi>e</mi><mi>t</mi><mi>h</mi><mi>o</mi><mi>d</mi><mi>s</mi><mi>:</mi><mi>m</mi><mo>.</mo><mi>n</mi><mi>a</mi><mi>m</mi><mi>e</mi><msup><mo>≠</mo><mi>'</mi></msup><mi>c</mi><mi>o</mi><mi>n</mi><mi>s</mi><mi>t</mi><mi>r</mi><mi>u</mi><mi>c</mi><mi>t</mi><mi>o</mi><msup><mi>r</mi><mi>'</mi></msup></math>.</p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 31. Simple Interfaces</div>
+<div class="title">Example 32. Simple Interfaces</div>
 <div class="content">
 <div class="paragraph">
 <p>The following example shows the syntax for defining interfaces.
@@ -7359,7 +7461,7 @@ If a type variable is used in <code>typearg</code> to bound a type variable of a
 </div>
 </div>
 <div class="exampleblock">
-<div class="title">Example 32. Generic Type Definition and Usage as Type of Variable</div>
+<div class="title">Example 33. Generic Type Definition and Usage as Type of Variable</div>
 <div class="content">
 <div class="paragraph">
 <p>This example demonstrates how to define a generic type and how to refer to it in a variable definition.</p>
@@ -7397,7 +7499,7 @@ var s: string = stringContainer.getItem();</code></pre>
 <p>In line 3, the type variable <code>T</code> of the generic class <code>Container</code> is bound to <code>string</code>.</p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 33. Binding of type variables with multiple types</div>
+<div class="title">Example 34. Binding of type variables with multiple types</div>
 <div class="content">
 <div class="paragraph">
 <p>For a given generic class <code>G</code></p>
@@ -7632,7 +7734,7 @@ interface Consumer&lt;in T&gt; { // contravariance
 </div>
 </div>
 <div id="ex:use-site-declaration-variance" class="exampleblock">
-<div class="title">Example 34. Use-site declaration of variance</div>
+<div class="title">Example 35. Use-site declaration of variance</div>
 <div class="content">
 <div class="paragraph">
 <p>For illustration purposes, let’s compare use-site and definition-site declaration of variance.
@@ -8212,7 +8314,7 @@ Because static methods can be overridden in subclasses (which is different to Ja
 <p>Default methods in interfaces, cf. <a href="#_default-methods-in-interfaces">Default Methods in Interfaces</a>, may also be declared <code>@Final</code>.</p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 35. Final Methods in Interfaces</div>
+<div class="title">Example 36. Final Methods in Interfaces</div>
 <div class="content">
 <div class="paragraph">
 <p>If a method in an interface is provided with a body, it may be declared final.
@@ -8529,7 +8631,7 @@ This is marked as an error in the subclass.</p>
 </div>
 </div>
 <div class="exampleblock">
-<div class="title">Example 36. Field name conflicts with structural member name</div>
+<div class="title">Example 37. Field name conflicts with structural member name</div>
 <div class="content">
 <div class="paragraph">
 <p>The situation described in <a href="#Req-IDE-58">[Req-IDE-58]</a> is demonstrated in the following code fragment:</p>
@@ -8739,7 +8841,7 @@ console.log(b.fb); // !!</code></pre>
 <p>The following examples illustrate further details of other use cases of spec constructors.</p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 37. Anonymous Interface in Constructor</div>
+<div class="title">Example 38. Anonymous Interface in Constructor</div>
 <div class="content">
 <div class="paragraph">
 <p>The base class <code>A</code> in the examples redefines the constructor already defined in <code>N4Object</code>. This is not
@@ -8765,7 +8867,7 @@ class B extends A {
 </div>
 </div>
 <div class="exampleblock">
-<div class="title">Example 38. Spec Object and Subclasses</div>
+<div class="title">Example 39. Spec Object and Subclasses</div>
 <div class="content">
 <div class="listingblock">
 <div class="content">
@@ -8824,7 +8926,7 @@ In this example, the field <code>n</code> should not have been defined as requir
 </div>
 </div>
 <div class="exampleblock">
-<div class="title">Example 39. Superfluous Properties in @Spec Constructors</div>
+<div class="title">Example 40. Superfluous Properties in @Spec Constructors</div>
 <div class="content">
 <div class="paragraph">
 <p>Each non-<math xmlns="http://www.w3.org/1998/Math/MathML"><mstyle mathvariant="monospace"><mtext>public</mtext></mstyle></math> field has to be set in the constructor via the <math xmlns="http://www.w3.org/1998/Math/MathML"><mstyle mathvariant="monospace"><mtext>with</mtext></mstyle></math> to the parameter otherwise properties are <em>not</em> used to set non-<math xmlns="http://www.w3.org/1998/Math/MathML"><mstyle mathvariant="monospace"><mtext>public</mtext></mstyle></math> fields.</p>
@@ -8876,7 +8978,7 @@ In particular, fields of an interface declared in a <code>n4jsd</code> file  can
 <p>The following example illustrates this restriction.</p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 40. Interface fields that cannot be initialized via @Spec constructors</div>
+<div class="title">Example 41. Interface fields that cannot be initialized via @Spec constructors</div>
 <div class="content">
 <div class="listingblock">
 <div class="title">Inf.n4jsd</div>
@@ -9044,7 +9146,7 @@ Using notation <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>m</mi><mfenc
 It shows a small class hierarchy using covariant constructors, <code>Cls</code> and <code>Cls2</code>, together with a helper function <code>createAnother</code> that creates and returns a new instance of the same type as its argument <code>value</code>.</p>
 </div>
 <div id="ex:covariant_constructors" class="exampleblock">
-<div class="title">Example 41. Covariant Constructors</div>
+<div class="title">Example 42. Covariant Constructors</div>
 <div class="content">
 <div class="listingblock">
 <div class="content">
@@ -9083,7 +9185,7 @@ If we removed the <code>@CovariantConstructor</code> annotation on <code>Cls</co
 <p>The next example illustrates how to use <code>@CovariantConstructor</code> with interfaces and shows a behavior that might be surprising at first sight.</p>
 </div>
 <div id="ex:covariant-constructors-in-interfaces" class="exampleblock">
-<div class="title">Example 42. Covariant Constructors in Interfaces</div>
+<div class="title">Example 43. Covariant Constructors in Interfaces</div>
 <div class="content">
 <div class="listingblock">
 <div class="content">
@@ -9398,7 +9500,7 @@ N4SetterDeclaration &lt;Yield&gt;:
 <p>Notes with regard to syntax: Although ECMAScript 6 does not define fields in classes, it defines getter and setter methods similarly (cf. [<a href="#ECMA15a">ECMA15a(p.S13.3, p.p.209)</a>]).</p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 43. Getter and Setter</div>
+<div class="title">Example 44. Getter and Setter</div>
 <div class="content">
 <div class="paragraph">
 <p>The getter and setter implementations usually reference data fields internally.
@@ -10021,7 +10123,7 @@ In the list above, only the first line can be used when assigning values to a fi
 <p>It is even possible to call a static field accessor or method of a class using dynamic polymorphism, as demonstrated in the following example:</p>
 </div>
 <div id="ex:Polymorphism_and_static_methods" class="exampleblock">
-<div class="title">Example 44. Static members of classes, inheritance and polymorphism</div>
+<div class="title">Example 45. Static members of classes, inheritance and polymorphism</div>
 <div class="content">
 <div class="listingblock">
 <div class="content">
@@ -10061,7 +10163,7 @@ B.bar(); // will print "B#foo"</code></pre>
 depending on the declared type of the receiver (and not its value):</p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 45. Static members in Java</div>
+<div class="title">Example 46. Static members in Java</div>
 <div class="content">
 <div class="listingblock">
 <div class="content">
@@ -10129,7 +10231,7 @@ Static methods and field accessors of interfaces, therefore, always have to prov
 Compare the following example to <a href="#_polymorphism-and-static-methods">Static Polymorphism</a> for classes above:</p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 46. Static members of interfaces</div>
+<div class="title">Example 47. Static members of interfaces</div>
 <div class="content">
 <div class="listingblock">
 <div class="content">
@@ -10507,7 +10609,7 @@ In these cases, the implementor has to redefine the members in order to be aware
 We always use the <code>@Override</code> annotation.</p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 47. Method Consumption</div>
+<div class="title">Example 48. Method Consumption</div>
 <div class="content">
 <div class="paragraph">
 <p><a href="#tab:methodConsumption">Consumption of methods</a> shows simple examples of above rules.
@@ -10594,7 +10696,7 @@ If the method is defined in class <code>C</code>, and if this method is printed 
 </dl>
 </div>
 <div class="exampleblock">
-<div class="title">Example 48. Field and Field Initializer Consumption</div>
+<div class="title">Example 49. Field and Field Initializer Consumption</div>
 <div class="content">
 <div class="listingblock">
 <div class="content">
@@ -10789,7 +10891,7 @@ defined type must not be inherited from</p>
 </div>
 </div>
 <div class="exampleblock">
-<div class="title">Example 49. Declaration Site Structural Typing</div>
+<div class="title">Example 50. Declaration Site Structural Typing</div>
 <div class="content">
 <div class="paragraph">
 <p>The following snippet demonstrates the effect of definition-site structural types by comparing them to
@@ -10894,7 +10996,7 @@ In the example, the datafield <code>a.field</code> has the nested structural typ
 Nested structural types are evaluated on the fly when doing subtype checks.</p>
 </div>
 <div id="ex:nested-structural-typing-strategies" class="exampleblock">
-<div class="title">Example 50. Nested Structural Typing Strategies</div>
+<div class="title">Example 51. Nested Structural Typing Strategies</div>
 <div class="content">
 <div class="listingblock">
 <div class="content">
@@ -10913,7 +11015,7 @@ var a : ~i~A; // ST2</code></pre>
 <p>The following example demonstrates the effect of the structural type modifiers:</p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 51. Effect of structural type modifiers on use-site</div>
+<div class="title">Example 52. Effect of structural type modifiers on use-site</div>
 <div class="content">
 <div class="paragraph">
 <p>Let’s assume the type defined on the left.
@@ -11067,7 +11169,6 @@ interface ~i~I {
 </tr>
 </tbody>
 </table>
-<div style="page-break-after: always;"></div>
 <div class="paragraph">
 <p>Note that even if a type is defined without the structural modifier, it is not possible to use <code>instanceof</code> for variables declared as structural, as shown in the next example:</p>
 </div>
@@ -11120,6 +11221,16 @@ foo(c: ~~C, i: ~~I) {
 </tr>
 </tbody>
 </table>
+</div>
+</div>
+<div class="openblock requirement">
+<div class="content">
+<div class="paragraph">
+<p><a id="Req-IDE-78701"></a><strong>Req. IDE-78701:</strong> <a href="#Req-IDE-78701">Nominal and structural typing spec attributes</a> (ver. 1)</p>
+</div>
+<div class="paragraph">
+<p>Within this spec, we define the following attributes of a type reference <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>T</mi></math>:</p>
+</div>
 <div class="ulist">
 <ul>
 <li>
@@ -11136,6 +11247,14 @@ foo(c: ~~C, i: ~~I) {
 </li>
 <li>
 <p>If a type is referenced with the structural initializer field type modifier <code>~i~</code>, then the property <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>T</mi><mo>.</mo><mi>r</mi><mi>e</mi><mi>f</mi><mi>S</mi><mi>t</mi><mi>r</mi><mi>u</mi><mi>c</mi><mi>t</mi><mi>u</mi><mi>r</mi><mi>a</mi><mi>l</mi><mi>I</mi><mi>n</mi><mi>i</mi><mi>t</mi><mi>F</mi><mi>i</mi><mi>e</mi><mi>l</mi><mi>d</mi></math> is true.</p>
+</li>
+<li>
+<p>We use <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>T</mi><mo>.</mo><mi>i</mi><mi>s</mi><mi>S</mi><mi>t</mi><mi>r</mi><mi>u</mi><mi>c</mi><mi>t</mi><mi>u</mi><mi>r</mi><mi>a</mi><mi>l</mi></math> to simply refer any structural typing, i.e.+
+<math xmlns="http://www.w3.org/1998/Math/MathML"><mi>T</mi><mo>.</mo><mi>i</mi><mi>s</mi><mi>S</mi><mi>t</mi><mi>r</mi><mi>u</mi><mi>c</mi><mi>t</mi><mi>u</mi><mi>r</mi><mi>a</mi><mi>l</mi><mo>=</mo><mi>T</mi><mo>.</mo><mi>r</mi><mi>e</mi><mi>f</mi><mi>S</mi><mi>t</mi><mi>r</mi><mi>u</mi><mi>c</mi><mi>t</mi><mi>u</mi><mi>r</mi><mi>a</mi><mi>l</mi><mo>∨</mo><mi>T</mi><mo>.</mo><mi>r</mi><mi>e</mi><mi>f</mi><mi>S</mi><mi>t</mi><mi>r</mi><mi>u</mi><mi>c</mi><mi>t</mi><mi>u</mi><mi>r</mi><mi>a</mi><mi>l</mi><mi>F</mi><mi>i</mi><mi>e</mi><mi>l</mi><mi>d</mi><mo>∨</mo></math>T.refStructuralReadOnlyField \lor T.refStructuralWriteOnlyField || T.refStructuralInitField || T.defStructural$</p>
+</li>
+<li>
+<p>We use <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>T</mi><mo>.</mo><mi>i</mi><mi>s</mi><mi>N</mi><mi>o</mi><mi>m</mi><mi>i</mi><mi>n</mi><mi>a</mi><mi>l</mi></math> as the opposite of <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>T</mi><mo>.</mo><mi>i</mi><mi>s</mi><mi>S</mi><mi>t</mi><mi>r</mi><mi>u</mi><mi>c</mi><mi>t</mi><mi>u</mi><mi>r</mi><mi>a</mi><mi>l</mi></math>, i.e.<br>
+<math xmlns="http://www.w3.org/1998/Math/MathML"><mi>T</mi><mo>.</mo><mi>i</mi><mi>s</mi><mi>N</mi><mi>o</mi><mi>m</mi><mi>i</mi><mi>n</mi><mi>a</mi><mi>l</mi><mo>=</mo><mo>¬</mo><mi>T</mi><mo>.</mo><mi>i</mi><mi>s</mi><mi>S</mi><mi>t</mi><mi>r</mi><mi>u</mi><mi>c</mi><mi>t</mi><mi>u</mi><mi>r</mi><mi>a</mi><mi>l</mi></math></p>
 </li>
 </ul>
 </div>
@@ -11300,7 +11419,7 @@ use-site structural typing (<a href="#Req-IDE-76">[Req-IDE-76]</a>) are
 applied.</p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 52. Use-Site Structural Typing</div>
+<div class="title">Example 53. Use-Site Structural Typing</div>
 <div class="content">
 <div class="paragraph">
 <p>The following example demonstrates the effect of the structural (field) modifier, used in this case for function parameters.</p>
@@ -11323,7 +11442,7 @@ g({x:10});      // ok: object literal provides all fields of I</code></pre>
 </div>
 </div>
 <div class="exampleblock">
-<div class="title">Example 53. Structural types variable and instanceof operator</div>
+<div class="title">Example 54. Structural types variable and instanceof operator</div>
 <div class="content">
 <div class="paragraph">
 <p>It is possible to use a variable typed with a structural version of a type on the left hand side of the <code>instanceof</code> operator, as demonstrated in this example:</p>
@@ -11452,7 +11571,7 @@ All public member fields with <code>@Final</code> annotation are considered to b
 The already-initialized <code>@Final</code> fields can be either omitted from, or can be re-initialized via, an initializer field typing <code>@Spec</code> style constructor.</p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 54. Subtype relationship between structural field typing</div>
+<div class="title">Example 55. Subtype relationship between structural field typing</div>
 <div class="content">
 <div class="listingblock">
 <div class="content">
@@ -11916,7 +12035,7 @@ Data fields with an initializer are treated as optional in the initializer field
 <p>It is important to note that it is valid to use the <code>ProvidesInitializer</code> annotation for setters in <code>n4js</code> files and not only definition files.</p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 55. Setters with <code>@ProvidesInitializer</code> treated as optional</div>
+<div class="title">Example 56. Setters with <code>@ProvidesInitializer</code> treated as optional</div>
 <div class="content">
 <div class="listingblock">
 <div class="content">
@@ -11951,7 +12070,7 @@ well. To ensure the overall type safety, the semantics of optionality (e.g. on o
 visibility.</p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 56. Access modifier in structural typing</div>
+<div class="title">Example 57. Access modifier in structural typing</div>
 <div class="content">
 <div class="listingblock">
 <div class="content">
@@ -12063,7 +12182,7 @@ Consider the following example:</p>
 </div>
 </div>
 <div class="exampleblock">
-<div class="title">Example 57. Additional optional members in structural typing</div>
+<div class="title">Example 58. Additional optional members in structural typing</div>
 <div class="content">
 <div class="listingblock">
 <div class="content">
@@ -12085,7 +12204,7 @@ c2 = { f1:42 };  // ok!!</code></pre>
 Hence, type variables must not be augmented with additional structural members like in the following example.</p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 58. Forbidden additional structural members on type variables</div>
+<div class="title">Example 59. Forbidden additional structural members on type variables</div>
 <div class="content">
 <div class="listingblock">
 <div class="content">
@@ -12101,7 +12220,7 @@ Hence, type variables must not be augmented with additional structural members l
 However, constraints like this should be rather stated using an explicit interface like in the example below.</p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 59. Use explicitly defined Interfaces</div>
+<div class="title">Example 60. Use explicitly defined Interfaces</div>
 <div class="content">
 <div class="listingblock">
 <div class="content">
@@ -12375,7 +12494,7 @@ other constraint violations.</p>
 </div>
 </div>
 <div class="exampleblock">
-<div class="title">Example 60. Function type conformance</div>
+<div class="title">Example 61. Function type conformance</div>
 <div class="content">
 <div class="paragraph">
 <p>The following incomplete snippet demonstrates the usage of two function variables <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>f</mi><mn>1</mn></math> and <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>f</mi><mn>2</mn></math>, in which <math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo>[</mo><mspace width="-0.167em"/><mrow><mo>[</mo></mrow></mrow><mrow><mi>f</mi><mn>2</mn></mrow><mrow><mrow><mo>]</mo></mrow><mspace width="-0.167em"/><mo>]</mo></mrow><mo>&lt;</mo><mi>:</mi><mrow><mo>[</mo><mspace width="-0.167em"/><mrow><mo>[</mo></mrow></mrow><mrow><mi>f</mi><mn>1</mn></mrow><mrow><mrow><mo>]</mo></mrow><mspace width="-0.167em"/><mo>]</mo></mrow></math> must hold true according to the aforementioned constraints.
@@ -12398,7 +12517,7 @@ bar(f1);</code></pre>
 <p>The type of <code>this</code> can be explicitly set via the <code>@This</code> annotation.</p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 61. Function Subtyping</div>
+<div class="title">Example 62. Function Subtyping</div>
 <div class="content">
 <div class="listingblock">
 <div class="content">
@@ -12421,7 +12540,7 @@ fA(p);      // --&gt; error    void !&lt;: A</code></pre>
 </div>
 </div>
 <div class="exampleblock">
-<div class="title">Example 62. Subtyping with function types</div>
+<div class="title">Example 63. Subtyping with function types</div>
 <div class="content">
 <div class="paragraph">
 <p>If classes A, B, and C are defined as previously mentioned, i.e. <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>C</mi><mo>&lt;</mo><mi>:</mi><mi>B</mi><mo>&lt;</mo><mi>:</mi><mi>A</mi></math>, then
@@ -12583,7 +12702,7 @@ required to be supertypes of the formal parameters’ types in ).
 Where a particular type variable is used, on co- or contra-variant position, is not relevant:</p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 63. Bounded type variable at co-variant position in function type</div>
+<div class="title">Example 64. Bounded type variable at co-variant position in function type</div>
 <div class="content">
 <div class="listingblock">
 <div class="content">
@@ -12829,7 +12948,7 @@ fragment FunctionBody &lt;Yield, Expression&gt;*:
 This supertype contains all common properties of these two subtypes, that is, all properties of <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>F</mi><mi>u</mi><mi>n</mi><mi>c</mi><mi>t</mi><mi>i</mi><mi>o</mi><mi>n</mi><mi>E</mi><mi>x</mi><mi>p</mi><mi>r</mi><mi>e</mi><mi>s</mi><mi>s</mi><mi>i</mi><mi>o</mi><mi>n</mi></math>.</p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 64. Function Declaration with Type Annotation</div>
+<div class="title">Example 65. Function Declaration with Type Annotation</div>
 <div class="content">
 <div class="listingblock">
 <div class="content">
@@ -12915,7 +13034,7 @@ The following context information is used to infer the full signature:</p>
 This is demonstrated in the next example.</p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 65. Inference Of Function Expression’s Signature</div>
+<div class="title">Example 66. Inference Of Function Expression’s Signature</div>
 <div class="content">
 <div class="paragraph">
 <p>In general, <code>{function():any}</code> is a subtype of <code>{function():void}</code> (cf. <a href="#_function-type">Function Type</a>).
@@ -13092,7 +13211,7 @@ GeneratorMethodDeclaration:
 Take this example:</p>
 </div>
 <div id="ex:two-simple-generator-functions" class="exampleblock">
-<div class="title">Example 66. Two simple generator functions</div>
+<div class="title">Example 67. Two simple generator functions</div>
 <div class="content">
 <div class="listingblock">
 <div class="content">
@@ -13422,7 +13541,7 @@ parser to distinguish between using <code>async</code> as an identifier referenc
 keyword, as shown in the next example.</p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 67. Async as keyword and identifier</div>
+<div class="title">Example 68. Async as keyword and identifier</div>
 <div class="content">
 <div class="listingblock">
 <div class="content">
@@ -13610,7 +13729,7 @@ As a consequence, nested <code>Promise</code>s as a return type of a async funct
 Consider the example below.</p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 68. Type variables with async methods.</div>
+<div class="title">Example 69. Type variables with async methods.</div>
 <div class="content">
 <div class="listingblock">
 <div class="content">
@@ -13684,7 +13803,7 @@ The function or method can then be used as if it were declared with <code>async<
 This is particularly useful in N4JS definition files (.n4jsd) to allow using an existing callback-based API from N4JS code with the more convenient <code>await</code>.</p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 69. Promisifiable</div>
+<div class="title">Example 70. Promisifiable</div>
 <div class="content">
 <div class="paragraph">
 <p>Given a function with an N4JS signature</p>
@@ -13962,7 +14081,7 @@ The same auto-conversion rules defined for JavaScript <code>Object</code> theref
 That is, in most cases, no extra hint is passed to <code>DefaultValue</code>. Thus <code>valueOf</code> usually takes precedence over toString as demonstrated in the following example:</p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 70. Auto-Conversion</div>
+<div class="title">Example 71. Auto-Conversion</div>
 <div class="content">
 <div class="paragraph">
 <p>Assume some classes and corresponding instances defined as follows:</p>
@@ -14138,7 +14257,7 @@ Using structural types on the right-hand side of <code>instancesof</code> constr
 <p>In order to avoid errors at runtime, the <code>instanceof</code> operator defines appropriate constraints, see <a href="#_relational-expression">Relational Expression</a> for details.</p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 71. Type Check Example</div>
+<div class="title">Example 72. Type Check Example</div>
 <div class="content">
 <div class="paragraph">
 <p>Given the following classes and variable:</p>
@@ -14241,7 +14360,7 @@ constructor. This also allows to retrieve meta-information directly for an insta
 the constructor of <code>C</code> available, for example because the constructor is not accessible.</p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 72. Reflection with <code>N4class</code></div>
+<div class="title">Example 73. Reflection with <code>N4class</code></div>
 <div class="content">
 <div class="paragraph">
 <p>This example demonstrates how these reflective features are accessed:</p>
@@ -14277,7 +14396,7 @@ N4BuiltInClasses.N4Class</code></pre>
 They are not defined in a module, thus their <a href="#_acronyms">FQN</a> returns only their simple name.</p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 73. Reflection with Built-In Types</div>
+<div class="title">Example 74. Reflection with Built-In Types</div>
 <div class="content">
 <div class="listingblock">
 <div class="content">
@@ -14315,7 +14434,7 @@ console.log('B.n4class.fqn:             ' + B.n4class.fqn)</code></pre>
 </div>
 </div>
 <div class="exampleblock">
-<div class="title">Example 74. N4Class.of</div>
+<div class="title">Example 75. N4Class.of</div>
 <div class="content">
 <div class="paragraph">
 <p>The type has a method to retrieve the meta-information from instances (i.e. or enumeration literals using )
@@ -14579,7 +14698,7 @@ Also see [<a href="#West06a">West06a</a>] and <a href="https://developer.mozilla
 Type inference heuristics and explanations are provided in the next section.</p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 75. This in Unrestricted Mode</div>
+<div class="title">Example 76. This in Unrestricted Mode</div>
 <div class="content">
 <div class="paragraph">
 <p>In unrestricted mode, <code>this</code> is bound to the receiver.
@@ -14611,7 +14730,7 @@ var ol2 = {
 </div>
 </div>
 <div class="exampleblock">
-<div class="title">Example 76. This in strict mode</div>
+<div class="title">Example 77. This in strict mode</div>
 <div class="content">
 <div class="paragraph">
 <p>In strict mode, <code>this</code> is bound to the receiver.
@@ -14645,7 +14764,7 @@ var ol2 = {
 </div>
 </div>
 <div class="exampleblock">
-<div class="title">Example 77. This in N4JS mode</div>
+<div class="title">Example 78. This in N4JS mode</div>
 <div class="content">
 <div class="paragraph">
 <p>As in strict mode, <code>this</code> is bound to the receiver and if there is no receiver, it is bound to <code>undefined</code>. So the example above is also true for N4JS mode.
@@ -14811,7 +14930,7 @@ This is indicated by the nominal modifier <math xmlns="http://www.w3.org/1998/Ma
 </div>
 </div>
 <div class="exampleblock">
-<div class="title">Example 78. Effect of Nominal This Type</div>
+<div class="title">Example 79. Effect of Nominal This Type</div>
 <div class="content">
 <div class="paragraph">
 <p>Given the following declaration</p>
@@ -14851,7 +14970,7 @@ omitted in error messages, leading to</p>
 </div>
 </div>
 <div class="exampleblock">
-<div class="title">Example 79. This and Function Declaration</div>
+<div class="title">Example 80. This and Function Declaration</div>
 <div class="content">
 <div class="paragraph">
 <p>This example demonstrates the usage of functions annotated with <code>@This</code>.
@@ -14880,7 +14999,7 @@ logger.apply( new B(),[]) // prints "~ B was logged ~"</code></pre>
 </div>
 </div>
 <div class="exampleblock">
-<div class="title">Example 80. This and Function Expressions</div>
+<div class="title">Example 81. This and Function Expressions</div>
 <div class="content">
 <div class="paragraph">
 <p>In this example a function is created via a function expression.
@@ -15265,7 +15384,7 @@ For many use cases the behavior is similar though, as the members of a union typ
 <p>Note that <code>typeof [1,2,3]</code> does not return <code>Array&lt;number&gt;</code> (as ECMAScript is not aware of the generic array type), but <code>Object</code>.</p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 81. Array Type Inference</div>
+<div class="title">Example 82. Array Type Inference</div>
 <div class="content">
 <div class="paragraph">
 <p>The type for all variables declared in this example is inferred to <code>Array&lt;string&gt;</code>:</p>
@@ -15547,7 +15666,7 @@ If <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>E</mi></math> is not typ
 <div class="sect4">
 <h5 id="_scoping-and-linking"><a class="anchor" href="#_scoping-and-linking"></a><a class="link" href="#_scoping-and-linking">8.1.5.2. Scoping and linking</a></h5>
 <div class="exampleblock">
-<div class="title">Example 82. Scoping and linking</div>
+<div class="title">Example 83. Scoping and linking</div>
 <div class="content">
 <div class="listingblock">
 <div class="content">
@@ -15624,7 +15743,7 @@ The type if a parenthesized expression <math xmlns="http://www.w3.org/1998/Math/
 </div>
 </div>
 <div class="exampleblock">
-<div class="title">Example 83. Parenthesized Expression Type Examples</div>
+<div class="title">Example 84. Parenthesized Expression Type Examples</div>
 <div class="content">
 <div class="paragraph">
 <p>In the following listing, the type of the plain expressions is equivalent to the parenthesized versions:</p>
@@ -15840,7 +15959,7 @@ then the receiver must be a subtype of the declared <code>@This</code> type.</p>
 <p>Although index access is very limited, it is still possible to use immediate instances of <code>Object</code> in terms of a map (but this applies only to index access, not the dot notation):</p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 84. Object as Map</div>
+<div class="title">Example 85. Object as Map</div>
 <div class="content">
 <div class="listingblock">
 <div class="content">
@@ -16004,7 +16123,7 @@ Or in other words: Only instantiable classes have an inferred type of <math xmln
 <p>to <a href="#new-expression-3">3</a> It is not possible to refer to union or intersection at that location. So this is not explicitly denied here since it is not possible anyway.</p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 85. Abstract classes and construction</div>
+<div class="title">Example 86. Abstract classes and construction</div>
 <div class="content">
 <div class="paragraph">
 <p>The following examples demonstrates the usage of abstract classes and constructor types, to make the first two constraints more clearer:</p>
@@ -16173,7 +16292,7 @@ In that case, the type variable defined in the generic method declaration is exp
 See <a href="#_property-accessors">Property Accessors</a> for semantics and type inference.</p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 86. Generic Method Invocation</div>
+<div class="title">Example 87. Generic Method Invocation</div>
 <div class="content">
 <div class="paragraph">
 <p>This examples demonstrate how to explicitly
@@ -16501,7 +16620,7 @@ mathematical addition and the result is a number. In other cases the 'plus' is i
 <p>Adding two integers (int) leads to a number, since the result may not be represented as an (JavaScript) int anymore.</p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 87. Type of addition expression</div>
+<div class="title">Example 88. Type of addition expression</div>
 <div class="content">
 <div class="listingblock">
 <div class="content">
@@ -16698,7 +16817,7 @@ Use-site structural typing is also not possible since <code>~</code> would be in
 The compiler rewrites the code to make this work.</p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 88. <code>instanceof</code> with Interface</div>
+<div class="title">Example 89. <code>instanceof</code> with Interface</div>
 <div class="content">
 <div class="paragraph">
 <p>The following example demonstrates the use of the operator with an interface.
@@ -16964,7 +17083,7 @@ The ECMAScript operation <code>ToBoolean</code> [<a href="#ECMA11a">ECMA11a(p.S9
 </div>
 </div>
 <div class="exampleblock">
-<div class="title">Example 89. Type of Conditional Expressions</div>
+<div class="title">Example 90. Type of Conditional Expressions</div>
 <div class="content">
 <div class="paragraph">
 <p>Given the following declarations:</p>
@@ -17144,7 +17263,7 @@ Since the type of the latter is the right-hand side, we can define:</p>
 <p>All expressions will be evaluated even though only the value of the last expression will be the result.</p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 90. Comma Expression</div>
+<div class="title">Example 91. Comma Expression</div>
 <div class="content">
 <div class="paragraph">
 <p>Assignment expressions preceed comma expressions:</p>
@@ -17186,7 +17305,7 @@ b =  12, 34, true ; // error, b=12 is invalid</code></pre>
 there are two use cases for keyword <code>super</code>: super member access and super constructor calls.</p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 91. Super Keyword</div>
+<div class="title">Example 92. Super Keyword</div>
 <div class="content">
 <div class="paragraph">
 <p>Two use cases for keyword super:</p>
@@ -17372,7 +17491,7 @@ This is assured by the standard rules for binding identifiers.</p>
 This is important in particular for static methods as demonstrated in the following example:</p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 92. Super Call in Static Methods</div>
+<div class="title">Example 93. Super Call in Static Methods</div>
 <div class="content">
 <div class="listingblock">
 <div class="content">
@@ -17763,7 +17882,7 @@ fragment VariableDeclarationImpl &lt;In, Yield, AllowType&gt;*:
 </div>
 </div>
 <div class="exampleblock">
-<div class="title">Example 93. Variable Statement</div>
+<div class="title">Example 94. Variable Statement</div>
 <div class="content">
 <div class="listingblock">
 <div class="content">
@@ -18373,7 +18492,7 @@ ModuleSpecifier: STRING;</code></pre>
 <p>Also see compilation as described in <a href="#_modules">Modules</a>, for semantics see <a href="#import-statement-semantics">Import Statement Semantics</a>.</p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 94. Import</div>
+<div class="title">Example 95. Import</div>
 <div class="content">
 <div class="listingblock">
 <div class="content">
@@ -18566,7 +18685,7 @@ This string must be a valid</p>
 </div>
 </div>
 <div class="exampleblock">
-<div class="title">Example 95. Imports</div>
+<div class="title">Example 96. Imports</div>
 <div class="content">
 <div class="paragraph">
 <p>Imports cannot be duplicated:</p>
@@ -18801,7 +18920,7 @@ ExportableElement:
 </dl>
 </div>
 <div class="exampleblock">
-<div class="title">Example 96. Export</div>
+<div class="title">Example 97. Export</div>
 <div class="content">
 <div class="listingblock">
 <div class="content">
@@ -19082,7 +19201,7 @@ If <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>e</mi><mi>r</mi><mi>r</m
 <p>If no matching error is found, the annotation itself will issue an error.</p>
 </div>
 <div id="ex:IDEBUG" class="exampleblock">
-<div class="title">Example 97. IDEBUG Example</div>
+<div class="title">Example 98. IDEBUG Example</div>
 <div class="content">
 <div class="paragraph">
 <p>In the following code snippet, two errors are to be transformed to warnings.</p>
@@ -19484,7 +19603,7 @@ In other words, the user must provide an instance of the parent injector (the in
 (injector of the DIComponent annotated with <code>@WithParentInjector</code>).</p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 98. Simple DIComponents Relation</div>
+<div class="title">Example 99. Simple DIComponents Relation</div>
 <div class="content">
 <div class="listingblock">
 <div class="content">
@@ -19544,7 +19663,7 @@ It was used in this instance for of lack of formal notations for DI concepts and
 </div>
 </div>
 <div id="ex:complex-dicomponents-relations" class="exampleblock">
-<div class="title">Example 99. Complex DIComponents Relations</div>
+<div class="title">Example 100. Complex DIComponents Relations</div>
 <div class="content">
 <div class="listingblock">
 <div class="content">
@@ -19768,7 +19887,7 @@ following fields:</p>
 </div>
 </div>
 <div class="exampleblock">
-<div class="title">Example 100. Simple Field Injection</div>
+<div class="title">Example 101. Simple Field Injection</div>
 <div class="content">
 <div class="paragraph">
 <p><a href="#ex:field-injection">Simple Field Injection</a> demonstrates simple field injection using default bindings.
@@ -21430,7 +21549,7 @@ The mutually-exclusive properties <math xmlns="http://www.w3.org/1998/Math/MathM
 </div>
 </div>
 <div class="exampleblock">
-<div class="title">Example 101. Static polyfill</div>
+<div class="title">Example 102. Static polyfill</div>
 <div class="content">
 <div class="paragraph">
 <p><a href="#ex:staticpolyfill-genmod">Static Polyfill, Genmod</a> shows an example of generated code.
@@ -21947,7 +22066,7 @@ Note that switching off validation for n4js files is disallowed.</p>
 </dl>
 </div>
 <div class="exampleblock">
-<div class="title">Example 102. Module Filters</div>
+<div class="title">Example 103. Module Filters</div>
 <div class="content">
 <div class="paragraph">
 <p>A simple and a source-container-specific module filter in the <code>n4js</code> section of a package.json file.</p>
@@ -22087,14 +22206,14 @@ apply to projects that represent the root folder of a yarn workspace; those proj
 by default.</p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 103. A package.json file with N4JS-specific properties.</div>
+<div class="title">Example 104. A package.json file with N4JS-specific properties.</div>
 <div class="content">
 <div class="paragraph">
 <p>The following example illustrates how to use the N4JS-related package.json properties.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>{
+<pre class="highlight"><code class="language-n4js" data-lang="n4js">{
 	"name": "SampleProject",
 	"version": "0.0.1",
 	"author": "Enfore AG",
@@ -22386,7 +22505,7 @@ Besides the usual properties the package.json file usually needs to specify the 
 <div class="listingblock">
 <div class="title">Package.json: Important properties for type definition projects</div>
 <div class="content">
-<pre class="highlight"><code>{
+<pre class="highlight"><code class="language-n4js" data-lang="n4js">{
 	"n4js": {
 		"projectType": "definition"
 		"definesPackage": "..."
@@ -23038,7 +23157,7 @@ If no such implementation is found, a warning is generated.</p>
 </div>
 </div>
 <div id="external-definitions-and-implementations" class="exampleblock">
-<div class="title">Example 104. External Definitions and Their Implementations</div>
+<div class="title">Example 105. External Definitions and Their Implementations</div>
 <div class="content">
 <div class="paragraph">
 <p>If, in addition to standard <code>source</code>, the <code>source-external</code> fragment is provided in <code>Sources</code>, <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>n</mi><mn>4</mn><mi>j</mi><mi>s</mi><mi>d</mi></math> files in the folder tree below source folders
@@ -23059,7 +23178,7 @@ will be related to modules of the same name in the external folders. This is sho
 <p>Assume the following non-N4JS module:</p>
 </div>
 <div id="ex:External_Classes_Example" class="exampleblock">
-<div class="title">Example 105. External Classes</div>
+<div class="title">Example 106. External Classes</div>
 <div class="content">
 <div class="listingblock">
 <div class="content">
@@ -23116,7 +23235,7 @@ export external public class Circle {
 </div>
 </div>
 <div class="exampleblock">
-<div class="title">Example 106. Structurally-typed external interfaces</div>
+<div class="title">Example 107. Structurally-typed external interfaces</div>
 <div class="content">
 <div class="listingblock">
 <div class="content">
@@ -23277,7 +23396,7 @@ It also adds completely new classes and features, of course.</p>
 Here, an example of applying a runtime polyfill is detailed.</p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 107. Object.observe with Polyfill</div>
+<div class="title">Example 108. Object.observe with Polyfill</div>
 <div class="content">
 <div class="paragraph">
 <p>The following snippet demonstrates how to define a polyfill of the built-in class <code>Object</code> to add the new ECMAScript 7 observer functionality.
@@ -23404,7 +23523,7 @@ The format is as follows: <code>moduleSpecifier '.' typeName ( ('.'|'#') memberN
 </div>
 </div>
 <div class="exampleblock">
-<div class="title">Example 108. @testee</div>
+<div class="title">Example 109. @testee</div>
 <div class="content">
 <div class="paragraph">
 <p>The target element is to be fully qualified including the module specifier. The module specifier is simply
@@ -23433,7 +23552,7 @@ the test fixture, e.g., creating instances of some classes implementing
 the interfaces tested in the base class.</p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 109. Usage of testeeFromType</div>
+<div class="title">Example 110. Usage of testeeFromType</div>
 <div class="content">
 <div class="paragraph">
 <p>In the following example, the is used. This tag will lead to a test documentation for <code>B.foo</code> and <code>C.foo</code>.</p>
@@ -23503,7 +23622,7 @@ recognized when defined in a member JSDoc). The <code>@testeeMember</code> is sp
 </table>
 </div>
 <div id="ex:testeetype-and-testeemethod" class="exampleblock">
-<div class="title">Example 110. testeeType and testeeMethod</div>
+<div class="title">Example 111. testeeType and testeeMethod</div>
 <div class="content">
 <div class="paragraph">
 <p>Assume the following testees:</p>
@@ -23586,7 +23705,7 @@ links.
 </table>
 </div>
 <div class="exampleblock">
-<div class="title">Example 111. testeeType and testeeMethod with omitted constraints</div>
+<div class="title">Example 112. testeeType and testeeMethod with omitted constraints</div>
 <div class="content">
 <div class="paragraph">
 <p>Assume testees similar as in <a href="#ex:testeetype-and-testeemethod">testeeType and testeeMethod</a>. Since the semantics of <code>bar</code> is not changed in <code>B</code>, it is probably not necessary to generate the same constraint in the documentation for <code>bar</code> twice (one in the section for class <code>A</code> and another one in the section of class <code>B</code>).
@@ -27585,7 +27704,7 @@ to a jury trial in any resulting litigation.</p>
 <div id="footer">
 <div id="footer-text">
 Version 0.9<br>
-Last updated 2019-08-07 15:02:40 CEST
+Last updated 2019-08-08 13:15:33 CEST
 </div>
 </div>
 <!-- ************* docinfo-footer *************************************************************** -->

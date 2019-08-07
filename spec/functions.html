@@ -5,7 +5,7 @@
 <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 1.5.5">
-<meta name="author" content="2019-08-07 15:02:40 CEST">
+<meta name="author" content="2019-08-08 13:15:33 CEST">
 <title>N4JS Language Specification</title>
 <link rel="stylesheet" href="styles/spec.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
@@ -47,7 +47,7 @@
 <div id="header">
 <h1>N4JS Language Specification</h1>
 <div class="details">
-<span id="author" class="author">2019-08-07 15:02:40 CEST</span><br>
+<span id="author" class="author">2019-08-08 13:15:33 CEST</span><br>
 <span id="revnumber">version 0.9</span>
 </div>
 <div id="toc" class="toc2">
@@ -1092,7 +1092,7 @@ other constraint violations.</p>
 </div>
 </div>
 <div class="exampleblock">
-<div class="title">Example 60. Function type conformance</div>
+<div class="title">Example 61. Function type conformance</div>
 <div class="content">
 <div class="paragraph">
 <p>The following incomplete snippet demonstrates the usage of two function variables <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>f</mi><mn>1</mn></math> and <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>f</mi><mn>2</mn></math>, in which <math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo>[</mo><mspace width="-0.167em"/><mrow><mo>[</mo></mrow></mrow><mrow><mi>f</mi><mn>2</mn></mrow><mrow><mrow><mo>]</mo></mrow><mspace width="-0.167em"/><mo>]</mo></mrow><mo>&lt;</mo><mi>:</mi><mrow><mo>[</mo><mspace width="-0.167em"/><mrow><mo>[</mo></mrow></mrow><mrow><mi>f</mi><mn>1</mn></mrow><mrow><mrow><mo>]</mo></mrow><mspace width="-0.167em"/><mo>]</mo></mrow></math> must hold true according to the aforementioned constraints.
@@ -1115,7 +1115,7 @@ bar(f1);</code></pre>
 <p>The type of <code>this</code> can be explicitly set via the <code>@This</code> annotation.</p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 61. Function Subtyping</div>
+<div class="title">Example 62. Function Subtyping</div>
 <div class="content">
 <div class="listingblock">
 <div class="content">
@@ -1138,7 +1138,7 @@ fA(p);      // --&gt; error    void !&lt;: A</code></pre>
 </div>
 </div>
 <div class="exampleblock">
-<div class="title">Example 62. Subtyping with function types</div>
+<div class="title">Example 63. Subtyping with function types</div>
 <div class="content">
 <div class="paragraph">
 <p>If classes A, B, and C are defined as previously mentioned, i.e. <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>C</mi><mo>&lt;</mo><mi>:</mi><mi>B</mi><mo>&lt;</mo><mi>:</mi><mi>A</mi></math>, then
@@ -1300,7 +1300,7 @@ required to be supertypes of the formal parameters’ types in ).
 Where a particular type variable is used, on co- or contra-variant position, is not relevant:</p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 63. Bounded type variable at co-variant position in function type</div>
+<div class="title">Example 64. Bounded type variable at co-variant position in function type</div>
 <div class="content">
 <div class="listingblock">
 <div class="content">
@@ -1546,7 +1546,7 @@ fragment FunctionBody &lt;Yield, Expression&gt;*:
 This supertype contains all common properties of these two subtypes, that is, all properties of <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>F</mi><mi>u</mi><mi>n</mi><mi>c</mi><mi>t</mi><mi>i</mi><mi>o</mi><mi>n</mi><mi>E</mi><mi>x</mi><mi>p</mi><mi>r</mi><mi>e</mi><mi>s</mi><mi>s</mi><mi>i</mi><mi>o</mi><mi>n</mi></math>.</p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 64. Function Declaration with Type Annotation</div>
+<div class="title">Example 65. Function Declaration with Type Annotation</div>
 <div class="content">
 <div class="listingblock">
 <div class="content">
@@ -1632,7 +1632,7 @@ The following context information is used to infer the full signature:</p>
 This is demonstrated in the next example.</p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 65. Inference Of Function Expression’s Signature</div>
+<div class="title">Example 66. Inference Of Function Expression’s Signature</div>
 <div class="content">
 <div class="paragraph">
 <p>In general, <code>{function():any}</code> is a subtype of <code>{function():void}</code> (cf. <a href="#_function-type">Function Type</a>).
@@ -1809,7 +1809,7 @@ GeneratorMethodDeclaration:
 Take this example:</p>
 </div>
 <div id="ex:two-simple-generator-functions" class="exampleblock">
-<div class="title">Example 66. Two simple generator functions</div>
+<div class="title">Example 67. Two simple generator functions</div>
 <div class="content">
 <div class="listingblock">
 <div class="content">
@@ -2139,7 +2139,7 @@ parser to distinguish between using <code>async</code> as an identifier referenc
 keyword, as shown in the next example.</p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 67. Async as keyword and identifier</div>
+<div class="title">Example 68. Async as keyword and identifier</div>
 <div class="content">
 <div class="listingblock">
 <div class="content">
@@ -2327,7 +2327,7 @@ As a consequence, nested <code>Promise</code>s as a return type of a async funct
 Consider the example below.</p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 68. Type variables with async methods.</div>
+<div class="title">Example 69. Type variables with async methods.</div>
 <div class="content">
 <div class="listingblock">
 <div class="content">
@@ -2401,7 +2401,7 @@ The function or method can then be used as if it were declared with <code>async<
 This is particularly useful in N4JS definition files (.n4jsd) to allow using an existing callback-based API from N4JS code with the more convenient <code>await</code>.</p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 69. Promisifiable</div>
+<div class="title">Example 70. Promisifiable</div>
 <div class="content">
 <div class="paragraph">
 <p>Given a function with an N4JS signature</p>
@@ -2536,7 +2536,7 @@ words this is illegal:</p>
 <div id="footer">
 <div id="footer-text">
 Version 0.9<br>
-Last updated 2019-08-07 15:02:40 CEST
+Last updated 2019-08-08 13:15:33 CEST
 </div>
 </div>
 <!-- ************* docinfo-footer *************************************************************** -->

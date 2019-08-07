@@ -5,7 +5,7 @@
 <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 1.5.5">
-<meta name="author" content="2019-08-07 15:02:40 CEST">
+<meta name="author" content="2019-08-08 13:15:33 CEST">
 <title>N4JS Language Specification</title>
 <link rel="stylesheet" href="styles/spec.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
@@ -47,7 +47,7 @@
 <div id="header">
 <h1>N4JS Language Specification</h1>
 <div class="details">
-<span id="author" class="author">2019-08-07 15:02:40 CEST</span><br>
+<span id="author" class="author">2019-08-08 13:15:33 CEST</span><br>
 <span id="revnumber">version 0.9</span>
 </div>
 <div id="toc" class="toc2">
@@ -1253,7 +1253,7 @@ Note that switching off validation for n4js files is disallowed.</p>
 </dl>
 </div>
 <div class="exampleblock">
-<div class="title">Example 102. Module Filters</div>
+<div class="title">Example 103. Module Filters</div>
 <div class="content">
 <div class="paragraph">
 <p>A simple and a source-container-specific module filter in the <code>n4js</code> section of a package.json file.</p>
@@ -1393,14 +1393,14 @@ apply to projects that represent the root folder of a yarn workspace; those proj
 by default.</p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 103. A package.json file with N4JS-specific properties.</div>
+<div class="title">Example 104. A package.json file with N4JS-specific properties.</div>
 <div class="content">
 <div class="paragraph">
 <p>The following example illustrates how to use the N4JS-related package.json properties.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>{
+<pre class="highlight"><code class="language-n4js" data-lang="n4js">{
 	"name": "SampleProject",
 	"version": "0.0.1",
 	"author": "Enfore AG",
@@ -1692,7 +1692,7 @@ Besides the usual properties the package.json file usually needs to specify the 
 <div class="listingblock">
 <div class="title">Package.json: Important properties for type definition projects</div>
 <div class="content">
-<pre class="highlight"><code>{
+<pre class="highlight"><code class="language-n4js" data-lang="n4js">{
 	"n4js": {
 		"projectType": "definition"
 		"definesPackage": "..."
@@ -2054,7 +2054,7 @@ During runtime DI mechanisms will take care of providing proper instances of imp
 <div id="footer">
 <div id="footer-text">
 Version 0.9<br>
-Last updated 2019-08-07 15:02:40 CEST
+Last updated 2019-08-08 13:15:33 CEST
 </div>
 </div>
 <!-- ************* docinfo-footer *************************************************************** -->

@@ -5,7 +5,7 @@
 <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 1.5.5">
-<meta name="author" content="2019-08-07 15:02:40 CEST">
+<meta name="author" content="2019-08-08 13:15:33 CEST">
 <title>N4JS Language Specification</title>
 <link rel="stylesheet" href="styles/spec.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
@@ -47,7 +47,7 @@
 <div id="header">
 <h1>N4JS Language Specification</h1>
 <div class="details">
-<span id="author" class="author">2019-08-07 15:02:40 CEST</span><br>
+<span id="author" class="author">2019-08-08 13:15:33 CEST</span><br>
 <span id="revnumber">version 0.9</span>
 </div>
 <div id="toc" class="toc2">
@@ -3268,27 +3268,129 @@ This virtual subclass also explains why only one single class may be contained i
 </div>
 </li>
 <li>
-<p>Only one class must be contained in the intersection type:</p>
+<p>Only one nominally typed class must be contained in the intersection type:</p>
 <div class="openblock">
 <div class="content">
-<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mfenced close=")" open="("><mrow><mo>∃</mo><mi>C</mi><mo>∈</mo><mi>I</mi><mo>.</mo><mi>t</mi><mi>y</mi><mi>p</mi><mi>e</mi><mi>R</mi><mi>e</mi><mi>f</mi><mi>s</mi><mi>:</mi><mi>μ</mi><mfenced close=")" open="("><mi>C</mi></mfenced><mo>=</mo><mstyle mathvariant="monospace"><mtext>Class</mtext></mstyle></mrow></mfenced><mo>→</mo><mo>∄</mo><mi>T</mi><mo>∈</mo><mi>I</mi><mo>.</mo><mi>t</mi><mi>y</mi><mi>p</mi><mi>e</mi><mi>R</mi><mi>e</mi><mi>f</mi><mi>s</mi><mo>∖</mo><mfenced close="}" open="{"><mi>C</mi></mfenced><mi>:</mi><mi>μ</mi><mfenced close=")" open="("><mi>T</mi></mfenced><mo>=</mo><mstyle mathvariant="monospace"><mtext>Class</mtext></mstyle></math>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mfenced close=")" open="("><mrow><mo>∃</mo><mi>C</mi><mo>∈</mo><mi>I</mi><mo>.</mo><mi>t</mi><mi>y</mi><mi>p</mi><mi>e</mi><mi>R</mi><mi>e</mi><mi>f</mi><mi>s</mi><mi>:</mi><mi>μ</mi><mfenced close=")" open="("><mi>C</mi></mfenced><mo>=</mo><mstyle mathvariant="monospace"><mtext>Class</mtext></mstyle><mo>∧</mo><mi>C</mi><mo>.</mo><mi>i</mi><mi>s</mi><mi>S</mi><mi>t</mi><mi>r</mi><mi>u</mi><mi>c</mi><mi>t</mi><mi>u</mi><mi>r</mi><mi>a</mi><mi>l</mi></mrow></mfenced><mo>→</mo><mo>∄</mo><mi>T</mi><mo>∈</mo><mi>I</mi><mo>.</mo><mi>t</mi><mi>y</mi><mi>p</mi><mi>e</mi><mi>R</mi><mi>e</mi><mi>f</mi><mi>s</mi><mo>∖</mo><mfenced close="}" open="{"><mi>C</mi></mfenced><mi>:</mi><mi>μ</mi><mfenced close=")" open="("><mi>T</mi></mfenced><mo>=</mo><mstyle mathvariant="monospace"><mtext>Class</mtext></mstyle><mo>∧</mo><mi>T</mi><mo>.</mo><mi>i</mi><mi>s</mi><mi>S</mi><mi>t</mi><mi>r</mi><mi>u</mi><mi>c</mi><mi>t</mi><mi>u</mi><mi>r</mi><mi>a</mi><mi>l</mi></math>
 </div>
 </div>
 <div class="paragraph">
-<p>For the time being, only a warning is produced when more than one class is contained in the intersection type .</p>
+<p>A warning is produced when more than one nominal class is contained in the intersection type, since
+only undefined (or null) can be assigned to a type reference of this type.</p>
 </div>
 </li>
 <li>
 <p>Non-optional elements:</p>
-</li>
-</ol>
-</div>
 <div class="openblock">
 <div class="content">
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mo>∀</mo><mi>T</mi><mo>∈</mo><mi>I</mi><mo>.</mo><mi>t</mi><mi>y</mi><mi>p</mi><mi>e</mi><mi>R</mi><mi>e</mi><mi>f</mi><mi>s</mi><mo>→</mo><mo>¬</mo><mi>T</mi><mo>.</mo><mi>o</mi><mi>p</mi><mi>t</mi></math>
 </div>
 </div>
+</li>
+<li>
+<p>If the intersection contains multiple references to the same generic type, a warning is produced if only undefined (or null) can be assigned to a type reference of this type. There are some rare cases in which this does not happen. This is true if for all type arguments one of the following conditions hold:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>a type argument corresponding to a type parameter without def-site variance is a wildcard with an upper bound (use "extends" or no bound) or a type argument not defining an upper bound corresponds to a covariant (out) type parameter, and this constraint (IDE-27) holds for an intersection created from the upper bounds of the type argument (or the lower bound of the type parameter).</p>
+</li>
+<li>
+<p>a type argument is a wildcard with lower bounds (since Object would be a solution)</p>
+</li>
+</ul>
 </div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>Definition of structural typing attributes see <a href="#Req-ID-78701">[Req-ID-78701]</a>.</p>
+</div>
+<div class="paragraph">
+<p>The combination of intersection types and generics is a bit tricky. The following example demonstrates that:</p>
+</div>
+<div class="exampleblock">
+<div class="title">Example 20. Intersection and generics</div>
+<div class="content">
+<div class="paragraph">
+<p>Given the following types:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>class G&lt;T&gt; {
+     private T: t
+	set(t: T) { this.t = t;}
+	get(): T { return this.t; }
+}
+class C { public y; }
+class D { public x; }
+interface I {}</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We use the generic with the getter and setter here only to demonstrate co- and contra variance effects.</p>
+</div>
+<div class="paragraph">
+<p>Let</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>let g1: G&lt;C&gt; &amp; G&lt;D&gt;;</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>be a variable. We can only assign undefined to g1, since any other value would not be confirm to the intersection.
+If we for example would assign</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>let gc = new G&lt;C&gt;()
+g1 = gc;</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>we would run into contra-variance problems:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>gc.set(new C());</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This would implicitly also set a <code>C</code> in <code>g1</code>, which would not be compatible with <code>D</code>. This would lead to a problem in the following lines:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>let gd: G&lt;D&gt; = g1;
+let d: D = gd.get();</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This is the typical contra variance problem.</p>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>Similar problems arise even with structural types.</p>
+</div>
+<div class="paragraph">
+<p>Note that in theory more warnings could be produced, in particular in combination with
+structural types (and the fact that N4JS classes must explicitly implement even
+structural interfaces). We omit these kind of warnings for two reasons:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>performance</p>
+</li>
+<li>
+<p>anticipated slight changes in semantics (e.g. we may remove the requirement of explicitly implementing structural interfaces)</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Since problems caused by not instanceable type references will be detected by programmers before runtime anyway, we do not need to be strict here. They are merely convenience features and they do not affect the correctness of the type system.</p>
 </div>
 <div class="openblock requirement">
 <div class="content">
@@ -3365,7 +3467,7 @@ The aforementioned constraints must hold.
 We also implicitly use this representation in this specification.</p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 20. Subtyping with intersection type</div>
+<div class="title">Example 21. Subtyping with intersection type</div>
 <div class="content">
 <div class="paragraph">
 <p>Let A, B, and C be defined as in the chapter beginning (<math xmlns="http://www.w3.org/1998/Math/MathML"><mi>C</mi><mo>&lt;</mo><mi>:</mi><mi>B</mi><mo>&lt;</mo><mi>:</mi><mi>A</mi></math>)</p>
@@ -3924,7 +4026,7 @@ A constructor type with a wildcard is never a subtype of a constructor type with
 <li>
 <p>Overriding of static methods is possible and by using the constructor or classifier type, polymorphism for static methods is possible as well.</p>
 <div id="_polymorphism-and-static-methods" class="exampleblock">
-<div class="title">Example 21. Static Polymorphism</div>
+<div class="title">Example 22. Static Polymorphism</div>
 <div class="content">
 <div class="listingblock">
 <div class="content">
@@ -3948,7 +4050,7 @@ B.bar(); // will return "B", as foo() is called polymorphical</code></pre>
 <p>It is even possible to refer to the constructor of an abstract class.
 The abstract class itself cannot provide this constructor (it only provides a type..), that is to say only concrete subclasses can provide constructors compatible to the constructor.</p>
 <div class="exampleblock">
-<div class="title">Example 22. Constructor of Abstract Class</div>
+<div class="title">Example 23. Constructor of Abstract Class</div>
 <div class="content">
 <div class="listingblock">
 <div class="content">
@@ -4051,7 +4153,7 @@ referenced type has a covariant constructor, cf. <a href="classifiers.html#_cov
 code shown in <a href="#ex-constructors-and-prototypes">Constructors and Prototypes</a>.</p>
 </div>
 <div id="ex-constructors-and-prototypes" class="exampleblock">
-<div class="title">Example 23. Constructors and Prototypes</div>
+<div class="title">Example 24. Constructors and Prototypes</div>
 <div class="content">
 <div class="listingblock">
 <div class="content">
@@ -4173,7 +4275,7 @@ The <code>this</code> keyword refers to the type of instances of the class in ca
 See <a href="grammar.html#_this-keyword">This Keyword</a> for details.</p>
 </div>
 <div id="ex:this-keyword-and-type-in-instance-and-static-context" class="exampleblock">
-<div class="title">Example 24. This keyword and type in instance and static context</div>
+<div class="title">Example 25. This keyword and type in instance and static context</div>
 <div class="content">
 <div class="paragraph">
 <p>Note that the following code is not working, because some usages below are
@@ -4273,7 +4375,7 @@ To refer to the this-classifier (static type) the construct <code>type{this}</co
 </div>
 <div style="page-break-after: always;"></div>
 <div class="exampleblock">
-<div class="title">Example 25. This type in function-type-expression</div>
+<div class="title">Example 26. This type in function-type-expression</div>
 <div class="content">
 <div class="listingblock">
 <div class="content">
@@ -4293,7 +4395,7 @@ To refer to the this-classifier (static type) the construct <code>type{this}</co
 In the following example the problem is sketched up. <sup class="footnote">[<a id="_footnoteref_26" class="footnote" href="appendix_c_bibliography.html#_footnote_26" title="View footnote.">26</a>]</sup></p>
 </div>
 <div class="exampleblock">
-<div class="title">Example 26. Problems with this type and type arguments</div>
+<div class="title">Example 27. Problems with this type and type arguments</div>
 <div class="content">
 <div class="listingblock">
 <div class="content">
@@ -4519,7 +4621,7 @@ public object N4Enum {
 </div>
 </div>
 <div class="exampleblock">
-<div class="title">Example 27. Enumeration List</div>
+<div class="title">Example 28. Enumeration List</div>
 <div class="content">
 <div class="paragraph">
 <p>Due to the common base type <code>N4Enum</code> it is possible to define generics accepting only enumeration, as shown in this example:</p>
@@ -4635,7 +4737,7 @@ value, as in</p>
 </ol>
 </div>
 <div class="exampleblock">
-<div class="title">Example 28. WebIDL example</div>
+<div class="title">Example 29. WebIDL example</div>
 <div class="content">
 <div class="listingblock">
 <div class="title">Gecko-Engine webIDL XMLHttpRequestResponseType as taken from [<a href="appendix_c_bibliography.html#W3C:Steen:14:XL">W3C:Steen:14:XL</a>]</div>
@@ -4801,7 +4903,7 @@ of tuples and IterableN are very different.</p>
 <div id="footer">
 <div id="footer-text">
 Version 0.9<br>
-Last updated 2019-08-07 15:02:40 CEST
+Last updated 2019-08-08 13:15:33 CEST
 </div>
 </div>
 <!-- ************* docinfo-footer *************************************************************** -->
