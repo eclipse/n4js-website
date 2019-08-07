@@ -1,0 +1,1602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 1.5.5">
+<meta name="author" content="2019-08-07 15:02:40 CEST">
+<title>N4JS IDE Specification</title>
+<link rel="stylesheet" href="styles/spec.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
+<!-- ************* docinfo ******************************************************************* -->
+
+
+<!-- ************* Favicon ************-->
+<link rel="icon" href="images/favicon.ico" />
+
+<!-- ************* Back-to-top JQuery ************* -->
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
+
+
+<link href="styles/prism.min.css" rel="stylesheet" />
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+<!-- ************* Styles ************* -->
+<link rel="stylesheet" type="text/css" href="styles/n4jsspec-adoc.css">
+
+
+<!-- ****************** NavBar ****************** -->
+<div id="menubar">
+	<div class="banner">
+        <a href="https://www.eclipse.org/n4js/#"><img id="logo" src="images/n4js-logo.png" alt="Eclipse N4JS"></a>
+    </div>
+<ul>
+  <li><a href="index.html">Index</a></li>
+</ul>
+</div>
+<!-- ************* docinfo ******************************************************************* -->
+<style>
+      .admonitionblock td.icon .icon-todo:before{content:"\f249";color:#f4ee42}
+    </style>
+</head>
+<body class="book toc2 toc-left">
+<div id="header">
+<h1>N4JS IDE Specification</h1>
+<div class="details">
+<span id="author" class="author">2019-08-07 15:02:40 CEST</span><br>
+<span id="revnumber">version 0.9</span>
+</div>
+<div id="toc" class="toc2">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="views.html#sec:Views">1. Views</a>
+<ul class="sectlevel2">
+<li><a href="views.html#_eclipse-standard-views">1.1. Eclipse Standard Views</a>
+<ul class="sectlevel3">
+<li><a href="views.html#sec:Project_Explorer_View">1.1.1. Project Explorer</a></li>
+<li><a href="views.html#sec:Outline_View">1.1.2. Outline</a></li>
+<li><a href="views.html#sec:Problems_View">1.1.3. Problems</a></li>
+<li><a href="views.html#sec:Console_View">1.1.4. Console</a></li>
+<li><a href="views.html#sec:History_View">1.1.5. History</a></li>
+<li><a href="views.html#sec:Error_Log_View">1.1.6. Error Log</a></li>
+</ul>
+</li>
+<li><a href="views.html#_n4js-specific-views">1.2. N4JS Specific Views</a>
+<ul class="sectlevel3">
+<li><a href="views.html#_test-results">1.2.1. Test Results</a></li>
+<li><a href="views.html#_source-graphs">1.2.2. Source Graphs</a></li>
+<li><a href="views.html#_api-compare">1.2.3. API Compare</a></li>
+<li><a href="views.html#_performance-graphs">1.2.4. Performance Graphs</a></li>
+<li><a href="views.html#_source-mapping">1.2.5. Source Mapping</a></li>
+<li><a href="views.html#_xpect-view">1.2.6. Xpect View</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="navigation.html#_navigation">2. Navigation</a>
+<ul class="sectlevel2">
+<li><a href="navigation.html#sec:Outline_Navigation">2.1. Outline</a>
+<ul class="sectlevel3">
+<li><a href="navigation.html#_quick-outline">2.1.1. Quick Outline</a></li>
+<li><a href="navigation.html#_normal-outline">2.1.2. Normal Outline</a></li>
+</ul>
+</li>
+<li><a href="navigation.html#_navigation-commands">2.2. Navigation Commands</a>
+<ul class="sectlevel3">
+<li><a href="navigation.html#sec:Navigate_to_Declaration">2.2.1. Navigate to Declaration</a></li>
+<li><a href="navigation.html#sec:find_by_references">2.2.2. Find by References</a></li>
+<li><a href="navigation.html#sec:Open_Type_Declaration">2.2.3. Open Type Declaration</a></li>
+</ul>
+</li>
+<li><a href="navigation.html#sec:Working_Sets">2.3. Working Sets</a>
+<ul class="sectlevel3">
+<li><a href="navigation.html#sec:Working_Set_Managers">2.3.1. Working Set Managers</a></li>
+<li><a href="navigation.html#sec:Working_Set_Constraints">2.3.2. Working Set Constraints</a></li>
+<li><a href="navigation.html#sec:Manual_Association_Working_Set_Manager_UI_Features">2.3.3. Manual Association Working Set Manager - UI Features</a></li>
+<li><a href="navigation.html#sec:Project_Name_Filter_Working_Set_Manager">2.3.4. Project Name Filter Working Set Manager</a></li>
+<li><a href="navigation.html#sec:Git_Repository_Working_Set_Manager">2.3.5. Git Repository Working Set Manager</a></li>
+<li><a href="navigation.html#sec:Project_Location_Working_Set_Manager">2.3.6. Project Location Working Set Manager</a></li>
+<li><a href="navigation.html#sec:N4JS_Project_Type_Working_Set_Manager">2.3.7. N4JS Project Type Working Set Manager</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#_assistance">3. Assistance</a>
+<ul class="sectlevel2">
+<li><a href="#sec:Content_Assist">3.1. Content Assist</a>
+<ul class="sectlevel3">
+<li><a href="#sec:Complete_Keywords">3.1.1. Complete Keywords</a></li>
+<li><a href="#sec:Complete_Annotations">3.1.2. Complete Annotations</a></li>
+<li><a href="#sec:Complete_Identifier_Reference">3.1.3. Complete Identifier Reference</a></li>
+<li><a href="#sec:Complete_Member_Overrides">3.1.4. Complete Member Overrides</a></li>
+<li><a href="#sec:Constructor_Completion">3.1.5. Constructor Completion</a></li>
+<li><a href="#sec:Complete_Function_Expression">3.1.6. Complete Function Expression with Known Type</a></li>
+<li><a href="#sec:Complete_Variable_and_Parameter_Names">3.1.7. Complete Variable and Parameter Names</a></li>
+</ul>
+</li>
+<li><a href="#sec:Quick_Fixes">3.2. Quick Fixes</a>
+<ul class="sectlevel3">
+<li><a href="#sec:N4JS_Issue_Properties">3.2.1. N4JS Issue User data</a></li>
+<li><a href="#sec:N4JS_Issue_Fixes">3.2.2. N4JS Issue Fixes</a>
+<ul class="sectlevel4">
+<li><a href="#sec:Linking_Issues">3.2.2.1. Linking Issues</a></li>
+<li><a href="#sec:Import_Issues">3.2.2.2. Import Issues</a></li>
+<li><a href="#sec:Visibility_Issues">3.2.2.3. Visibility Issues</a></li>
+<li><a href="#sec:Classifier_Issues">3.2.2.4. Classifier Issues</a></li>
+<li><a href="#sec:Function_Issues">3.2.2.5. Function Issues</a></li>
+<li><a href="#sec:Syntax_Issues">3.2.2.6. Syntax Issues</a></li>
+<li><a href="#sec:Conversion_Issues">3.2.2.7. Conversion Issues</a></li>
+<li><a href="#sec:Type_Issues">3.2.2.8. Type Issues</a></li>
+<li><a href="#sec:Expression_Issues">3.2.2.9. Expression Issues</a></li>
+<li><a href="#sec:Super_Keyword_Issues">3.2.2.10. Super Keyword Issues</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#sec:Quick_Assist">3.3. Quick Assist</a></li>
+<li><a href="#sec:Cleanup_Operations">3.4. Cleanup Operations</a>
+<ul class="sectlevel3">
+<li><a href="#sec:Formatting">3.4.1. Formatting</a></li>
+<li><a href="#sec:Organize_Imports">3.4.2. Organize Imports</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="wizards.html#_wizards">4. Wizards</a>
+<ul class="sectlevel2">
+<li><a href="wizards.html#sec:N4JS_Project_Wizard">4.1. N4JS Project Wizard</a></li>
+<li><a href="wizards.html#sec:Empty_N4JS_File">4.2. Empty N4JS File</a></li>
+<li><a href="wizards.html#sec:Empty_JS_File">4.3. Empty JS File</a>
+<ul class="sectlevel3">
+<li><a href="wizards.html#sec:N4JS_Class_File_Wizard">4.3.1. N4JS Class Wizard</a></li>
+<li><a href="wizards.html#field-properties">4.3.2. Field Properties</a></li>
+<li><a href="wizards.html#visibility-issues-or-final-super-classes">4.3.3. Visibility issues or <code>@Final</code> super classes</a></li>
+<li><a href="wizards.html#generation-1">4.3.4. Generation</a></li>
+<li><a href="wizards.html#preview-1">4.3.5. Preview</a></li>
+</ul>
+</li>
+<li><a href="wizards.html#sec:N4JS_Interface_Wizard">4.4. Interface Wizard</a>
+<ul class="sectlevel3">
+<li><a href="wizards.html#field-properties-1">4.4.1. Field Properties</a></li>
+<li><a href="wizards.html#visibility-issues">4.4.2. Visibility Issues</a></li>
+<li><a href="wizards.html#import-naming-conflicts">4.4.3. Import naming conflicts</a></li>
+<li><a href="wizards.html#generation-2">4.4.4. Generation</a></li>
+<li><a href="wizards.html#preview-2">4.4.5. Preview</a></li>
+</ul>
+</li>
+<li><a href="wizards.html#sec:N4JS_Enum_File_Wizard">4.5. Enum Wizard</a>
+<ul class="sectlevel3">
+<li><a href="wizards.html#field-properties-2">4.5.1. Field Properties</a></li>
+<li><a href="wizards.html#generation-3">4.5.2. Generation</a></li>
+<li><a href="wizards.html#preview-3">4.5.3. Preview</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="execution_support.html#_execution-support">5. Execution Support</a>
+<ul class="sectlevel2">
+<li><a href="execution_support.html#sec:Non_UI_Execution">5.1. Non-UI Execution</a>
+<ul class="sectlevel3">
+<li><a href="execution_support.html#sec:Non_UI_Debugging">5.1.1. Non-UI Debugging</a></li>
+</ul>
+</li>
+<li><a href="execution_support.html#sec:UI_Execution">5.2. UI Execution</a></li>
+</ul>
+</li>
+<li><a href="test_support.html#_test-support">6. Test Support</a>
+<ul class="sectlevel2">
+<li><a href="test_support.html#sec:N4JS_Mangelhaft_support">6.1. N4JS Mangelhaft support</a>
+<ul class="sectlevel3">
+<li><a href="test_support.html#sec:Asynchronous_Tests">6.1.1. Asynchronous Tests, Test Isolation and Timeouts</a></li>
+<li><a href="test_support.html#sec:Supported_xUnit_API">6.1.2. Supported xUnit API</a>
+<ul class="sectlevel4">
+<li><a href="test_support.html#sec:Test_Group">6.1.2.1. Test Group</a></li>
+<li><a href="test_support.html#sec:Test_Method">6.1.2.2. Test Method</a></li>
+<li><a href="test_support.html#sec:BeforeAll">6.1.2.3. BeforeAll Setup</a></li>
+<li><a href="test_support.html#sec:Before_Setup">6.1.2.4. Before Setup</a></li>
+<li><a href="test_support.html#sec:After_Teardown">6.1.2.5. After Teardown</a></li>
+<li><a href="test_support.html#sec:AfterAll_Teardown">6.1.2.6. AfterAll Teardown</a></li>
+<li><a href="test_support.html#sec:Test_Ignore">6.1.2.7. Test Ignore</a></li>
+<li><a href="test_support.html#sec:Timeout">6.1.2.8. Timeout</a></li>
+<li><a href="test_support.html#sec:Description">6.1.2.9. Description</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="test_support.html#sec:Test_Reporting">6.2. Test Reporting</a>
+<ul class="sectlevel3">
+<li><a href="test_support.html#sec:Test_Messages">6.2.1. Test Messages</a>
+<ul class="sectlevel4">
+<li><a href="test_support.html#_test-case-ids">6.2.1.1. Test Case IDs</a></li>
+<li><a href="test_support.html#sec:Start_Session">6.2.1.2. Start Session</a></li>
+<li><a href="test_support.html#sec:Ping_Session">6.2.1.3. Ping Session</a></li>
+<li><a href="test_support.html#sec:End_Session">6.2.1.4. End Session</a></li>
+<li><a href="test_support.html#sec:Start_Test">6.2.1.5. Start Test</a></li>
+<li><a href="test_support.html#sec:End_Test">6.2.1.6. End Test</a></li>
+<li><a href="test_support.html#sec:Ping_Test">6.2.1.7. Ping Test</a></li>
+<li><a href="test_support.html#sec:Test_Catalog">6.2.1.8. Test Catalog</a></li>
+<li><a href="test_support.html#sec:Test_Session_Example">6.2.1.9. Test Session Example</a></li>
+</ul>
+</li>
+<li><a href="test_support.html#sec:Test_Runtime_Configuration">6.2.2. Test Runtime Configuration</a></li>
+<li><a href="test_support.html#sec:Test_Plan">6.2.3. Test Plan</a></li>
+<li><a href="test_support.html#sec:Test_Environment_Configuration">6.2.4. Test Environment Configuration</a></li>
+<li><a href="test_support.html#sec:Test_Environment_Configuration_Example">6.2.5. Test Environment Configuration Example</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="help_system.html#_help-system">7. Help System</a>
+<ul class="sectlevel2">
+<li><a href="help_system.html#sec:Built_In_Help">7.1. Built-In Help</a></li>
+<li><a href="help_system.html#sec:Context_Sensitive_Help">7.2. Context Sensitive Help</a></li>
+<li><a href="help_system.html#sec:Cheat_Sheets">7.3. Cheat Sheets</a></li>
+<li><a href="help_system.html#sec:JSDoc">7.4. JSDoc</a></li>
+<li><a href="help_system.html#sec:Hovering">7.5. Hovering</a>
+<ul class="sectlevel3">
+<li><a href="help_system.html#sec:Show_Type_Information_of_Selection">7.5.1. Show Type Information of Selection</a></li>
+</ul>
+</li>
+<li><a href="help_system.html#sec:Example_Projects_and_Files">7.6. Example Projects and Files</a></li>
+</ul>
+</li>
+<li><a href="bug_management.html#_bug-management">8. Bug Management</a>
+<ul class="sectlevel2">
+<li><a href="bug_management.html#sec:Built_In_Xpect_Support">8.1. Built-In Xpect Support</a>
+<ul class="sectlevel3">
+<li><a href="bug_management.html#sec:Report_View">8.1.1. Report View</a></li>
+<li><a href="bug_management.html#sec:Generate_Bug_Report">8.1.2. Generate Bug Report</a></li>
+<li><a href="bug_management.html#sec:Supported_Xpect_Tests">8.1.3. Supported Xpect Tests</a>
+<ul class="sectlevel4">
+<li><a href="bug_management.html#sec:XPECT_N4JS_Errors">8.1.3.1. Errors, Warnings, Infos, Issues</a></li>
+<li><a href="bug_management.html#sec:XPECT_N4JS_Noerrors">8.1.3.2. Noerrors</a></li>
+<li><a href="bug_management.html#sec:XPECT_N4JS_Output">8.1.3.3. Output, OutputRegex</a></li>
+<li><a href="bug_management.html#sec:XPECT_N4JS_Type_Of">8.1.3.4. Type Of</a></li>
+<li><a href="bug_management.html#sec:XPECT_Advanced_Methods">8.1.3.5. Advanced methods</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="cli.html#_cli">9. CLI</a>
+<ul class="sectlevel2">
+<li><a href="cli.html#sec:Headless_Compiler">9.1. Headless Compiler</a></li>
+<li><a href="cli.html#sec:Headless_Dependencies">9.2. Headless Dependnecies</a></li>
+<li><a href="cli.html#sec:Headless_Execution">9.3. Headless Execution</a>
+<ul class="sectlevel3">
+<li><a href="cli.html#sec:Cleaning_Headlessly">9.3.1. Cleaning Headlessly</a></li>
+<li><a href="cli.html#sec:Running_Headlessly">9.3.2. Running Headlessly</a></li>
+<li><a href="cli.html#sec:Information_about_running_headlessly">9.3.3. Information about running headlessly</a></li>
+<li><a href="cli.html#sec:Testing_Headlessly">9.3.4. Testing Headlessly</a></li>
+<li><a href="cli.html#sec:Information_about_testing_headlessly">9.3.5. Information about testing headlessly</a></li>
+<li><a href="cli.html#_testresults">9.3.6. TestResults</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="appendix_a_license.html#sec:License">Appendix A: License</a></li>
+<li><a href="appendix_b_acronyms.html#sec:Acronyms">Appendix B: Acronyms</a></li>
+<li><a href="appendix_c_bibliography.html#_bibliography">Appendix C: Bibliography</a></li>
+</ul>
+</div>
+</div>
+<div id="content"><div class="sect1">
+<h2 id="_assistance"><a class="anchor" href="#_assistance"></a><a class="link" href="#_assistance">3. Assistance</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In this chapter we describe all kind of tools assisting the user when writing code, i.e. content assist, quickfixes, quick assists, etc.</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title=""></i>
+</td>
+<td class="content">
+Not all features are yet implemented!
+</td>
+</tr>
+</table>
+</div>
+<div class="sect2 language-n4js">
+<h3 id="sec:Content_Assist"><a class="anchor" href="#sec:Content_Assist"></a><a class="link" href="#sec:Content_Assist">3.1. Content Assist</a></h3>
+<div class="paragraph">
+<p>Content assist may change the document at various places at once. In those cases, it is important to prevent flickering in the editor. The FQNImporter provides a blue print how to adjust line numbers properly and scroll the viewport of the current editor to minimize flickering in the UI.</p>
+</div>
+<div class="paragraph">
+<p>Completions not listed here as they are provided by template proposals:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Classifier declaration template proposal</p>
+</li>
+<li>
+<p>Function declaration template proposal</p>
+</li>
+<li>
+<p>Getter/Setter pair template proposal</p>
+</li>
+</ol>
+</div>
+<div class="sect3">
+<h4 id="sec:Complete_Keywords"><a class="anchor" href="#sec:Complete_Keywords"></a><a class="link" href="#sec:Complete_Keywords">3.1.1. Complete Keywords</a></h4>
+<div class="paragraph">
+<p>Complete keyword which are syntactically correct at a given location. Do not suggest completions which would lead to wrong code.</p>
+</div>
+<div class="paragraph">
+<p>Keywords that contain only a single character are not proposed since they would pollute the proposal window and don’t offer added value.</p>
+</div>
+<div class="paragraph">
+<p>Special attention has to be given to operators. Since they are modelled in the grammar and not as cross references, their validaty is purely syntactically. That is, there is no generic facility in Xtext, that allows to filter unapplicable operators as there is for cross references.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="sec:Complete_Annotations"><a class="anchor" href="#sec:Complete_Annotations"></a><a class="link" href="#sec:Complete_Annotations">3.1.2. Complete Annotations</a></h4>
+<div class="paragraph">
+<p>Annotations can be proposed depending on the following elements or the context.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="sec:Complete_Identifier_Reference"><a class="anchor" href="#sec:Complete_Identifier_Reference"></a><a class="link" href="#sec:Complete_Identifier_Reference">3.1.3. Complete Identifier Reference</a></h4>
+<div class="paragraph">
+<p>References to identifiers can be automatically completed. This is even true if the declaration is not imported yet, as the import may be automatically added as well.</p>
+</div>
+<div class="openblock">
+<div class="title">Complete identifier references</div>
+<div class="content">
+<div class="paragraph">
+<p>The IDE supports auto-completion of an identifier referencing to a declaration.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Complete type references.</p>
+</li>
+<li>
+<p>Complete function references.</p>
+</li>
+<li>
+<p>Complete variable references.</p>
+</li>
+<li>
+<p>Complete parameter references.</p>
+</li>
+<li>
+<p>If necessary, imports are added automatically to complete reference <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>r</mi></math> to declaration <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>D</mi></math>.</p>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Precondition</dt>
+<dd>
+<p>-</p>
+</dd>
+<dt class="hdlist1">Postcondition</dt>
+<dd>
+<div class="paragraph">
+<p><math xmlns="http://www.w3.org/1998/Math/MathML"><mspace width="3.0mm"/><mi>b</mi><mi>i</mi><mi>n</mi><mi>d</mi><mfenced close=")" open="("><mi>r</mi><mi>D</mi></mfenced></math><br>
+<math xmlns="http://www.w3.org/1998/Math/MathML"><mspace width="3.0mm"/><mo>⇔</mo></math><br>
+<math xmlns="http://www.w3.org/1998/Math/MathML"><mspace width="3.0mm"/><mi>r</mi><mo>.</mo><mi>n</mi><mi>a</mi><mi>m</mi><mi>e</mi><mo>=</mo><mi>D</mi><mo>.</mo><mi>n</mi><mi>a</mi><mi>m</mi><mi>e</mi></math><br>
+<math xmlns="http://www.w3.org/1998/Math/MathML"><mspace width="3.0mm"/><mi>D</mi><mo>∈</mo><mi>r</mi><mo>.</mo><mi>m</mi><mi>o</mi><mi>d</mi><mi>u</mi><mi>l</mi><mi>e</mi></math><br>
+<math xmlns="http://www.w3.org/1998/Math/MathML"><mspace width="3.0mm"/><mo>⊕</mo></math><br>
+<math xmlns="http://www.w3.org/1998/Math/MathML"><mspace width="3.0mm"/><mo>∃</mo><mstyle mathvariant="monospace"><mtext>NamedImportSpecifier</mtext></mstyle><mi>N</mi><mi>I</mi><mi>S</mi><mi>:</mi></math><br>
+<math xmlns="http://www.w3.org/1998/Math/MathML"><mspace width="3.0mm"/><mi>W</mi><mi>I</mi><mi>S</mi><mo>.</mo><mi>i</mi><mi>m</mi><mi>p</mi><mi>o</mi><mi>r</mi><mi>t</mi><mi>D</mi><mi>e</mi><mi>c</mi><mi>l</mi><mo>.</mo><mi>i</mi><mi>m</mi><mi>p</mi><mi>o</mi><mi>r</mi><mi>t</mi><mi>e</mi><mi>d</mi><mi>M</mi><mi>o</mi><mi>d</mi><mi>u</mi><mi>l</mi><mi>e</mi><mo>=</mo><mi>D</mi><mo>.</mo><mi>m</mi><mi>o</mi><mi>d</mi><mi>u</mi><mi>l</mi><mi>e</mi></math><br>
+<math xmlns="http://www.w3.org/1998/Math/MathML"><mspace width="3.0mm"/><mo>∨</mo><mo>∃</mo><mstyle mathvariant="monospace"><mtext>WildcardImportSpecifier</mtext></mstyle><mi>W</mi><mi>I</mi><mi>S</mi><mi>:</mi></math></p>
+</div>
+</dd>
+<dt class="hdlist1">Description</dt>
+<dd>
+<p>There might be multiple declarations <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>D</mi></math> in project (or in dependent projects) with <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>D</mi><mo>.</mo><mi>n</mi><mi>a</mi><mi>m</mi><mi>e</mi><mo>=</mo><mi>r</mi><mo>.</mo><mi>n</mi><mi>a</mi><mi>m</mi><mi>e</mi></math>. If the declaration <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>D</mi></math> is not local, then a named import may be created by the content assist:</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>If the declaration <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>D</mi></math> is local, no import is created</p>
+</li>
+<li>
+<p>If an import enabling access to the declaration already exists, no other import is created.</p>
+</li>
+<li>
+<p>If an alias already exists, the alias name is used, even if the prefix was different when the content assist was activated.</p>
+</li>
+<li>
+<p>If the import would conflict with an existing member, an alias is proposed along with the import. Linked editing helps to choose a proper alias.</p>
+</li>
+<li>
+<p>All imports from a single module are done within a single import declaration. The exception to this rule are wildcard imports that provide a simple name which is currently unused. In that case, a new import may be necessary to disambiguate the wildcard.</p>
+</li>
+</ol>
+</div>
+</dd>
+</dl>
+</div>
+</li>
+<li>
+<p>If the identifier reference refers to a function (or method), an opening and a closing parenthesis are appended and
+the cursor is positioned between these two parentheses.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="sec:Complete_Member_Overrides"><a class="anchor" href="#sec:Complete_Member_Overrides"></a><a class="link" href="#sec:Complete_Member_Overrides">3.1.4. Complete Member Overrides</a></h4>
+<div class="openblock">
+<div class="title">Complete Member Overrides Inside a classifier</div>
+<div class="content">
+<div class="paragraph">
+<p>A prefix of an inherited member can be used to autocomplete that to a complete declaration.
+This is in particular true for methods.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="sec:Constructor_Completion"><a class="anchor" href="#sec:Constructor_Completion"></a><a class="link" href="#sec:Constructor_Completion">3.1.5. Constructor Completion</a></h4>
+<div class="openblock">
+<div class="title">Constructor Completion</div>
+<div class="content">
+<div class="paragraph">
+<p>Constructor Completion Based on the declared fields and super constructor, constructor methods can be completed.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="sec:Complete_Function_Expression"><a class="anchor" href="#sec:Complete_Function_Expression"></a><a class="link" href="#sec:Complete_Function_Expression">3.1.6. Complete Function Expression with Known Type</a></h4>
+<div class="openblock">
+<div class="title">Complete Function Expression</div>
+<div class="content">
+<div class="paragraph">
+<p>If a function expression is used as an argument or assigned to a typed variable, the signature of the function can be derived from the type. This can be used to complete a function expression.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="sec:Complete_Variable_and_Parameter_Names"><a class="anchor" href="#sec:Complete_Variable_and_Parameter_Names"></a><a class="link" href="#sec:Complete_Variable_and_Parameter_Names">3.1.7. Complete Variable and Parameter Names</a></h4>
+<div class="openblock">
+<div class="title">Type based completion of Variable and Parameter Names</div>
+<div class="content">
+<div class="paragraph">
+<p>Variable and parameter names can be completed based on the type. Camel case detection is used to propose different variations.</p>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>Completion of variables references see <a href="#sec:Complete_Identifier_Reference">Complete Identifier Reference</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect2 language-n4js">
+<h3 id="sec:Quick_Fixes"><a class="anchor" href="#sec:Quick_Fixes"></a><a class="link" href="#sec:Quick_Fixes">3.2. Quick Fixes</a></h3>
+<div class="paragraph">
+<p>Quick fixes try to solve issues, i.e. errors or warnings, automatically. This is done by rewriting code, either at the location of the issue or at referenced locations.</p>
+</div>
+<div class="paragraph">
+<p>In all cases, a quick fix must only be suggested if the following preconditions are fulfilled:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>All locations at which modifications have to be done must be writeable.</p>
+</li>
+<li>
+<p>If bindings are involved, e.g., names are to be changed, all previous bindings must remain similar. This might be more complicated as it seems!</p>
+</li>
+</ol>
+</div>
+<div class="sect3">
+<h4 id="sec:N4JS_Issue_Properties"><a class="anchor" href="#sec:N4JS_Issue_Properties"></a><a class="link" href="#sec:N4JS_Issue_Properties">3.2.1. N4JS Issue User data</a></h4>
+<div class="paragraph">
+<p>As some quick fixes need more information to decide upfront which strategy to use, some issues provide additional data. These properties are defined in the file <code>IssueUserDataKeys.java</code> in the <code>org.eclipse.n4js.validation</code> package. They can for example be accessed by passing the according key to the <code>getUserData</code> method of an <code>N4JSIssue</code> instance. They are also available as array based Xtext Issue user data.<br></p>
+</div>
+<div class="paragraph">
+<p>All available user data keys are described for each Issue code in <a href="#sec:N4JS_Issue_Fixes">N4JS Issue Fixes</a>.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="sec:N4JS_Issue_Fixes"><a class="anchor" href="#sec:N4JS_Issue_Fixes"></a><a class="link" href="#sec:N4JS_Issue_Fixes">3.2.2. N4JS Issue Fixes</a></h4>
+<div class="paragraph">
+<p>The principle idea is to provide a quick fix for every issue, if it is possible to automatically solve it.</p>
+</div>
+<div class="sect4">
+<h5 id="sec:Linking_Issues"><a class="anchor" href="#sec:Linking_Issues"></a><a class="link" href="#sec:Linking_Issues">3.2.2.1. Linking Issues</a></h5>
+<div class="paragraph">
+<p>Linking issues are special in that they are created by the standard Xtext linker and use all the same built-in issue code <code>Diagnostic.LINKING_DIAGNOSTIC</code>. Therefore, we cannot refer to these issues using one of our custom N4JS issue codes.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Diagnostic.LINKING_DIAGNOSTIC</dt>
+<dd>
+<p><code>Couldn’t resolve reference to <em>n</em></code></p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Add missing import declaration for unresolved name <em>n</em>.</p>
+</li>
+</ol>
+</div>
+</dd>
+</dl>
+</div>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+Precondition
+</td>
+<td class="hdlist2">
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>An exported identifiable element <em>e</em> with name <em>n</em> exists in another module <em>m</em>.</p>
+</li>
+<li>
+<p><em>e</em> is visible from the given location.</p>
+</li>
+</ol>
+</div>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Label
+</td>
+<td class="hdlist2">
+<p><code>Import <em>n</em> - <em>m</em></code></p>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Postcondition</dt>
+<dd>
+<p>An import declaration was added such that name <em>n</em> is now resolvable at the given location and bound to <em>e</em>.</p>
+</dd>
+<dt class="hdlist1">Description</dt>
+<dd>
+<p>Some important notes:</p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><code>A</code> separate quick fix is proposed for each candidate element instead of having a single generic quick fix for adding imports and showing a dialog later (for example, create two quick fixes “Import class <code>X</code> from module M1" and “Import interface <code>X</code> from module M2" instead of a single quick fix “Add import for name X").<br>
+This is unusual for quick fixes, because it means significant work has to be done upfront when creating the quick fix / modification proposals, which raises performance concerns. However,</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>the JDT handles this the same way and</p>
+</li>
+<li>
+<p>this brings the implementation closer to content assist allowing more reuse, therefore this decision was taken.</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>For consistency, matching of lower/upper/camel case is to be handled as in code completion during content assist. The same applies to display string formatting, esp. name formatting and coloring of element <em>e</em> and module <em>m</em>.</p>
+</li>
+<li>
+<p>Note that here we can make more assumptions than during import as part of content assist. For example, we know that the element is not imported yet (otherwise there would not be an error) and there won’t be a need for an alias and linked editing.</p>
+</li>
+</ol>
+</div>
+</dd>
+</dl>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect4">
+<h5 id="sec:Import_Issues"><a class="anchor" href="#sec:Import_Issues"></a><a class="link" href="#sec:Import_Issues">3.2.2.2. Import Issues</a></h5>
+
+</div>
+<div class="sect4">
+<h5 id="sec:Visibility_Issues"><a class="anchor" href="#sec:Visibility_Issues"></a><a class="link" href="#sec:Visibility_Issues">3.2.2.3. Visibility Issues</a></h5>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">VIS_ILLEGAL_MEMBER_ACCESS</dt>
+<dd>
+<p><code>The <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>m</mi><mi>e</mi><mi>m</mi><mi>b</mi><mi>e</mi><mi>r</mi><mi>T</mi><mi>y</mi><mi>p</mi><mi>e</mi></math> <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>m</mi><mi>e</mi><mi>m</mi><mi>b</mi><mi>e</mi><mi>r</mi></math> is not visible.</code></p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Change access modifier to protected/public or remove <code>@Internal</code> annotation.</p>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Precondition</dt>
+<dd>
+<p>The file containing the declaration of <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>m</mi><mi>e</mi><mi>m</mi><mi>b</mi><mi>e</mi><mi>r</mi></math> is modifiable</p>
+</dd>
+<dt class="hdlist1">Postcondition</dt>
+<dd>
+<p>The access modifier has been changed so that <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>m</mi><mi>e</mi><mi>m</mi><mi>b</mi><mi>e</mi><mi>r</mi></math> is visible at issue location.</p>
+</dd>
+<dt class="hdlist1">User Data</dt>
+<dd>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>ACCESS_SUGGESTION</strong> The most restrictive modifier making the member visible.</p>
+</li>
+<li>
+<p><strong>DECLARATION_OBJECT_URI</strong> The EObject URI of the member declaration</p>
+</li>
+</ul>
+</div>
+</dd>
+</dl>
+</div>
+</li>
+</ol>
+</div>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>This table shows the access modifier changes to perform to fix the visibility issue while maintaining the strongest access restrictions possible.</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 14.2857%;">
+<col style="width: 14.2857%;">
+<col style="width: 14.2857%;">
+<col style="width: 14.2857%;">
+<col style="width: 14.2857%;">
+<col style="width: 14.2858%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-center valign-top" rowspan="2"><p class="tableblock"><code>Access Modifier</code></p></td>
+<td class="tableblock halign-center valign-top" colspan="6"><p class="tableblock"><code>Accessible From</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Inside Module</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Inside Project</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Vendor Subtypes</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Vendor Projects</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Other Subtypes</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Everywhere</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>private</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>-</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>project</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>protected@Internal</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>public@Internal</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>protected</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>public</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>project</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>-</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>-</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>protected@Internal</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>public@Internal</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>protected</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>public</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>protected@Internal</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>-</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>-</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>-</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>public@Internal</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>protected</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>public</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>protected</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>-</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>-</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>-</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>public@Internal</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>-</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>public</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>public@Internal</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>-</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>-</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>-</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>-</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>public</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>public</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>public</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>-</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>-</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>-</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>-</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>-</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>-</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Member access modifier changes for quick fixes</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">VIS_ILLEGAL_FUN_ACCESS</dt>
+<dd>
+<p><code>The function <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>f</mi></math> is not visible.</code></p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Change access modifier to protected/public or remove <code>@Internal</code> annotation.</p>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Precondition</dt>
+<dd>
+<p>–</p>
+</dd>
+<dt class="hdlist1">Postcondition</dt>
+<dd>
+<p>The access modifier has been changed so that <em>f</em> is visible at issue location.</p>
+</dd>
+<dt class="hdlist1">User Data</dt>
+<dd>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>ACCESS_SUGGESTION</strong> The most restrictive modifier making the function visible.</p>
+</li>
+<li>
+<p><strong>DECLARATION_OBJECT_URI</strong> The EObject URI of the function declaration</p>
+</li>
+</ul>
+</div>
+</dd>
+</dl>
+</div>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">VIS_ILLEGAL_TYPE_ACCESS</dt>
+<dd>
+<p><code>The type <em>T</em> is not visible.</code></p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Change access modifier to protected/public or remove <code>@Internal</code> annotation.</p>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Precondition</dt>
+<dd>
+<p>–</p>
+</dd>
+<dt class="hdlist1">Postcondition</dt>
+<dd>
+<p>The access modifier has been changed so that <em>T</em> is visible at issue location.</p>
+</dd>
+<dt class="hdlist1">User Data</dt>
+<dd>
+<p>see VIS_ILLEGAL_FUN_ACCESS</p>
+</dd>
+</dl>
+</div>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">VIS_ILLEGAL_VARIABLE_ACCESS</dt>
+<dd>
+<p><code>The variable <em>v</em> is not visible.</code></p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Change access modifier to protected/public or remove <code>@Internal</code> annotation.</p>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Precondition</dt>
+<dd>
+<p>Module containing <em>v</em> is writeable.</p>
+</dd>
+<dt class="hdlist1">Postcondition</dt>
+<dd>
+<p>The access modifier has been changed so that <em>v</em> is visible at issue location.</p>
+</dd>
+<dt class="hdlist1">User Data</dt>
+<dd>
+<p>see VIS_ILLEGAL_FUN_ACCESS</p>
+</dd>
+</dl>
+</div>
+</li>
+</ol>
+</div>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>For type, variable and function visibility issues the following changes have to be made to solve the visibility issue:</p>
+</div>
+<table id="tab:typeAccessControl" class="tableblock frame-all grid-all spread">
+<caption class="title">Table 1. Type,function and variable access modifier changes for quick fixes</caption>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 20%;">
+</colgroup>
+<tbody>
+<tr>
+<th class="tableblock halign-center valign-top" rowspan="2"><p class="tableblock">Access Modifier</p></th>
+<th class="tableblock halign-center valign-top" colspan="4"><p class="tableblock">Accessible From</p></th>
+</tr>
+<tr>
+<th class="tableblock halign-center valign-top"><p class="tableblock">Module</p></th>
+<th class="tableblock halign-center valign-top"><p class="tableblock">Project</p></th>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Vendor</p></th>
+<th class="tableblock halign-left valign-top"><p class="tableblock">World</p></th>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>private</code></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><code>-</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>export project</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>export public@Internal</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>export public</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>project</code></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><code>-</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>export project</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>export public@Internal</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>export public</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>export project</code></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><code>-</code></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><code>-</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>export public@Internal</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>export public</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>export public@Internal</code></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><code>-</code></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><code>-</code></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><code>-</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>export public</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>export public</code></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><code>-</code></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><code>-</code></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><code>-</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>export public</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect4">
+<h5 id="sec:Classifier_Issues"><a class="anchor" href="#sec:Classifier_Issues"></a><a class="link" href="#sec:Classifier_Issues">3.2.2.4. Classifier Issues</a></h5>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">CLF_EXTEND_FINAL</dt>
+<dd>
+<p><code>Cannot extend final class <em>C</em>.</code></p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Remove <code>@Final</code> annotation in class <em>C</em></p>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Precondition</dt>
+<dd>
+<p>–</p>
+</dd>
+<dt class="hdlist1">Postcondition</dt>
+<dd>
+<p><math xmlns="http://www.w3.org/1998/Math/MathML"><mo>¬</mo><mi>C</mi><mo>.</mo><mi>f</mi><mi>i</mi><mi>n</mi><mi>a</mi><mi>l</mi></math></p>
+</dd>
+</dl>
+</div>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">CLF_OBSERVABLE_MISSING</dt>
+<dd>
+<p><code>Class <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>e</mi><mn>0</mn></msub></math> extends observable class <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>e</mi><mn>1</mn></msub></math> and must therefore be annotated with @Observable.</code></p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Add <code>@Obervable</code> annotation in class <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>e</mi><mn>0</mn></msub></math></p>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Precondition</dt>
+<dd>
+<p>–</p>
+</dd>
+<dt class="hdlist1">Postcondition</dt>
+<dd>
+<p><math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>e</mi><mn>0.</mn></msub><mi>o</mi><mi>b</mi><mi>s</mi><mi>e</mi><mi>r</mi><mi>v</mi><mi>a</mi><mi>b</mi><mi>l</mi><mi>e</mi></math></p>
+</dd>
+</dl>
+</div>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">CLF_OVERRIDE_ANNOTATION</dt>
+<dd>
+<p><code>The <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>e</mi><mn>0</mn></msub></math> overriding <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>e</mi><mn>1</mn></msub></math> must be annotated with @Override.</code></p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Add <code>@Override</code> annotation to <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>e</mi><mn>0</mn></msub></math></p>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Precondition</dt>
+<dd>
+<p>–</p>
+</dd>
+<dt class="hdlist1">Label</dt>
+<dd>
+<p><code>Add @Override</code></p>
+</dd>
+<dt class="hdlist1">Postcondition</dt>
+<dd>
+<p><math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>e</mi><mn>0.</mn></msub><mi>o</mi><mi>v</mi><mi>e</mi><mi>r</mi><mi>r</mi><mi>i</mi><mi>d</mi><mi>e</mi></math></p>
+</dd>
+</dl>
+</div>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">CLF_OVERRIDE_FINAL</dt>
+<dd>
+<p><code>The <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>e</mi><mn>0</mn></msub></math> cannot override final <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>e</mi><mn>1</mn></msub></math>.</code></p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Remove <code>@Final</code> annotation in <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>e</mi><mn>1</mn></msub></math></p>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Precondition</dt>
+<dd>
+<p>–</p>
+</dd>
+<dt class="hdlist1">Postcondition</dt>
+<dd>
+<p><math xmlns="http://www.w3.org/1998/Math/MathML"><mo>¬</mo><msub><mi>e</mi><mn>1.</mn></msub><mi>f</mi><mi>i</mi><mi>n</mi><mi>a</mi><mi>l</mi></math></p>
+</dd>
+</dl>
+</div>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">CLF_OVERRIDE_VISIBILITY</dt>
+<dd>
+<p><code>The <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>e</mi><mn>0</mn></msub></math> cannot reduce the visibility of <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>e</mi><mn>1</mn></msub></math>.</code></p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Set access modifier of <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>e</mi><mn>0</mn></msub></math> to access modifier of <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>e</mi><mn>1</mn></msub></math></p>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Precondition</dt>
+<dd>
+<p>–</p>
+</dd>
+<dt class="hdlist1">Postcondition</dt>
+<dd>
+<p><math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>e</mi><mn>0.</mn></msub><mi>a</mi><mi>c</mi><mi>c</mi><mo>=</mo><mo>=</mo><msub><mi>e</mi><mn>1.</mn></msub><mi>a</mi><mi>c</mi><mi>c</mi></math></p>
+</dd>
+</dl>
+</div>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">CLF_OVERRIDE_NON_EXISTENT</dt>
+<dd>
+<p><code>The <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>e</mi><mn>0</mn></msub></math> <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>e</mi><mn>1</mn></msub></math> must override or implement a <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>e</mi><mn>0</mn></msub></math> from a super class, consumed role or implemented interface.</code></p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Remove <code>@Override</code> annotation in <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>e</mi><mn>1</mn></msub></math></p>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Precondition</dt>
+<dd>
+<p>–</p>
+</dd>
+<dt class="hdlist1">Label</dt>
+<dd>
+<p><code>Remove @Override</code></p>
+</dd>
+<dt class="hdlist1">Postcondition</dt>
+<dd>
+<p><math xmlns="http://www.w3.org/1998/Math/MathML"><mo>¬</mo><msub><mi>e</mi><mn>1.</mn></msub><mi>o</mi><mi>v</mi><mi>e</mi><mi>r</mi><mi>r</mi><mi>i</mi><mi>d</mi><mi>e</mi></math></p>
+</dd>
+</dl>
+</div>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">CLF_REDEFINED_TYPE_NOT_SAME_TYPE</dt>
+<dd>
+<p><code>Type of <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>e</mi><mn>0</mn></msub></math> must equal type of <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>e</mi><mn>1</mn></msub></math> <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>e</mi><mn>2</mn></msub></math>.</code></p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Set declared type of <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>e</mi><mn>0</mn></msub></math> to declared type of <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>e</mi><mn>2</mn></msub></math></p>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Precondition</dt>
+<dd>
+<p>–</p>
+</dd>
+<dt class="hdlist1">Postcondition</dt>
+<dd>
+<p><math xmlns="http://www.w3.org/1998/Math/MathML"><mi>τ</mi><msub><mi>e</mi><mn>0</mn></msub><mo>=</mo><msub><mi>e</mi><mn>2</mn></msub></math></p>
+</dd>
+</dl>
+</div>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">CLF_REDEFINED_MEMBER_TYPE_INVALID</dt>
+<dd>
+<p><code>Type of <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>e</mi><mn>0</mn></msub></math> does not conform to <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>e</mi><mn>2</mn></msub></math> <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>e</mi><mn>1</mn></msub></math>: <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>e</mi><mn>3</mn></msub></math>.</code></p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Set declared type of <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>e</mi><mn>0</mn></msub></math> to declared type of <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>e</mi><mn>1</mn></msub></math></p>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Precondition</dt>
+<dd>
+<p>–</p>
+</dd>
+<dt class="hdlist1">Postcondition</dt>
+<dd>
+<p><math xmlns="http://www.w3.org/1998/Math/MathML"><mi>τ</mi><msub><mi>e</mi><mn>0</mn></msub><mo>=</mo><msub><mi>e</mi><mn>1</mn></msub></math></p>
+</dd>
+</dl>
+</div>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">CLF_REDEFINED_METHOD_TYPE_CONFLICT</dt>
+<dd>
+<p><code>Signature of <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>e</mi><mn>0</mn></msub></math> does not conform to <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>e</mi><mn>1</mn></msub></math> <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>e</mi><mn>2</mn></msub></math>: <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>e</mi><mn>3</mn></msub></math>.</code></p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Set declared type of <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>e</mi><mn>0</mn></msub></math> to declared type of <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>e</mi><mn>2</mn></msub></math></p>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Precondition</dt>
+<dd>
+<p>–</p>
+</dd>
+<dt class="hdlist1">Postcondition</dt>
+<dd>
+<p><math xmlns="http://www.w3.org/1998/Math/MathML"><mi>τ</mi><msub><mi>e</mi><mn>0</mn></msub><mo>=</mo><msub><mi>e</mi><mn>2</mn></msub></math></p>
+</dd>
+</dl>
+</div>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">CLF_MISSING_IMPLEMENTATION</dt>
+<dd>
+<p><code>Class <em>C</em> must either be defined abstract or implement <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>m</mi></math>.</code></p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Declare <em>C</em> as abstract</p>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Precondition</dt>
+<dd>
+<p>–</p>
+</dd>
+<dt class="hdlist1">Postcondition</dt>
+<dd>
+<p><math xmlns="http://www.w3.org/1998/Math/MathML"><mi>C</mi><mo>.</mo><mi>a</mi><mi>b</mi><mi>s</mi><mi>t</mi><mi>r</mi><mi>a</mi><mi>c</mi><mi>t</mi></math></p>
+</dd>
+</dl>
+</div>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">CLF_ABSTRACT_BODY</dt>
+<dd>
+<p><code>Abstract methods do not specify a body.</code> for method <em>M</em></p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Remove abstract annotation from method.</p>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Precondition</dt>
+<dd>
+<p>–</p>
+</dd>
+<dt class="hdlist1">Postcondition</dt>
+<dd>
+<p><math xmlns="http://www.w3.org/1998/Math/MathML"><mo>¬</mo><mi>M</mi><mo>.</mo><mi>a</mi><mi>b</mi><mi>s</mi><mi>t</mi><mi>r</mi><mi>a</mi><mi>c</mi><mi>t</mi></math></p>
+</dd>
+</dl>
+</div>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">CLF_ABSTRACT_MISSING</dt>
+<dd>
+<p><code>The abstract <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>e</mi><mn>0</mn></msub></math> <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>e</mi><mn>1</mn></msub></math> in class <em>C</em> can only be defined in an abstract class.</code></p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Declare <em>C</em> as abstract</p>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Precondition</dt>
+<dd>
+<p>–</p>
+</dd>
+<dt class="hdlist1">Postcondition</dt>
+<dd>
+<p><math xmlns="http://www.w3.org/1998/Math/MathML"><mi>C</mi><mo>.</mo><mi>a</mi><mi>b</mi><mi>s</mi><mi>t</mi><mi>r</mi><mi>a</mi><mi>c</mi><mi>t</mi></math></p>
+</dd>
+<dt class="hdlist1">Multi appliable</dt>
+<dd>
+<p>false</p>
+</dd>
+</dl>
+</div>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">CLF_MISSING_BODY</dt>
+<dd>
+<p><code>The <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>e</mi><mn>0</mn></msub></math> <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>e</mi><mn>1</mn></msub></math> has to have either a body or must be defined abstract.</code></p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Declare <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>e</mi><mn>1</mn></msub></math> as abstract</p>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Precondition</dt>
+<dd>
+<p>–</p>
+</dd>
+<dt class="hdlist1">Postcondition</dt>
+<dd>
+<p><math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>e</mi><mn>1.</mn></msub><mi>a</mi><mi>b</mi><mi>s</mi><mi>t</mi><mi>r</mi><mi>a</mi><mi>c</mi><mi>t</mi></math></p>
+</dd>
+</dl>
+</div>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">CLF_EXT_EXTERNAL_N4JSD</dt>
+<dd>
+<p><code><math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>e</mi><mn>0</mn></msub></math> declared as external have to be placed in a file with file extension ’n4jsd’.</code></p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Remove external annotation</p>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Precondition</dt>
+<dd>
+<p>–</p>
+</dd>
+<dt class="hdlist1">Postcondition</dt>
+<dd>
+<p><math xmlns="http://www.w3.org/1998/Math/MathML"><mo>¬</mo><msub><mi>e</mi><mn>0.</mn></msub><mi>e</mi><mi>x</mi><mi>t</mi><mi>e</mi><mi>r</mi><mi>n</mi><mi>a</mi><mi>l</mi></math></p>
+</dd>
+</dl>
+</div>
+</li>
+<li>
+<p>Change module file extension to n4jsd</p>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Precondition</dt>
+<dd>
+<p>–</p>
+</dd>
+<dt class="hdlist1">Postcondition</dt>
+<dd>
+<p>module file extension is n4jsd</p>
+</dd>
+</dl>
+</div>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">CLF_NOT_EXPORTED_NOT_PRIVATE</dt>
+<dd>
+<p><code>A <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>e</mi><mn>0</mn></msub></math> with visibility <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>e</mi><mn>1</mn></msub></math> must be marked as exported.</code></p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Export <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>e</mi><mn>0</mn></msub></math></p>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Precondition</dt>
+<dd>
+<p>–</p>
+</dd>
+<dt class="hdlist1">Postcondition</dt>
+<dd>
+<p><math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>e</mi><mn>0</mn></msub></math> is exported</p>
+</dd>
+</dl>
+</div>
+</li>
+</ol>
+</div>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect4">
+<h5 id="sec:Function_Issues"><a class="anchor" href="#sec:Function_Issues"></a><a class="link" href="#sec:Function_Issues">3.2.2.5. Function Issues</a></h5>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+FUN_BLOCK
+</td>
+<td class="hdlist2">
+<p><code>Functions declarations should not be placed in blocks. Use a function expression or move the statement to the top of the outer function.</code> with function <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>F</mi></math></p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Change function declaration to function expression</p>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Precondition</dt>
+<dd>
+<p>–</p>
+</dd>
+<dt class="hdlist1">Postcondition</dt>
+</dl>
+</div>
+</li>
+</ol>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="openblock">
+<div class="content">
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mtable><mtr><mtd/><mtd><mo>∃</mo><mstyle mathvariant="monospace"><mtext>Variable</mtext></mstyle><mi> </mi><mi>v</mi><mo>∈</mo><mi>F</mi><mo>.</mo><mi>v</mi><mi>e</mi><mi>e</mi><mi>:</mi></mtd></mtr><mtr><mtd/><mtd><mspace width="3.0em"/><mi>v</mi><mo>.</mo><mi>n</mi><mi>a</mi><mi>m</mi><mi>e</mi><mo>=</mo><mi>F</mi></mtd></mtr><mtr><mtd/><mtd><mspace width="3.0em"/><mo>∧</mo><mi>v</mi><mo>.</mo><mi>e</mi><mi>x</mi><mi>p</mi><mi>r</mi><mo>.</mo><mi>μ</mi><mo>=</mo><mstyle mathvariant="monospace"><mtext>FunctionExpression</mtext></mstyle></mtd></mtr><mtr><mtd/><mtd><mspace width="3.0em"/><mo>∧</mo><mi>v</mi><mo>.</mo><mi>e</mi><mi>x</mi><mi>p</mi><mi>r</mi><mo>.</mo><mi>n</mi><mi>a</mi><mi>m</mi><mi>e</mi><mo>=</mo><mi>F</mi><mo>.</mo><mi>n</mi><mi>a</mi><mi>m</mi><mi>e</mi><mo>,</mo><mi>v</mi><mo>.</mo><mi>e</mi><mi>x</mi><mi>p</mi><mi>r</mi><mo>.</mo><mi>b</mi><mi>o</mi><mi>d</mi><mi>y</mi><mo>=</mo><mi>F</mi><mo>.</mo><mi>b</mi><mi>o</mi><mi>d</mi><mi>y</mi></mtd></mtr></mtable></math>
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Description</dt>
+<dd>
+<p>Change function declaration to function expression assigned to variable of the function name</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect4">
+<h5 id="sec:Syntax_Issues"><a class="anchor" href="#sec:Syntax_Issues"></a><a class="link" href="#sec:Syntax_Issues">3.2.2.6. Syntax Issues</a></h5>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">AST_STR_FUN_NOT_NESTED</dt>
+<dd>
+<p><code>Functions must only be declared on script level or as part of other expressions</code></p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Change function declaration to function expression assigned to variable of the function name</p>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Precondition</dt>
+<dd>
+<p>–</p>
+</dd>
+<dt class="hdlist1">Postcondition</dt>
+</dl>
+</div>
+</li>
+</ol>
+</div>
+</dd>
+</dl>
+</div>
+<div class="openblock">
+<div class="content">
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mtable><mtr><mtd/><mtd><mo>∃</mo><mstyle mathvariant="monospace"><mtext>Variable</mtext></mstyle><mi> </mi><mi>v</mi><mo>∈</mo><mi>F</mi><mo>.</mo><mi>v</mi><mi>e</mi><mi>e</mi><mi>:</mi></mtd></mtr><mtr><mtd/><mtd><mspace width="3.0em"/><mi>v</mi><mo>.</mo><mi>n</mi><mi>a</mi><mi>m</mi><mi>e</mi><mo>=</mo><mi>F</mi></mtd></mtr><mtr><mtd/><mtd><mspace width="3.0em"/><mo>∧</mo><mi>v</mi><mo>.</mo><mi>e</mi><mi>x</mi><mi>p</mi><mi>r</mi><mo>.</mo><mi>μ</mi><mo>=</mo><mstyle mathvariant="monospace"><mtext>FunctionExpression</mtext></mstyle></mtd></mtr><mtr><mtd/><mtd><mspace width="3.0em"/><mo>∧</mo><mi>v</mi><mo>.</mo><mi>e</mi><mi>x</mi><mi>p</mi><mi>r</mi><mo>.</mo><mi>n</mi><mi>a</mi><mi>m</mi><mi>e</mi><mo>=</mo><mi>F</mi><mo>.</mo><mi>n</mi><mi>a</mi><mi>m</mi><mi>e</mi><mo>,</mo><mi>v</mi><mo>.</mo><mi>e</mi><mi>x</mi><mi>p</mi><mi>r</mi><mo>.</mo><mi>b</mi><mi>o</mi><mi>d</mi><mi>y</mi><mo>=</mo><mi>F</mi><mo>.</mo><mi>b</mi><mi>o</mi><mi>d</mi><mi>y</mi></mtd></mtr></mtable></math>
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">SYN_MODIFIER_BAD_ORDER</dt>
+<dd>
+<p><code>Modifiers should appear in this order: O </code></p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Rearrange access modifiers</p>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Precondition</dt>
+<dd>
+<p>–</p>
+</dd>
+<dt class="hdlist1">Postcondition</dt>
+<dd>
+<p>Modifiers are in order O</p>
+</dd>
+<dt class="hdlist1">Description</dt>
+<dd>
+<p>Reorder the access modifiers to match the N4JS compliant order.</p>
+</dd>
+</dl>
+</div>
+</li>
+</ol>
+</div>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect4">
+<h5 id="sec:Conversion_Issues"><a class="anchor" href="#sec:Conversion_Issues"></a><a class="link" href="#sec:Conversion_Issues">3.2.2.7. Conversion Issues</a></h5>
+
+</div>
+<div class="sect4">
+<h5 id="sec:Type_Issues"><a class="anchor" href="#sec:Type_Issues"></a><a class="link" href="#sec:Type_Issues">3.2.2.8. Type Issues</a></h5>
+
+</div>
+<div class="sect4">
+<h5 id="sec:Expression_Issues"><a class="anchor" href="#sec:Expression_Issues"></a><a class="link" href="#sec:Expression_Issues">3.2.2.9. Expression Issues</a></h5>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">EXP_WRONG_NUMBER_OF_TYPEARGS</dt>
+<dd>
+<p><code>Incorrect number of type arguments for <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>T</mi></math> <em>C</em>: expected <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>t</mi><mi>p</mi><mi>c</mi><mi>o</mi><mi>u</mi><mi>n</mi><mi>t</mi></math>, got <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>t</mi><mi>a</mi><mi>c</mi><mi>o</mi><mi>u</mi><mi>n</mi><mi>t</mi></math>.</code></p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Remove superfluous arguments</p>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Precondition</dt>
+<dd>
+<p><math xmlns="http://www.w3.org/1998/Math/MathML"><mi>t</mi><mi>a</mi><mi>c</mi><mi>o</mi><mi>u</mi><mi>n</mi><mi>t</mi><mo>&gt;</mo><mi>t</mi><mi>p</mi><mi>c</mi><mi>o</mi><mi>u</mi><mi>n</mi><mi>t</mi></math></p>
+</dd>
+<dt class="hdlist1">Postcondition</dt>
+<dd>
+<p><math xmlns="http://www.w3.org/1998/Math/MathML"><mi>t</mi><mi>a</mi><mi>c</mi><mi>o</mi><mi>u</mi><mi>n</mi><mi>t</mi><mo>=</mo><mi>t</mi><mi>p</mi><mi>c</mi><mi>o</mi><mi>u</mi><mi>n</mi><mi>t</mi></math></p>
+</dd>
+<dt class="hdlist1">Description</dt>
+</dl>
+</div>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">EXP_NUM_OF_ARGS_TOO_MANY</dt>
+<dd>
+<p><code>Incorrect number of arguments: expected <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>f</mi><mi>p</mi><mi>c</mi><mi>o</mi><mi>u</mi><mi>n</mi><mi>t</mi></math>, got <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>a</mi><mi>r</mi><mi>g</mi><mi>c</mi><mi>o</mi><mi>u</mi><mi>n</mi><mi>t</mi></math>.</code></p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Remove superfluous arguments</p>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Precondition</dt>
+<dd>
+<p><math xmlns="http://www.w3.org/1998/Math/MathML"><mi>a</mi><mi>r</mi><mi>g</mi><mi>c</mi><mi>o</mi><mi>u</mi><mi>n</mi><mi>t</mi><mo>&gt;</mo><mi>f</mi><mi>p</mi><mi>c</mi><mi>o</mi><mi>u</mi><mi>n</mi><mi>t</mi></math></p>
+</dd>
+<dt class="hdlist1">Postcondition</dt>
+<dd>
+<p><math xmlns="http://www.w3.org/1998/Math/MathML"><mi>a</mi><mi>r</mi><mi>g</mi><mi>c</mi><mi>o</mi><mi>u</mi><mi>n</mi><mi>t</mi><mo>=</mo><mi>f</mi><mi>p</mi><mi>c</mi><mi>o</mi><mi>u</mi><mi>n</mi><mi>t</mi></math></p>
+</dd>
+<dt class="hdlist1">Description</dt>
+</dl>
+</div>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">EXP_CAST_UNNECESSARY</dt>
+<dd>
+<p><code>Unnecessary cast from <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>S</mi></math> to <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>T</mi></math></code></p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Remove cast</p>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Precondition</dt>
+<dd>
+<p>–</p>
+</dd>
+<dt class="hdlist1">Postcondition</dt>
+<dd>
+<p>cast removed</p>
+</dd>
+<dt class="hdlist1">Description</dt>
+</dl>
+</div>
+</li>
+</ol>
+</div>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect4">
+<h5 id="sec:Super_Keyword_Issues"><a class="anchor" href="#sec:Super_Keyword_Issues"></a><a class="link" href="#sec:Super_Keyword_Issues">3.2.2.10. Super Keyword Issues</a></h5>
+
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="sec:Quick_Assist"><a class="anchor" href="#sec:Quick_Assist"></a><a class="link" href="#sec:Quick_Assist">3.3. Quick Assist</a></h3>
+
+</div>
+<div class="sect2 language-n4js">
+<h3 id="sec:Cleanup_Operations"><a class="anchor" href="#sec:Cleanup_Operations"></a><a class="link" href="#sec:Cleanup_Operations">3.4. Cleanup Operations</a></h3>
+<div class="sect3">
+<h4 id="sec:Formatting"><a class="anchor" href="#sec:Formatting"></a><a class="link" href="#sec:Formatting">3.4.1. Formatting</a></h4>
+
+</div>
+<div class="sect3">
+<h4 id="sec:Organize_Imports"><a class="anchor" href="#sec:Organize_Imports"></a><a class="link" href="#sec:Organize_Imports">3.4.2. Organize Imports</a></h4>
+<div class="paragraph">
+<p>Import statements can be cleaned up or automatically inserted by invoking <code>Organize Imports</code>. <code>Organize Imports</code> is available in the context menu <code>Source / Organise imports</code> , in menu <code>Source &gt; Organize imports</code> or by hitting <kbd>Cmd</kbd> + <kbd>Option</kbd> +<kbd>O</kbd> (Win/Linux - <kbd>Ctrl</kbd> +<kbd>Alt</kbd> +<kbd>O</kbd>).</p>
+</div>
+<div class="paragraph">
+<p>For a valid file without errors, this will result in the following actions:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Unused explicit imports will be removed.</p>
+</li>
+<li>
+<p>Unused wildcard imports will be removed.</p>
+</li>
+<li>
+<p>In each import statement the imported elements will be lexicographically sorted depending on the imported element’s name.</p>
+</li>
+<li>
+<p>All import statements will be lexicographically sorted depending on the module specifier as major and the element name as minor key.</p>
+</li>
+<li>
+<p>All import statements will be moved to the top of the file.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>For a file with error-conditions of unresolved references, this will result in the automatic actions:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>All ambiguous wildcard imports will be presented in one dialog, requesting the user to resolve the ambiguity.</p>
+</li>
+<li>
+<p>Each uniquely resolvable <code>unresolved Classifier</code> will be added by a named import. The search scope is limited to the dependencies declared in the current project-setup.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>No action will be taken, if &#8230;&#8203;</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>a classifier with name <code>X</code> is already imported by name from a module <code>A</code> and a unknown member of this classifier is marked. Even though the import of <code>X</code> from a different module <code>B</code> could remove this error, the semantic consequences could not be evaluated. The state will be left as-is.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>If more then one option leads to a possible resolution the situation should be clarified using quick-fixes, e.g. if &#8230;&#8203;</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>more then one module provides an element, which would render a formerly unresolved reference to be valid.</p>
+</li>
+<li>
+<p>for a wildcard-imported element <code>X</code> there are unknown members and a different module provides an element <code>X</code> containing the missing members. In such a case a named import of <code>X</code> would be proposed, optionally using an alias.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Version 0.9<br>
+Last updated 2019-08-07 15:02:40 CEST
+</div>
+</div>
+<!-- ************* docinfo-footer *************************************************************** -->
+<div class="Grid social" style="color:#d5dfea">
+  <div class="Cell Cell--2-12 m-Cell--withMargin">
+    <h2>Quick Links</h2>
+    <ul>
+      <li><a href="../downloads.html">Download</a></li>
+      <li><a href="../userguides/index.html">Documentation</a></li>
+      <li><a href="https://github.com/eclipse/n4js/">Source</a></li>
+      <li><a href="https://github.com/eclipse/n4js/issues">Issues</a></li>
+    </ul>
+  </div>
+  <div class="Cell Cell--2-12 m-Cell--withMargin">
+    <br/><br/>
+    <ul>
+      <li><a href="https://www.eclipse.org/forums/index.php/f/365/">Forum</a></li>
+      <li><a href="http://n4js.blogspot.de/">Blog</a></li>
+      <li><a href="https://dev.eclipse.org/mailman/listinfo/n4js-dev">Mailing List</a></li>
+      <li><a href="https://projects.eclipse.org/projects/technology.n4js">Eclipse Project Page</a></li>
+      <li><a href="https://twitter.com/n4jsdev">Tweets by n4jsdev</a></li>
+    </ul>
+  </div>
+  <div class="Cell Cell--2-12 m-Cell--withMargin">
+    <br/><br/>
+    <ul>
+      <li><a href="http://www.eclipse.org/">Eclipse Home</a></li>
+      <li><a href="http://www.eclipse.org/legal/privacy.php">Privacy Policy</a></li>
+      <li><a href="http://www.eclipse.org/legal/termsofuse.php">Terms of Use</a></li>
+      <li><a href="http://www.eclipse.org/legal/copyright.php">Copyright Agent</a></li>
+      <li><a href="http://www.eclipse.org/legal/">Legal</a></li>
+    </ul>
+  </div>
+  <div style="clear: both; height: 0; overflow: hidden;"></div>
+</div>
+
+<!-- ************* UI Scripts ************* -->
+<script type="text/javascript" src="scripts/back-to-top.js"></script>
+
+<script type="text/javascript" src="scripts/treeview.js"></script>
+<script type="text/javascript" src="scripts/toc.js"></script>
+
+<!-- ************* Prism.js Syntax Highlighting ************* -->
+<script src="scripts/prism.js"></script>
+
+<script type="text/javascript">
+	// Add the 'toclist' id for search function
+	$(".toc2 > ul").attr('id', 'toclist');
+	// Generate a Search input form
+	$("#toclist > li:first-of-type").before('<input type="text" id="pagesearch" onkeyup="search()" placeholder="Search for section...">');
+	$("#toclist > li:first-of-type").before('<i id="clear" class="fa fa-times-circle-o"></i>');
+	$("#clear").click(function(){
+	    $("#pagesearch").val('');
+	    search();
+	    $('.toc2 > ul').treeView('collapseAll');
+	});
+	// intialize Treeview.js
+	$(".toc2 > ul").treeView();
+	// Initialize Scrollspy
+</script>
+<!-- ************* docinfo-footer *************************************************************** -->
+</body>
+</html>

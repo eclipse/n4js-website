@@ -1,0 +1,2602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 1.5.5">
+<meta name="author" content="2019-08-07 15:02:40 CEST">
+<title>N4JS Language Specification</title>
+<link rel="stylesheet" href="styles/spec.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
+<!-- ************* docinfo ******************************************************************* -->
+
+
+<!-- ************* Favicon ************-->
+<link rel="icon" href="images/favicon.ico" />
+
+<!-- ************* Back-to-top JQuery ************* -->
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
+
+
+<link href="styles/prism.min.css" rel="stylesheet" />
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+<!-- ************* Styles ************* -->
+<link rel="stylesheet" type="text/css" href="styles/n4jsspec-adoc.css">
+
+
+<!-- ****************** NavBar ****************** -->
+<div id="menubar">
+	<div class="banner">
+        <a href="https://www.eclipse.org/n4js/#"><img id="logo" src="images/n4js-logo.png" alt="Eclipse N4JS"></a>
+    </div>
+<ul>
+  <li><a href="index.html">Index</a></li>
+</ul>
+</div>
+<!-- ************* docinfo ******************************************************************* -->
+<style>
+      .admonitionblock td.icon .icon-todo:before{content:"\f249";color:#f4ee42}
+    </style>
+</head>
+<body class="book toc2 toc-left">
+<div id="header">
+<h1>N4JS Language Specification</h1>
+<div class="details">
+<span id="author" class="author">2019-08-07 15:02:40 CEST</span><br>
+<span id="revnumber">version 0.9</span>
+</div>
+<div id="toc" class="toc2">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="introduction.html#_introduction">1. Introduction</a>
+<ul class="sectlevel2">
+<li><a href="introduction.html#_notation">1.1. Notation</a>
+<ul class="sectlevel3">
+<li><a href="introduction.html#_grammar-notation">1.1.1. Grammar Notation</a></li>
+<li><a href="introduction.html#_type-judgments-and-rules-and-constraints-notation">1.1.2. Type Judgments and Rules and Constraints Notation</a>
+<ul class="sectlevel4">
+<li><a href="introduction.html#_typing-rules-and-judgments">1.1.2.1. Typing Rules and Judgments</a></li>
+<li><a href="introduction.html#_types-of-an-element">1.1.2.2. Types of an Element</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="introduction.html#_auxiliary-functions">1.2. Auxiliary Functions</a>
+<ul class="sectlevel3">
+<li><a href="introduction.html#_binding">1.2.1. Binding</a></li>
+<li><a href="introduction.html#_merging-types">1.2.2. Merging Types</a>
+<ul class="sectlevel4">
+<li><a href="introduction.html#_logic-formulas">1.2.2.1. Logic Formulas</a></li>
+</ul>
+</li>
+<li><a href="introduction.html#_symbols-and-font-convention">1.2.3. Symbols and Font Convention</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="grammar.html#_grammar">2. Grammar</a>
+<ul class="sectlevel2">
+<li><a href="grammar.html#_lexical-conventions">2.1. Lexical Conventions</a>
+<ul class="sectlevel3">
+<li><a href="grammar.html#_identifier-names-and-identifiers">2.1.1. Identifier Names and Identifiers</a></li>
+<li><a href="grammar.html#_this-keyword">2.1.2. This Keyword</a></li>
+<li><a href="grammar.html#_regular-expression-literals">2.1.3. Regular Expression Literals</a></li>
+<li><a href="grammar.html#_automatic-semicolon-insertion">2.1.4. Automatic Semicolon Insertion</a></li>
+<li><a href="grammar.html#_jsdoc">2.1.5. JSDoc</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="names.html#_names">3. Names</a>
+<ul class="sectlevel2">
+<li><a href="names.html#_access-control">3.1. Access Control</a></li>
+<li><a href="names.html#_accessibility-of-types-top-level-variables-and-function-declarations">3.2. Accessibility of Types, Top-Level Variables and Function Declarations</a>
+<ul class="sectlevel3">
+<li><a href="names.html#_accessibility-of-members">3.2.1. Accessibility of Members</a></li>
+<li><a href="names.html#_valid-names">3.2.2. Valid Names</a></li>
+<li><a href="names.html#_qualified-names">3.2.3. Qualified Names</a></li>
+<li><a href="names.html#_name-duplicates">3.2.4. Name Duplicates</a>
+<ul class="sectlevel4">
+<li><a href="names.html#_lexical-environment">3.2.4.1. Lexical Environment</a></li>
+<li><a href="names.html#_duplicates-and-shadowing">3.2.4.2. Duplicates and Shadowing</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="types.html#_types">4. Types</a>
+<ul class="sectlevel2">
+<li><a href="types.html#_overview">4.1. Overview</a></li>
+<li><a href="types.html#_type-expressions">4.2. Type Expressions</a>
+<ul class="sectlevel3">
+<li><a href="types.html#_syntax">4.2.1. Syntax</a></li>
+<li><a href="types.html#_properties">4.2.2. Properties</a></li>
+<li><a href="types.html#_semantics">4.2.3. Semantics</a></li>
+</ul>
+</li>
+<li><a href="types.html#_type-inference">4.3. Type Inference</a></li>
+<li><a href="types.html#_generic-and-parameterized-types">4.4. Generic and Parameterized Types</a>
+<ul class="sectlevel3">
+<li><a href="types.html#_generic-types">4.4.1. Generic Types</a></li>
+<li><a href="types.html#_type-variables">4.4.2. Type Variables</a></li>
+<li><a href="types.html#_parameterized-types">4.4.3. Parameterized Types</a></li>
+</ul>
+</li>
+<li><a href="types.html#_primitive-ecmascript-types">4.5. Primitive ECMAScript Types</a>
+<ul class="sectlevel3">
+<li><a href="types.html#_undefined-type">4.5.1. Undefined Type</a></li>
+<li><a href="types.html#_null-type">4.5.2. Null Type</a></li>
+<li><a href="types.html#_primitive-boolean-type">4.5.3. Primitive Boolean Type</a></li>
+<li><a href="types.html#_primitive-string-type">4.5.4. Primitive String Type</a></li>
+<li><a href="types.html#_primitive-number-type">4.5.5. Primitive Number Type</a></li>
+<li><a href="types.html#_primitive-type-int">4.5.6. Primitive Type int</a></li>
+<li><a href="types.html#_primitive-symbol-type">4.5.7. Primitive Symbol Type</a></li>
+</ul>
+</li>
+<li><a href="types.html#_primitive-n4js-types">4.6. Primitive N4JS Types</a>
+<ul class="sectlevel3">
+<li><a href="types.html#_any-type">4.6.1. Any Type</a>
+<ul class="sectlevel4">
+<li><a href="types.html#any-type-semantics">4.6.1.1. Semantics</a></li>
+<li><a href="types.html#any-type-type-inference">4.6.1.2. Type Inference</a>
+<ul class="sectlevel5">
+<li><a href="types.html#_default-type-of-variables">4.6.1.2.1. Default Type of Variables</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="types.html#_void-type">4.6.2. Void Type</a>
+<ul class="sectlevel4">
+<li><a href="types.html#void-type-semantics">4.6.2.1. Semantics</a></li>
+</ul>
+</li>
+<li><a href="types.html#_unknown-type">4.6.3. Unknown Type</a></li>
+<li><a href="types.html#_primitive-pathselector-and-i18nkey">4.6.4. Primitive Pathselector and I18nKey</a>
+<ul class="sectlevel4">
+<li><a href="types.html#pathselector-semantics">4.6.4.1. Semantics</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="types.html#_built-in-ecmascript-object-types">4.7. Built-in ECMAScript Object Types</a>
+<ul class="sectlevel3">
+<li><a href="types.html#ECMAScript-objects-semantics">4.7.1. Semantics</a></li>
+<li><a href="types.html#_object-type">4.7.2. Object Type</a></li>
+<li><a href="types.html#_function-object-type">4.7.3. Function-Object-Type</a></li>
+<li><a href="types.html#_array-object-type">4.7.4. Array Object Type</a></li>
+<li><a href="types.html#_string-object-type">4.7.5. String Object Type</a></li>
+<li><a href="types.html#_boolean-object-type">4.7.6. Boolean Object Type</a></li>
+<li><a href="types.html#_number-object-type">4.7.7. Number Object Type</a></li>
+<li><a href="types.html#_global-object-type">4.7.8. Global Object Type</a></li>
+<li><a href="types.html#_symbol">4.7.9. Symbol</a></li>
+<li><a href="types.html#_promise">4.7.10. Promise</a></li>
+<li><a href="types.html#_iterator-interface">4.7.11. Iterator Interface</a></li>
+<li><a href="types.html#_iterable-interface">4.7.12. Iterable Interface</a></li>
+</ul>
+</li>
+<li><a href="types.html#_built-in-n4js-types">4.8. Built-In N4JS Types</a>
+<ul class="sectlevel3">
+<li><a href="types.html#_n4object">4.8.1. N4Object</a>
+<ul class="sectlevel4">
+<li><a href="types.html#N4Object-semantics">4.8.1.1. Semantics</a></li>
+</ul>
+</li>
+<li><a href="types.html#_n4class">4.8.2. N4Class</a></li>
+<li><a href="types.html#IterableN">4.8.3. IterableN</a></li>
+</ul>
+</li>
+<li><a href="types.html#_type-modifiers">4.9. Type Modifiers</a>
+<ul class="sectlevel3">
+<li><a href="types.html#Type_Modifiers_Dynamic">4.9.1. Dynamic</a></li>
+<li><a href="types.html#_optional-return-types">4.9.2. Optional Return Types</a></li>
+</ul>
+</li>
+<li><a href="types.html#_union-and-intersection-type-composed-types">4.10. Union and Intersection Type (Composed Types)</a>
+<ul class="sectlevel3">
+<li><a href="types.html#_union-type">4.10.1. Union Type</a>
+<ul class="sectlevel4">
+<li><a href="types.html#union-type-syntax">4.10.1.1. Syntax</a></li>
+<li><a href="types.html#union-type-semantics">4.10.1.2. Semantics</a></li>
+<li><a href="types.html#_warnings">4.10.1.3. Warnings</a></li>
+</ul>
+</li>
+<li><a href="types.html#_intersection-type">4.10.2. Intersection Type</a>
+<ul class="sectlevel4">
+<li><a href="types.html#intersection-type-syntax">4.10.2.1. Syntax</a></li>
+<li><a href="types.html#intersection-type-semantics">4.10.2.2. Semantics</a></li>
+<li><a href="types.html#_warnings-2">4.10.2.3. Warnings</a></li>
+</ul>
+</li>
+<li><a href="types.html#_composed-types-in-wildcards">4.10.3. Composed Types in Wildcards</a></li>
+<li><a href="types.html#_property-access-for-composed-types">4.10.4. Property Access for Composed Types</a>
+<ul class="sectlevel4">
+<li><a href="types.html#_properties-of-union-type">4.10.4.1. Properties of Union Type</a>
+<ul class="sectlevel5">
+<li><a href="types.html#_remarks-on-union-type-s-members">4.10.4.1.1. Remarks on union type’s members:</a></li>
+</ul>
+</li>
+<li><a href="types.html#_properties-of-intersection-type">4.10.4.2. Properties of Intersection Type</a>
+<ul class="sectlevel5">
+<li><a href="types.html#_remarks-on-intersection-type-s-methods">4.10.4.2.1. Remarks on intersection type’s methods:</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="types.html#_constructor-and-classifier-type">4.11. Constructor and Classifier Type</a>
+<ul class="sectlevel3">
+<li><a href="types.html#_syntax-3">4.11.1. Syntax</a></li>
+<li><a href="types.html#_semantics-2">4.11.2. Semantics</a></li>
+<li><a href="types.html#_constructors-and-prototypes-in-ecmascript-2015">4.11.3. Constructors and Prototypes in ECMAScript 2015</a></li>
+</ul>
+</li>
+<li><a href="types.html#_this-type">4.12. This Type</a>
+<ul class="sectlevel3">
+<li><a href="types.html#this-type-syntax">4.12.1. Syntax</a></li>
+<li><a href="types.html#this-keyword-semantics">4.12.2. Semantics</a></li>
+</ul>
+</li>
+<li><a href="types.html#_enums">4.13. Enums</a>
+<ul class="sectlevel3">
+<li><a href="types.html#_enums-n4js">4.13.1. Enums (N4JS)</a>
+<ul class="sectlevel4">
+<li><a href="types.html#enums-syntax">4.13.1.1. Syntax</a></li>
+<li><a href="types.html#enums-semantics">4.13.1.2. Semantics</a></li>
+</ul>
+</li>
+<li><a href="types.html#_string-based-enums">4.13.2. String-Based Enums</a></li>
+</ul>
+</li>
+<li><a href="types.html#_short-hand-syntax">4.14. Short-Hand Syntax</a>
+<ul class="sectlevel3">
+<li><a href="types.html#_array-short-hand-syntax">4.14.1. Array Short-Hand Syntax</a></li>
+<li><a href="types.html#_iterablen-short-hand-syntax">4.14.2. IterableN Short-Hand Syntax</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="classifiers.html#_classifiers">5. Classifiers</a>
+<ul class="sectlevel2">
+<li><a href="classifiers.html#_n4js-specific-classifiers">5.1. N4JS Specific Classifiers</a>
+<ul class="sectlevel3">
+<li><a href="classifiers.html#_properties-2">5.1.1. Properties</a></li>
+<li><a href="classifiers.html#_common-semantics-of-classifiers">5.1.2. Common Semantics of Classifiers</a></li>
+<li><a href="classifiers.html#_classes">5.1.3. Classes</a>
+<ul class="sectlevel4">
+<li><a href="classifiers.html#_definition-of-classes">5.1.3.1. Definition of Classes</a>
+<ul class="sectlevel5">
+<li><a href="classifiers.html#class-syntax">5.1.3.1.1. Syntax</a></li>
+<li><a href="classifiers.html#class-properties">5.1.3.1.2. Properties</a></li>
+<li><a href="classifiers.html#class-type-inference">5.1.3.1.3. Type Inference</a></li>
+</ul>
+</li>
+<li><a href="classifiers.html#class-semantics">5.1.3.2. Semantics</a></li>
+<li><a href="classifiers.html#_final-modifier">5.1.3.3. Final Modifier</a></li>
+<li><a href="classifiers.html#_abstract-classes">5.1.3.4. Abstract Classes</a></li>
+<li><a href="classifiers.html#_non-instantiable-classes">5.1.3.5. Non-Instantiable Classes</a></li>
+<li><a href="classifiers.html#_superclass">5.1.3.6. Superclass</a></li>
+</ul>
+</li>
+<li><a href="classifiers.html#_interfaces">5.1.4. Interfaces</a>
+<ul class="sectlevel4">
+<li><a href="classifiers.html#_definition-of-interfaces">5.1.4.1. Definition of Interfaces</a>
+<ul class="sectlevel5">
+<li><a href="classifiers.html#interfaces-syntax">5.1.4.1.1. Syntax</a></li>
+<li><a href="classifiers.html#interfaces-properties">5.1.4.1.2. Properties</a></li>
+<li><a href="classifiers.html#interfaces-type-inference">5.1.4.1.3. Type Inference</a></li>
+<li><a href="classifiers.html#interfaces-semantics">5.1.4.1.4. Semantics</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="classifiers.html#_generic-classifiers">5.1.5. Generic Classifiers</a></li>
+<li><a href="classifiers.html#sec:definition-site-variance">5.1.6. Definition-Site Variance</a></li>
+</ul>
+</li>
+<li><a href="classifiers.html#_members">5.2. Members</a>
+<ul class="sectlevel3">
+<li><a href="classifiers.html#_syntax-4">5.2.1. Syntax</a>
+<ul class="sectlevel4">
+<li><a href="classifiers.html#_properties-3">5.2.1.1. Properties</a></li>
+</ul>
+</li>
+<li><a href="classifiers.html#_semantics-3">5.2.2. Semantics</a></li>
+<li><a href="classifiers.html#_methods">5.2.3. Methods</a>
+<ul class="sectlevel4">
+<li><a href="classifiers.html#_syntax-5">5.2.3.1. Syntax</a></li>
+<li><a href="classifiers.html#_properties-4">5.2.3.2. Properties</a></li>
+<li><a href="classifiers.html#_semantics-4">5.2.3.3. Semantics</a></li>
+<li><a href="classifiers.html#_final-methods">5.2.3.4. Final Methods</a></li>
+<li><a href="classifiers.html#_abstract-methods">5.2.3.5. Abstract Methods</a></li>
+<li><a href="classifiers.html#_generic-methods">5.2.3.6. Generic Methods</a></li>
+</ul>
+</li>
+<li><a href="classifiers.html#_default-methods-in-interfaces">5.2.4. Default Methods in Interfaces</a>
+<ul class="sectlevel4">
+<li><a href="classifiers.html#_asynchronous-methods">5.2.4.1. Asynchronous Methods</a></li>
+</ul>
+</li>
+<li><a href="classifiers.html#_constructors">5.2.5. Constructors</a>
+<ul class="sectlevel4">
+<li><a href="classifiers.html#_structural-this-type-in-constructor">5.2.5.1. Structural This Type in Constructor</a></li>
+<li><a href="classifiers.html#spec-constructor">5.2.5.2. @Spec Constructor</a></li>
+<li><a href="classifiers.html#_callable-constructors">5.2.5.3. Callable Constructors</a></li>
+<li><a href="classifiers.html#_covariant-constructors">5.2.5.4. Covariant Constructors</a></li>
+</ul>
+</li>
+<li><a href="classifiers.html#_data-fields">5.2.6. Data Fields</a>
+<ul class="sectlevel4">
+<li><a href="classifiers.html#data-fields-syntax">5.2.6.1. Syntax</a></li>
+<li><a href="classifiers.html#data-fields-properties">5.2.6.2. Properties</a>
+<ul class="sectlevel5">
+<li><a href="classifiers.html#data-fields-semantics">5.2.6.2.1. Semantics</a></li>
+<li><a href="classifiers.html#data-fields-type-inference">5.2.6.2.2. Type Inference</a></li>
+</ul>
+</li>
+<li><a href="classifiers.html#_assignment-modifiers">5.2.6.3. Assignment Modifiers</a></li>
+<li><a href="classifiers.html#_field-accessors-getter-setter">5.2.6.4. Field Accessors (Getter/Setter)</a>
+<ul class="sectlevel5">
+<li><a href="classifiers.html#field-acessors-syntax">5.2.6.4.1. Syntax</a></li>
+<li><a href="classifiers.html#field-acessors-properties">5.2.6.4.2. Properties</a></li>
+<li><a href="classifiers.html#field-accessors-semantics">5.2.6.4.3. Semantics</a></li>
+</ul>
+</li>
+<li><a href="classifiers.html#optional-fields">5.2.6.5. Optional Fields</a>
+<ul class="sectlevel5">
+<li><a href="classifiers.html#_syntax-6">5.2.6.5.1. Syntax</a></li>
+<li><a href="classifiers.html#_semantics-5">5.2.6.5.2. Semantics</a></li>
+<li><a href="classifiers.html#_background">5.2.6.5.3. Background</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="classifiers.html#_static-members">5.2.7. Static Members</a>
+<ul class="sectlevel4">
+<li><a href="classifiers.html#_access-from-and-to-static-members">5.2.7.1. Access From and To Static Members</a></li>
+<li><a href="classifiers.html#_generic-static-methods">5.2.7.2. Generic static methods</a></li>
+<li><a href="classifiers.html#_static-members-of-interfaces">5.2.7.3. Static Members of Interfaces</a></li>
+</ul>
+</li>
+<li><a href="classifiers.html#_redefinition-of-members">5.2.8. Redefinition of Members</a>
+<ul class="sectlevel4">
+<li><a href="classifiers.html#_overriding-of-members">5.2.8.1. Overriding of Members</a></li>
+<li><a href="classifiers.html#_implementation-of-members">5.2.8.2. Implementation of Members</a>
+<ul class="sectlevel5">
+<li><a href="classifiers.html#_member-consumption">5.2.8.2.1. Member Consumption</a></li>
+<li><a href="classifiers.html#_member-implementation">5.2.8.2.2. Member Implementation</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="classifiers.html#_structural-typing">5.3. Structural Typing</a>
+<ul class="sectlevel3">
+<li><a href="classifiers.html#_syntax-7">5.3.1. Syntax</a></li>
+<li><a href="classifiers.html#_definition-site-structural-typing">5.3.2. Definition Site Structural Typing</a></li>
+<li><a href="classifiers.html#_use-site-structural-typing">5.3.3. Use-Site Structural Typing</a></li>
+<li><a href="classifiers.html#structural-readWriteInit-field-typing">5.3.4. Structural Read-only, Write-only and Initializer Field Typing</a></li>
+<li><a href="classifiers.html#_public-setter-annotated-with-code-providesinitializer-code">5.3.5. Public Setter Annotated With <code>ProvidesInitializer</code></a></li>
+<li><a href="classifiers.html#_structural-types-with-optional-fields">5.3.6. Structural Types With Optional Fields</a></li>
+<li><a href="classifiers.html#_structural-types-with-access-modifier">5.3.7. Structural Types With Access Modifier</a></li>
+<li><a href="classifiers.html#_structural-types-with-additional-members">5.3.8. Structural Types With Additional Members</a>
+<ul class="sectlevel4">
+<li><a href="classifiers.html#_syntax-8">5.3.8.1. Syntax</a>
+<ul class="sectlevel5">
+<li><a href="classifiers.html#_semantics-6">5.3.8.1.1. Semantics</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#_functions">6. Functions</a>
+<ul class="sectlevel2">
+<li><a href="#_function-type">6.1. Function Type</a>
+<ul class="sectlevel3">
+<li><a href="#_properties-5">6.1.1. Properties</a></li>
+<li><a href="#function-type-inference">6.1.2. Type Inference</a></li>
+<li><a href="#_autoboxing-of-function-type">6.1.3. Autoboxing of Function Type</a></li>
+<li><a href="#_arguments-object">6.1.4. Arguments Object</a></li>
+</ul>
+</li>
+<li><a href="#_ecmascript-5-function-definition">6.2. ECMAScript 5 Function Definition</a>
+<ul class="sectlevel3">
+<li><a href="#_function-declaration">6.2.1. Function Declaration</a>
+<ul class="sectlevel4">
+<li><a href="#_syntax-9">6.2.1.1. Syntax</a></li>
+<li><a href="#_semantics-8">6.2.1.2. Semantics</a></li>
+</ul>
+</li>
+<li><a href="#_function-expression">6.2.2. Function Expression</a>
+<ul class="sectlevel4">
+<li><a href="#function-expression-syntax">6.2.2.1. Syntax</a></li>
+<li><a href="#_semantics-and-type-inference">6.2.2.2. Semantics and Type Inference</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#_ecmascript-2015-function-definition">6.3. ECMAScript 2015 Function Definition</a>
+<ul class="sectlevel3">
+<li><a href="#_formal-parameters">6.3.1. Formal Parameters</a>
+<ul class="sectlevel4">
+<li><a href="#Type_Modifiers_Optional">6.3.1.1. Optional Parameters</a></li>
+<li><a href="#Type_Modifiers_Default">6.3.1.2. Default Parameters</a></li>
+<li><a href="#Type_Modifiers_Variadic">6.3.1.3. Variadic</a></li>
+</ul>
+</li>
+<li><a href="#_generator-functions">6.3.2. Generator Functions</a>
+<ul class="sectlevel4">
+<li><a href="#generator-functions-syntax">6.3.2.1. Syntax</a></li>
+<li><a href="#generator-functions-semantics">6.3.2.2. Semantics</a></li>
+<li><a href="#_generator-arrow-functions">6.3.2.3. Generator Arrow Functions</a></li>
+</ul>
+</li>
+<li><a href="#_arrow-function-expression">6.3.3. Arrow Function Expression</a>
+<ul class="sectlevel4">
+<li><a href="#arrow-function-expression-syntax">6.3.3.1. Syntax</a></li>
+<li><a href="#arrow-function-expression-semantics-and-type-inference">6.3.3.2. Semantics and Type Inference</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#_ecmascript-proposals-function-definition">6.4. ECMAScript Proposals Function Definition</a>
+<ul class="sectlevel3">
+<li><a href="#_asynchronous-functions">6.4.1. Asynchronous Functions</a>
+<ul class="sectlevel4">
+<li><a href="#asynchronous-functions-syntax">6.4.1.1. Syntax</a></li>
+<li><a href="#asynchronous-functions-semantics">6.4.1.2. Semantics</a></li>
+<li><a href="#_asynchronous-arrow-functions">6.4.1.3. Asynchronous Arrow Functions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#_n4js-extended-function-definition">6.5. N4JS Extended Function Definition</a>
+<ul class="sectlevel3">
+<li><a href="#_generic-functions">6.5.1. Generic Functions</a></li>
+<li><a href="#_promisifiable-functions">6.5.2. Promisifiable Functions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="conversions_and_reflection.html#_conversions-and-reflection">7. Conversions and Reflection</a>
+<ul class="sectlevel2">
+<li><a href="conversions_and_reflection.html#_autoboxing-and-coercing">7.1. Autoboxing and Coercing</a>
+<ul class="sectlevel3">
+<li><a href="conversions_and_reflection.html#_coercing">7.1.1. Coercing</a></li>
+<li><a href="conversions_and_reflection.html#_autoboxing-of-primitives">7.1.2. Autoboxing of Primitives</a></li>
+<li><a href="conversions_and_reflection.html#_autoboxing-of-function-expressions-and-declarations">7.1.3. Autoboxing of Function Expressions and Declarations</a></li>
+</ul>
+</li>
+<li><a href="conversions_and_reflection.html#_auto-conversion-of-objects">7.2. Auto-Conversion of Objects</a>
+<ul class="sectlevel3">
+<li><a href="conversions_and_reflection.html#_auto-conversion-of-class-instances">7.2.1. Auto-Conversion of Class Instances</a>
+<ul class="sectlevel4">
+<li><a href="conversions_and_reflection.html#_auto-conversion-of-interface-instances">7.2.1.1. Auto-Conversion of Interface Instances</a></li>
+</ul>
+</li>
+<li><a href="conversions_and_reflection.html#_auto-conversion-of-enum-literals">7.2.2. Auto-Conversion of Enum Literals</a></li>
+</ul>
+</li>
+<li><a href="conversions_and_reflection.html#_type-cast-and-type-check">7.3. Type Cast and Type Check</a>
+<ul class="sectlevel3">
+<li><a href="conversions_and_reflection.html#_type-cast">7.3.1. Type Cast</a></li>
+<li><a href="conversions_and_reflection.html#_type-check">7.3.2. Type Check</a></li>
+</ul>
+</li>
+<li><a href="conversions_and_reflection.html#_reflection-meta-information">7.4. Reflection meta-information</a>
+<ul class="sectlevel3">
+<li><a href="conversions_and_reflection.html#_reflection-for-classes">7.4.1. Reflection for Classes</a></li>
+<li><a href="conversions_and_reflection.html#_reflection-for-interfaces">7.4.2. Reflection for Interfaces</a></li>
+<li><a href="conversions_and_reflection.html#_reflection-for-enumerations">7.4.3. Reflection for Enumerations</a></li>
+</ul>
+</li>
+<li><a href="conversions_and_reflection.html#_conversion-of-primitive-types">7.5. Conversion of primitive types</a></li>
+</ul>
+</li>
+<li><a href="expressions.html#_expressions">8. Expressions</a>
+<ul class="sectlevel2">
+<li><a href="expressions.html#_ecmascript-5-expressions">8.1. ECMAScript 5 Expressions</a>
+<ul class="sectlevel3">
+<li><a href="expressions.html#_the-this-literal">8.1.1. The this Literal</a></li>
+<li><a href="expressions.html#_identifier">8.1.2. Identifier</a></li>
+<li><a href="expressions.html#_literals">8.1.3. Literals</a>
+<ul class="sectlevel4">
+<li><a href="expressions.html#_integer-literals">8.1.3.1. Integer Literals</a></li>
+</ul>
+</li>
+<li><a href="expressions.html#_array-literal">8.1.4. Array Literal</a></li>
+<li><a href="expressions.html#_object-literal">8.1.5. Object Literal</a>
+<ul class="sectlevel4">
+<li><a href="expressions.html#_properties-6">8.1.5.1. Properties</a></li>
+<li><a href="expressions.html#_scoping-and-linking">8.1.5.2. Scoping and linking</a></li>
+</ul>
+</li>
+<li><a href="expressions.html#_parenthesized-expression-and-grouping-operator">8.1.6. Parenthesized Expression and Grouping Operator</a></li>
+<li><a href="expressions.html#_property-accessors">8.1.7. Property Accessors</a>
+<ul class="sectlevel4">
+<li><a href="expressions.html#properties-1">8.1.7.1. Properties</a></li>
+</ul>
+</li>
+<li><a href="expressions.html#_new-expression">8.1.8. New Expression</a></li>
+<li><a href="expressions.html#_function-expression-2">8.1.9. Function Expression</a></li>
+<li><a href="expressions.html#_function-calls">8.1.10. Function Calls</a></li>
+<li><a href="expressions.html#_postfix-expression">8.1.11. Postfix Expression</a></li>
+<li><a href="expressions.html#_unary-expression">8.1.12. Unary Expression</a></li>
+<li><a href="expressions.html#_multiplicative-expression">8.1.13. Multiplicative Expression</a></li>
+<li><a href="expressions.html#_additive-expression">8.1.14. Additive Expression</a>
+<ul class="sectlevel4">
+<li><a href="expressions.html#type-inference-10">8.1.14.1. Type Inference</a></li>
+</ul>
+</li>
+<li><a href="expressions.html#_bitwise-shift-expression">8.1.15. Bitwise Shift Expression</a></li>
+<li><a href="expressions.html#_relational-expression">8.1.16. Relational Expression</a></li>
+<li><a href="expressions.html#_equality-expression">8.1.17. Equality Expression</a></li>
+<li><a href="expressions.html#_binary-bitwise-expression">8.1.18. Binary Bitwise Expression</a></li>
+<li><a href="expressions.html#_binary-logical-expression">8.1.19. Binary Logical Expression</a></li>
+<li><a href="expressions.html#_conditional-expression">8.1.20. Conditional Expression</a></li>
+<li><a href="expressions.html#_assignment-expression">8.1.21. Assignment Expression</a></li>
+<li><a href="expressions.html#_comma-expression">8.1.22. Comma Expression</a></li>
+</ul>
+</li>
+<li><a href="expressions.html#_ecmascript-6-expressions">8.2. ECMAScript 6 Expressions</a>
+<ul class="sectlevel3">
+<li><a href="expressions.html#_the-super-keyword">8.2.1. The super Keyword</a></li>
+</ul>
+</li>
+<li><a href="expressions.html#_ecmascript-7-expressions">8.3. ECMAScript 7 Expressions</a>
+<ul class="sectlevel3">
+<li><a href="expressions.html#_await-expression">8.3.1. Await Expression</a></li>
+</ul>
+</li>
+<li><a href="expressions.html#_n4js-specific-expressions">8.4. N4JS Specific Expressions</a>
+<ul class="sectlevel3">
+<li><a href="expressions.html#_class-expression">8.4.1. Class Expression</a></li>
+<li><a href="expressions.html#_cast-as-expression">8.4.2. Cast (As) Expression</a>
+<ul class="sectlevel4">
+<li><a href="expressions.html#cast-as-expression-semantics-type-inference">8.4.2.1. Semantics and Type Inference</a></li>
+</ul>
+</li>
+<li><a href="expressions.html#Import_Calls">8.4.3. Import Calls</a></li>
+</ul>
+</li>
+<li><a href="expressions.html#compile-time-expressions">8.5. Compile-Time Expressions</a></li>
+</ul>
+</li>
+<li><a href="statements.html#_statements">9. Statements</a>
+<ul class="sectlevel2">
+<li><a href="statements.html#_ecmascript-5-statements">9.1. ECMAScript 5 Statements</a>
+<ul class="sectlevel3">
+<li><a href="statements.html#_function-or-field-accessor-bodies">9.1.1. Function or Field Accessor Bodies</a></li>
+<li><a href="statements.html#_variable-statement">9.1.2. Variable Statement</a></li>
+<li><a href="statements.html#_if-statement">9.1.3. If Statement</a></li>
+<li><a href="statements.html#_iteration-statements">9.1.4. Iteration Statements</a></li>
+<li><a href="statements.html#_return-statement">9.1.5. Return Statement</a></li>
+<li><a href="statements.html#_with-statement">9.1.6. With Statement</a></li>
+<li><a href="statements.html#_switch-statement">9.1.7. Switch Statement</a></li>
+<li><a href="statements.html#_throw-try-and-catch-statements">9.1.8. Throw, Try, and Catch Statements</a></li>
+<li><a href="statements.html#_debugger-statement">9.1.9. Debugger Statement</a></li>
+</ul>
+</li>
+<li><a href="statements.html#_ecmascript-6-statements">9.2. ECMAScript 6 Statements</a>
+<ul class="sectlevel3">
+<li><a href="statements.html#_let">9.2.1. Let</a></li>
+<li><a href="statements.html#_const">9.2.2. Const</a></li>
+<li><a href="statements.html#_for-of-statement">9.2.3. <code>for &#8230;&#8203; of</code> statement</a></li>
+<li><a href="statements.html#_import-statement">9.2.4. Import Statement</a>
+<ul class="sectlevel4">
+<li><a href="statements.html#Dynamic_Imports">9.2.4.1. Dynamic Imports</a></li>
+<li><a href="statements.html#_immutabilaty-of-imports">9.2.4.2. Immutabilaty of Imports</a></li>
+</ul>
+</li>
+<li><a href="statements.html#_export-statement">9.2.5. Export Statement</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="annotations.html#_annotations">10. Annotations</a>
+<ul class="sectlevel2">
+<li><a href="annotations.html#_introduction-2">10.1. Introduction</a>
+<ul class="sectlevel3">
+<li><a href="annotations.html#_syntax-13">10.1.1. Syntax</a></li>
+<li><a href="annotations.html#_properties-7">10.1.2. Properties</a></li>
+<li><a href="annotations.html#_element-specific-annotations">10.1.3. Element-Specific Annotations</a></li>
+<li><a href="annotations.html#_general-annotations">10.1.4. General Annotations</a>
+<ul class="sectlevel4">
+<li><a href="annotations.html#_idebug">10.1.4.1. IDEBUG</a></li>
+</ul>
+</li>
+<li><a href="annotations.html#idebug-syntax">10.1.5. Syntax</a>
+<ul class="sectlevel4">
+<li><a href="annotations.html#_semantics-11">10.1.5.1. Semantics</a></li>
+<li><a href="annotations.html#_suppress-warnings">10.1.5.2. Suppress Warnings</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="annotations.html#_declaration-of-annotations">10.2. Declaration of Annotations</a></li>
+</ul>
+</li>
+<li><a href="extended_fetaures.html#_extended-fetaures">11. Extended Fetaures</a>
+<ul class="sectlevel2">
+<li><a href="extended_fetaures.html#_array-and-object-destructuring">11.1. Array and Object Destructuring</a>
+<ul class="sectlevel3">
+<li><a href="extended_fetaures.html#_syntax-14">11.1.1. Syntax</a></li>
+<li><a href="extended_fetaures.html#_semantics-12">11.1.2. Semantics</a></li>
+</ul>
+</li>
+<li><a href="extended_fetaures.html#_dependency-injection">11.2. Dependency Injection</a>
+<ul class="sectlevel3">
+<li><a href="extended_fetaures.html#_di-components-and-injectors">11.2.1. DI Components and Injectors</a>
+<ul class="sectlevel4">
+<li><a href="extended_fetaures.html#_dicomponent-relations">11.2.1.1. DIComponent Relations</a></li>
+</ul>
+</li>
+<li><a href="extended_fetaures.html#_binders-and-bindings">11.2.2. Binders and Bindings</a></li>
+<li><a href="extended_fetaures.html#_injection-points">11.2.3. Injection Points</a>
+<ul class="sectlevel4">
+<li><a href="extended_fetaures.html#_field-injection">11.2.3.1. Field Injection</a></li>
+<li><a href="extended_fetaures.html#_constructor-injection">11.2.3.2. Constructor Injection</a></li>
+<li><a href="extended_fetaures.html#_method-injection">11.2.3.3. Method Injection</a>
+<ul class="sectlevel5">
+<li><a href="extended_fetaures.html#_provider">11.2.3.3.1. Provider</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="extended_fetaures.html#_n4js-di-life-cycle-and-scopes">11.2.4. N4JS DI Life Cycle and Scopes</a>
+<ul class="sectlevel4">
+<li><a href="extended_fetaures.html#_injection-cylces">11.2.4.1. Injection Cylces</a></li>
+<li><a href="extended_fetaures.html#_default-scope">11.2.4.2. Default Scope</a></li>
+<li><a href="extended_fetaures.html#_singleton-scope">11.2.4.3. Singleton Scope</a></li>
+<li><a href="extended_fetaures.html#_per-injection-chain-singleton">11.2.4.4. Per Injection Chain Singleton</a></li>
+</ul>
+</li>
+<li><a href="extended_fetaures.html#_validation-of-callsites-targeting-n4injector-methods">11.2.5. Validation of callsites targeting N4Injector methods</a></li>
+<li><a href="extended_fetaures.html#_n4js-di-annotations">11.2.6. N4JS DI Annotations</a>
+<ul class="sectlevel4">
+<li><a href="extended_fetaures.html#_n4js-di-generateinjector">11.2.6.1. N4JS DI @GenerateInjector</a></li>
+<li><a href="extended_fetaures.html#_n4js-di-withparentinjector">11.2.6.2. N4JS DI @WithParentInjector</a></li>
+<li><a href="extended_fetaures.html#_n4js-di-usebinder">11.2.6.3. N4JS DI @UseBinder</a></li>
+<li><a href="extended_fetaures.html#_n4js-di-binder">11.2.6.4. N4JS DI @Binder</a></li>
+<li><a href="extended_fetaures.html#_n4js-di-bind">11.2.6.5. N4JS DI @Bind</a></li>
+<li><a href="extended_fetaures.html#_n4js-di-provides">11.2.6.6. N4JS DI @Provides</a></li>
+<li><a href="extended_fetaures.html#_n4js-di-inject">11.2.6.7. N4JS DI @Inject</a></li>
+<li><a href="extended_fetaures.html#_n4js-di-singleton">11.2.6.8. N4JS DI @Singleton</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="extended_fetaures.html#_test-support">11.3. Test Support</a></li>
+<li><a href="extended_fetaures.html#_polyfill-definitions">11.4. Polyfill Definitions</a>
+<ul class="sectlevel3">
+<li><a href="extended_fetaures.html#_runtime-polyfill-definitions">11.4.1. Runtime Polyfill Definitions</a></li>
+<li><a href="extended_fetaures.html#_static-polyfill-definitions">11.4.2. Static Polyfill Definitions</a></li>
+<li><a href="extended_fetaures.html#_transpiling-static-polyfilled-classes">11.4.3. Transpiling static polyfilled classes</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="components.html#_components">12. Components</a>
+<ul class="sectlevel2">
+<li><a href="components.html#_overview-2">12.1. Overview</a></li>
+<li><a href="components.html#Component_Types">12.2. Component Types</a>
+<ul class="sectlevel3">
+<li><a href="components.html#_libraries">12.2.1. Libraries</a></li>
+<li><a href="components.html#_runtime-environment-and-runtime-libraries">12.2.2. Runtime Environment and Runtime Libraries</a></li>
+<li><a href="components.html#_tests">12.2.3. Tests</a></li>
+<li><a href="components.html#_type-definitions">12.2.4. Type Definitions</a></li>
+</ul>
+</li>
+<li><a href="components.html#package-json">12.3. Package.json File</a>
+<ul class="sectlevel3">
+<li><a href="components.html#_basic-properties">12.3.1. Basic Properties</a></li>
+<li><a href="components.html#_n4js-properties">12.3.2. N4JS Properties</a></li>
+<li><a href="components.html#_constraints">12.3.3. Constraints</a></li>
+</ul>
+</li>
+<li><a href="components.html#_support-for-npm-scopes">12.4. Support for NPM Scopes</a></li>
+<li><a href="components.html#sec:N4JS-Type-Definitions">12.5. N4JS Type Definitions</a>
+<ul class="sectlevel3">
+<li><a href="components.html#_specify-type-definition">12.5.1. Specify Type Definition</a></li>
+<li><a href="components.html#_name-conventions">12.5.2. Name Conventions</a></li>
+<li><a href="components.html#_version-conventions">12.5.3. Version Conventions</a>
+<ul class="sectlevel4">
+<li><a href="components.html#_define-a-new-type-definition-package">12.5.3.1. Define a New Type Definition Package</a></li>
+<li><a href="components.html#_using-a-type-definition-package">12.5.3.2. Using a Type Definition Package</a></li>
+<li><a href="components.html#_rational">12.5.3.3. Rational</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="components.html#_modules">12.6. Modules</a></li>
+<li><a href="components.html#_api-and-implementation-component">12.7. API and Implementation Component</a>
+<ul class="sectlevel3">
+<li><a href="components.html#_execution-of-api-and-implementation-components">12.7.1. Execution of API and Implementation Components</a></li>
+<li><a href="components.html#_api-and-implementation-with-di">12.7.2. API and Implementation With DI</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="plainjs.html#_plainjs">13. PlainJS</a>
+<ul class="sectlevel2">
+<li><a href="plainjs.html#_type-inference-and-validation-for-plain-js">13.1. Type Inference and Validation for Plain JS</a></li>
+<li><a href="plainjs.html#_external-declarations">13.2. External Declarations</a>
+<ul class="sectlevel3">
+<li><a href="plainjs.html#_declaring-externals">13.2.1. Declaring externals</a></li>
+<li><a href="plainjs.html#_instantiating-external-classes">13.2.2. Instantiating external classes</a></li>
+<li><a href="plainjs.html#_implementation-of-external-declarations">13.2.3. Implementation of External Declarations</a></li>
+<li><a href="plainjs.html#_example">13.2.4. Example</a></li>
+</ul>
+</li>
+<li><a href="plainjs.html#_global-definitions">13.3. Global Definitions</a></li>
+<li><a href="plainjs.html#_runtime-definitions">13.4. Runtime Definitions</a></li>
+<li><a href="plainjs.html#_applying-polyfills">13.5. Applying Polyfills</a></li>
+</ul>
+</li>
+<li><a href="jsdoc.html#_jsdoc-2">14. JSDoc</a>
+<ul class="sectlevel2">
+<li><a href="jsdoc.html#_general-n4jsdoc-features">14.1. General N4JSDoc Features</a>
+<ul class="sectlevel3">
+<li><a href="jsdoc.html#_provided-inline-tags">14.1.1. Provided Inline Tags</a>
+<ul class="sectlevel4">
+<li><a href="jsdoc.html#jsdoc_tag__code">14.1.1.1. @code</a></li>
+<li><a href="jsdoc.html#jsdoc_tag__link">14.1.1.2. @link</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="jsdoc.html#_n4jsdoc-for-user-projects">14.2. N4JSdoc for User Projects</a>
+<ul class="sectlevel3">
+<li><a href="jsdoc.html#_standard-tags">14.2.1. Standard Tags</a>
+<ul class="sectlevel4">
+<li><a href="jsdoc.html#_-author">14.2.1.1. @author</a></li>
+<li><a href="jsdoc.html#jsdoc_tag_param">14.2.1.2. @param</a></li>
+<li><a href="jsdoc.html#jsdoc_tag_return">14.2.1.3. @return</a></li>
+</ul>
+</li>
+<li><a href="jsdoc.html#_test-related-tags">14.2.2. Test Related Tags</a>
+<ul class="sectlevel4">
+<li><a href="jsdoc.html#jsdoc_tag__testee">14.2.2.1. @testee</a></li>
+<li><a href="jsdoc.html#jsdoc_tag__testeeFromType">14.2.2.2. @testeeFromType</a></li>
+<li><a href="jsdoc.html#_testeeType_and__testeeMember">14.2.2.3. @testeeType and @testeeMember</a></li>
+<li><a href="jsdoc.html#jsdoc_tag_reqid_in_Tests">14.2.2.4. @reqid in Tests</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="jsdoc.html#_n4jsdoc-for-api-and-implementation-projects">14.3. N4JSDoc for API and Implementation Projects</a>
+<ul class="sectlevel3">
+<li><a href="jsdoc.html#jsdoc_tag__apiNote">14.3.1. @apiNote</a></li>
+<li><a href="jsdoc.html#API_Project_Tags">14.3.2. API Project Tags</a>
+<ul class="sectlevel4">
+<li><a href="jsdoc.html#jsdoc_tag_apiState">14.3.2.1. @apiState</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="jsx.html#_jsx">15. JSX</a>
+<ul class="sectlevel2">
+<li><a href="jsx.html#_jsx-support">15.1. JSX Support</a></li>
+<li><a href="jsx.html#_jsx-backend">15.2. JSX Backend</a></li>
+</ul>
+</li>
+<li><a href="grammars.html#_grammars">16. Grammars</a>
+<ul class="sectlevel2">
+<li><a href="grammars.html#_type-expressions-grammar">16.1. Type Expressions Grammar</a></li>
+<li><a href="grammars.html#_n4js-language-grammar">16.2. N4JS Language Grammar</a></li>
+</ul>
+</li>
+<li><a href="jsobjects.html#_jsobjects">17. JSObjects</a>
+<ul class="sectlevel2">
+<li><a href="jsobjects.html#_object">17.1. Object</a></li>
+<li><a href="jsobjects.html#_string">17.2. String</a></li>
+<li><a href="jsobjects.html#_boolean">17.3. Boolean</a></li>
+<li><a href="jsobjects.html#_number">17.4. Number</a>
+<ul class="sectlevel3">
+<li><a href="jsobjects.html#_static-attributes">17.4.1. Static Attributes</a></li>
+</ul>
+</li>
+<li><a href="jsobjects.html#function">17.5. Function</a></li>
+<li><a href="jsobjects.html#_error">17.6. Error</a></li>
+<li><a href="jsobjects.html#_array">17.7. Array</a></li>
+<li><a href="jsobjects.html#_date">17.8. Date</a></li>
+<li><a href="jsobjects.html#_math">17.9. Math</a>
+<ul class="sectlevel3">
+<li><a href="jsobjects.html#static-attributes-1">17.9.1. Static Attributes</a></li>
+</ul>
+</li>
+<li><a href="jsobjects.html#_regexp">17.10. RegExp</a></li>
+<li><a href="jsobjects.html#_json">17.11. JSON</a></li>
+</ul>
+</li>
+<li><a href="n4js_objects.html#_n4js-objects">18. N4JS Objects</a>
+<ul class="sectlevel2">
+<li><a href="n4js_objects.html#_reflection-model">18.1. Reflection Model</a></li>
+<li><a href="n4js_objects.html#_error-types">18.2. Error Types</a>
+<ul class="sectlevel3">
+<li><a href="n4js_objects.html#_n4apinotimplemented">18.2.1. N4ApiNotImplemented</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="appendix_a_acronyms.html#_acronyms">Appendix A: Acronyms</a></li>
+<li><a href="appendix_b_license.html#sec:License">Appendix B: License</a></li>
+<li><a href="appendix_c_bibliography.html#_bibliography">Appendix C: Bibliography</a></li>
+</ul>
+</div>
+</div>
+<div id="content"><div class="sect1">
+<h2 id="_functions"><a class="anchor" href="#_functions"></a><a class="link" href="#_functions">6. Functions</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Functions, be they function declarations, expressions or even methods, are internally modeled by means of a function type.
+In this chapter, the general function type is described along with its semantics and type constraints.
+Function definitions and expressions are then introduced in terms of statements and expressions.
+Method definitions and special usages are described in <a href="classifiers.html#_methods">Methods</a>.</p>
+</div>
+<div class="sect2 language-n4js">
+<h3 id="_function-type"><a class="anchor" href="#_function-type"></a><a class="link" href="#_function-type">6.1. Function Type</a></h3>
+<div class="paragraph">
+<p>A function type is modeled as <code>Object</code> (see [<a href="appendix_c_bibliography.html#ECMA11a">ECMA11a(p.S13, p.p.98)</a>] in ECMAScript.</p>
+</div>
+<div class="paragraph">
+<p>Function types can be defined by means of;</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>A function object (<a href="types.html#_function-object-type">Function-Object-Type</a>).</p>
+</li>
+<li>
+<p>A function type expression (<a href="types.html#_type-expressions">Type Expressions</a>).</p>
+</li>
+<li>
+<p>A function declaration (<a href="#_function-declaration">Function Declaration</a>).</p>
+</li>
+<li>
+<p>A method declaration (<a href="classifiers.html#_methods">Methods</a>).</p>
+</li>
+</ul>
+</div>
+<div class="sect3">
+<h4 id="_properties-5"><a class="anchor" href="#_properties-5"></a><a class="link" href="#_properties-5">6.1.1. Properties</a></h4>
+<div class="paragraph">
+<p>In any case, a function type declares the signature of a function and allows validation of calls to that function.
+A function type has the following properties:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>typePars</code>  </dt>
+<dd>
+<p>(0-indexed) list of type parameters (i.e. type variables) for generic functions.</p>
+</dd>
+<dt class="hdlist1"><code>fpars</code>  </dt>
+<dd>
+<p>(0-indexed) list of formal parameters.</p>
+</dd>
+<dt class="hdlist1"><code>returnType</code> </dt>
+<dd>
+<p>(possibly inferred) return type (expression) of the function or method.</p>
+</dd>
+<dt class="hdlist1"><code>name</code> </dt>
+<dd>
+<p>Name of function or method, may be empty or automatically generated (for messages).</p>
+</dd>
+<dt class="hdlist1"><code>body</code> </dt>
+<dd>
+<p>The body of the function, it contains statements <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>s</mi><mi>t</mi><mi>m</mi><mi>t</mi><mi>s</mi></math>.
+The body is null if a function type is defined in a type expression, and it is the last argument in case of a function object constructor, or the content of the function definition body.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>Additionally, the following pseudo properties for functions are defined:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>thisTypeRef</code> </dt>
+<dd>
+<p>The this type ref is the type to which the <code>this</code>-keyword would be evaluated
+if used inside the function or member. The inference rules are described
+in <a href="grammar.html#_this-keyword">This Keyword</a>.</p>
+</dd>
+<dt class="hdlist1"><code>fpars</code> </dt>
+<dd>
+<p>List of formal parameters and the this type ref.
+This is only used for sub typing rules.
+If <code>this</code> is not used inside the function, then <code>any</code> is set instead of the inferred thisTypeRef to allow for more usages.
+The property is computed as follows:</p>
+<div class="openblock">
+<div class="content">
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mi>t</mi><mi>f</mi><mi>p</mi><mi>a</mi><mi>r</mi><mi>s</mi><mo>=</mo><mstyle mathvariant="bold"><mtext>if</mtext></mstyle><mo>.</mo><mspace width="1.0mm"/><mo>.</mo><mspace width="1.0mm"/><mo>.</mo><mspace width="1.0mm"/><mspace width="3.0mm"/><mstyle mathvariant="bold"><mtext>this is used or explicitly declared</mtext></mstyle><mspace width="3.0mm"/><mstyle mathvariant="bold"><mtext>then</mtext></mstyle><mo>.</mo><mspace width="1.0mm"/><mo>.</mo><mspace width="1.0mm"/><mo>.</mo><mspace width="1.0mm"/><mi>t</mi><mi>h</mi><mi>i</mi><mi>s</mi><mi>T</mi><mi>y</mi><mi>p</mi><mi>e</mi><mi>R</mi><mi>e</mi><mi>f</mi><mo>+</mo><mi>f</mi><mi>p</mi><mi>a</mi><mi>r</mi><mi>s</mi><mspace width="3.0mm"/><mstyle mathvariant="bold"><mtext>else</mtext></mstyle><mo>.</mo><mspace width="1.0mm"/><mo>.</mo><mspace width="1.0mm"/><mo>.</mo><mspace width="1.0mm"/><mi>a</mi><mi>n</mi><mi>y</mi><mo>+</mo><mi>f</mi><mi>p</mi><mi>a</mi><mi>r</mi><mi>s</mi></math>
+</div>
+</div>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>Parameters (in <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>p</mi><mi>a</mi><mi>r</mi><mi>s</mi></math>) have the following properties:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>name</code> </dt>
+<dd>
+<p>Name of the parameter.</p>
+</dd>
+<dt class="hdlist1"><code>type</code> </dt>
+<dd>
+<p>Type (expression) of the parameter. Note that only parameter types can
+be variadic or optional.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>The function definition can be annotated similar to <a href="classifiers.html#_methods">Methods</a> except that the <code>final</code> and <code>abstract</code> modifiers aren’t supported for function declarations.
+A function declaration is always final and never abstract.
+Also, a function has no property advice set.</p>
+</div>
+<h4 id="_semantics-7" class="discrete">Semantics</h4>
+<div class="openblock requirement">
+<div class="content">
+<div class="paragraph">
+<p><a id="Req-IDE-79"></a><strong>Req. IDE-79:</strong> <a href="#Req-IDE-79">Function Type</a> (ver. 1)</p>
+</div>
+<div class="paragraph">
+<p>Type Given a function type <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>F</mi></math>, the following constraints must be true:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Optional parameters must be defined at the end of the (formal) parameter list.
+In particular, an optional parameter must not be followed by a non-optional parameter:</p>
+<div class="openblock">
+<div class="content">
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mi>F</mi><mo>.</mo><mi>f</mi><mi>p</mi><mi>a</mi><mi>r</mi><msub><mi>s</mi><mi>i</mi></msub><mo>.</mo><mi>o</mi><mi>p</mi><mi>t</mi><mi>i</mi><mi>o</mi><mi>n</mi><mi>a</mi><mi>l</mi><mo>→</mo><mo>∄</mo><mi>k</mi><mo>&gt;</mo><mi>i</mi><mi>:</mi><mo>¬</mo><mi>F</mi><mo>.</mo><mi>f</mi><mi>p</mi><mi>a</mi><mi>r</mi><msub><mi>s</mi><mi>k</mi></msub><mo>.</mo><mi>o</mi><mi>p</mi><mi>t</mi><mi>v</mi><mi>a</mi><mi>r</mi></math>
+</div>
+</div>
+</li>
+<li>
+<p>Only the last parameter of a method may be defined as variadic parameter:</p>
+<div class="openblock">
+<div class="content">
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mi>F</mi><mo>.</mo><mi>f</mi><mi>p</mi><mi>a</mi><mi>r</mi><msub><mi>s</mi><mi>i</mi></msub><mo>.</mo><mi>v</mi><mi>a</mi><mi>r</mi><mi>i</mi><mi>a</mi><mi>d</mi><mi>i</mi><mi>c</mi><mo>→</mo><mi>i</mi><mo>=</mo><mo>|</mo><mi>F</mi><mo>.</mo><mi>f</mi><mi>p</mi><mi>a</mi><mi>r</mi><mi>s</mi><mo>|</mo><mo>-</mo><mn>1</mn></math>
+</div>
+</div>
+</li>
+<li>
+<p>If a function explicitly defines a return type, the last statement of the transitive closure of statements of the body must be a return statement:</p>
+<div class="paragraph">
+<p><math xmlns="http://www.w3.org/1998/Math/MathML"><mi>F</mi><mo>.</mo><mi>t</mi><mi>y</mi><mi>p</mi><mi>e</mi><mi>R</mi><mi>e</mi><mi>f</mi><mo>≠</mo><mi>U</mi><mi>n</mi><mi>d</mi><mi>e</mi><mi>f</mi><mi>i</mi><mi>n</mi><mi>e</mi><mi>d</mi><mo>→</mo></math><br>
+<math xmlns="http://www.w3.org/1998/Math/MathML"><mo>|</mo><mi>f</mi><mo>.</mo><mi>b</mi><mi>o</mi><mi>d</mi><mi>y</mi><mo>.</mo><mi>s</mi><mi>t</mi><mi>m</mi><mi>t</mi><mi>s</mi><mo>|</mo><mo>&gt;</mo><mn>0</mn></math><br>
+<math xmlns="http://www.w3.org/1998/Math/MathML"><mo>∧</mo><mi>f</mi><mo>.</mo><mi>b</mi><mi>o</mi><mi>d</mi><mi>y</mi><mo>.</mo><mi>s</mi><mi>t</mi><mi>m</mi><mi>t</mi><msubsup><mi>s</mi><mrow><mo>|</mo><mi>f</mi><mo>.</mo><mi>b</mi><mi>o</mi><mi>d</mi><mi>y</mi><mo>.</mo><mi>s</mi><mi>t</mi><mi>m</mi><mi>t</mi><msup><mi>s</mi><mo>*</mo></msup><mo>|</mo><mo>-</mo><mn>1</mn></mrow><mo>*</mo></msubsup><mi>i</mi><mi>s</mi><mi>a</mi><mi> </mi><mstyle mathvariant="monospace"><mtext>ReturnStatement</mtext></mstyle></math></p>
+</div>
+</li>
+<li>
+<p>If a function explicitly defines a return type, all return
+statements must return a type conform to that type:</p>
+<div class="paragraph">
+<p><math xmlns="http://www.w3.org/1998/Math/MathML"><mspace width="3.0mm"/><mi>F</mi><mo>.</mo><mi>t</mi><mi>y</mi><mi>p</mi><mi>e</mi><mi>R</mi><mi>e</mi><mi>f</mi><mo>≠</mo><mi>U</mi><mi>n</mi><mi>d</mi><mi>e</mi><mi>f</mi><mi>i</mi><mi>n</mi><mi>e</mi><mi>d</mi></math><br>
+<math xmlns="http://www.w3.org/1998/Math/MathML"><mspace width="3.0mm"/><mo>⇔</mo></math><br>
+<math xmlns="http://www.w3.org/1998/Math/MathML"><mspace width="3.0mm"/><mo>∀</mo><mi>r</mi><mo>∈</mo><mi>F</mi><mo>.</mo><mi>b</mi><mi>o</mi><mi>d</mi><mi>y</mi><mo>.</mo><mi>s</mi><mi>t</mi><mi>m</mi><mi>t</mi><mi>s</mi><mo>,</mo><mi>r</mi><mi> </mi><mi>i</mi><mi>s</mi><mi>a</mi><mi> </mi><mstyle mathvariant="monospace"><mtext>ReturnStatement</mtext></mstyle><mi>:</mi></math><br>
+<math xmlns="http://www.w3.org/1998/Math/MathML"><mspace width="3.0mm"/><mi>r</mi><mo>.</mo><mi>e</mi><mi>x</mi><mi>p</mi><mi>r</mi><mo>≠</mo><mi>n</mi><mi>u</mi><mi>l</mi><mi>l</mi><mo>∧</mo><mrow><mo>[</mo><mspace width="-0.167em"/><mrow><mo>[</mo></mrow></mrow><mrow><mi>r</mi><mo>.</mo><mi>e</mi><mi>x</mi><mi>p</mi><mi>r</mi><mo>.</mo><mi>t</mi><mi>y</mi><mi>p</mi><mi>e</mi><mi>R</mi><mi>e</mi><mi>f</mi></mrow><mrow><mrow><mo>]</mo></mrow><mspace width="-0.167em"/><mo>]</mo></mrow><mo>&lt;</mo><mi>:</mi><mrow><mo>[</mo><mspace width="-0.167em"/><mrow><mo>[</mo></mrow></mrow><mrow><mi>F</mi><mo>.</mo><mi>t</mi><mi>y</mi><mi>p</mi><mi>e</mi><mi>R</mi><mi>e</mi><mi>f</mi></mrow><mrow><mrow><mo>]</mo></mrow><mspace width="-0.167em"/><mo>]</mo></mrow></math></p>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="function-type-inference"><a class="anchor" href="#function-type-inference"></a><a class="link" href="#function-type-inference">6.1.2. Type Inference</a></h4>
+<div id="function_type_conformance_non_parameterized" class="openblock definition">
+<div class="content">
+<div class="paragraph">
+<p><a id="function_type_conformance_non_parameterized"></a><strong>Definition:</strong> <a href="#function_type_conformance_non_parameterized">Function Type Conformance Non-Parameterized</a></p>
+</div>
+<div class="paragraph">
+<p><em>For the given non-parameterized function types</em>
+<math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>F</mi><mrow><mi>l</mi><mi>e</mi><mi>f</mi><mi>t</mi></mrow></msub></math> with
+<math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>F</mi><mrow><mi>l</mi><mi>e</mi><mi>f</mi><mi>t</mi></mrow></msub><mo>.</mo><mi>t</mi><mi>f</mi><mi>p</mi><mi>a</mi><mi>r</mi><mi>s</mi><mo>=</mo><msub><mi>L</mi><mn>0</mn></msub><mo>,</mo><msub><mi>L</mi><mn>1</mn></msub><mo>,</mo><mo>.</mo><mspace width="1.0mm"/><mo>.</mo><mspace width="1.0mm"/><mo>.</mo><mspace width="1.0mm"/><msub><mi>L</mi><mi>k</mi></msub></math> and
+<math xmlns="http://www.w3.org/1998/Math/MathML"><mo>|</mo><msub><mi>F</mi><mrow><mi>l</mi><mi>e</mi><mi>f</mi><mi>t</mi></mrow></msub><mo>.</mo><mi>t</mi><mi>y</mi><mi>p</mi><mi>e</mi><mi>s</mi><mi>P</mi><mi>a</mi><mi>r</mi><mi>s</mi><mo>|</mo><mo>=</mo><mn>0</mn></math><br>
+<math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>F</mi><mrow><mi>r</mi><mi>i</mi><mi>g</mi><mi>h</mi><mi>t</mi></mrow></msub></math> with
+<math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>F</mi><mrow><mi>r</mi><mi>i</mi><mi>g</mi><mi>h</mi><mi>t</mi></mrow></msub><mo>.</mo><mi>t</mi><mi>f</mi><mi>p</mi><mi>a</mi><mi>r</mi><mi>s</mi><mo>=</mo><msub><mi>R</mi><mn>0</mn></msub><mo>,</mo><msub><mi>R</mi><mn>1</mn></msub><mo>,</mo><mo>.</mo><mspace width="1.0mm"/><mo>.</mo><mspace width="1.0mm"/><mo>.</mo><mspace width="1.0mm"/><msub><mi>R</mi><mi>n</mi></msub></math> and
+<math xmlns="http://www.w3.org/1998/Math/MathML"><mo>|</mo><msub><mi>F</mi><mrow><mi>r</mi><mi>i</mi><mi>g</mi><mi>h</mi><mi>t</mi></mrow></msub><mo>.</mo><mi>t</mi><mi>y</mi><mi>p</mi><mi>e</mi><mi>s</mi><mi>P</mi><mi>a</mi><mi>r</mi><mi>s</mi><mo>|</mo><mo>=</mo><mn>0</mn></math>,<br>
+we say <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>F</mi><mrow><mi>l</mi><mi>e</mi><mi>f</mi><mi>t</mi></mrow></msub></math> conforms to <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>F</mi><mrow><mi>r</mi><mi>i</mi><mi>g</mi><mi>h</mi><mi>t</mi></mrow></msub></math>,
+written as <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>F</mi><mrow><mi>l</mi><mi>e</mi><mi>f</mi><mi>t</mi></mrow></msub><mo>&lt;</mo><mi>:</mi><msub><mi>F</mi><mrow><mi>r</mi><mi>i</mi><mi>g</mi><mi>h</mi><mi>t</mi></mrow></msub></math>, if and only if:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>F</mi><mrow><mi>r</mi><mi>i</mi><mi>g</mi><mi>h</mi><mi>t</mi></mrow></msub><mo>.</mo><mi>r</mi><mi>e</mi><mi>t</mi><mi>u</mi><mi>r</mi><mi>n</mi><mi>T</mi><mi>y</mi><mi>p</mi><mi>e</mi><mo>=</mo><mstyle mathvariant="monospace"><mtext>void</mtext></mstyle></math><br>
+<math xmlns="http://www.w3.org/1998/Math/MathML"><mo>∨</mo><mfenced close=")" open="("><mrow><msub><mi>F</mi><mrow><mi>l</mi><mi>e</mi><mi>f</mi><mi>t</mi></mrow></msub><mo>.</mo><mi>r</mi><mi>e</mi><mi>t</mi><mi>u</mi><mi>r</mi><mi>n</mi><mi>T</mi><mi>y</mi><mi>p</mi><mi>e</mi><mo>=</mo><mstyle mathvariant="monospace"><mtext>void</mtext></mstyle><mo>∧</mo><msub><mi>F</mi><mrow><mi>r</mi><mi>i</mi><mi>g</mi><mi>h</mi><mi>t</mi></mrow></msub><mo>.</mo><mi>o</mi><mi>p</mi><mi>t</mi></mrow></mfenced></math><br>
+<math xmlns="http://www.w3.org/1998/Math/MathML"><mo>∨</mo><mrow><mo>(</mo><mrow><msub><mi>F</mi><mrow><mi>l</mi><mi>e</mi><mi>f</mi><mi>t</mi></mrow></msub><mo>.</mo><mi>r</mi><mi>e</mi><mi>t</mi><mi>u</mi><mi>r</mi><mi>n</mi><mi>T</mi><mi>y</mi><mi>p</mi><mi>e</mi><mo>&lt;</mo><mi>:</mi><msub><mi>F</mi><mrow><mi>r</mi><mi>i</mi><mi>g</mi><mi>h</mi><mi>t</mi></mrow></msub><mo>.</mo><mi>r</mi><mi>e</mi><mi>t</mi><mi>u</mi><mi>r</mi><mi>n</mi><mi>T</mi><mi>y</mi><mi>p</mi><mi>e</mi><mo>∧</mo><mo>¬</mo><mfenced close=")" open="("><mrow><msub><mi>F</mi><mrow><mi>l</mi><mi>e</mi><mi>f</mi><mi>t</mi></mrow></msub><mo>.</mo><mi>o</mi><mi>p</mi><mi>t</mi><mo>∧</mo><mo>¬</mo><msub><mi>F</mi><mrow><mi>r</mi><mi>i</mi><mi>g</mi><mi>h</mi><mi>t</mi></mrow></msub><mo>.</mo><mi>o</mi><mi>p</mi><mi>t</mi></mrow></mfenced><mo>)</mo></mrow></mrow></math></p>
+</li>
+<li>
+<p>if <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>k</mi><mo>≤</mo><mi>n</mi></math>:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><math xmlns="http://www.w3.org/1998/Math/MathML"><mo>∀</mo><mi> </mi><mi>i</mi><mo>,</mo><mn>1</mn><mo>≤</mo><mi>i</mi><mo>≤</mo><mi>k</mi><mi>:</mi><mfenced close=")" open="("><mrow><msub><mi>R</mi><mi>i</mi></msub><mo>.</mo><mi>o</mi><mi>p</mi><mi>t</mi><mo>→</mo><mfenced close=")" open="("><mrow><msub><mi>L</mi><mi>i</mi></msub><mo>.</mo><mi>o</mi><mi>p</mi><mi>t</mi><mo>∨</mo><msub><mi>L</mi><mi>i</mi></msub><mo>.</mo><mi>v</mi><mi>a</mi><mi>r</mi></mrow></mfenced></mrow></mfenced><mo>∧</mo><mfenced close=")" open="("><mrow><msub><mi>R</mi><mi>i</mi></msub><mo>.</mo><mi>v</mi><mi>a</mi><mi>r</mi><mo>→</mo><msub><mi>L</mi><mi>i</mi></msub><mo>.</mo><mi>v</mi><mi>a</mi><mi>r</mi></mrow></mfenced></math></p>
+</li>
+<li>
+<p><math xmlns="http://www.w3.org/1998/Math/MathML"><mo>∀</mo><mi> </mi><mi>i</mi><mo>,</mo><mn>1</mn><mo>≤</mo><mi>i</mi><mo>≤</mo><mi>k</mi><mi>:</mi><msub><mi>L</mi><mi>i</mi></msub><mi>:</mi><mo>&gt;</mo><msub><mi>R</mi><mi>i</mi></msub></math></p>
+</li>
+<li>
+<p><math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>L</mi><mi>k</mi></msub><mo>.</mo><mi>v</mi><mi>a</mi><mi>r</mi><mo>=</mo><mi>t</mi><mi>r</mi><mi>u</mi><mi>e</mi><mo>→</mo><mo>∀</mo><mi> </mi><mi>i</mi><mo>,</mo><mi>k</mi><mo>&lt;</mo><mi>i</mi><mo>≤</mo><mi>n</mi><mi>:</mi><msub><mi>L</mi><mi>K</mi></msub><mi>:</mi><mo>&gt;</mo><msub><mi>R</mi><mi>i</mi></msub></math></p>
+<div class="paragraph">
+<p>else (<math xmlns="http://www.w3.org/1998/Math/MathML"><mi>k</mi><mo>&gt;</mo><mi>n</mi></math>):</p>
+</div>
+</li>
+<li>
+<p><math xmlns="http://www.w3.org/1998/Math/MathML"><mo>∀</mo><mi> </mi><mi>i</mi><mo>,</mo><mn>1</mn><mo>≤</mo><mi>i</mi><mo>≤</mo><mi>n</mi><mi>:</mi><mfenced close=")" open="("><mrow><msub><mi>R</mi><mi>i</mi></msub><mo>.</mo><mi>o</mi><mi>p</mi><mi>t</mi><mo>→</mo><mfenced close=")" open="("><mrow><msub><mi>L</mi><mi>i</mi></msub><mo>.</mo><mi>o</mi><mi>p</mi><mi>t</mi><mo>∨</mo><msub><mi>L</mi><mi>i</mi></msub><mo>.</mo><mi>v</mi><mi>a</mi><mi>r</mi></mrow></mfenced></mrow></mfenced><mo>∧</mo><mfenced close=")" open="("><mrow><msub><mi>R</mi><mi>i</mi></msub><mo>.</mo><mi>v</mi><mi>a</mi><mi>r</mi><mo>→</mo><msub><mi>L</mi><mi>i</mi></msub><mo>.</mo><mi>v</mi><mi>a</mi><mi>r</mi></mrow></mfenced></math></p>
+</li>
+<li>
+<p><math xmlns="http://www.w3.org/1998/Math/MathML"><mo>∀</mo><mi> </mi><mi>i</mi><mo>,</mo><mn>1</mn><mo>≤</mo><mi>i</mi><mo>≤</mo><mi>n</mi><mi>:</mi><msub><mi>L</mi><mi>i</mi></msub><mi>:</mi><mo>&gt;</mo><msub><mi>R</mi><mi>i</mi></msub></math></p>
+</li>
+<li>
+<p><math xmlns="http://www.w3.org/1998/Math/MathML"><mo>∀</mo><mi> </mi><mi>n</mi><mo>&lt;</mo><mi>i</mi><mo>≤</mo><mi>k</mi><mi>:</mi><msub><mi>L</mi><mi>i</mi></msub><mo>.</mo><mi>o</mi><mi>p</mi><mi>t</mi><mo>∨</mo><msub><mi>L</mi><mi>i</mi></msub><mo>.</mo><mi>v</mi><mi>a</mi><mi>r</mi></math></p>
+</li>
+<li>
+<p><math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>R</mi><mi>n</mi></msub><mo>.</mo><mi>v</mi><mi>a</mi><mi>r</mi><mo>=</mo><mi>t</mi><mi>r</mi><mi>u</mi><mi>e</mi><mo>→</mo><mo>∀</mo><mi> </mi><mi>i</mi><mo>,</mo><mi>n</mi><mo>&lt;</mo><mi>i</mi><mo>≤</mo><mi>k</mi><mi>:</mi><msub><mi>L</mi><mi>i</mi></msub><mi>:</mi><mo>&gt;</mo><msub><mi>R</mi><mi>n</mi></msub></math></p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a href="#cdVarianceFunctionChart">Function Variance Chart</a> shows a simple example with the function type conformance relations.</p>
+</div>
+<div id="cdVarianceFunctionChart" class="imageblock">
+<div class="content">
+<img src="chapters/06_functions/fig/cdVarianceFunctionChart.svg" alt="cdVarianceFunctionChart">
+</div>
+<div class="title">Figure 6. Function Variance Chart</div>
+</div>
+<div class="paragraph">
+<p><code>{function()}</code> <math xmlns="http://www.w3.org/1998/Math/MathML"><mo>&lt;</mo><mi>:</mi></math> <code>{function(A)}</code> <math xmlns="http://www.w3.org/1998/Math/MathML"><mo>&lt;</mo><mi>:</mi></math> <code>{function(A, A)}</code> might be surprising for Java programmers. However, in JavaScript it is
+possible to call a function with any number of arguments independently
+from how many formal parameters the function defines.</p>
+</div>
+<div class="paragraph">
+<p>If a function does not define a return type, <code>any</code> is assumed if at least one
+of the (indirectly) contained return statements contains an expression.
+Otherwise <code>void</code> is assumed. This is also true if there is an error due to
+other constraint violations.</p>
+</div>
+<div class="openblock">
+<div class="content">
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mtable><mtr><mtd><mspace width="3.0mm"/><mfrac><mrow><mi>b</mi><mi>i</mi><mi>n</mi><mi>d</mi><mi>s</mi><mfenced close=")" open="("><mi>f</mi><mi>F</mi></mfenced><mspace width="3.0mm"/><mi>F</mi><mo>.</mo><mi>r</mi><mi>e</mi><mi>t</mi><mi>u</mi><mi>r</mi><mi>n</mi><mi>T</mi><mi>y</mi><mi>p</mi><mi>e</mi><mo>=</mo><mstyle mathvariant="monospace"><mtext>null</mtext></mstyle><mspace width="3.0mm"/><mo>∃</mo><mi>r</mi><mo>∈</mo><mi>r</mi><mi>e</mi><mi>t</mi><mi>u</mi><mi>r</mi><mi>n</mi><mi>s</mi><mfenced close=")" open="("><mi>F</mi></mfenced><mi>:</mi><mi>r</mi><mo>.</mo><mi>e</mi><mi>x</mi><mi>p</mi><mi>r</mi><mi>e</mi><mi>s</mi><mi>s</mi><mi>i</mi><mi>o</mi><mi>n</mi><mo>≠</mo><mstyle mathvariant="monospace"><mtext>null</mtext></mstyle></mrow><mrow><mi>Γ</mi><mo>⊢</mo><mi>f</mi><mstyle mathvariant="monospace"><mtext>’(’</mtext></mstyle><mi>a</mi><mi>r</mi><mi>g</mi><mi>l</mi><mi>i</mi><mi>s</mi><mi>t</mi><mi> </mi><mstyle mathvariant="monospace"><mtext>’)’</mtext></mstyle><mi>:</mi><mstyle mathvariant="monospace"><mtext>any</mtext></mstyle></mrow></mfrac></mtd></mtr><mtr><mtd><mspace width="3.0mm"/><mfrac><mrow><mi>b</mi><mi>i</mi><mi>n</mi><mi>d</mi><mi>s</mi><mfenced close=")" open="("><mi>f</mi><mi>F</mi></mfenced><mspace width="3.0mm"/><mi>F</mi><mo>.</mo><mi>r</mi><mi>e</mi><mi>t</mi><mi>u</mi><mi>r</mi><mi>n</mi><mi>T</mi><mi>y</mi><mi>p</mi><mi>e</mi><mo>=</mo><mstyle mathvariant="monospace"><mtext>null</mtext></mstyle><mspace width="3.0mm"/><mo>∀</mo><mi>r</mi><mo>∈</mo><mi>r</mi><mi>e</mi><mi>t</mi><mi>u</mi><mi>r</mi><mi>n</mi><mi>s</mi><mfenced close=")" open="("><mi>F</mi></mfenced><mi>:</mi><mi>r</mi><mo>.</mo><mi>e</mi><mi>x</mi><mi>p</mi><mi>r</mi><mi>e</mi><mi>s</mi><mi>s</mi><mi>i</mi><mi>o</mi><mi>n</mi><mo>≠</mo><mstyle mathvariant="monospace"><mtext>null</mtext></mstyle></mrow><mrow><mi>Γ</mi><mo>⊢</mo><mi>f</mi><mstyle mathvariant="monospace"><mtext>’(’</mtext></mstyle><mi>a</mi><mi>r</mi><mi>g</mi><mi>l</mi><mi>i</mi><mi>s</mi><mi>t</mi><mi> </mi><mstyle mathvariant="monospace"><mtext>’)’</mtext></mstyle><mi>:</mi><mstyle mathvariant="monospace"><mtext>void</mtext></mstyle></mrow></mfrac></mtd></mtr></mtable></math>
+</div>
+</div>
+<div class="paragraph">
+<p>with</p>
+</div>
+<div class="openblock">
+<div class="content">
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mtable><mtr><mtd><mspace width="3.0mm"/><mfrac><mrow><mfenced close="}" open="{"><mrow><mi>r</mi><mo>∈</mo><mi>F</mi><mo>.</mo><mi>b</mi><mi>o</mi><mi>d</mi><mi>y</mi><mo>.</mo><mi>s</mi><mi>t</mi><mi>a</mi><mi>t</mi><mi>e</mi><mi>m</mi><mi>e</mi><mi>n</mi><mi>t</mi><mi>s</mi><mo>|</mo><mi>μ</mi><mfenced close=")" open="("><mi>r</mi></mfenced><mo>=</mo><mstyle mathvariant="monospace"><mtext>ReturnStatement</mtext></mstyle></mrow></mfenced><mo>∪</mo><munder><mo>⋃</mo><mrow><mi>s</mi><mo>∈</mo><mi>F</mi><mo>.</mo><mi>b</mi><mi>o</mi><mi>d</mi><mi>y</mi><mo>.</mo><mi>s</mi><mi>t</mi><mi>a</mi><mi>t</mi><mi>e</mi><mi>m</mi><mi>e</mi><mi>n</mi><mi>t</mi><mi>s</mi></mrow></munder><mi>r</mi><mi>e</mi><mi>t</mi><mi>u</mi><mi>r</mi><mi>n</mi><mi>s</mi><mfenced close=")" open="("><mi>s</mi></mfenced></mrow><mrow><mi>r</mi><mi>e</mi><mi>t</mi><mi>u</mi><mi>r</mi><mi>n</mi><mi>s</mi><mfenced close=")" open="("><mi>F</mi></mfenced><mi>:</mi><mi>R</mi><mi>E</mi><mi>T</mi><mi>S</mi></mrow></mfrac></mtd></mtr><mtr><mtd><mspace width="3.0mm"/><mfrac><mrow><mfenced close="}" open="{"><mrow><mi>s</mi><mi>u</mi><mi>b</mi><mo>∈</mo><mi>s</mi><mo>.</mo><mi>s</mi><mi>t</mi><mi>a</mi><mi>t</mi><mi>e</mi><mi>m</mi><mi>e</mi><mi>n</mi><mi>t</mi><mi>s</mi><mo>|</mo><mi>μ</mi><mfenced close=")" open="("><mrow><mi>s</mi><mi>u</mi><mi>b</mi></mrow></mfenced><mo>=</mo><mstyle mathvariant="monospace"><mtext>ReturnStatement</mtext></mstyle></mrow></mfenced><mo>∪</mo><munder><mo>⋃</mo><mrow><mi>s</mi><mi>u</mi><mi>b</mi><mo>∈</mo><mi>s</mi><mo>.</mo><mi>s</mi><mi>t</mi><mi>a</mi><mi>t</mi><mi>e</mi><mi>m</mi><mi>e</mi><mi>n</mi><mi>t</mi><mi>s</mi></mrow></munder><mi>r</mi><mi>e</mi><mi>t</mi><mi>u</mi><mi>r</mi><mi>n</mi><mi>s</mi><mfenced close=")" open="("><mrow><mi>s</mi><mi>u</mi><mi>b</mi></mrow></mfenced></mrow><mrow><mi>r</mi><mi>e</mi><mi>t</mi><mi>u</mi><mi>r</mi><mi>n</mi><mi>s</mi><mfenced close=")" open="("><mi>s</mi></mfenced><mi>:</mi><mi>R</mi><mi>E</mi><mi>T</mi><mi>S</mi></mrow></mfrac></mtd></mtr></mtable></math>
+</div>
+</div>
+</div>
+</div>
+<div class="exampleblock">
+<div class="title">Example 60. Function type conformance</div>
+<div class="content">
+<div class="paragraph">
+<p>The following incomplete snippet demonstrates the usage of two function variables <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>f</mi><mn>1</mn></math> and <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>f</mi><mn>2</mn></math>, in which <math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo>[</mo><mspace width="-0.167em"/><mrow><mo>[</mo></mrow></mrow><mrow><mi>f</mi><mn>2</mn></mrow><mrow><mrow><mo>]</mo></mrow><mspace width="-0.167em"/><mo>]</mo></mrow><mo>&lt;</mo><mi>:</mi><mrow><mo>[</mo><mspace width="-0.167em"/><mrow><mo>[</mo></mrow></mrow><mrow><mi>f</mi><mn>1</mn></mrow><mrow><mrow><mo>]</mo></mrow><mspace width="-0.167em"/><mo>]</mo></mrow></math> must hold true according to the aforementioned constraints.
+A function <code>bar</code> declares a parameter <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>f</mi><mn>1</mn></math>, which is actually a function itself.
+<math xmlns="http://www.w3.org/1998/Math/MathML"><mi>f</mi><mn>2</mn></math> is a variable, to which a function expression is a assigned.
+Function <code>bar</code> is then called with <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>f</mi><mn>2</mn></math> as an argument.
+Thus, the type of <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>f</mi><mn>2</mn></math> must be a subtype of the <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>f</mi><mn>1</mn></math>’s type.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-n4js" data-lang="n4js">function bar(f1: {function(A,B):C}) { ... }
+
+var f2: {function(A,B):C} = function(p1,p2){...};
+bar(f1);</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>The type of <code>this</code> can be explicitly set via the <code>@This</code> annotation.</p>
+</div>
+<div class="exampleblock">
+<div class="title">Example 61. Function Subtyping</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-n4js" data-lang="n4js">function f(): A {..}
+function p(): void {..}
+
+fAny(log: {function():any}) {...}
+fVoid(f: {function():void}) {..}
+fA(g: {function():A}) {...}
+
+fAny(f);    // --&gt; ok       A &lt;: any
+fVoid(f);   // --&gt;error     A !&lt;: void
+fA(f);      // --&gt; ok (easy)    A &lt;: A
+
+fAny(p);    // --&gt; ok       void &lt;: any
+fVoid(p);   // --&gt; ok       void &lt;: void
+fA(p);      // --&gt; error    void !&lt;: A</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="exampleblock">
+<div class="title">Example 62. Subtyping with function types</div>
+<div class="content">
+<div class="paragraph">
+<p>If classes A, B, and C are defined as previously mentioned, i.e. <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>C</mi><mo>&lt;</mo><mi>:</mi><mi>B</mi><mo>&lt;</mo><mi>:</mi><mi>A</mi></math>, then
+the following subtyping relations with function types are to be evaluated as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-n4js" data-lang="n4js">       {function(B):B} &lt;: {function(B):B}           -&gt; true
+        {function():A} &lt;: {function():B}            -&gt; false
+        {function():C} &lt;: {function():B}            -&gt; true
+         {function(A)} &lt;: {function(B)}             -&gt; true
+         {function(C)} &lt;: {function(B)}             -&gt; false
+
+     {function():void} &lt;: {function():void}         -&gt; true
+{function():undefined} &lt;: {function():void}         -&gt; true
+     {function():void} &lt;: {function():undefined}    -&gt; true (!)
+
+        {function():B} &lt;: {function():void}         -&gt; true (!)
+        {function():B} &lt;: {function():undefined}    -&gt; false (!)
+     {function():void} &lt;: {function():B}            -&gt; false
+{function():undefined} &lt;: {function():B}            -&gt; true</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The following examples demonstrate the effect of optional and variadic parameters:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-n4js" data-lang="n4js">{function(A)} &lt;: {function(B)}                      -&gt; true
+{function(A...)} &lt;: {function(A)}                   -&gt; true
+{function(A, A)} &lt;: {function(A)}                   -&gt; false
+{function(A)} &lt;: {function(A,A)}                    -&gt; true (!)
+{function(A, A...)} &lt;: {function(A)}                -&gt; true
+{function(A)} &lt;: {function(A,A...)}                 -&gt; true (!)
+{function(A, A...)} &lt;: {function(B)}                -&gt; true
+{function(A?)} &lt;: {function(A?)}                    -&gt; true
+{function(A...)} &lt;: {function(A...)}                -&gt; true
+{function(A?)} &lt;: {function(A)}                     -&gt; true
+{function(A)} &lt;: {function(A?)}                     -&gt; false
+{function(A...)} &lt;: {function(A?)}                  -&gt; true
+{function(A?)} &lt;: {function(A...)}                  -&gt; true (!)
+{function(A,A...)} &lt;: {function(A...)}              -&gt; false
+{function(A,A?)} &lt;: {function(A...)}                -&gt; false
+{function(A?,A...)} &lt;: {function(A...)}             -&gt; true
+{function(A...)} &lt;: {function(A?,A...)}             -&gt; true
+{function(A...)} &lt;: {function(A?)}                  -&gt; true
+{function(A?,A?)} &lt;: {function(A...)}               -&gt; true (!)
+{function(A?,A?,A?)} &lt;: {function(A...)}            -&gt; true (!)
+{function(A?)} &lt;: {function()}                      -&gt; true (!)
+{function(A...)} &lt;: {function()}                    -&gt; true (!)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The following examples demonstrate the effect of optional return types:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-n4js" data-lang="n4js">{function():void} &lt;: {function():void}              -&gt; true
+{function():X}    &lt;: {function():void}              -&gt; true
+{function():X?}   &lt;: {function():void}              -&gt; true
+{function():void} &lt;: {function():Y}                 -&gt; false
+{function():X}    &lt;: {function():Y}                 -&gt; X &lt;: Y
+{function():X?}   &lt;: {function():Y}                 -&gt; false (!)
+{function():void} &lt;: {function():Y?}                -&gt; true (!)
+{function():X}    &lt;: {function():Y?}                -&gt; X &lt;: Y
+{function():X?}   &lt;: {function():Y?}                -&gt; X &lt;: Y
+       {function():B?} &lt;: {function():undefined}    -&gt; false (!)
+{function():undefined} &lt;: {function():B?}           -&gt; true</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The following examples show the effect of the <code>@This</code> annotation:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-n4js" data-lang="n4js">{@This(A) function():void} &lt;: {@This(X) function():void}    -&gt; false
+{@This(B) function():void} &lt;: {@This(A) function():void}    -&gt; false
+{@This(A) function():void} &lt;: {@This(B) function():void}    -&gt; true
+{@This(any) function():void} &lt;: {@This(X) function():void}  -&gt; true
+{function():void} &lt;: {@This(X) function():void}             -&gt; true
+{@This(A) function():void} &lt;: {@This(any) function():void}  -&gt; false
+{@This(A) function():void} &lt;: {function():void}             -&gt; false</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="openblock definition">
+<div class="content">
+<div class="paragraph">
+<p><a id="function_type_conformance"></a><strong>Definition:</strong> <a href="#function_type_conformance">Function Type Conformance</a></p>
+</div>
+<div class="paragraph">
+<p>For the given function types<br>
+<math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>F</mi><mrow><mi>l</mi><mi>e</mi><mi>f</mi><mi>t</mi></mrow></msub></math> with
+<math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>F</mi><mrow><mi>l</mi><mi>e</mi><mi>f</mi><mi>t</mi></mrow></msub><mo>.</mo><mi>t</mi><mi>f</mi><mi>p</mi><mi>a</mi><mi>r</mi><mi>s</mi><mo>=</mo><msub><mi>L</mi><mn>0</mn></msub><mo>,</mo><msub><mi>L</mi><mn>1</mn></msub><mo>,</mo><mo>.</mo><mspace width="1.0mm"/><mo>.</mo><mspace width="1.0mm"/><mo>.</mo><mspace width="1.0mm"/><msub><mi>L</mi><mi>k</mi></msub></math><br>
+<math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>F</mi><mrow><mi>r</mi><mi>i</mi><mi>g</mi><mi>h</mi><mi>t</mi></mrow></msub></math> with
+<math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>F</mi><mrow><mi>r</mi><mi>i</mi><mi>g</mi><mi>h</mi><mi>t</mi></mrow></msub><mo>.</mo><mi>t</mi><mi>f</mi><mi>p</mi><mi>a</mi><mi>r</mi><mi>s</mi><mo>=</mo><msub><mi>R</mi><mn>0</mn></msub><mo>,</mo><msub><mi>R</mi><mn>1</mn></msub><mo>,</mo><mo>.</mo><mspace width="1.0mm"/><mo>.</mo><mspace width="1.0mm"/><mo>.</mo><mspace width="1.0mm"/><msub><mi>R</mi><mi>n</mi></msub></math>,<br>
+we say <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>F</mi><mrow><mi>l</mi><mi>e</mi><mi>f</mi><mi>t</mi></mrow></msub></math> conforms to <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>F</mi><mrow><mi>r</mi><mi>i</mi><mi>g</mi><mi>h</mi><mi>t</mi></mrow></msub></math>, written as <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>F</mi><mrow><mi>l</mi><mi>e</mi><mi>f</mi><mi>t</mi></mrow></msub><mo>&lt;</mo><mi>:</mi><msub><mi>F</mi><mrow><mi>r</mi><mi>i</mi><mi>g</mi><mi>h</mi><mi>t</mi></mrow></msub></math>, if and only if:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>if <math xmlns="http://www.w3.org/1998/Math/MathML"><mo>|</mo><msub><mi>F</mi><mrow><mi>l</mi><mi>e</mi><mi>f</mi><mi>t</mi></mrow></msub><mo>.</mo><mi>t</mi><mi>y</mi><mi>p</mi><mi>e</mi><mi>P</mi><mi>a</mi><mi>r</mi><mi>s</mi><mo>|</mo><mo>=</mo><mo>|</mo><msub><mi>F</mi><mrow><mi>r</mi><mi>i</mi><mi>g</mi><mi>h</mi><mi>t</mi></mrow></msub><mo>.</mo><mi>t</mi><mi>y</mi><mi>p</mi><mi>e</mi><mi>P</mi><mi>a</mi><mi>r</mi><mi>s</mi><mo>|</mo><mo>=</mo><mn>0</mn></math>:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>F</mi><mrow><mi>l</mi><mi>e</mi><mi>f</mi><mi>t</mi></mrow></msub><mo>&lt;</mo><mi>:</mi><msub><mi>F</mi><mrow><mi>r</mi><mi>i</mi><mi>g</mi><mi>h</mi><mi>t</mi></mrow></msub></math>
+(cf. <a href="#function_type_conformance_non_parameterized">Function Type Conformance Non-Parameterized</a>)</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>else if<br>
+<math xmlns="http://www.w3.org/1998/Math/MathML"><mo>|</mo><msub><mi>F</mi><mrow><mi>l</mi><mi>e</mi><mi>f</mi><mi>t</mi></mrow></msub><mo>.</mo><mi>t</mi><mi>y</mi><mi>p</mi><mi>e</mi><mi>P</mi><mi>a</mi><mi>r</mi><mi>s</mi><mo>|</mo><mo>&gt;</mo><mn>0</mn><mo>∧</mo><mo>|</mo><msub><mi>F</mi><mrow><mi>r</mi><mi>i</mi><mi>g</mi><mi>h</mi><mi>t</mi></mrow></msub><mo>.</mo><mi>t</mi><mi>y</mi><mi>p</mi><mi>e</mi><mi>P</mi><mi>a</mi><mi>r</mi><mi>s</mi><mo>|</mo><mo>=</mo><mn>0</mn></math>:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><math xmlns="http://www.w3.org/1998/Math/MathML"><mo>∃</mo><mi>θ</mi><mi>:</mi><mfenced close=")" open="("><mrow><mi>Γ</mi><mo>←</mo><mi>θ</mi></mrow></mfenced><mo>⊢</mo><msub><mi>F</mi><mrow><mi>l</mi><mi>e</mi><mi>f</mi><mi>t</mi></mrow></msub><mo>&lt;</mo><mi>:</mi><msub><mi>F</mi><mrow><mi>r</mi><mi>i</mi><mi>g</mi><mi>h</mi><mi>t</mi></mrow></msub></math> (cf. <a href="#function_type_conformance_non_parameterized">Function Type Conformance Non-Parameterized</a> )</p>
+<div class="paragraph">
+<p>(i.e. there exists a substitution <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>θ</mi></math> of type variables in <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>F</mi><mrow><mi>l</mi><mi>e</mi><mi>f</mi><mi>t</mi></mrow></msub></math> so that after substitution it becomes a subtype of <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>F</mi><mrow><mi>r</mi><mi>i</mi><mi>g</mi><mi>h</mi><mi>t</mi></mrow></msub></math> as defined by <a href="#function_type_conformance_non_parameterized">Function Type Conformance Non-Parameterized</a>)</p>
+</div>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>else if <math xmlns="http://www.w3.org/1998/Math/MathML"><mo>|</mo><msub><mi>F</mi><mrow><mi>l</mi><mi>e</mi><mi>f</mi><mi>t</mi></mrow></msub><mo>.</mo><mi>t</mi><mi>y</mi><mi>p</mi><mi>e</mi><mi>P</mi><mi>a</mi><mi>r</mi><mi>s</mi><mo>|</mo><mo>=</mo><mo>|</mo><msub><mi>F</mi><mrow><mi>r</mi><mi>i</mi><mi>g</mi><mi>h</mi><mi>t</mi></mrow></msub><mo>.</mo><mi>t</mi><mi>y</mi><mi>p</mi><mi>e</mi><mi>P</mi><mi>a</mi><mi>r</mi><mi>s</mi><mo>|</mo></math>:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><math xmlns="http://www.w3.org/1998/Math/MathML"><mi>Γ</mi><mo>←</mo><mfenced close="}" open="{"><mrow><msubsup><mi>V</mi><mi>i</mi><mi>r</mi></msubsup><mo>←</mo><msubsup><mi>V</mi><mi>i</mi><mi>l</mi></msubsup><mo>|</mo><mn>0</mn><mo>≤</mo><mi>i</mi><mo>≤</mo><mi>n</mi></mrow></mfenced><mo>⊢</mo><msub><mi>F</mi><mrow><mi>l</mi><mi>e</mi><mi>f</mi><mi>t</mi></mrow></msub><mo>&lt;</mo><mi>:</mi><msub><mi>F</mi><mrow><mi>r</mi><mi>i</mi><mi>g</mi><mi>h</mi><mi>t</mi></mrow></msub></math>
+( accordingly)</p>
+</li>
+<li>
+<p>-</p>
+<div class="openblock">
+<div class="content">
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mtable><mtr><mtd><mo>∀</mo><mn>0</mn><mo>≤</mo><mi>i</mi><mo>≤</mo><mi>n</mi><mi>:</mi></mtd></mtr><mtr><mtd><mi>i</mi><mi>n</mi><mi>t</mi><mi>e</mi><mi>r</mi><mi>s</mi><mi>e</mi><mi>c</mi><mi>t</mi><mi>i</mi><mi>o</mi><mi>n</mi><mfenced close="}" open="{"><mrow><msubsup><mi>V</mi><mi>i</mi><mi>l</mi></msubsup><mo>.</mo><mstyle mathvariant="italic"><mi>u</mi><mi>p</mi><mi>p</mi><mi>e</mi><mi>r</mi><mi>B</mi><mi>o</mi><mi>u</mi><mi>n</mi><mi>d</mi><mi>s</mi></mstyle></mrow></mfenced><mi>:</mi><mo>&gt;</mo><mi>i</mi><mi>n</mi><mi>t</mi><mi>e</mi><mi>r</mi><mi>s</mi><mi>e</mi><mi>c</mi><mi>t</mi><mi>i</mi><mi>o</mi><mi>n</mi><mfenced close="}" open="{"><mrow><msubsup><mi>V</mi><mi>i</mi><mi>r</mi></msubsup><mo>.</mo><mstyle mathvariant="italic"><mi>u</mi><mi>p</mi><mi>p</mi><mi>e</mi><mi>r</mi><mi>B</mi><mi>o</mi><mi>u</mi><mi>n</mi><mi>d</mi><mi>s</mi></mstyle></mrow></mfenced></mtd></mtr></mtable></math>
+</div>
+</div>
+<div class="paragraph">
+<p>with <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>F</mi><mrow><mi>l</mi><mi>e</mi><mi>f</mi><mi>t</mi></mrow></msub><mo>.</mo><mi>t</mi><mi>y</mi><mi>p</mi><mi>e</mi><mi>P</mi><mi>a</mi><mi>r</mi><mi>s</mi><mo>=</mo><msubsup><mi>V</mi><mn>0</mn><mi>l</mi></msubsup><mo>,</mo><msubsup><mi>V</mi><mn>1</mn><mi>l</mi></msubsup><mo>,</mo><mo>.</mo><mspace width="1.0mm"/><mo>.</mo><mspace width="1.0mm"/><mo>.</mo><mspace width="1.0mm"/><msubsup><mi>V</mi><mi>n</mi><mi>l</mi></msubsup></math> and <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>F</mi><mrow><mi>r</mi><mi>i</mi><mi>g</mi><mi>h</mi><mi>t</mi></mrow></msub><mo>.</mo><mi>t</mi><mi>y</mi><mi>p</mi><mi>e</mi><mi>P</mi><mi>a</mi><mi>r</mi><mi>s</mi><mo>=</mo><msubsup><mi>V</mi><mn>0</mn><mi>r</mi></msubsup><mo>,</mo><msubsup><mi>V</mi><mn>1</mn><mi>r</mi></msubsup><mo>,</mo><mo>.</mo><mspace width="1.0mm"/><mo>.</mo><mspace width="1.0mm"/><mo>.</mo><mspace width="1.0mm"/><msubsup><mi>V</mi><mi>n</mi><mi>r</mi></msubsup></math><br>
+(i.e. we replace each type variable in <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>F</mi><mrow><mi>r</mi><mi>i</mi><mi>g</mi><mi>h</mi><mi>t</mi></mrow></msub></math> by the corresponding type variable at the same index in <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>F</mi><mrow><mi>l</mi><mi>e</mi><mi>f</mi><mi>t</mi></mrow></msub></math>
+and check the constraints from <a href="#function_type_conformance_non_parameterized">Function Type Conformance Non-Parameterized</a>  as if <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>F</mi><mrow><mi>l</mi><mi>e</mi><mi>f</mi><mi>t</mi></mrow></msub></math> and <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>F</mi><mrow><mi>r</mi><mi>i</mi><mi>g</mi><mi>h</mi><mi>t</mi></mrow></msub></math> were non-parameterized functions and, in
+addition, the upper bounds on the left side need to be supertypes of the upper bounds on the right side).</p>
+</div>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>Note that the upper bounds on the left must be supertypes of the right-side upper bounds (for similar reasons why types of formal parameters on the left are
+required to be supertypes of the formal parameters’ types in ).
+Where a particular type variable is used, on co- or contra-variant position, is not relevant:</p>
+</div>
+<div class="exampleblock">
+<div class="title">Example 63. Bounded type variable at co-variant position in function type</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-n4js" data-lang="n4js">class A {}
+class B extends A {}
+
+class X {
+    &lt;T extends B&gt; m(): T { return null; }
+}
+class Y extends X {
+    @Override
+    &lt;T extends A&gt; m(): T { return null; }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Method <code>m</code> in <code>Y</code> may return an <code>A</code>, thus breaking the contract of m in <code>X</code>, but only if it is parameterized to do so, which is not allowed for clients of <code>X</code>, only those of <code>Y</code>.
+Therefore, the override in the above example is valid.</p>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>The subtype relation for function types is also applied for method overriding to ensure that an overriding method’s signature conforms to that of the overridden method,
+see <a href="classifiers.html#Req-IDE-72">[Req-IDE-72]</a> (applies to method comnsumption and implementation accordingly, see <a href="classifiers.html#Req-IDE-73">[Req-IDE-73]</a> and <a href="classifiers.html#Req-IDE-74">[Req-IDE-74]</a>).
+Note that this is very different from Java which is far more restrictive when checking overriding methods.
+As Java also supports method overloading: given two types <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>A</mi><mo>,</mo><mi>B</mi></math> with <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>B</mi><mo>&lt;</mo><mi>:</mi><mi>A</mi></math> and a super class method <code>void m(B param)</code>, it is valid to override <code>m</code> as <code>void m(A param)</code> in N4JS but not in Java.
+In Java this would be handled as method overloading and therefore an <code>@Override</code> annotation on <code>m</code> would produce an error.</p>
+</div>
+<div class="openblock requirement">
+<div class="content">
+<div class="paragraph">
+<p><a id="Req-IDE-80"></a><strong>Req. IDE-80:</strong> <a href="#Req-IDE-80">Upper and Lower Bound of a Function Type</a> (ver. 1)</p>
+</div>
+<div class="paragraph">
+<p>The upper bound of a function type <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>F</mi></math> is a function type with the lower bound types of the parameters and the upper bound of the return type:<br>
+<math xmlns="http://www.w3.org/1998/Math/MathML"><mi>u</mi><mi>p</mi><mi>p</mi><mi>e</mi><mi>r</mi><mfenced close=")" open="("><mrow><mstyle mathvariant="monospace"><mtext>function</mtext></mstyle><mfenced close=")" open="("><msub><mi>P</mi><mn>1</mn></msub><mrow><mo>.</mo><mspace width="1.0mm"/><mo>.</mo><mspace width="1.0mm"/><mo>.</mo><mspace width="1.0mm"/></mrow><msub><mi>P</mi><mi>n</mi></msub></mfenced><mi>:</mi><mi>R</mi></mrow></mfenced><mi>:</mi><mo>=</mo><mstyle mathvariant="monospace"><mtext>function</mtext></mstyle><mfenced close=")" open="("><mrow><mi>l</mi><mi>o</mi><mi>w</mi><mi>e</mi><mi>r</mi><mfenced close=")" open="("><msub><mi>P</mi><mn>1</mn></msub></mfenced></mrow><mrow><mo>.</mo><mspace width="1.0mm"/><mo>.</mo><mspace width="1.0mm"/><mo>.</mo><mspace width="1.0mm"/></mrow><mrow><mi>l</mi><mi>o</mi><mi>w</mi><mi>e</mi><mi>r</mi><mfenced close=")" open="("><msub><mi>P</mi><mi>n</mi></msub></mfenced></mrow></mfenced><mi>:</mi><mi>u</mi><mi>p</mi><mi>p</mi><mi>e</mi><mi>r</mi><mfenced close=")" open="("><mi>R</mi></mfenced></math></p>
+</div>
+<div class="paragraph">
+<p>The lower bound of a function type <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>F</mi></math> is a function type with the upper bound types of the parameters and the lower bound of the return type:<br>
+<math xmlns="http://www.w3.org/1998/Math/MathML"><mi>l</mi><mi>o</mi><mi>w</mi><mi>e</mi><mi>r</mi><mfenced close=")" open="("><mrow><mstyle mathvariant="monospace"><mtext>function</mtext></mstyle><mfenced close=")" open="("><msub><mi>P</mi><mn>1</mn></msub><mrow><mo>.</mo><mspace width="1.0mm"/><mo>.</mo><mspace width="1.0mm"/><mo>.</mo><mspace width="1.0mm"/></mrow><msub><mi>P</mi><mi>n</mi></msub></mfenced><mi>:</mi><mi>R</mi></mrow></mfenced><mi>:</mi><mo>=</mo><mstyle mathvariant="monospace"><mtext>function</mtext></mstyle><mfenced close=")" open="("><mrow><mi>u</mi><mi>p</mi><mi>p</mi><mi>e</mi><mi>r</mi><mfenced close=")" open="("><msub><mi>P</mi><mn>1</mn></msub></mfenced></mrow><mrow><mo>.</mo><mspace width="1.0mm"/><mo>.</mo><mspace width="1.0mm"/><mo>.</mo><mspace width="1.0mm"/></mrow><mrow><mi>u</mi><mi>p</mi><mi>p</mi><mi>e</mi><mi>r</mi><mfenced close=")" open="("><msub><mi>P</mi><mi>n</mi></msub></mfenced></mrow></mfenced><mi>:</mi><mi>l</mi><mi>o</mi><mi>w</mi><mi>e</mi><mi>r</mi><mfenced close=")" open="("><mi>R</mi></mfenced></math></p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_autoboxing-of-function-type"><a class="anchor" href="#_autoboxing-of-function-type"></a><a class="link" href="#_autoboxing-of-function-type">6.1.3. Autoboxing of Function Type</a></h4>
+<div class="paragraph">
+<p>Function types, compared to other types like String, come only in on flavour: the Function object representation.
+There is no primitive function type.
+Nevertheless, for function type expressions and function declarations, it is possible to call the properties of Function object directly.
+This is similar to autoboxing for strings.</p>
+</div>
+<div class="listingblock">
+<div class="title">Access of Function properties on functions</div>
+<div class="content">
+<pre class="highlight"><code class="language-n4js" data-lang="n4js">// function declaration
+var param: number = function(a,b){}.length // 2
+
+function a(x: number) : number { return x*x; }
+// function reference
+a.length; // 1
+
+// function variable
+var f = function(m,l,b){/*...*/};
+f.length; // 3
+
+class A {
+    s: string;
+    sayS(): string{ return this.s; }
+}
+
+var objA: A = new A();
+objA.s = "A";
+
+var objB = {s:"B"}
+
+// function variable
+var m = objA.sayS; // method as function, detached from objA
+var mA: {function(any)} = m.bind(objA); // bind to objA
+var mB: {function(any)} = m.bind(objB); // bind to objB
+
+m()  // returns: undefined
+mA() // returns: A
+mB() // returns: B
+
+m.call(objA,1,2,3);  // returns: A
+m.apply(objB,[1,2,3]); // returns: B
+m.toString(); // returns: function sayS(){ return this.s; }</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_arguments-object"><a class="anchor" href="#_arguments-object"></a><a class="link" href="#_arguments-object">6.1.4. Arguments Object</a></h4>
+<div class="paragraph">
+<p>A special arguments object is defined within the body of a function.
+It is accessible through the implicitly-defined local variable named ,
+unless it is shadowed by a local variable, a formal parameter or a
+function named <code>arguments</code> or in the rare case that the function itself is called ’arguments’ [<a href="appendix_c_bibliography.html#ECMA11a">ECMA11a(p.S10.5, p.p.59)</a>].
+The argument object has array-like behavior even though it is not of type <code>array</code>:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>All actual passed-in parameters of the current execution context can be retrieved by <math xmlns="http://www.w3.org/1998/Math/MathML"><mn>0</mn><mo>-</mo><mi>b</mi><mi>a</mi><mi>s</mi><mi>e</mi><mi>d</mi></math> index access.</p>
+</li>
+<li>
+<p>The <code>length</code> property of the arguments object stores the actual number of passed-in arguments which may differ from the number of formally defined number of parameters <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>f</mi><mi>p</mi><mi>a</mi><mi>r</mi><mi>s</mi></math> of the containing function.</p>
+</li>
+<li>
+<p>It is possible to store custom values in the arguments object, even outside the original index boundaries.</p>
+</li>
+<li>
+<p>All obtained values from the arguments object are of type <code>any</code>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>In non-strict ES mode the <code>callee</code> property holds a reference to the function executed [<a href="appendix_c_bibliography.html#ECMA11a">ECMA11a(p.S10.6, p.p.61)</a>].</p>
+</div>
+<div class="openblock requirement">
+<div class="content">
+<div class="paragraph">
+<p><a id="Req-IDE-81"></a><strong>Req. IDE-81:</strong> <a href="#Req-IDE-81">Arguments.callee</a> (ver. 1)</p>
+</div>
+<div class="paragraph">
+<p>In N4JS and in ES strict mode the use of <code>arguments.callee</code> is prohibited.</p>
+</div>
+</div>
+</div>
+<div class="openblock requirement">
+<div class="content">
+<div class="paragraph">
+<p><a id="Req-IDE-82"></a><strong>Req. IDE-82:</strong> <a href="#Req-IDE-82">Arguments as formal parameter name</a> (ver. 1)</p>
+</div>
+<div class="paragraph">
+<p>In N4JS, the formal parameters of the function cannot be named <code>arguments</code>.
+This applies to all variable execution environments like field accessors (getter/setter, <a href="classifiers.html#_field-accessors-getter-setter">Field Accessors (Getter/Setter)</a>),
+methods (<a href="classifiers.html#_methods">Methods</a>) and constructors (<a href="types.html#_constructor-and-classifier-type">Constructor and Classifier Type</a>), where <code>FormalParameter</code> type is used.</p>
+</div>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-n4js" data-lang="n4js">// regular function
+function a1(s1: string, n2: number) {
+    var l: number = arguments.length;
+    var s: string = arguments[0] as string;
+}
+
+class A {
+    // property access
+    get s(): string { return ""+arguments.length; } // 0
+    set s(n: number) { console.log( arguments.length ); }  // 1
+    // method
+    m(arg: string) {
+        var l: number = arguments.length;
+        var s: string = arguments[0]  as string;
+    }
+}
+
+// property access in object literals
+var x = {
+    a:5,
+    get b(): string {
+        return ""+arguments.length
+    }
+}
+
+// invalid:
+function z(){
+    arguments.length // illegal, see next lines
+    // define arguments to be a plain variable of type number:
+    var arguments: number = 4;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2 language-n4js">
+<h3 id="_ecmascript-5-function-definition"><a class="anchor" href="#_ecmascript-5-function-definition"></a><a class="link" href="#_ecmascript-5-function-definition">6.2. ECMAScript 5 Function Definition</a></h3>
+<div class="sect3">
+<h4 id="_function-declaration"><a class="anchor" href="#_function-declaration"></a><a class="link" href="#_function-declaration">6.2.1. Function Declaration</a></h4>
+<div class="sect4">
+<h5 id="_syntax-9"><a class="anchor" href="#_syntax-9"></a><a class="link" href="#_syntax-9">6.2.1.1. Syntax</a></h5>
+<div class="paragraph">
+<p>A function can be defined as described in [<a href="appendix_c_bibliography.html#ECMA11a">ECMA11a(p.S13, p.p.98)</a>] and additional annotations can be specified.
+Since N4JS is based on [<a href="appendix_c_bibliography.html#ECMA15a">ECMA15a</a>], the syntax contains constructs not available in [<a href="appendix_c_bibliography.html#ECMA11a">ECMA11a</a>].
+The newer constructs defined only in [<a href="appendix_c_bibliography.html#ECMA15a">ECMA15a</a>] and proposals already implemented in N4JS are described in <a href="#_ecmascript-2015-function-definition">ECMAScript 2015 Function Definition</a> and <a href="#_ecmascript-proposals-function-definition">ECMAScript Proposals Function Definition</a>.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title=""></i>
+</td>
+<td class="content">
+In contrast to plain JavaScript, function declarations can be used in blocks in N4JS.
+This is only true, however, for N4JS files, not for plain JS files.
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="title">Syntax Function Declaration and Expression</div>
+<div class="content">
+<pre class="highlight"><code class="language-xtext" data-lang="xtext">FunctionDeclaration &lt;Yield&gt;:
+    =&gt; ({FunctionDeclaration}
+        annotations+=Annotation*
+        (declaredModifiers+=N4Modifier)*
+        -&gt; FunctionImpl &lt;Yield,Yield,Expression=false&gt;
+    ) =&gt; Semi?
+;
+
+
+fragment AsyncNoTrailingLineBreak *: (declaredAsync?='async' NoLineTerminator)?;
+
+fragment FunctionImpl&lt;Yield, YieldIfGenerator, Expression&gt;*:
+    'function'
+    (
+        generator?='*' FunctionHeader&lt;YieldIfGenerator,Generator=true&gt; FunctionBody&lt;Yield=true,Expression&gt;
+    |   FunctionHeader&lt;Yield,Generator=false&gt; FunctionBody&lt;Yield=false,Expression&gt;
+    )
+;
+
+fragment FunctionHeader&lt;Yield, Generator&gt;*:
+    TypeVariables?
+    name=BindingIdentifier&lt;Yield&gt;?
+    StrictFormalParameters&lt;Yield=Generator&gt;
+    (-&gt; ':' returnTypeRef=TypeRef)?
+;
+
+fragment FunctionBody &lt;Yield, Expression&gt;*:
+        &lt;Expression&gt; body=Block&lt;Yield&gt;
+    |   &lt;!Expression&gt; body=Block&lt;Yield&gt;?
+;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Properties of the function declaration and expression are described in <a href="#_function-type">Function Type</a>.</p>
+</div>
+<div class="paragraph">
+<p>For this specification, we introduce a supertype <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>F</mi><mi>u</mi><mi>n</mi><mi>c</mi><mi>t</mi><mi>i</mi><mi>o</mi><mi>n</mi><mi>D</mi><mi>e</mi><mi>f</mi><mi>i</mi><mi>n</mi><mi>i</mi><mi>t</mi><mi>i</mi><mi>o</mi><mi>n</mi></math> for both, <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>F</mi><mi>u</mi><mi>n</mi><mi>c</mi><mi>t</mi><mi>i</mi><mi>o</mi><mi>n</mi><mi>D</mi><mi>e</mi><mi>c</mi><mi>l</mi><mi>a</mi><mi>r</mi><mi>a</mi><mi>t</mi><mi>i</mi><mi>o</mi><mi>n</mi></math> and <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>F</mi><mi>u</mi><mi>n</mi><mi>c</mi><mi>t</mi><mi>i</mi><mi>o</mi><mi>n</mi><mi>E</mi><mi>x</mi><mi>p</mi><mi>r</mi><mi>e</mi><mi>s</mi><mi>s</mi><mi>i</mi><mi>o</mi><mi>n</mi></math>.
+This supertype contains all common properties of these two subtypes, that is, all properties of <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>F</mi><mi>u</mi><mi>n</mi><mi>c</mi><mi>t</mi><mi>i</mi><mi>o</mi><mi>n</mi><mi>E</mi><mi>x</mi><mi>p</mi><mi>r</mi><mi>e</mi><mi>s</mi><mi>s</mi><mi>i</mi><mi>o</mi><mi>n</mi></math>.</p>
+</div>
+<div class="exampleblock">
+<div class="title">Example 64. Function Declaration with Type Annotation</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-n4js" data-lang="n4js">// plain JS
+function f(p) { return p.length }
+// N4JS
+function f(p: string): number { return p.length }</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_semantics-8"><a class="anchor" href="#_semantics-8"></a><a class="link" href="#_semantics-8">6.2.1.2. Semantics</a></h5>
+<div class="paragraph">
+<p>A function defined in a class’s method (or method modifier) builder is a method, see <a href="classifiers.html#_methods">Methods</a> for details and additional constraints.
+The metatype of a function definition is function type (<a href="#_function-type">Function Type</a>), as a function declaration is only a different syntax for creating a <code>Function</code> object.
+Constraints for function type are described in <a href="#_function-type">Function Type</a>.
+Another consequence is that the inferred type of a function definition <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>f</mi><mi>d</mi><mi>e</mi><mi>c</mi><mi>l</mi></math> is simply its function type <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>F</mi></math>.</p>
+</div>
+<div class="openblock">
+<div class="content">
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mfrac><mrow><mrow><mo>[</mo><mspace width="-0.167em"/><mrow><mo>[</mo></mrow></mrow><mrow><mi>f</mi><mi>d</mi><mi>e</mi><mi>c</mi><mi>l</mi></mrow><mrow><mrow><mo>]</mo></mrow><mspace width="-0.167em"/><mo>]</mo></mrow></mrow><mrow><mrow><mo>[</mo><mspace width="-0.167em"/><mrow><mo>[</mo></mrow></mrow><mi>F</mi><mrow><mrow><mo>]</mo></mrow><mspace width="-0.167em"/><mo>]</mo></mrow></mrow></mfrac></math>
+</div>
+</div>
+<div class="paragraph">
+<p>Note that the type of a function definition is different from its return type <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>f</mi><mo>.</mo><mi>d</mi><mi>e</mi><mi>c</mi><mi>l</mi></math>!</p>
+</div>
+<div class="openblock requirement">
+<div class="content">
+<div class="paragraph">
+<p><a id="Req-IDE-83"></a><strong>Req. IDE-83:</strong> <a href="#Req-IDE-83">Function Declaration only on Top-Level</a> (ver. 1)</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>In plain JavaScript, function declarations must only be located on top-level, that is they must not be nested in blocks.
+Since this is supported by most JavaScript engines, only a warning is issued.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_function-expression"><a class="anchor" href="#_function-expression"></a><a class="link" href="#_function-expression">6.2.2. Function Expression</a></h4>
+<div class="paragraph">
+<p>A function expression [<a href="appendix_c_bibliography.html#ECMA11a">ECMA11a(p.S11.2.5)</a>] is quite similar to a function declaration.
+Thus, most details are explained in <a href="#_ecmascript-5-function-definition">ECMAScript 5 Function Definition</a>.</p>
+</div>
+<div class="sect4">
+<h5 id="function-expression-syntax"><a class="anchor" href="#function-expression-syntax"></a><a class="link" href="#function-expression-syntax">6.2.2.1. Syntax</a></h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xtext" data-lang="xtext">FunctionExpression:
+         ({FunctionExpression}
+            FunctionImpl&lt;Yield=false,YieldIfGenerator=true,Expression=true&gt;
+         )
+;</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_semantics-and-type-inference"><a class="anchor" href="#_semantics-and-type-inference"></a><a class="link" href="#_semantics-and-type-inference">6.2.2.2. Semantics and Type Inference</a></h5>
+<div class="paragraph">
+<p>In general, the inferred type of a function expression simply is the function type as described in <a href="#_function-type">Function Type</a>.
+Often, the signature of a function expression is not explicitly specified but it can be inferred from the context.
+The following context information is used to infer the full signature:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>If the function expression is used on the right hand side of an assignment, the expected return type can be inferred from the left hand side.</p>
+</li>
+<li>
+<p>If the function expression is used as an argument in a call to another function, the full signature can be inferred from the corresponding type of the formal parameter declaration.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Although the signature of the function expression may be inferred from the formal parameter if the function expression is used as argument, this inference has some conceptual limitations.
+This is demonstrated in the next example.</p>
+</div>
+<div class="exampleblock">
+<div class="title">Example 65. Inference Of Function Expression’s Signature</div>
+<div class="content">
+<div class="paragraph">
+<p>In general, <code>{function():any}</code> is a subtype of <code>{function():void}</code> (cf. <a href="#_function-type">Function Type</a>).
+When the return type of a function expression is inferred, this relation is taken into account which may lead to unexpected results as shown in the following code snippet:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-n4js" data-lang="n4js">function f(cb: {function():void}) { cb() }
+f(function() { return 1; });</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>No error is issued: The type of the function expression actually is inferred to <code>{function():any}</code>, because there is a return statement with an expression.
+It is not inferred to <code>{function():void}</code>, even if the formal parameter of <code>f</code> suggests that.
+Due to the previously-stated relation <code>{function():any} &lt;: {function():void}</code> this is correct – the client (in this
+case function <code>f</code>) works perfectly well even if <code>cb</code> returns something.
+The contract of arguments states that the type of the argument is a subtype of the type of the formal parameter.
+This is what the inferencer takes into account!</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2 language-n4js">
+<h3 id="_ecmascript-2015-function-definition"><a class="anchor" href="#_ecmascript-2015-function-definition"></a><a class="link" href="#_ecmascript-2015-function-definition">6.3. ECMAScript 2015 Function Definition</a></h3>
+<div class="sect3">
+<h4 id="_formal-parameters"><a class="anchor" href="#_formal-parameters"></a><a class="link" href="#_formal-parameters">6.3.1. Formal Parameters</a></h4>
+<div class="paragraph">
+<p>Parameter handling has been significantly upgraded in ECMAScript 6.
+It now supports parameter default values, rest parameters (variadics) and destructuring.
+Formal parameters can be modified to be either default or variadic.
+In case a formal parameter has no modifier, it is called normal.
+Modified parameters also become optional.</p>
+</div>
+<div class="paragraph">
+<p>Modifiers of formal parameters such as default or rest are neither evaluated nor rewritten in the transpiler.</p>
+</div>
+<div class="sect4">
+<h5 id="Type_Modifiers_Optional"><a class="anchor" href="#Type_Modifiers_Optional"></a><a class="link" href="#Type_Modifiers_Optional">6.3.1.1. Optional Parameters</a></h5>
+<div class="paragraph">
+<p>An optional formal parameter can be omitted when calling a function/method.
+An omitted parameter has the value <code>undefined</code>.
+In case the omitted parameter is variadic, the value is an empty array.</p>
+</div>
+<div class="paragraph">
+<p>Parameters can not be declared as optional explicitly.
+Instead, being optional is true when a parameter is declared as default or variadic.
+Note that any formal parameter that follows a default parameter is itself also a default thus an optional parameter.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="Type_Modifiers_Default"><a class="anchor" href="#Type_Modifiers_Default"></a><a class="link" href="#Type_Modifiers_Default">6.3.1.2. Default Parameters</a></h5>
+<div class="paragraph">
+<p>A default parameter value is specified for a parameter via an equals sign (<code>=</code>).
+If a caller doesn’t provide a value for the parameter, the default value is used.</p>
+</div>
+<div class="paragraph">
+<p>Default initializers of parameters are specified at a formal parameter of a function or method after the equal sign using an arbitrary initializer expression, such as <code>var = "s"</code>.
+However, this default initializer can be omitted.
+When a formal parameter has a declared type, the default initializer is specified at the end, such as: <code>var : string = "s"</code>.
+The initializer expression is only evaluated in case no actual argument is given for the formal parameter.
+Also, the initializer expression is evaluated when the actual argument value is <code>undefined</code>.</p>
+</div>
+<div class="paragraph">
+<p>Formal parameters become default parameters implicitly when they are preceded by an explicit default parameter.
+In such cases, the default initializer is <code>undefined</code>.</p>
+</div>
+<div class="openblock requirement">
+<div class="content">
+<div class="paragraph">
+<p><a id="Req-IDE-14501"></a><strong>Req. IDE-14501:</strong> <a href="#Req-IDE-14501">Default parameters</a> (ver. 1)</p>
+</div>
+<div class="paragraph">
+<p>Any normal parameter which is preceded by a default parameter also becomes a default parameter.
+Its initializer is <code>undefined</code>.</p>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>When a method is overwritten, its default parameters are not part of the overwriting method.
+Consequently, initializers of default parameters in abstract methods are obsolete.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="Type_Modifiers_Variadic"><a class="anchor" href="#Type_Modifiers_Variadic"></a><a class="link" href="#Type_Modifiers_Variadic">6.3.1.3. Variadic</a></h5>
+<div class="paragraph">
+<p>Variadic parameters are also called <em>rest parameters</em>.
+Marking a parameter as variadic indicates that method accepts a variable number of parameters.
+A variadic parameter implies that the parameter is also optional as the cardinality is defined as <math xmlns="http://www.w3.org/1998/Math/MathML"><mfenced close="]" open="["><mrow><mn>0.</mn><mo>.</mo><mo>*</mo></mrow></mfenced></math>.
+No further parameter can be defined after a variadic parameter.
+When no argument is given for a variadic parameter, an empty array is provided when using the parameter in the body of the function or method.</p>
+</div>
+<div class="openblock requirement">
+<div class="content">
+<div class="paragraph">
+<p><a id="Req-IDE-16"></a><strong>Req. IDE-16:</strong> <a href="#Req-IDE-16">Variadic and optional parameters</a> (ver. 1)</p>
+</div>
+<div class="paragraph">
+<p>For a parameter <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>p</mi></math>, the following condition must hold:
+<math xmlns="http://www.w3.org/1998/Math/MathML"><mi>p</mi><mo>.</mo><mi>v</mi><mi>a</mi><mi>r</mi><mo>→</mo><mi>p</mi><mo>.</mo><mi>o</mi><mi>p</mi><mi>t</mi></math>.</p>
+</div>
+<div class="paragraph">
+<p>A parameter can not be declared both variadic and with a default value.
+That is to say that one can either write <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>v</mi><mi>a</mi><mi>r</mi><mi>N</mi><mi>a</mi><mi>m</mi><mi>e</mi><mo>=</mo></math> (default) or <math xmlns="http://www.w3.org/1998/Math/MathML"><mo>.</mo><mspace width="1.0mm"/><mo>.</mo><mspace width="1.0mm"/><mo>.</mo><mspace width="1.0mm"/><mi>v</mi><mi>a</mi><mi>r</mi><mi>N</mi><mi>a</mi><mi>m</mi><mi>e</mi></math>, but not <math xmlns="http://www.w3.org/1998/Math/MathML"><mo>.</mo><mspace width="1.0mm"/><mo>.</mo><mspace width="1.0mm"/><mo>.</mo><mspace width="1.0mm"/><mi>v</mi><mi>a</mi><mi>r</mi><mi>N</mi><mi>a</mi><mi>m</mi><mi>e</mi><mo>=</mo></math>.</p>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>Declaring a variadic parameter of type <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>T</mi></math> causes the type of the method parameter to become <code>Array&lt;T&gt;</code>.
+That is, declaring <code>function(&#8230;&#8203;tags : string)</code> causes <code>tags</code> to be an <code>Array&lt;string&gt;</code> and not just a scalar <code>string</code> value.</p>
+</div>
+<div class="paragraph">
+<p>To make this work at runtime, the compiler will generate code that constructs the <code>parameter</code> from the <code>arguments</code> parameter explicitly passed to the function.</p>
+</div>
+<div class="openblock requirement">
+<div class="content">
+<div class="paragraph">
+<p><a id="Req-IDE-17"></a><strong>Req. IDE-17:</strong> <a href="#Req-IDE-17">Variadic at Runtime</a> (ver. 1)</p>
+</div>
+<div class="paragraph">
+<p>At runtime, a variadic parameter is never set to undefined.
+Instead, the array may be empty.
+This must be true even if preceding parameters are optional and no arguments are passed at runtime.</p>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>For more constraints on using the variadic modifier, see <a href="types.html#_function-object-type">Function-Object-Type</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_generator-functions"><a class="anchor" href="#_generator-functions"></a><a class="link" href="#_generator-functions">6.3.2. Generator Functions</a></h4>
+<div class="paragraph">
+<p>Generators come together with the <code>yield</code> expression and can play three roles:
+the role of an iterator (data producer), of an observer (data consumer), and a combined role which is called coroutines.
+When calling a generator function or method, the returned generator object of type <code>Generator&lt;TYield,TReturn,TNext&gt;</code> can be controlled by its methods
+(cf. [<a href="appendix_c_bibliography.html#ECMA15a">ECMA15a(p.S14.4)</a>], also see [<a href="appendix_c_bibliography.html#Kuizinas14a">Kuizinas14a</a>]).</p>
+</div>
+<div class="sect4">
+<h5 id="generator-functions-syntax"><a class="anchor" href="#generator-functions-syntax"></a><a class="link" href="#generator-functions-syntax">6.3.2.1. Syntax</a></h5>
+<div class="paragraph">
+<p>Generator functions and methods differ from ordinary functions and methods only in the additional <code>*</code> symbol before the function or method name.
+The following syntax rules are extracted from the real syntax rules.
+They only display parts relevant to declaring a function or method as a generator.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xtext" data-lang="xtext">GeneratorFunctionDeclaration &lt;Yield&gt;:
+        (declaredModifiers+=N4Modifier)*
+        'function' generator?='*'
+        FunctionHeader&lt;YieldIfGenerator,Generator=true&gt;
+        FunctionBody&lt;Yield=true,Expression=false&gt;
+;
+
+GeneratorFunctionExpression:
+        'function' generator?='*'
+        FunctionHeader&lt;YieldIfGenerator,Generator=true&gt;
+        FunctionBody&lt;Yield=true,Expression=true&gt;
+;
+
+GeneratorMethodDeclaration:
+    annotations+=Annotation+ (declaredModifiers+=N4Modifier)* TypeVariables?
+    generator?='*' NoLineTerminator LiteralOrComputedPropertyName&lt;Yield&gt;
+    MethodParamsReturnAndBody&lt;Generator=true&gt;</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="generator-functions-semantics"><a class="anchor" href="#generator-functions-semantics"></a><a class="link" href="#generator-functions-semantics">6.3.2.2. Semantics</a></h5>
+<div class="paragraph">
+<p>The basic idea is to make code dealing with Generators easier to write and more readable without changing their functionality.
+Take this example:</p>
+</div>
+<div id="ex:two-simple-generator-functions" class="exampleblock">
+<div class="title">Example 66. Two simple generator functions</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-n4js" data-lang="n4js">// explicit form of the return type
+function * countTo(iMax:int) : Generator&lt;int,string,undefined&gt; {
+	for (int i=0; i&lt;=iMax; i++)
+		yield i;
+	return "finished";
+}
+val genObj1 = countTo(3);
+val values1 = [...genObj1]; // is [0,1,2,3]
+val lastObj1 = genObj1.next(); // is {value="finished",done=true}
+
+// shorthand form of the return type
+function * countFrom(start:int) : int {
+	for (int i=start; i&gt;=0; i--)
+		yield i;
+	return finished;
+}
+val genObj2 = countFrom(3);
+val values2 = [...genObj2]; // is [3,2,1,0]
+val lastObj2 = genObj2.next(); // is {value="finished",done=true}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In the example above, two generator functions are declared.
+The first declares its return type explicitly whereas the second uses a shorthand form.</p>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>Generator functions and methods return objects of the type <code>Generator&lt;TYield,TReturn,TNext&gt;</code> which is a subtype of the <code>Iterable&lt;TYield&gt;</code> and <code>Iterator&lt;TYield&gt;</code> interfaces.
+Moreover, it provides the methods <code>throw(exception:any)</code> and <code>return(value:TNext?)</code> for advanced control of the generator object.
+The complete interface of the generator class is given below.</p>
+</div>
+<div class="listingblock">
+<div class="title">The generator class</div>
+<div class="content">
+<pre class="highlight"><code class="language-n4js" data-lang="n4js">public providedByRuntime interface Generator&lt;out TYield, out TReturn, in TNext&gt;
+	extends Iterable&lt;TYield&gt;, Iterator&lt;TYield&gt; {
+	public abstract next(value: TNext?): IteratorEntry&lt;TYield&gt;
+	public abstract [Symbol.iterator](): Generator&lt;TYield, TReturn, TNext&gt;
+	public abstract throw(exception: any): IteratorEntry&lt;TYield&gt;;
+	public abstract return(value: TNext?): IteratorEntry&lt;TReturn&gt;;
+}</code></pre>
+</div>
+</div>
+<div class="openblock requirement">
+<div class="content">
+<div class="paragraph">
+<p><a id="Req-IDE-14370"></a><strong>Req. IDE-14370:</strong> <a href="#Req-IDE-14370">Modifier <code>*</code></a> (ver. 1)</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><code>*</code> may be used on declared functions and methods, and for function expressions.</p>
+</li>
+<li>
+<p>A function or method <em>f</em> with a declared return type <em>R</em> that is declared <code>*</code> has an actual return type of <code>Generator&lt;TYield,TReturn,TNext&gt;</code>.</p>
+</li>
+<li>
+<p>A generator function or method can have no declared return type, a shorthand form of a return type or an explicitly declared return type.</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>The explicitly declared return type is of the form <code>Generator&lt;TYield,TReturn,TNext&gt;</code> with the type variables:</p>
+<div class="olist lowerroman">
+<ol class="lowerroman" type="i">
+<li>
+<p><em>TYield</em> as the expected type of the yield expression argument,</p>
+</li>
+<li>
+<p><em>TReturn</em> as the expected type of the return expression, and</p>
+</li>
+<li>
+<p><em>TNext</em> as both the return type of the yield expression.</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>The shorthand form only declares the type of <em>TYield</em> which implicitly translates to <code>Generator&lt;TYield,TReturn,any&gt;</code> as the return type.</p>
+<div class="olist lowerroman">
+<ol class="lowerroman" type="i">
+<li>
+<p>The type <em>TReturn</em> is inferred to either <code>undefined</code> or <code>any</code> from the body.</p>
+</li>
+<li>
+<p>In case the declared type is <code>void</code>, actual return type evaluates to <code>Generator&lt;undefined,undefined,any&gt;</code>.</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>If no return type is declared, both <em>TYield</em> and <em>TReturn</em> are inferred from the body to either <code>any</code> or <code>undefined</code>. <em>TNext</em> is <code>any</code>.</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Given a generator function or method <em>f</em> with an actual return type <code>Generator&lt;TYield,TReturn,TNext&gt;</code>:</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>all yield statements in <em>f</em> must have an expression of type <em>TYield</em>.</p>
+</li>
+<li>
+<p>all return statements in <em>f</em> must have an expression of type <em>TReturn</em>.</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Return statements in generator functions or methods are always optional.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="openblock requirement">
+<div class="content">
+<div class="paragraph">
+<p><a id="Req-IDE-14371"></a><strong>Req. IDE-14371:</strong> <a href="#Req-IDE-14371">Modifier <code>yield</code> and <code>yield*</code></a> (ver. 1)</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><code>yield</code> and <code>yield*</code> may only be in body of generator functions or methods.</p>
+</li>
+<li>
+<p><code>yield expr</code> takes only expressions <em>expr</em> of type <em>TYield</em> in a generator function or methods with the actual type <code>Generator&lt;TYield,TReturn,TNext&gt;</code>.</p>
+</li>
+<li>
+<p>The return type of the <code>yield</code> expression is <em>TNext</em>.</p>
+</li>
+<li>
+<p><code>yield* fg()</code> takes only iterators of type <code>Iterator&lt;TYield&gt;</code>, and generator functions or methods <em>fg</em> with the actual return type <code>Generator&lt;? extends TYield,? extends TReturn,? super TNext&gt;</code>.</p>
+</li>
+<li>
+<p>The return type of the <code>yield*</code> expression is <em>any</em>, since a custom iterator could return an entry <code>{done=true,value}</code> and any value for the variable <code>value</code>.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>Similar to <code>async</code> functions, shorthand and explicit form <code>* function():int{};</code> and <code>* function():Generator&lt;int,TResult,any&gt;</code> are equal,
+given that the inferred <em>TResult</em> of the former functions equals to <em>TResult</em> in the latter function).
+In other words, the return type of generator functions or methods is wrapped when it is not explicitly defined as <code>Generator</code> already.
+Thus, whenever a nested generator type is desired, it has to be defined explicitly.
+Consider the example below.</p>
+</div>
+<div class="listingblock">
+<div class="title">Type variables with async methods.</div>
+<div class="content">
+<pre class="highlight"><code class="language-n4js" data-lang="n4js">class C&lt;T&gt; {
+	genFoo(): T{} // equals to genFoo(): Generator&lt;T, undefined, any&gt;;
+				// note that TResult depends on the body of genFoo()
+}
+function fn(C&lt;int&gt; c1, C&lt;Generator&lt;int,any,any&gt;&gt; c2) {
+	c1.genFoo();  // returns Generator&lt;int, undefined, any&gt;
+	c2.genFoo();  // returns Generator&lt;Generator&lt;int,any,any&gt;, undefined, any&gt;
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_generator-arrow-functions"><a class="anchor" href="#_generator-arrow-functions"></a><a class="link" href="#_generator-arrow-functions">6.3.2.3. Generator Arrow Functions</a></h5>
+<div class="paragraph">
+<p>As of now, generator arrow functions are not supported by EcmaScript 6 and also, the support is not planned.
+However, introducing generator arrow function in EcmaScript is still under discussion.
+For more information, please refer to <a href="https://esdiscuss.org/topic/generator-arrow-functions">ESDiscuss.org</a> and <a href="https://esdiscuss.org/topic/why-do-generator-expressions-return-generators">StackOverflow.com</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_arrow-function-expression"><a class="anchor" href="#_arrow-function-expression"></a><a class="link" href="#_arrow-function-expression">6.3.3. Arrow Function Expression</a></h4>
+<div class="paragraph">
+<p>This is an ECMAScript 6 expression (see [<a href="appendix_c_bibliography.html#ECMA15a">ECMA15a(p.S14.2)</a>]) for simplifying the definition of anonymous function expressions, a.k.a. lambdas or closures.
+The ECMAScript Specification calls this a function definition even though they may only appear in the context of expressions.</p>
+</div>
+<div class="paragraph">
+<p>Along with Assignments, Arrow function expressions have the least precedence, e.g. they serve as the entry point for the expression tree.</p>
+</div>
+<div class="paragraph">
+<p>Arrow function expressions can be considered syntactic window-dressing for old-school function expressions and therefore do not support the
+benefits regarding parameter annotations although parameter types may be given explicitly.
+The return type can be given as type hint if desired, but this is not mandatory (if left out, the return type is inferred).
+The notation <code>@=></code> stands for an async arrow function (<a href="#_asynchronous-arrow-functions">Asynchronous Arrow Functions</a>).</p>
+</div>
+<div class="sect4">
+<h5 id="arrow-function-expression-syntax"><a class="anchor" href="#arrow-function-expression-syntax"></a><a class="link" href="#arrow-function-expression-syntax">6.3.3.1. Syntax</a></h5>
+<div class="paragraph">
+<p>The simplified syntax reads like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xtext" data-lang="xtext">ArrowExpression returns ArrowFunction:
+    =&gt;(
+        {ArrowFunction}
+        (
+            '('
+                ( fpars+=FormalParameterNoAnnotations ( ',' fpars+=FormalParameterNoAnnotations )* )?
+            ')'
+            (':' returnTypeRef=TypeRef)?
+        |   fpars+=FormalParameterNoType
+        )
+        '=&gt;'
+    ) (
+        (=&gt; hasBracesAroundBody?='{' body=BlockMinusBraces '}') | body=ExpressionDisguisedAsBlock
+    )
+;
+
+FormalParameterNoAnnotations returns FormalParameter:
+    (declaredTypeRef=TypeRef variadic?='...'?)? name=JSIdentifier
+;
+FormalParameterNoType returns FormalParameter: name=JSIdentifier;
+
+BlockMinusBraces returns Block: {Block} statements+=Statement*;
+
+ExpressionDisguisedAsBlock returns Block:
+    {Block} statements+=AssignmentExpressionStatement
+;
+
+AssignmentExpressionStatement returns ExpressionStatement: expression=AssignmentExpression;</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="arrow-function-expression-semantics-and-type-inference"><a class="anchor" href="#arrow-function-expression-semantics-and-type-inference"></a><a class="link" href="#arrow-function-expression-semantics-and-type-inference">6.3.3.2. Semantics and Type Inference</a></h5>
+<div class="paragraph">
+<p>Generally speaking, the semantics are very similar to the function
+expressions but the devil’s in the details:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>arguments</code>: Unlike normal function expressions, an arrow function does not introduce an implicit <code>arguments</code> variable (<a href="#_arguments-object">Arguments Object</a>),
+therefore any occurrence of it in the arrow function’s body has always the same binding as an occurrence of <code>arguments</code> in the lexical context enclosing the arrow function.</p>
+</li>
+<li>
+<p><code>this</code>: An arrow function does not introduce a binding of its own for the <code>this</code> keyword. That explains why uses in the body of arrow function have the same meaning as occurrences in the enclosing lexical scope.
+As a consequence, an arrow function at the top level has both usages of <code>arguments</code> and <code>this</code> flagged as error (the outer lexical context doesn’t provide definitionsfor them).</p>
+</li>
+<li>
+<p><code>super</code>: As with function expressions in general, whether of the arrow variety or not, the usage of <code>super</code> isn’t allowed in the body of arrow functions.</p>
+</li>
+</ul>
+</div>
+<div class="openblock requirement">
+<div class="content">
+<div class="paragraph">
+<p><a id="Req-IDE-84"></a><strong>Req. IDE-84:</strong> <a href="#Req-IDE-84">No This in Top Level Arrow Function in N4JS Mode</a> (ver. 1)</p>
+</div>
+<div class="paragraph">
+<p>In N4JS, a top-level arrow function can’t refer to <code>this</code> as there’s no outer lexical context that provides a binding for it.</p>
+</div>
+</div>
+</div>
+<div class="openblock requirement">
+<div class="content">
+<div class="paragraph">
+<p><a id="Req-IDE-85"></a><strong>Req. IDE-85:</strong> <a href="#Req-IDE-85">No Arguments in Top Level Arrow Function</a> (ver. 1)</p>
+</div>
+<div class="paragraph">
+<p>In N4JS, a top-level arrow function can’t include usages of <code>arguments</code> in its body, again because of the missing binding for it.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2 language-n4js">
+<h3 id="_ecmascript-proposals-function-definition"><a class="anchor" href="#_ecmascript-proposals-function-definition"></a><a class="link" href="#_ecmascript-proposals-function-definition">6.4. ECMAScript Proposals Function Definition</a></h3>
+<div class="sect3">
+<h4 id="_asynchronous-functions"><a class="anchor" href="#_asynchronous-functions"></a><a class="link" href="#_asynchronous-functions">6.4.1. Asynchronous Functions</a></h4>
+<div class="paragraph">
+<p>To improve language-level support for asynchronous code, there exists an ECMAScript proposal <sup class="footnote">[<a id="_footnoteref_45" class="footnote" href="appendix_c_bibliography.html#_footnote_45" title="View footnote.">45</a>]</sup> based on Promises which are provided by ES6 as built-in types.
+N4JS implements this proposal.
+This concept is supported for declared functions and methods (<a href="classifiers.html#_asynchronous-methods">Asynchronous Methods</a>) as well
+as for function expressions and arrow functions (<a href="#_asynchronous-arrow-functions">Asynchronous Arrow Functions</a>).</p>
+</div>
+<div class="sect4">
+<h5 id="asynchronous-functions-syntax"><a class="anchor" href="#asynchronous-functions-syntax"></a><a class="link" href="#asynchronous-functions-syntax">6.4.1.1. Syntax</a></h5>
+<div class="paragraph">
+<p>The following syntax rules are extracted from the real syntax rules.
+They only display parts relevant to declaring a function or method as
+asynchronous.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xtext" data-lang="xtext">AsyncFunctionDeclaration &lt;Yield&gt;:
+        (declaredModifiers+=N4Modifier)*
+        declaredAsync?='async' NoLineTerminator 'function'
+        FunctionHeader&lt;Yield,Generator=false&gt;
+        FunctionBody&lt;Yield=false,Expression=false&gt;
+;
+
+AsyncFunctionExpression:
+        declaredAsync?='async' NoLineTerminator 'function'
+        FunctionHeader&lt;Yield=false,Generator=false&gt;
+        FunctionBody&lt;Yield=false,Expression=true&gt;
+;
+
+AsyncArrowExpression &lt;In, Yield&gt;:
+        declaredAsync?='async' NoLineTerminator '('
+            (fpars+=FormalParameter&lt;Yield&gt;
+                (',' fpars+=FormalParameter&lt;Yield&gt;)*)?
+        ')' (':' returnTypeRef=TypeRef)? '=&gt;'
+        (   '{' body=BlockMinusBraces&lt;Yield&gt; '}'
+            | body=ExpressionDisguisedAsBlock&lt;In&gt;
+        )
+;
+
+AsyncMethodDeclaration:
+    annotations+=Annotation+ (declaredModifiers+=N4Modifier)* TypeVariables?
+    declaredAsync?='async' NoLineTerminator LiteralOrComputedPropertyName&lt;Yield&gt;
+    MethodParamsReturnAndBody</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>’async’ is not a reserved word in ECMAScript and it can therefore be
+used either as an identifier or as a keyword, depending on the context.
+When used as a modifier to declare a function as asynchronous, then
+there must be no line terminator after the <code>async</code> modifier. This enables the
+parser to distinguish between using <code>async</code> as an identifier reference and a
+keyword, as shown in the next example.</p>
+</div>
+<div class="exampleblock">
+<div class="title">Example 67. Async as keyword and identifier</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-n4js" data-lang="n4js">async <i class="conum" data-value="1"></i><b>(1)</b>
+function foo() {}
+// vs
+async function bar(); <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>In this snippet, the <code>async</code> on line 1 is an identifier reference (referencing a
+variable or parameter) and the function defined on line 2 is a
+non-asynchronous function. The automatic semicolon insertion adds a
+semicolon after the reference on line 1.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>In contrast, <code>async</code> on line 4 is recognized as a modifier declaring the function as asynchronous.</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="asynchronous-functions-semantics"><a class="anchor" href="#asynchronous-functions-semantics"></a><a class="link" href="#asynchronous-functions-semantics">6.4.1.2. Semantics</a></h5>
+<div class="paragraph">
+<p>The basic idea is to make code dealing with Promises easier to write and
+more readable without changing the functionality of Promises. Take this
+example:</p>
+</div>
+<div class="listingblock">
+<div class="title">A simple asynchronous function using async/await.</div>
+<div class="content">
+<pre class="highlight"><code class="language-n4js" data-lang="n4js">// some asynchronous legacy API using promises
+interface DB {}
+interface DBAccess {
+    getDataBase(): Promise&lt;DB,?&gt;
+    loadEntry(db: DB, id: string): Promise&lt;string,?&gt;
+}
+
+var access: DBAccess;
+
+// our own function using async/await
+async function loadAddress(id: string) : string {
+    try {
+        var db: DB = await access.getDataBase();
+        var entry: string = await access.loadEntry(db, id);
+        return entry.address;
+    }
+    catch(err) {
+        // either getDataBase() or loadEntry() failed
+        throw err;
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The modifier <code>async</code> changes the return type of <code>loadAddress()</code> from <code>string</code> (the declared return type) to <code>Promise&lt;string,?&gt;</code> (the actual return type).
+For code inside the function, the return type is still <code>string</code>:
+the value in the return statement of the last line will be wrapped in a Promise.
+For client code outside the function and in case of recursive invocations, the return type is <code>Promise&lt;string,?&gt;</code>.
+To raise an error, simply throw an exception, its value will become the error value of the returned Promise.</p>
+</div>
+<div class="paragraph">
+<p>If the expression after an <code>await</code> evaluates to a <code>Promise</code>, execution of the enclosing asynchronous function will be suspended until either a success value is available
+(which will then make the entire await-expression evaluate to this success value and continue execution)
+or until the Promise is rejected (which will then cause an exception to be thrown at the location of the await-expression).
+If, on the other hand, the expression after an <code>await</code> evaluates to a non-promise, the value will be simply passed through.
+In addition, a warning is shown to indicate the unnecessary <code>await</code> expression.</p>
+</div>
+<div class="paragraph">
+<p>Note how method <code>loadAddress()</code> above can be implemented without any explicit references to the built-in type Promise.
+In the above example we handle the errors of the nested asynchronous calls to <code>getDataBase()</code> and <code>loadEntry()</code> for demonstration purposes only;
+if we are not interested in the errors we could simply remove the try/catch block and any errors would be forwarded to the caller of <code>loadAddress()</code>.</p>
+</div>
+<div class="paragraph">
+<p>Invoking an async function commonly adopts one of two forms:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>var p: Promise&lt;successType,?&gt; = asyncFn()</code></p>
+</li>
+<li>
+<p><code>await asyncFn()</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>These patterns are so common that a warning is available whenever both</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><code>Promise</code> is omitted as expected type; and</p>
+</li>
+<li>
+<p><code>await</code> is also omitted.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>The warning aims at hinting about forgetting to wait for the result, while remaining non-noisy.</p>
+</div>
+<div class="openblock requirement">
+<div class="content">
+<div class="paragraph">
+<p><a id="Req-IDE-86"></a><strong>Req. IDE-86:</strong> <a href="#Req-IDE-86">Modifier <code>async</code> and <code>await</code></a> (ver. 1)</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><code>async</code> may be used on declared functions and methods as well as for function expressions and arrow functions.</p>
+</li>
+<li>
+<p>A function or method that is declared <code>async</code> can have no declared return type, a shorthand form of a return type or an explicitly declared return type.</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>The explicitly declared return type is of the form <code>Promise&lt;R,E&gt;</code> where <em>R</em> is the type of all return statements in the body, and E is the type of exceptions that are thrown in the body.</p>
+</li>
+<li>
+<p>The shorthand form only declares the type of <em>R</em> which implicitly translates to <code>Promise&lt;R,?&gt;</code> as the actual return type.</p>
+</li>
+<li>
+<p>In case no return type is declared, the type <em>R</em> of <code>Promise&lt;R,?&gt;</code> is inferred from the body.</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>A function or method <em>f</em> with a declared return type <em>R</em> that is declared <code>async</code> has an actual return type of</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p><code>R</code> if <em>R</em> is a subtype of <code>Promise&lt;?,?&gt;</code>,</p>
+</li>
+<li>
+<p><code>Promise&lt;undefined,?&gt;</code> if <em>R</em> is type <code>void</code>.</p>
+</li>
+<li>
+<p><code>Promise&lt;R,?&gt;</code> in all other cases (i.e. the declared return type <em>R</em> is being wrapped in a <code>Promise</code>).</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Return type inference is only performed when no return type is declared.</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>The return type <code>R</code> of <code>Promise&lt;R,?&gt;</code> is inferred either as <code>void</code> or as <code>any</code>.</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Given a function or method <em>f</em> that is declared <code>async</code> with a declared return type <em>R</em>, or with a declared return type <code>Promise&lt;R,?&gt;</code>,
+all return statements in <em>f</em> must have an expression of type <em>R</em> (and not of type <code>Promise&lt;R,?&gt;</code>).</p>
+</li>
+<li>
+<p><code>await</code> can be used in expressions directly enclosed in an async function, and behaves like a unary operator with the same precedence as <code>yield</code> in ES6.</p>
+</li>
+<li>
+<p>Given an expression <em>expr</em> of type
+<em>T</em>, the type of (<code>await</code> <em>expr</em>) is inferred to <em>T</em> if
+<em>T</em> is not a Promise, or it is inferred to <em>S</em> if
+<em>T</em> is a Promise with a success value of type
+<em>S</em>, i.e. <em>T &lt;: Promise&lt;S,?&gt;</em> .</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>In other words, the return type <em>R</em> of <code>async</code> functions and methods will always be wrapped to <code>Promise&lt;R,?&gt;</code> unless <em>R</em> is a <code>Promise</code> already.
+As a consequence, nested <code>Promise</code>s as a return type of a async function or method have to be stated explicitly like <code>Promise&lt;Promise&lt;R,?&gt;,?&gt;</code>.</p>
+</div>
+<div class="paragraph">
+<p>When a type variable <code>T</code> is used to define the the return type of an async function or method, it will always be wrapped.
+Consider the example below.</p>
+</div>
+<div class="exampleblock">
+<div class="title">Example 68. Type variables with async methods.</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-n4js" data-lang="n4js">interface I&lt;T&gt; {
+	async foo(): T;  // amounts to foo(): Promise&lt;T,?&gt;
+}
+function snafu(i1: I&lt;int&gt;, i2: I&lt;Promise&lt;int,?&gt;&gt;) {
+	i1.foo();  // returns Promise&lt;int,?&gt;
+	i2.foo();  // returns Promise&lt;Promise&lt;int,?&gt;,?&gt;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_asynchronous-arrow-functions"><a class="anchor" href="#_asynchronous-arrow-functions"></a><a class="link" href="#_asynchronous-arrow-functions">6.4.1.3. Asynchronous Arrow Functions</a></h5>
+<div class="paragraph">
+<p>An <code>await</code> expression is allowed in the body of an async arrow function but not
+in the body of a non-async arrow function. The semantics here are
+intentional and are in line with similar constraint for function
+expressions.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2 language-n4js">
+<h3 id="_n4js-extended-function-definition"><a class="anchor" href="#_n4js-extended-function-definition"></a><a class="link" href="#_n4js-extended-function-definition">6.5. N4JS Extended Function Definition</a></h3>
+<div class="sect3">
+<h4 id="_generic-functions"><a class="anchor" href="#_generic-functions"></a><a class="link" href="#_generic-functions">6.5.1. Generic Functions</a></h4>
+<div class="paragraph">
+<p>A generic function is a function with a list of generic type parameters.
+These type parameters can be used in the function signature to declare the types of formal parameters and the return type.
+In addition, the type parameters can be used in the function body, for example when declaring the type of a local variable.</p>
+</div>
+<div class="paragraph">
+<p>In the following listing, a generic function <code>foo</code> is defined that has two type parameters <code>S</code> and <code>T</code>.
+Thereby <code>S</code> is used as to declare the parameter type <code>Array&lt;S&gt;</code> and <code>T</code> is used as the return type and to construct the returned value in the function body.</p>
+</div>
+<div class="listingblock">
+<div class="title">Generic Function Definition</div>
+<div class="content">
+<pre class="highlight"><code class="language-n4js" data-lang="n4js">function &lt;S,T&gt; foo(s: Array&lt;S&gt;): T { return new T(s); }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If a generic type parameter is not used as a formal parameter type or
+the return type, a warning is generated.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_promisifiable-functions"><a class="anchor" href="#_promisifiable-functions"></a><a class="link" href="#_promisifiable-functions">6.5.2. Promisifiable Functions</a></h4>
+<div class="paragraph">
+<p>In many existing libraries, which have been developed in pre-ES6-promise-API times, callback methods are used for asynchronous behavior.
+An asynchronous function follows the following conventions:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-n4js" data-lang="n4js">'function' name '(' arbitraryParameters ',' callbackFunction ')'</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Usually the function returns nothing (<code>void</code>).
+The callback function usually takes two arguments,in which the first is an error object and the other is the result value of the asynchronous operation.
+The callback function is called from the asynchronous function, leading to nested function calls (aka ’callback hell’).</p>
+</div>
+<div class="paragraph">
+<p>In order to simplify usage of this pattern, it is possible to mark such a function or method as <code>@Promisifiable</code>.
+It is then possible to ’promisify’ an invocation of this function or method, which means no callback function argument has to be provided and a will be returned.
+The function or method can then be used as if it were declared with <code>async</code>.
+This is particularly useful in N4JS definition files (.n4jsd) to allow using an existing callback-based API from N4JS code with the more convenient <code>await</code>.</p>
+</div>
+<div class="exampleblock">
+<div class="title">Example 69. Promisifiable</div>
+<div class="content">
+<div class="paragraph">
+<p>Given a function with an N4JS signature</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-n4js" data-lang="n4js">f(x: int, cb: {function(Error, string)}): void</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This method can be annotated with <code>Promisifiable</code> as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-n4js" data-lang="n4js">@Promisifiable f(x: int, cb: {function(Error, string)}): void</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>With this annotation, the function can be invoked in four different
+ways:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-n4js" data-lang="n4js">f(42, function(err, result1) { /* ... */ });            // traditional
+var promise: Promise&lt;string,Error&gt; = @Promisify f(42);  // promise
+var result3: string = await @Promisify f(42);           // long
+var result4: string = await f(42);                      // short</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The first line is only provided for completeness and shows that a promisifiable function can still be used in the ordinary way by providing a callback - no special handling will occur in this case.
+The second line shows how <code>f</code> can be promisified using the <code>@Promisify</code> annotation - no callback needs to be provided and instead, a <code>Promise</code> will be returned.
+We can either use this promise directly or immediately <code>await</code> on it, as shown in line 3.
+The syntax shown in line 4 is merely shorthand for <code>await @Promisify</code>, i.e. the annotation is optional after <code>await</code>.</p>
+</div>
+</div>
+</div>
+<div class="openblock requirement">
+<div class="content">
+<div class="paragraph">
+<p><a id="Req-IDE-87"></a><strong>Req. IDE-87:</strong> <a href="#Req-IDE-87">Promisifiable</a> (ver. 1)</p>
+</div>
+<div class="paragraph">
+<p>A function or method <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>f</mi></math> can be annotated with <code>@Promisifiable</code> if and only if the following constraints hold:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Last parameter of <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>f</mi></math> is a function (the <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>c</mi><mi>a</mi><mi>l</mi><mi>l</mi><mi>b</mi><mi>a</mi><mi>c</mi><mi>k</mi></math>).</p>
+</li>
+<li>
+<p>The <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>c</mi><mi>a</mi><mi>l</mi><mi>l</mi><mi>b</mi><mi>a</mi><mi>c</mi><mi>k</mi></math> has a signature of</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>{function(E, T0, T1, &#8230;&#8203;, Tn): V}</code>, or</p>
+</li>
+<li>
+<p><code>{function(T0, T1, &#8230;&#8203;, Tn): V}</code></p>
+<div class="paragraph">
+<p>in which <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>E</mi></math> is type <code>Error</code> or a subtype thereof, <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>T</mi><mn>0</mn></msub><mo>,</mo><mo>.</mo><mspace width="1.0mm"/><mo>.</mo><mspace width="1.0mm"/><mo>.</mo><mspace width="1.0mm"/><mo>,</mo><msub><mi>T</mi><mi>n</mi></msub></math> are arbitrary types except or its subtypes.
+<math xmlns="http://www.w3.org/1998/Math/MathML"><mi>E</mi></math>, if given, is then the type of the error value, and <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>T</mi><mn>0</mn></msub><mo>,</mo><mo>.</mo><mspace width="1.0mm"/><mo>.</mo><mspace width="1.0mm"/><mo>.</mo><mspace width="1.0mm"/><mo>,</mo><msub><mi>T</mi><mi>n</mi></msub></math> are the types of the success values of the asynchronous operation.<br>
+Since the return value of the synchronous function call is not available when using <code>@Promisify</code>, <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>V</mi></math> is recommended to be <code>void</code>, but it can be any type.</p>
+</div>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>The callback parameter may be optional.<sup class="footnote">[<a id="_footnoteref_46" class="footnote" href="appendix_c_bibliography.html#_footnote_46" title="View footnote.">46</a>]</sup></p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>According to <a href="#Req-IDE-87">[Req-IDE-87]</a>, a promisifiable function or method may or may not have a non-void return type, and that only the first parameter of the callback is allowed to be of type <code>Error</code>, all other parameters must be of other types.</p>
+</div>
+<div class="openblock requirement">
+<div class="content">
+<div class="paragraph">
+<p><a id="Req-IDE-88"></a><strong>Req. IDE-88:</strong> <a href="#Req-IDE-88">@Promisify and await with promisifiable functions</a> (ver. 1)</p>
+</div>
+<div class="paragraph">
+<p>A promisifiable function <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>f</mi></math> with one of the two valid
+signatures given in <a href="#Req-IDE-87">[Req-IDE-87]</a> can be promisified with <code>Promisify</code> or
+used with <code>await</code>, if and only if the following constraints hold:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Function <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>f</mi></math> must be annotated with <code>@Promisifiable</code>.</p>
+</li>
+<li>
+<p>Using <code>@Promisify f()</code> without <code>await</code> returns a promise of type <code>Promise&lt;S,F&gt;</code> where</p>
+<div class="ulist">
+<ul>
+<li>
+<p><math xmlns="http://www.w3.org/1998/Math/MathML"><mi>S</mi></math> is <code>IterableN&lt;T0,&#8230;&#8203;,Tn&gt;</code> if <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>n</mi><mo>≥</mo><mn>2</mn></math>, <code>T</code> if <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>n</mi><mo>=</mo><mn>1</mn></math>, and <code>undefined</code> if <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>n</mi><mo>=</mo><mn>0</mn></math>.</p>
+</li>
+<li>
+<p><math xmlns="http://www.w3.org/1998/Math/MathML"><mi>F</mi></math> is <code>E</code> if given, <code>undefined</code> otherwise.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Using <code>await @Promisify f()</code> returns a value of type <code>IterableN&lt;T0,&#8230;&#8203;,Tn&gt;</code> if <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>n</mi><mo>≥</mo><mn>2</mn></math>, of type <code>T</code> if <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>n</mi><mo>=</mo><mn>1</mn></math>, and of type <code>undefined</code> if <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>n</mi><mo>=</mo><mn>0</mn></math>.</p>
+</li>
+<li>
+<p>In case of using an <code>await</code>, the annotation can be omitted.<br>
+I.e., <code>await @Promisify f()</code> is equivalent to <code>await f()</code>.</p>
+</li>
+<li>
+<p>Only call expressions using f as target can be promisified, in other
+words this is illegal:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-n4js" data-lang="n4js">var pf = @Promisify f; // illegal code!</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Version 0.9<br>
+Last updated 2019-08-07 15:02:40 CEST
+</div>
+</div>
+<!-- ************* docinfo-footer *************************************************************** -->
+<div class="Grid social" style="color:#d5dfea">
+  <div class="Cell Cell--2-12 m-Cell--withMargin">
+    <h2>Quick Links</h2>
+    <ul>
+      <li><a href="../downloads.html">Download</a></li>
+      <li><a href="../userguides/index.html">Documentation</a></li>
+      <li><a href="https://github.com/eclipse/n4js/">Source</a></li>
+      <li><a href="https://github.com/eclipse/n4js/issues">Issues</a></li>
+    </ul>
+  </div>
+  <div class="Cell Cell--2-12 m-Cell--withMargin">
+    <br/><br/>
+    <ul>
+      <li><a href="https://www.eclipse.org/forums/index.php/f/365/">Forum</a></li>
+      <li><a href="http://n4js.blogspot.de/">Blog</a></li>
+      <li><a href="https://dev.eclipse.org/mailman/listinfo/n4js-dev">Mailing List</a></li>
+      <li><a href="https://projects.eclipse.org/projects/technology.n4js">Eclipse Project Page</a></li>
+      <li><a href="https://twitter.com/n4jsdev">Tweets by n4jsdev</a></li>
+    </ul>
+  </div>
+  <div class="Cell Cell--2-12 m-Cell--withMargin">
+    <br/><br/>
+    <ul>
+      <li><a href="http://www.eclipse.org/">Eclipse Home</a></li>
+      <li><a href="http://www.eclipse.org/legal/privacy.php">Privacy Policy</a></li>
+      <li><a href="http://www.eclipse.org/legal/termsofuse.php">Terms of Use</a></li>
+      <li><a href="http://www.eclipse.org/legal/copyright.php">Copyright Agent</a></li>
+      <li><a href="http://www.eclipse.org/legal/">Legal</a></li>
+    </ul>
+  </div>
+  <div style="clear: both; height: 0; overflow: hidden;"></div>
+</div>
+
+<!-- ************* UI Scripts ************* -->
+<script type="text/javascript" src="scripts/back-to-top.js"></script>
+
+<script type="text/javascript" src="scripts/treeview.js"></script>
+<script type="text/javascript" src="scripts/toc.js"></script>
+
+<!-- ************* Prism.js Syntax Highlighting ************* -->
+<script src="scripts/prism.js"></script>
+
+<script type="text/javascript">
+	// Add the 'toclist' id for search function
+	$(".toc2 > ul").attr('id', 'toclist');
+	// Generate a Search input form
+	$("#toclist > li:first-of-type").before('<input type="text" id="pagesearch" onkeyup="search()" placeholder="Search for section...">');
+	$("#toclist > li:first-of-type").before('<i id="clear" class="fa fa-times-circle-o"></i>');
+	$("#clear").click(function(){
+	    $("#pagesearch").val('');
+	    search();
+	    $('.toc2 > ul').treeView('collapseAll');
+	});
+	// intialize Treeview.js
+	$(".toc2 > ul").treeView();
+	// Initialize Scrollspy
+</script>
+<!-- ************* docinfo-footer *************************************************************** -->
+</body>
+</html>

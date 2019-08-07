@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 1.5.5">
+<meta name="author" content="2019-08-07 15:02:40 CEST">
+<title>N4JS IDE Specification</title>
+<link rel="stylesheet" href="styles/spec.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
+<!-- ************* docinfo ******************************************************************* -->
+
+
+<!-- ************* Favicon ************-->
+<link rel="icon" href="images/favicon.ico" />
+
+<!-- ************* Back-to-top JQuery ************* -->
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
+
+
+<link href="styles/prism.min.css" rel="stylesheet" />
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+<!-- ************* Styles ************* -->
+<link rel="stylesheet" type="text/css" href="styles/n4jsspec-adoc.css">
+
+
+<!-- ****************** NavBar ****************** -->
+<div id="menubar">
+	<div class="banner">
+        <a href="https://www.eclipse.org/n4js/#"><img id="logo" src="images/n4js-logo.png" alt="Eclipse N4JS"></a>
+    </div>
+<ul>
+  <li><a href="index.html">Index</a></li>
+</ul>
+</div>
+<!-- ************* docinfo ******************************************************************* -->
+<style>
+      .admonitionblock td.icon .icon-todo:before{content:"\f249";color:#f4ee42}
+    </style>
+</head>
+<body class="book toc2 toc-left">
+<div id="header">
+<h1>N4JS IDE Specification</h1>
+<div class="details">
+<span id="author" class="author">2019-08-07 15:02:40 CEST</span><br>
+<span id="revnumber">version 0.9</span>
+</div>
+<div id="toc" class="toc2">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="views.html#sec:Views">1. Views</a>
+<ul class="sectlevel2">
+<li><a href="views.html#_eclipse-standard-views">1.1. Eclipse Standard Views</a>
+<ul class="sectlevel3">
+<li><a href="views.html#sec:Project_Explorer_View">1.1.1. Project Explorer</a></li>
+<li><a href="views.html#sec:Outline_View">1.1.2. Outline</a></li>
+<li><a href="views.html#sec:Problems_View">1.1.3. Problems</a></li>
+<li><a href="views.html#sec:Console_View">1.1.4. Console</a></li>
+<li><a href="views.html#sec:History_View">1.1.5. History</a></li>
+<li><a href="views.html#sec:Error_Log_View">1.1.6. Error Log</a></li>
+</ul>
+</li>
+<li><a href="views.html#_n4js-specific-views">1.2. N4JS Specific Views</a>
+<ul class="sectlevel3">
+<li><a href="views.html#_test-results">1.2.1. Test Results</a></li>
+<li><a href="views.html#_source-graphs">1.2.2. Source Graphs</a></li>
+<li><a href="views.html#_api-compare">1.2.3. API Compare</a></li>
+<li><a href="views.html#_performance-graphs">1.2.4. Performance Graphs</a></li>
+<li><a href="views.html#_source-mapping">1.2.5. Source Mapping</a></li>
+<li><a href="views.html#_xpect-view">1.2.6. Xpect View</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="navigation.html#_navigation">2. Navigation</a>
+<ul class="sectlevel2">
+<li><a href="navigation.html#sec:Outline_Navigation">2.1. Outline</a>
+<ul class="sectlevel3">
+<li><a href="navigation.html#_quick-outline">2.1.1. Quick Outline</a></li>
+<li><a href="navigation.html#_normal-outline">2.1.2. Normal Outline</a></li>
+</ul>
+</li>
+<li><a href="navigation.html#_navigation-commands">2.2. Navigation Commands</a>
+<ul class="sectlevel3">
+<li><a href="navigation.html#sec:Navigate_to_Declaration">2.2.1. Navigate to Declaration</a></li>
+<li><a href="navigation.html#sec:find_by_references">2.2.2. Find by References</a></li>
+<li><a href="navigation.html#sec:Open_Type_Declaration">2.2.3. Open Type Declaration</a></li>
+</ul>
+</li>
+<li><a href="navigation.html#sec:Working_Sets">2.3. Working Sets</a>
+<ul class="sectlevel3">
+<li><a href="navigation.html#sec:Working_Set_Managers">2.3.1. Working Set Managers</a></li>
+<li><a href="navigation.html#sec:Working_Set_Constraints">2.3.2. Working Set Constraints</a></li>
+<li><a href="navigation.html#sec:Manual_Association_Working_Set_Manager_UI_Features">2.3.3. Manual Association Working Set Manager - UI Features</a></li>
+<li><a href="navigation.html#sec:Project_Name_Filter_Working_Set_Manager">2.3.4. Project Name Filter Working Set Manager</a></li>
+<li><a href="navigation.html#sec:Git_Repository_Working_Set_Manager">2.3.5. Git Repository Working Set Manager</a></li>
+<li><a href="navigation.html#sec:Project_Location_Working_Set_Manager">2.3.6. Project Location Working Set Manager</a></li>
+<li><a href="navigation.html#sec:N4JS_Project_Type_Working_Set_Manager">2.3.7. N4JS Project Type Working Set Manager</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="assistance.html#_assistance">3. Assistance</a>
+<ul class="sectlevel2">
+<li><a href="assistance.html#sec:Content_Assist">3.1. Content Assist</a>
+<ul class="sectlevel3">
+<li><a href="assistance.html#sec:Complete_Keywords">3.1.1. Complete Keywords</a></li>
+<li><a href="assistance.html#sec:Complete_Annotations">3.1.2. Complete Annotations</a></li>
+<li><a href="assistance.html#sec:Complete_Identifier_Reference">3.1.3. Complete Identifier Reference</a></li>
+<li><a href="assistance.html#sec:Complete_Member_Overrides">3.1.4. Complete Member Overrides</a></li>
+<li><a href="assistance.html#sec:Constructor_Completion">3.1.5. Constructor Completion</a></li>
+<li><a href="assistance.html#sec:Complete_Function_Expression">3.1.6. Complete Function Expression with Known Type</a></li>
+<li><a href="assistance.html#sec:Complete_Variable_and_Parameter_Names">3.1.7. Complete Variable and Parameter Names</a></li>
+</ul>
+</li>
+<li><a href="assistance.html#sec:Quick_Fixes">3.2. Quick Fixes</a>
+<ul class="sectlevel3">
+<li><a href="assistance.html#sec:N4JS_Issue_Properties">3.2.1. N4JS Issue User data</a></li>
+<li><a href="assistance.html#sec:N4JS_Issue_Fixes">3.2.2. N4JS Issue Fixes</a>
+<ul class="sectlevel4">
+<li><a href="assistance.html#sec:Linking_Issues">3.2.2.1. Linking Issues</a></li>
+<li><a href="assistance.html#sec:Import_Issues">3.2.2.2. Import Issues</a></li>
+<li><a href="assistance.html#sec:Visibility_Issues">3.2.2.3. Visibility Issues</a></li>
+<li><a href="assistance.html#sec:Classifier_Issues">3.2.2.4. Classifier Issues</a></li>
+<li><a href="assistance.html#sec:Function_Issues">3.2.2.5. Function Issues</a></li>
+<li><a href="assistance.html#sec:Syntax_Issues">3.2.2.6. Syntax Issues</a></li>
+<li><a href="assistance.html#sec:Conversion_Issues">3.2.2.7. Conversion Issues</a></li>
+<li><a href="assistance.html#sec:Type_Issues">3.2.2.8. Type Issues</a></li>
+<li><a href="assistance.html#sec:Expression_Issues">3.2.2.9. Expression Issues</a></li>
+<li><a href="assistance.html#sec:Super_Keyword_Issues">3.2.2.10. Super Keyword Issues</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="assistance.html#sec:Quick_Assist">3.3. Quick Assist</a></li>
+<li><a href="assistance.html#sec:Cleanup_Operations">3.4. Cleanup Operations</a>
+<ul class="sectlevel3">
+<li><a href="assistance.html#sec:Formatting">3.4.1. Formatting</a></li>
+<li><a href="assistance.html#sec:Organize_Imports">3.4.2. Organize Imports</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="wizards.html#_wizards">4. Wizards</a>
+<ul class="sectlevel2">
+<li><a href="wizards.html#sec:N4JS_Project_Wizard">4.1. N4JS Project Wizard</a></li>
+<li><a href="wizards.html#sec:Empty_N4JS_File">4.2. Empty N4JS File</a></li>
+<li><a href="wizards.html#sec:Empty_JS_File">4.3. Empty JS File</a>
+<ul class="sectlevel3">
+<li><a href="wizards.html#sec:N4JS_Class_File_Wizard">4.3.1. N4JS Class Wizard</a></li>
+<li><a href="wizards.html#field-properties">4.3.2. Field Properties</a></li>
+<li><a href="wizards.html#visibility-issues-or-final-super-classes">4.3.3. Visibility issues or <code>@Final</code> super classes</a></li>
+<li><a href="wizards.html#generation-1">4.3.4. Generation</a></li>
+<li><a href="wizards.html#preview-1">4.3.5. Preview</a></li>
+</ul>
+</li>
+<li><a href="wizards.html#sec:N4JS_Interface_Wizard">4.4. Interface Wizard</a>
+<ul class="sectlevel3">
+<li><a href="wizards.html#field-properties-1">4.4.1. Field Properties</a></li>
+<li><a href="wizards.html#visibility-issues">4.4.2. Visibility Issues</a></li>
+<li><a href="wizards.html#import-naming-conflicts">4.4.3. Import naming conflicts</a></li>
+<li><a href="wizards.html#generation-2">4.4.4. Generation</a></li>
+<li><a href="wizards.html#preview-2">4.4.5. Preview</a></li>
+</ul>
+</li>
+<li><a href="wizards.html#sec:N4JS_Enum_File_Wizard">4.5. Enum Wizard</a>
+<ul class="sectlevel3">
+<li><a href="wizards.html#field-properties-2">4.5.1. Field Properties</a></li>
+<li><a href="wizards.html#generation-3">4.5.2. Generation</a></li>
+<li><a href="wizards.html#preview-3">4.5.3. Preview</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="execution_support.html#_execution-support">5. Execution Support</a>
+<ul class="sectlevel2">
+<li><a href="execution_support.html#sec:Non_UI_Execution">5.1. Non-UI Execution</a>
+<ul class="sectlevel3">
+<li><a href="execution_support.html#sec:Non_UI_Debugging">5.1.1. Non-UI Debugging</a></li>
+</ul>
+</li>
+<li><a href="execution_support.html#sec:UI_Execution">5.2. UI Execution</a></li>
+</ul>
+</li>
+<li><a href="test_support.html#_test-support">6. Test Support</a>
+<ul class="sectlevel2">
+<li><a href="test_support.html#sec:N4JS_Mangelhaft_support">6.1. N4JS Mangelhaft support</a>
+<ul class="sectlevel3">
+<li><a href="test_support.html#sec:Asynchronous_Tests">6.1.1. Asynchronous Tests, Test Isolation and Timeouts</a></li>
+<li><a href="test_support.html#sec:Supported_xUnit_API">6.1.2. Supported xUnit API</a>
+<ul class="sectlevel4">
+<li><a href="test_support.html#sec:Test_Group">6.1.2.1. Test Group</a></li>
+<li><a href="test_support.html#sec:Test_Method">6.1.2.2. Test Method</a></li>
+<li><a href="test_support.html#sec:BeforeAll">6.1.2.3. BeforeAll Setup</a></li>
+<li><a href="test_support.html#sec:Before_Setup">6.1.2.4. Before Setup</a></li>
+<li><a href="test_support.html#sec:After_Teardown">6.1.2.5. After Teardown</a></li>
+<li><a href="test_support.html#sec:AfterAll_Teardown">6.1.2.6. AfterAll Teardown</a></li>
+<li><a href="test_support.html#sec:Test_Ignore">6.1.2.7. Test Ignore</a></li>
+<li><a href="test_support.html#sec:Timeout">6.1.2.8. Timeout</a></li>
+<li><a href="test_support.html#sec:Description">6.1.2.9. Description</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="test_support.html#sec:Test_Reporting">6.2. Test Reporting</a>
+<ul class="sectlevel3">
+<li><a href="test_support.html#sec:Test_Messages">6.2.1. Test Messages</a>
+<ul class="sectlevel4">
+<li><a href="test_support.html#_test-case-ids">6.2.1.1. Test Case IDs</a></li>
+<li><a href="test_support.html#sec:Start_Session">6.2.1.2. Start Session</a></li>
+<li><a href="test_support.html#sec:Ping_Session">6.2.1.3. Ping Session</a></li>
+<li><a href="test_support.html#sec:End_Session">6.2.1.4. End Session</a></li>
+<li><a href="test_support.html#sec:Start_Test">6.2.1.5. Start Test</a></li>
+<li><a href="test_support.html#sec:End_Test">6.2.1.6. End Test</a></li>
+<li><a href="test_support.html#sec:Ping_Test">6.2.1.7. Ping Test</a></li>
+<li><a href="test_support.html#sec:Test_Catalog">6.2.1.8. Test Catalog</a></li>
+<li><a href="test_support.html#sec:Test_Session_Example">6.2.1.9. Test Session Example</a></li>
+</ul>
+</li>
+<li><a href="test_support.html#sec:Test_Runtime_Configuration">6.2.2. Test Runtime Configuration</a></li>
+<li><a href="test_support.html#sec:Test_Plan">6.2.3. Test Plan</a></li>
+<li><a href="test_support.html#sec:Test_Environment_Configuration">6.2.4. Test Environment Configuration</a></li>
+<li><a href="test_support.html#sec:Test_Environment_Configuration_Example">6.2.5. Test Environment Configuration Example</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="help_system.html#_help-system">7. Help System</a>
+<ul class="sectlevel2">
+<li><a href="help_system.html#sec:Built_In_Help">7.1. Built-In Help</a></li>
+<li><a href="help_system.html#sec:Context_Sensitive_Help">7.2. Context Sensitive Help</a></li>
+<li><a href="help_system.html#sec:Cheat_Sheets">7.3. Cheat Sheets</a></li>
+<li><a href="help_system.html#sec:JSDoc">7.4. JSDoc</a></li>
+<li><a href="help_system.html#sec:Hovering">7.5. Hovering</a>
+<ul class="sectlevel3">
+<li><a href="help_system.html#sec:Show_Type_Information_of_Selection">7.5.1. Show Type Information of Selection</a></li>
+</ul>
+</li>
+<li><a href="help_system.html#sec:Example_Projects_and_Files">7.6. Example Projects and Files</a></li>
+</ul>
+</li>
+<li><a href="bug_management.html#_bug-management">8. Bug Management</a>
+<ul class="sectlevel2">
+<li><a href="bug_management.html#sec:Built_In_Xpect_Support">8.1. Built-In Xpect Support</a>
+<ul class="sectlevel3">
+<li><a href="bug_management.html#sec:Report_View">8.1.1. Report View</a></li>
+<li><a href="bug_management.html#sec:Generate_Bug_Report">8.1.2. Generate Bug Report</a></li>
+<li><a href="bug_management.html#sec:Supported_Xpect_Tests">8.1.3. Supported Xpect Tests</a>
+<ul class="sectlevel4">
+<li><a href="bug_management.html#sec:XPECT_N4JS_Errors">8.1.3.1. Errors, Warnings, Infos, Issues</a></li>
+<li><a href="bug_management.html#sec:XPECT_N4JS_Noerrors">8.1.3.2. Noerrors</a></li>
+<li><a href="bug_management.html#sec:XPECT_N4JS_Output">8.1.3.3. Output, OutputRegex</a></li>
+<li><a href="bug_management.html#sec:XPECT_N4JS_Type_Of">8.1.3.4. Type Of</a></li>
+<li><a href="bug_management.html#sec:XPECT_Advanced_Methods">8.1.3.5. Advanced methods</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="cli.html#_cli">9. CLI</a>
+<ul class="sectlevel2">
+<li><a href="cli.html#sec:Headless_Compiler">9.1. Headless Compiler</a></li>
+<li><a href="cli.html#sec:Headless_Dependencies">9.2. Headless Dependnecies</a></li>
+<li><a href="cli.html#sec:Headless_Execution">9.3. Headless Execution</a>
+<ul class="sectlevel3">
+<li><a href="cli.html#sec:Cleaning_Headlessly">9.3.1. Cleaning Headlessly</a></li>
+<li><a href="cli.html#sec:Running_Headlessly">9.3.2. Running Headlessly</a></li>
+<li><a href="cli.html#sec:Information_about_running_headlessly">9.3.3. Information about running headlessly</a></li>
+<li><a href="cli.html#sec:Testing_Headlessly">9.3.4. Testing Headlessly</a></li>
+<li><a href="cli.html#sec:Information_about_testing_headlessly">9.3.5. Information about testing headlessly</a></li>
+<li><a href="cli.html#_testresults">9.3.6. TestResults</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="appendix_a_license.html#sec:License">Appendix A: License</a></li>
+<li><a href="appendix_b_acronyms.html#sec:Acronyms">Appendix B: Acronyms</a></li>
+<li><a href="#_bibliography">Appendix C: Bibliography</a></li>
+</ul>
+</div>
+</div>
+<div id="content"><div class="sect1">
+<h2 id="_bibliography"><a class="anchor" href="#_bibliography"></a><a class="link" href="#_bibliography">Appendix C: Bibliography</a></h2>
+<div class="sectionbody">
+<div class="openblock bibliography">
+<div class="content">
+<div class="paragraph">
+<p><a id="N4JSSpec"></a><em>N4JS Language Specification</em>. </p>
+</div>
+<div class="paragraph">
+<p><a id="Martin96b"></a>Martin, Robert C. (1996). <em>The Liskov Substitution Principle</em>. Retrieved from <a href="http://www.objectmentor.com/publications/lsp.pdf" class="bare">http://www.objectmentor.com/publications/lsp.pdf</a></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Version 0.9<br>
+Last updated 2019-08-07 15:02:40 CEST
+</div>
+</div>
+<!-- ************* docinfo-footer *************************************************************** -->
+<div class="Grid social" style="color:#d5dfea">
+  <div class="Cell Cell--2-12 m-Cell--withMargin">
+    <h2>Quick Links</h2>
+    <ul>
+      <li><a href="../downloads.html">Download</a></li>
+      <li><a href="../userguides/index.html">Documentation</a></li>
+      <li><a href="https://github.com/eclipse/n4js/">Source</a></li>
+      <li><a href="https://github.com/eclipse/n4js/issues">Issues</a></li>
+    </ul>
+  </div>
+  <div class="Cell Cell--2-12 m-Cell--withMargin">
+    <br/><br/>
+    <ul>
+      <li><a href="https://www.eclipse.org/forums/index.php/f/365/">Forum</a></li>
+      <li><a href="http://n4js.blogspot.de/">Blog</a></li>
+      <li><a href="https://dev.eclipse.org/mailman/listinfo/n4js-dev">Mailing List</a></li>
+      <li><a href="https://projects.eclipse.org/projects/technology.n4js">Eclipse Project Page</a></li>
+      <li><a href="https://twitter.com/n4jsdev">Tweets by n4jsdev</a></li>
+    </ul>
+  </div>
+  <div class="Cell Cell--2-12 m-Cell--withMargin">
+    <br/><br/>
+    <ul>
+      <li><a href="http://www.eclipse.org/">Eclipse Home</a></li>
+      <li><a href="http://www.eclipse.org/legal/privacy.php">Privacy Policy</a></li>
+      <li><a href="http://www.eclipse.org/legal/termsofuse.php">Terms of Use</a></li>
+      <li><a href="http://www.eclipse.org/legal/copyright.php">Copyright Agent</a></li>
+      <li><a href="http://www.eclipse.org/legal/">Legal</a></li>
+    </ul>
+  </div>
+  <div style="clear: both; height: 0; overflow: hidden;"></div>
+</div>
+
+<!-- ************* UI Scripts ************* -->
+<script type="text/javascript" src="scripts/back-to-top.js"></script>
+
+<script type="text/javascript" src="scripts/treeview.js"></script>
+<script type="text/javascript" src="scripts/toc.js"></script>
+
+<!-- ************* Prism.js Syntax Highlighting ************* -->
+<script src="scripts/prism.js"></script>
+
+<script type="text/javascript">
+	// Add the 'toclist' id for search function
+	$(".toc2 > ul").attr('id', 'toclist');
+	// Generate a Search input form
+	$("#toclist > li:first-of-type").before('<input type="text" id="pagesearch" onkeyup="search()" placeholder="Search for section...">');
+	$("#toclist > li:first-of-type").before('<i id="clear" class="fa fa-times-circle-o"></i>');
+	$("#clear").click(function(){
+	    $("#pagesearch").val('');
+	    search();
+	    $('.toc2 > ul').treeView('collapseAll');
+	});
+	// intialize Treeview.js
+	$(".toc2 > ul").treeView();
+	// Initialize Scrollspy
+</script>
+<!-- ************* docinfo-footer *************************************************************** -->
+</body>
+</html>

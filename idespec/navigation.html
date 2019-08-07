@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 1.5.5">
+<meta name="author" content="2019-08-07 15:02:40 CEST">
+<title>N4JS IDE Specification</title>
+<link rel="stylesheet" href="styles/spec.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
+<!-- ************* docinfo ******************************************************************* -->
+
+
+<!-- ************* Favicon ************-->
+<link rel="icon" href="images/favicon.ico" />
+
+<!-- ************* Back-to-top JQuery ************* -->
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
+
+
+<link href="styles/prism.min.css" rel="stylesheet" />
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+<!-- ************* Styles ************* -->
+<link rel="stylesheet" type="text/css" href="styles/n4jsspec-adoc.css">
+
+
+<!-- ****************** NavBar ****************** -->
+<div id="menubar">
+	<div class="banner">
+        <a href="https://www.eclipse.org/n4js/#"><img id="logo" src="images/n4js-logo.png" alt="Eclipse N4JS"></a>
+    </div>
+<ul>
+  <li><a href="index.html">Index</a></li>
+</ul>
+</div>
+<!-- ************* docinfo ******************************************************************* -->
+<style>
+      .admonitionblock td.icon .icon-todo:before{content:"\f249";color:#f4ee42}
+    </style>
+</head>
+<body class="book toc2 toc-left">
+<div id="header">
+<h1>N4JS IDE Specification</h1>
+<div class="details">
+<span id="author" class="author">2019-08-07 15:02:40 CEST</span><br>
+<span id="revnumber">version 0.9</span>
+</div>
+<div id="toc" class="toc2">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="views.html#sec:Views">1. Views</a>
+<ul class="sectlevel2">
+<li><a href="views.html#_eclipse-standard-views">1.1. Eclipse Standard Views</a>
+<ul class="sectlevel3">
+<li><a href="views.html#sec:Project_Explorer_View">1.1.1. Project Explorer</a></li>
+<li><a href="views.html#sec:Outline_View">1.1.2. Outline</a></li>
+<li><a href="views.html#sec:Problems_View">1.1.3. Problems</a></li>
+<li><a href="views.html#sec:Console_View">1.1.4. Console</a></li>
+<li><a href="views.html#sec:History_View">1.1.5. History</a></li>
+<li><a href="views.html#sec:Error_Log_View">1.1.6. Error Log</a></li>
+</ul>
+</li>
+<li><a href="views.html#_n4js-specific-views">1.2. N4JS Specific Views</a>
+<ul class="sectlevel3">
+<li><a href="views.html#_test-results">1.2.1. Test Results</a></li>
+<li><a href="views.html#_source-graphs">1.2.2. Source Graphs</a></li>
+<li><a href="views.html#_api-compare">1.2.3. API Compare</a></li>
+<li><a href="views.html#_performance-graphs">1.2.4. Performance Graphs</a></li>
+<li><a href="views.html#_source-mapping">1.2.5. Source Mapping</a></li>
+<li><a href="views.html#_xpect-view">1.2.6. Xpect View</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#_navigation">2. Navigation</a>
+<ul class="sectlevel2">
+<li><a href="#sec:Outline_Navigation">2.1. Outline</a>
+<ul class="sectlevel3">
+<li><a href="#_quick-outline">2.1.1. Quick Outline</a></li>
+<li><a href="#_normal-outline">2.1.2. Normal Outline</a></li>
+</ul>
+</li>
+<li><a href="#_navigation-commands">2.2. Navigation Commands</a>
+<ul class="sectlevel3">
+<li><a href="#sec:Navigate_to_Declaration">2.2.1. Navigate to Declaration</a></li>
+<li><a href="#sec:find_by_references">2.2.2. Find by References</a></li>
+<li><a href="#sec:Open_Type_Declaration">2.2.3. Open Type Declaration</a></li>
+</ul>
+</li>
+<li><a href="#sec:Working_Sets">2.3. Working Sets</a>
+<ul class="sectlevel3">
+<li><a href="#sec:Working_Set_Managers">2.3.1. Working Set Managers</a></li>
+<li><a href="#sec:Working_Set_Constraints">2.3.2. Working Set Constraints</a></li>
+<li><a href="#sec:Manual_Association_Working_Set_Manager_UI_Features">2.3.3. Manual Association Working Set Manager - UI Features</a></li>
+<li><a href="#sec:Project_Name_Filter_Working_Set_Manager">2.3.4. Project Name Filter Working Set Manager</a></li>
+<li><a href="#sec:Git_Repository_Working_Set_Manager">2.3.5. Git Repository Working Set Manager</a></li>
+<li><a href="#sec:Project_Location_Working_Set_Manager">2.3.6. Project Location Working Set Manager</a></li>
+<li><a href="#sec:N4JS_Project_Type_Working_Set_Manager">2.3.7. N4JS Project Type Working Set Manager</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="assistance.html#_assistance">3. Assistance</a>
+<ul class="sectlevel2">
+<li><a href="assistance.html#sec:Content_Assist">3.1. Content Assist</a>
+<ul class="sectlevel3">
+<li><a href="assistance.html#sec:Complete_Keywords">3.1.1. Complete Keywords</a></li>
+<li><a href="assistance.html#sec:Complete_Annotations">3.1.2. Complete Annotations</a></li>
+<li><a href="assistance.html#sec:Complete_Identifier_Reference">3.1.3. Complete Identifier Reference</a></li>
+<li><a href="assistance.html#sec:Complete_Member_Overrides">3.1.4. Complete Member Overrides</a></li>
+<li><a href="assistance.html#sec:Constructor_Completion">3.1.5. Constructor Completion</a></li>
+<li><a href="assistance.html#sec:Complete_Function_Expression">3.1.6. Complete Function Expression with Known Type</a></li>
+<li><a href="assistance.html#sec:Complete_Variable_and_Parameter_Names">3.1.7. Complete Variable and Parameter Names</a></li>
+</ul>
+</li>
+<li><a href="assistance.html#sec:Quick_Fixes">3.2. Quick Fixes</a>
+<ul class="sectlevel3">
+<li><a href="assistance.html#sec:N4JS_Issue_Properties">3.2.1. N4JS Issue User data</a></li>
+<li><a href="assistance.html#sec:N4JS_Issue_Fixes">3.2.2. N4JS Issue Fixes</a>
+<ul class="sectlevel4">
+<li><a href="assistance.html#sec:Linking_Issues">3.2.2.1. Linking Issues</a></li>
+<li><a href="assistance.html#sec:Import_Issues">3.2.2.2. Import Issues</a></li>
+<li><a href="assistance.html#sec:Visibility_Issues">3.2.2.3. Visibility Issues</a></li>
+<li><a href="assistance.html#sec:Classifier_Issues">3.2.2.4. Classifier Issues</a></li>
+<li><a href="assistance.html#sec:Function_Issues">3.2.2.5. Function Issues</a></li>
+<li><a href="assistance.html#sec:Syntax_Issues">3.2.2.6. Syntax Issues</a></li>
+<li><a href="assistance.html#sec:Conversion_Issues">3.2.2.7. Conversion Issues</a></li>
+<li><a href="assistance.html#sec:Type_Issues">3.2.2.8. Type Issues</a></li>
+<li><a href="assistance.html#sec:Expression_Issues">3.2.2.9. Expression Issues</a></li>
+<li><a href="assistance.html#sec:Super_Keyword_Issues">3.2.2.10. Super Keyword Issues</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="assistance.html#sec:Quick_Assist">3.3. Quick Assist</a></li>
+<li><a href="assistance.html#sec:Cleanup_Operations">3.4. Cleanup Operations</a>
+<ul class="sectlevel3">
+<li><a href="assistance.html#sec:Formatting">3.4.1. Formatting</a></li>
+<li><a href="assistance.html#sec:Organize_Imports">3.4.2. Organize Imports</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="wizards.html#_wizards">4. Wizards</a>
+<ul class="sectlevel2">
+<li><a href="wizards.html#sec:N4JS_Project_Wizard">4.1. N4JS Project Wizard</a></li>
+<li><a href="wizards.html#sec:Empty_N4JS_File">4.2. Empty N4JS File</a></li>
+<li><a href="wizards.html#sec:Empty_JS_File">4.3. Empty JS File</a>
+<ul class="sectlevel3">
+<li><a href="wizards.html#sec:N4JS_Class_File_Wizard">4.3.1. N4JS Class Wizard</a></li>
+<li><a href="wizards.html#field-properties">4.3.2. Field Properties</a></li>
+<li><a href="wizards.html#visibility-issues-or-final-super-classes">4.3.3. Visibility issues or <code>@Final</code> super classes</a></li>
+<li><a href="wizards.html#generation-1">4.3.4. Generation</a></li>
+<li><a href="wizards.html#preview-1">4.3.5. Preview</a></li>
+</ul>
+</li>
+<li><a href="wizards.html#sec:N4JS_Interface_Wizard">4.4. Interface Wizard</a>
+<ul class="sectlevel3">
+<li><a href="wizards.html#field-properties-1">4.4.1. Field Properties</a></li>
+<li><a href="wizards.html#visibility-issues">4.4.2. Visibility Issues</a></li>
+<li><a href="wizards.html#import-naming-conflicts">4.4.3. Import naming conflicts</a></li>
+<li><a href="wizards.html#generation-2">4.4.4. Generation</a></li>
+<li><a href="wizards.html#preview-2">4.4.5. Preview</a></li>
+</ul>
+</li>
+<li><a href="wizards.html#sec:N4JS_Enum_File_Wizard">4.5. Enum Wizard</a>
+<ul class="sectlevel3">
+<li><a href="wizards.html#field-properties-2">4.5.1. Field Properties</a></li>
+<li><a href="wizards.html#generation-3">4.5.2. Generation</a></li>
+<li><a href="wizards.html#preview-3">4.5.3. Preview</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="execution_support.html#_execution-support">5. Execution Support</a>
+<ul class="sectlevel2">
+<li><a href="execution_support.html#sec:Non_UI_Execution">5.1. Non-UI Execution</a>
+<ul class="sectlevel3">
+<li><a href="execution_support.html#sec:Non_UI_Debugging">5.1.1. Non-UI Debugging</a></li>
+</ul>
+</li>
+<li><a href="execution_support.html#sec:UI_Execution">5.2. UI Execution</a></li>
+</ul>
+</li>
+<li><a href="test_support.html#_test-support">6. Test Support</a>
+<ul class="sectlevel2">
+<li><a href="test_support.html#sec:N4JS_Mangelhaft_support">6.1. N4JS Mangelhaft support</a>
+<ul class="sectlevel3">
+<li><a href="test_support.html#sec:Asynchronous_Tests">6.1.1. Asynchronous Tests, Test Isolation and Timeouts</a></li>
+<li><a href="test_support.html#sec:Supported_xUnit_API">6.1.2. Supported xUnit API</a>
+<ul class="sectlevel4">
+<li><a href="test_support.html#sec:Test_Group">6.1.2.1. Test Group</a></li>
+<li><a href="test_support.html#sec:Test_Method">6.1.2.2. Test Method</a></li>
+<li><a href="test_support.html#sec:BeforeAll">6.1.2.3. BeforeAll Setup</a></li>
+<li><a href="test_support.html#sec:Before_Setup">6.1.2.4. Before Setup</a></li>
+<li><a href="test_support.html#sec:After_Teardown">6.1.2.5. After Teardown</a></li>
+<li><a href="test_support.html#sec:AfterAll_Teardown">6.1.2.6. AfterAll Teardown</a></li>
+<li><a href="test_support.html#sec:Test_Ignore">6.1.2.7. Test Ignore</a></li>
+<li><a href="test_support.html#sec:Timeout">6.1.2.8. Timeout</a></li>
+<li><a href="test_support.html#sec:Description">6.1.2.9. Description</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="test_support.html#sec:Test_Reporting">6.2. Test Reporting</a>
+<ul class="sectlevel3">
+<li><a href="test_support.html#sec:Test_Messages">6.2.1. Test Messages</a>
+<ul class="sectlevel4">
+<li><a href="test_support.html#_test-case-ids">6.2.1.1. Test Case IDs</a></li>
+<li><a href="test_support.html#sec:Start_Session">6.2.1.2. Start Session</a></li>
+<li><a href="test_support.html#sec:Ping_Session">6.2.1.3. Ping Session</a></li>
+<li><a href="test_support.html#sec:End_Session">6.2.1.4. End Session</a></li>
+<li><a href="test_support.html#sec:Start_Test">6.2.1.5. Start Test</a></li>
+<li><a href="test_support.html#sec:End_Test">6.2.1.6. End Test</a></li>
+<li><a href="test_support.html#sec:Ping_Test">6.2.1.7. Ping Test</a></li>
+<li><a href="test_support.html#sec:Test_Catalog">6.2.1.8. Test Catalog</a></li>
+<li><a href="test_support.html#sec:Test_Session_Example">6.2.1.9. Test Session Example</a></li>
+</ul>
+</li>
+<li><a href="test_support.html#sec:Test_Runtime_Configuration">6.2.2. Test Runtime Configuration</a></li>
+<li><a href="test_support.html#sec:Test_Plan">6.2.3. Test Plan</a></li>
+<li><a href="test_support.html#sec:Test_Environment_Configuration">6.2.4. Test Environment Configuration</a></li>
+<li><a href="test_support.html#sec:Test_Environment_Configuration_Example">6.2.5. Test Environment Configuration Example</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="help_system.html#_help-system">7. Help System</a>
+<ul class="sectlevel2">
+<li><a href="help_system.html#sec:Built_In_Help">7.1. Built-In Help</a></li>
+<li><a href="help_system.html#sec:Context_Sensitive_Help">7.2. Context Sensitive Help</a></li>
+<li><a href="help_system.html#sec:Cheat_Sheets">7.3. Cheat Sheets</a></li>
+<li><a href="help_system.html#sec:JSDoc">7.4. JSDoc</a></li>
+<li><a href="help_system.html#sec:Hovering">7.5. Hovering</a>
+<ul class="sectlevel3">
+<li><a href="help_system.html#sec:Show_Type_Information_of_Selection">7.5.1. Show Type Information of Selection</a></li>
+</ul>
+</li>
+<li><a href="help_system.html#sec:Example_Projects_and_Files">7.6. Example Projects and Files</a></li>
+</ul>
+</li>
+<li><a href="bug_management.html#_bug-management">8. Bug Management</a>
+<ul class="sectlevel2">
+<li><a href="bug_management.html#sec:Built_In_Xpect_Support">8.1. Built-In Xpect Support</a>
+<ul class="sectlevel3">
+<li><a href="bug_management.html#sec:Report_View">8.1.1. Report View</a></li>
+<li><a href="bug_management.html#sec:Generate_Bug_Report">8.1.2. Generate Bug Report</a></li>
+<li><a href="bug_management.html#sec:Supported_Xpect_Tests">8.1.3. Supported Xpect Tests</a>
+<ul class="sectlevel4">
+<li><a href="bug_management.html#sec:XPECT_N4JS_Errors">8.1.3.1. Errors, Warnings, Infos, Issues</a></li>
+<li><a href="bug_management.html#sec:XPECT_N4JS_Noerrors">8.1.3.2. Noerrors</a></li>
+<li><a href="bug_management.html#sec:XPECT_N4JS_Output">8.1.3.3. Output, OutputRegex</a></li>
+<li><a href="bug_management.html#sec:XPECT_N4JS_Type_Of">8.1.3.4. Type Of</a></li>
+<li><a href="bug_management.html#sec:XPECT_Advanced_Methods">8.1.3.5. Advanced methods</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="cli.html#_cli">9. CLI</a>
+<ul class="sectlevel2">
+<li><a href="cli.html#sec:Headless_Compiler">9.1. Headless Compiler</a></li>
+<li><a href="cli.html#sec:Headless_Dependencies">9.2. Headless Dependnecies</a></li>
+<li><a href="cli.html#sec:Headless_Execution">9.3. Headless Execution</a>
+<ul class="sectlevel3">
+<li><a href="cli.html#sec:Cleaning_Headlessly">9.3.1. Cleaning Headlessly</a></li>
+<li><a href="cli.html#sec:Running_Headlessly">9.3.2. Running Headlessly</a></li>
+<li><a href="cli.html#sec:Information_about_running_headlessly">9.3.3. Information about running headlessly</a></li>
+<li><a href="cli.html#sec:Testing_Headlessly">9.3.4. Testing Headlessly</a></li>
+<li><a href="cli.html#sec:Information_about_testing_headlessly">9.3.5. Information about testing headlessly</a></li>
+<li><a href="cli.html#_testresults">9.3.6. TestResults</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="appendix_a_license.html#sec:License">Appendix A: License</a></li>
+<li><a href="appendix_b_acronyms.html#sec:Acronyms">Appendix B: Acronyms</a></li>
+<li><a href="appendix_c_bibliography.html#_bibliography">Appendix C: Bibliography</a></li>
+</ul>
+</div>
+</div>
+<div id="content"><div class="sect1">
+<h2 id="_navigation"><a class="anchor" href="#_navigation"></a><a class="link" href="#_navigation">2. Navigation</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In this chapter we describe specific views and features to allow for easy navigation.</p>
+</div>
+<div class="sect2 language-n4js">
+<h3 id="sec:Outline_Navigation"><a class="anchor" href="#sec:Outline_Navigation"></a><a class="link" href="#sec:Outline_Navigation">2.1. Outline</a></h3>
+<div class="paragraph">
+<p>In general, a outline view and a quick outline are supported. Both outlines work similar, which is why both are specified together. The outline of an N4JS file is a tree which should show the following structure: <a id="sec:N4JS_Outline"></a></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Top-level defined classes, interfaces, roles, enums, functions and exported variables. For all these different types, icons are to be used (similar to JDT). Beside the name, type variables should be shown as well, if defined.</p>
+</li>
+<li>
+<p>Members of classifiers are to be shown in the classifier branch. All members (fields, methods, field accessors) are to be shown, with appropriate icons indicating the type (field/member), static flag, access modifier, abstract flag. The icons should look similar to JDT.</p>
+</li>
+<li>
+<p>an import declaration should have a node in the outline view, if multiple elements are imported these should represented as child nodes of that import declaration node. If the import uses aliases the original name and the alias name should appear in the outline node text.</p>
+</li>
+<li>
+<p>for a non exported function declaration no outline node should be created</p>
+</li>
+<li>
+<p>for a non exported variable declaration no outline node should be created</p>
+</li>
+<li>
+<p>for a exported variable statement there should be a node in the outline, if this statement contains only one variable declaration the node represents this declaration. For multiple variable declarations in the statement the statement node just is a comma separated list of the variable names and for each variable there is child node</p>
+</li>
+<li>
+<p>for fields, functions, methods, getters and variables their declared (return) type should be shown (by adding : typeName after the element name). If the type is inferred then the type name should be presented in a different color</p>
+</li>
+<li>
+<p>for functions, methods and setters each formal parameter should be represented by its declared or inferred type (when inferred than with different color)</p>
+</li>
+<li>
+<p>constructors are represented by the method icon and a decorator in the top right corner</p>
+</li>
+<li>
+<p>enumeration literals are represented with the same decoration as static final fields</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The top-level elements must be sortable either by order in the file (default) or alphabetically.</p>
+</div>
+<div class="sect3">
+<h4 id="_quick-outline"><a class="anchor" href="#_quick-outline"></a><a class="link" href="#_quick-outline">2.1.1. Quick Outline</a></h4>
+<div class="paragraph">
+<p>The quick outline supports two modes. The modes are iteratively selected by pressing <span class="keyseq"><kbd>CMD/CTRL</kbd>+<kbd>O</kbd></span>.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">owned</dt>
+<dd>
+<p>This is the default mode, only members directly owned by the type are shown</p>
+</dd>
+<dt class="hdlist1">inherited</dt>
+<dd>
+<p>In this mode, the owned members are shown including inherited, consumed, or polyfilled members. The origin is also shown and a different color is used to highlight the special status of these members. For usability reasons (limiting the number of filters), inherited, consumed and polyfilled members are treated similarly.</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_normal-outline"><a class="anchor" href="#_normal-outline"></a><a class="link" href="#_normal-outline">2.1.2. Normal Outline</a></h4>
+<div class="paragraph">
+<p>In the normal outline view, toggles are used for the same purpose. Visualisations are similar to the quick outline view.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">inherited</dt>
+<dd>
+<p>By default, only owned members of a type are shown. If the "inherited" toggle is active, inherited, consumed, or polyfilled members as well. For usability reasons (limiting the number of filters), inherited, consumed, and polyfilled members are treated similarly.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p></p>
+</div>
+<div class="sidebarblock">
+<div class="content">
+<a href="https://github.com/eclipse/n4js/issues/99" class="gray" title="GitHub Issues"><span class="image"><img src="images/issue.svg" alt=""></span> #99</a>
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">sorting</dt>
+<dd>
+<p>By default, all elements are sorted in the order of their appearance in the source code. If alphabetic sorting is enabled, they are sorted alphabetically.</p>
+</dd>
+</dl>
+</div>
+<div class="admonitionblock todo">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-todo" title="Todo"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Potential improvements:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>show decorator when a member overrides and member from a super class / super interface or role</p>
+</li>
+<li>
+<p>show object literals and their members in the outline view (just filter <code>eAllContents</code> of an element that already has a node in outline view for object literals)</p>
+</li>
+<li>
+<p>show function expression in the outline view (just filter <code>eAllContents</code> of an element that already has a node in outline view for function expressions)</p>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_navigation-commands"><a class="anchor" href="#_navigation-commands"></a><a class="link" href="#_navigation-commands">2.2. Navigation Commands</a></h3>
+<div class="sect3">
+<h4 id="sec:Navigate_to_Declaration"><a class="anchor" href="#sec:Navigate_to_Declaration"></a><a class="link" href="#sec:Navigate_to_Declaration">2.2.1. Navigate to Declaration</a></h4>
+<div class="paragraph">
+<p>It is possible to Command-click on almost every reference and jump to its declaration.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="sec:find_by_references"><a class="anchor" href="#sec:find_by_references"></a><a class="link" href="#sec:find_by_references">2.2.2. Find by References</a></h4>
+<div class="paragraph">
+<p>For each referenceable element in an open N4JS file you can click your mouse and invoke the context menu to select <code>Find references</code>. Then in the Eclipse search view all found references are displayed as tree: each match is structured by resource path and coarse grained element in the resource (like a method). If there are multiple matches within a method only the first match is linked but in its display string the total match count is shown in brackets.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>find by references shows the result as tree in the Eclipse search view with having elements that are members or have defined type displayed as nodes</p>
+</li>
+<li>
+<p>every found reference is displayed under its nearest parent that is a member or has a defined type</p>
+</li>
+<li>
+<p>if there a multiple found references in a node only the first one is displayed (and linked) + the number of all total matches is shown as part of the display string (like in JDT)</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect3">
+<h4 id="sec:Open_Type_Declaration"><a class="anchor" href="#sec:Open_Type_Declaration"></a><a class="link" href="#sec:Open_Type_Declaration">2.2.3. Open Type Declaration</a></h4>
+<div class="paragraph">
+<p>One can quickly browse the workbench for available types. The declaration of the types can be opened in editor from this dialog. The N4JS type search dialog can be raised with the <kbd>Cmd</kbd> + <kbd>Shift</kbd> + <kbd>T</kbd> key binding (<kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>T</kbd> on Windows and Linux systems).</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Enter <strong>exact type name</strong>, prefix name or a camel case pattern to run a query against the types. The following rules and patterns are supported.</p>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Wildcards</strong>: <code>?</code>  for any character and <code>*</code> for any string.</p>
+</li>
+<li>
+<p><strong>Camel case</strong>: <code>DM</code>  will return with all types that contains <code>D</code> and <code>M</code> with the given order such as <code>DataMap</code> and <code>DataMapEntry</code> but not <code>ImmutableDataMap</code>.</p>
+<div class="paragraph">
+<p><code>AcBuGr</code> will return with all types that contain <code>Ac</code>, <code>Bu</code> and <code>Gr</code> with the given order such as <code>ActionButtonGroup</code>.</p>
+</div>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>Highlighting</strong>: The matching types names are highlighted according to the matching parts.</p>
+</li>
+<li>
+<p><strong>Decorator</strong> for duplicate type names: The internally used fully qualified name of the type will be appended to the type name automatically, so one can easily distinguish between types even there are type name collision.</p>
+</li>
+<li>
+<p><strong>Opening types in editor</strong>: Type declarations can be opened in the editor in the following ways: after entering the type name prefix or pattern to the filter text one can navigate among the filtered items with the up and/or down arrow keys. Simply hitting return on the keyboard or clicking on the ’OK’ button the currently selected declaration of the selected type will be opened in the editor. For opening multiple type declarations one can use the <kbd>Shift</kbd>  modifier to select more than one element. Single type can be opened with double clicking on it in the dialog.</p>
+</li>
+<li>
+<p><strong>History</strong>: Once a type is being opened then it will be available among the recently opened type in the type search dialog. These items will show up in the upper part of the list in the dialog.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect2 language-bash">
+<h3 id="sec:Working_Sets"><a class="anchor" href="#sec:Working_Sets"></a><a class="link" href="#sec:Working_Sets">2.3. Working Sets</a></h3>
+<div class="paragraph">
+<p>Working sets are used to logically group resources, projects in the Project Explorer (navigator) and in the UI in general. Although a couple of projects can be easily handled and shown without any sophisticated working set support in the navigator, larger code sources consisting of multiple projects could cause some trouble when one has to maintain them. Indeed one could use multiple workspaces and could switch between them or can simply manually open-close relevant projects, but this gets cumbersome too.</p>
+</div>
+<div class="paragraph">
+<p>This section describes the general design of the N4JS specific working set support and also introduces a couple of use cases while enumerating the constraints.</p>
+</div>
+<div class="sect3">
+<h4 id="sec:Working_Set_Managers"><a class="anchor" href="#sec:Working_Set_Managers"></a><a class="link" href="#sec:Working_Set_Managers">2.3.1. Working Set Managers</a></h4>
+<div class="paragraph">
+<p>Just like the JDT (<code>org.eclipse.jdt.internal.ui.workingsets.WorkingSetModel</code>) based working set support, the N4JS IDE based approach is also aware of the <code>org.eclipse.ui.IWorkingSet</code> and the <code>org.eclipse.ui.IWorkingSetManager</code> APIs but besides simply using them it comes with its own implementation and adapts it to the default Eclipse based one, furthermore it also comes with an Eclipse extension point based mechanism to support various working set managers at the same time to provide even better user experience and a more convenient way of working set management.</p>
+</div>
+<div class="paragraph">
+<p>A working set manager can be contributed to the IDE via the <code>org.eclipse.n4js.ui.workingSetManager</code> extension point, then the implementation class must implement the <code>org.eclipse.n4js.ui.workingsets.WorkingSetManager</code> interface but it is highly recommended to rather extend the <code>org.eclipse.n4js.ui.workingsets.WorkingSetManagerImpl</code> class. Guice based dependency injection should also be considered when implementing the custom working set manager. It means that each custom working set manager implementation must have a public <em>no-args</em> constructor. This <em>no-args</em> constructor will be invoked when creating the instances via <code>IConfigurationElement#createExecutableExtension(String)</code> method. Then the members, if any will be injected by the working set manager broker. Below <code>plugin.xml</code> snippet describes how to contribute a custom working set manager to the IDE.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">   &lt;extension
+         point="org.eclipse.n4js.ui.workingSetManager"&gt;
+      &lt;manager
+            class="some.package.name.MyExecutableExtensionFactory:some.package.name.MyWorkingSetManager"&gt;
+      &lt;/manager&gt;
+   &lt;/extension&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>By default the N4JS IDE comes with five different built-in working set managers. These are the followings:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Manual Association Working Set Manager,</p>
+</li>
+<li>
+<p>Project Name Filter Working Set Manager,</p>
+</li>
+<li>
+<p>Git Repository Working Set Manager,</p>
+</li>
+<li>
+<p>Project Location Working Set Manager and</p>
+</li>
+<li>
+<p>N4JS Project Type Working Set Manager.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The benefits and the details of each built-in working set managers will be discussed in later sections but first we have to distinguish between three conceptually different working set manager approaches.</p>
+</div>
+<div class="paragraph">
+<p>First off, IDE supports fully static working set managers. Fully static working set managers might manage any arbitrary number of working sets, and each working set might be associated with any number of Eclipse projects. That means, user might create, edit and remove working sets and manually associate projects with individual working sets. One project might belong to multiple working sets. There is a dedicated working set, <em>Other Projects</em>, that cannot be renamed and/or deleted. When no user defined working sets are available this dedicated working set will be still available. IDE comes with one single fully static working set manager: <em>Manual Association Working Set Manager</em>.</p>
+</div>
+<div class="paragraph">
+<p>The second kind of working set manager is the semi-dynamic one. That means, user can create, modify and delete working sets, but the associations between the projects and the working sets are automatic. This means, the user might define a working set - project association rule, and the projects will be automatically associated with the working sets. Just like in the above kind, one project might belong to multiple working sets and here as well, there is a dedicated working set manager, that cannot be modified: <em>Other Projects</em>. IDE comes with one semi-dynamic working set manager. That is the <em>Project Name Filter Working Set Manager</em>. User might define a project name filter rule with a regular expression, and each project which name matches a pattern will be associated with the working set. If a project does not comply to any working set manager rule, then it will belong to the <em>Other Projects</em> working set.</p>
+</div>
+<div class="paragraph">
+<p>The third kind of working set manager is the fully-dynamic working set manager. Both the working sets and the project associations are done by some implementation specific rules. Such as Git repository provider based, or project location based approaches. These working set managers have the dedicated <em>Other Projects</em> working set that is used as a fallback working set. For instance, if the <em>Git Repository Working Set Manager</em> is the active one, all projects that are shared with Git will belong to the corresponding working set manager but if a project is not yet a shared project, then it will belong to the dedicated fallback working set. As always that working set manager cannot be deleted and/or modified.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="sec:Working_Set_Constraints"><a class="anchor" href="#sec:Working_Set_Constraints"></a><a class="link" href="#sec:Working_Set_Constraints">2.3.2. Working Set Constraints</a></h4>
+<div class="paragraph">
+<p>This section enumerates a set of constraints that have to considered by both end users and implementors:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Working set manager identifier must be unique.</p>
+</li>
+<li>
+<p>The identifier of the working set manager must be unique per container working set managers.</p>
+</li>
+<li>
+<p>Each working set must have a working set with <em>Other Projects</em> unique ID and name.</p>
+</li>
+<li>
+<p>Working sets with <em>Other Projects</em> unique ID must not be editable nor deletable.</p>
+</li>
+<li>
+<p>At least one working set should be visible (not hidden) per working set managers.</p>
+</li>
+<li>
+<p>Working set managers are activated when the <em>Working Sets</em> are configured as <em>Top Level Elements</em> in the <em>Project Explorer</em>.</p>
+</li>
+<li>
+<p>Working set order can be specified and customized by the user if it is not specified yet, then a case sensitive ordering based on the working set names should be applied.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="sec:Manual_Association_Working_Set_Manager_UI_Features"><a class="anchor" href="#sec:Manual_Association_Working_Set_Manager_UI_Features"></a><a class="link" href="#sec:Manual_Association_Working_Set_Manager_UI_Features">2.3.3. Manual Association Working Set Manager - UI Features</a></h4>
+<div class="paragraph">
+<p>This section describes the working set manager by introducing the UI capabilities as well.</p>
+</div>
+<div class="paragraph">
+<p>This working set manager is a fully static working set manager and activated and used as the default one when the working set manager support is turned on in the IDE. With this working set manager one can create a new working set by simply defining a unique name for the working set and associating any number of workspace project to the working set. Furthermore existing working sets can be modified and deleted but the <em>Other Projects</em> working set. The working set support can be turned on in the <em>Project Explorer</em> view. Via the view menu one has to select <em>Top Level Elements</em> <em>&gt;</em> <em>Working Sets</em> menu item.</p>
+</div>
+<div class="imageblock center" style="text-align: center">
+<div class="content">
+<img src="chapters/04_navigation/fig/activate_working_set_managers.png" alt="Activate_Working_Set_Managers" width="50%">
+</div>
+<div class="title">Figure 1. Activate Working Set Managers</div>
+</div>
+<div class="paragraph">
+<p>After the working set manager mode activation, a new toolbar contribution item become visible and user can select among the available working set managers.</p>
+</div>
+<div class="imageblock center" style="text-align: center">
+<div class="content">
+<img src="chapters/04_navigation/fig/select_working_set_manager_01.png" alt="Select_Working_Set_Manager" width="50%">
+</div>
+<div class="title">Figure 2. Select Working Set Manager</div>
+</div>
+<div class="paragraph">
+<p>As the below picture depicts the available working set managers are listed and the currently active manager is marked with a check. In our case that is the <em>Manual Association Working Set Manager</em>.</p>
+</div>
+<div class="imageblock center" style="text-align: center">
+<div class="content">
+<img src="chapters/04_navigation/fig/select_working_set_manager_02.png" alt="Activate_Working_Set_Manager" width="25%">
+</div>
+<div class="title">Figure 3. Activate Working Set Manager</div>
+</div>
+<div class="paragraph">
+<p>Once the the <em>Configure Manual Association&#8230;&#8203;</em> menu item is selected, the working set manager configuration dialog pops up. By clicking on the <em>New&#8230;&#8203;</em> button in the configuration dialog, a new working set wizard will be invoked and the manual working set - project association can be configured.</p>
+</div>
+<div class="imageblock center" style="text-align: center">
+<div class="content">
+<img src="chapters/04_navigation/fig/configure_working_sets_01.png" alt="Configure_Working_Sets" width="25%">
+</div>
+<div class="title">Figure 4. Configure Working Sets</div>
+</div>
+<div class="paragraph">
+<p>In the wizard after specifying the desired unique name of the working set an arbitrary number of workspace projects can be associated with the working set. It is important to note, that a project can be associated with more than one working sets. If a project is not associated with any working sets then it will be automatically linked to the fallback <em>Other Projects</em> working set.</p>
+</div>
+<div class="imageblock center" style="text-align: center">
+<div class="content">
+<img src="chapters/04_navigation/fig/working_set_project_association.png" alt="Configure_Working_Set_Project_Association" width="50%">
+</div>
+<div class="title">Figure 5. Working Set - Projects Association</div>
+</div>
+<div class="paragraph">
+<p>Once all the changes made are confirmed and the configuration dialog is closed via the <em>OK</em> button, the <em>Project Explorer</em> will be refreshed and will reflect the working set changes.</p>
+</div>
+<div class="imageblock center" style="text-align: center">
+<div class="content">
+<img src="chapters/04_navigation/fig/working_sets_in_navigator.png" alt="Custom_Working_Sets_In_Project_Explorer" width="25%">
+</div>
+<div class="title">Figure 6. Custom Working Sets In Project Explorer</div>
+</div>
+<div class="paragraph">
+<p>The order of the working sets can be configured and customized in the working set manager configuration dialog, or just simply reordering it from the navigator itself by drag and dropping the available working set managers.</p>
+</div>
+<div class="imageblock center" style="text-align: center">
+<div class="content">
+<img src="chapters/04_navigation/fig/working_set_reorder.png" alt="Re_Ordering_Working_Sets_In_Project_Explorer" width="25%">
+</div>
+<div class="title">Figure 7. Re-ordering Working Sets In Project Explorer</div>
+</div>
+<div class="paragraph">
+<p>Besides changing the order of the working sets, working sets can be hidden from the navigator. Just like the ordering, this can be changed from the working set configuration dialog, or by simply selecting working sets in the navigator and hiding them via <em>Hide Selected Working Set</em> menu item. Important to note, at least one working set should be visible in the navigator, so if all the working sets are selected in the navigator, then the menu item will be disabled. Same behavior in the working set customization dialog, if all items are unchecked, then the <em>OK</em> button is disabled in the dialog.</p>
+</div>
+<div class="imageblock center" style="text-align: center">
+<div class="content">
+<img src="chapters/04_navigation/fig/working_set_hide.png" alt="Hide_Working_Sets_In_Project_Explorer" width="25%">
+</div>
+<div class="title">Figure 8. Hide Working Sets In Project Explorer</div>
+</div>
+<div class="paragraph">
+<p>Once at least one working set is hidden from the UI, then a new toolbar contribution become visible in the <em>Project Explorer</em>. This UI contribution provides a quick, convenient way to show a specific or all hidden working sets in the navigator. It is worth to note, if a project is automatically associated with the <em>Other Projects</em> working set (because it does not belong to any working sets due to the lack of manual association) it will be not shown in the navigator if the <em>Other Projects</em> working set is hidden. Once all working sets are visible, indeed the <em>Show Hidden Working Sets</em> toolbar contribution become invisible.</p>
+</div>
+<div class="imageblock center" style="text-align: center">
+<div class="content">
+<img src="chapters/04_navigation/fig/working_set_show.png" alt="Show_Hidden_Working_Sets_In_Project_Explorer" width="25%">
+</div>
+<div class="title">Figure 9. Show Hidden Working Sets In Project Explorer</div>
+</div>
+<div class="paragraph">
+<p>Besides the above described generic working set UI support, projects can be associated with working sets by simply drag and dropping them from one working set into another. Note, this is only supported for the <em>Manual Association Working Set Manager</em>.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="sec:Project_Name_Filter_Working_Set_Manager"><a class="anchor" href="#sec:Project_Name_Filter_Working_Set_Manager"></a><a class="link" href="#sec:Project_Name_Filter_Working_Set_Manager">2.3.4. Project Name Filter Working Set Manager</a></h4>
+<div class="paragraph">
+<p>As mentioned earlier, this working set is a semi-dynamic working set. The working sets can be created, edited and deleted by the user by simply specifying project name filter pattern as valid regular expressions but the project association itself is fully automatic. If the name of a project does not match with any project name filter rule, then the project will be associated with the <em>Other Projects</em> working set. Although reordering the working sets from the navigator by simple drag and dropping them is supported, project association is disabled.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="sec:Git_Repository_Working_Set_Manager"><a class="anchor" href="#sec:Git_Repository_Working_Set_Manager"></a><a class="link" href="#sec:Git_Repository_Working_Set_Manager">2.3.5. Git Repository Working Set Manager</a></h4>
+<div class="paragraph">
+<p>This working set is a fully-dynamic working set. Projects will be associated by the Git providers. It means, if a project is imported from a pre-configured local Git repository, then the project will be associated with the working set linked with the Git repository. The subset of the available working sets is become automatically updated once the Git repository preferences changed by the user. These preferences can be changed on the <em>Git</em> perspective in the <em>Git Repositories</em> view by simple adding or hiding/removing a repository from the view.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="sec:Project_Location_Working_Set_Manager"><a class="anchor" href="#sec:Project_Location_Working_Set_Manager"></a><a class="link" href="#sec:Project_Location_Working_Set_Manager">2.3.6. Project Location Working Set Manager</a></h4>
+<div class="paragraph">
+<p>This fully-dynamic working set manager calculates the subset of available working sets based on the parent folder of the projects. The benefit of this working set manager is to support the convention recommended by the maven/Git folder structuring. The following constraints are applied when associating the projects with the available working sets:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>If a project is located in the root of the Eclipse workspace, then it will be associated with <em>Other Projects</em> working set.</p>
+</li>
+<li>
+<p>If a project is nested somewhere in the Eclipse workspace, then it will be associated with a working set that has the same name as the parent folder of the project. Let assume the Eclipse workspace root points to <code>/eclipse/root</code> and there is a project <code>P1</code> nested in the workspace root at <code>/eclipse/root/path/to/nested/location/P1</code>, then the associated working set will be <code>location</code>.</p>
+</li>
+<li>
+<p>If a project is not contained in the workspace, but has a Git provider that is configured in IDE, and the project root is the local Git repository root, then the associated working set name will be the name of the Git repository. For example, if we have Eclipse workspace root pointing to <code>/eclipse/root</code> location and a <code>P2</code> project located <code>/some/path/to/git/P2</code> but this location is the location of a registered Git repository, then the name of the associated working set will be neither <code>Other Projects</code> not <code>git</code> but <code>P2</code> since that is known Git local repository root.</p>
+</li>
+<li>
+<p>If project <code>P3</code> is not contained in the Eclipse workspace but contained in a known local Git repository just like above, but the project root is not the local Git repository root, then the name of the parent folder will be considered as the name of the associated working set. This rule is a hybrid alternative of the second and the third constraints, hence for instance if the project is under <code>/some/path/to/git/repositoryName/plugins/P3</code> and <code>repositoryName</code> is local git repository, then the name of the associated working set will be <code>plugins</code> and not <code>repositoryName</code>.</p>
+</li>
+<li>
+<p>Else the associated working set will be the <em>Other Projects</em> fallback working set.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="sec:N4JS_Project_Type_Working_Set_Manager"><a class="anchor" href="#sec:N4JS_Project_Type_Working_Set_Manager"></a><a class="link" href="#sec:N4JS_Project_Type_Working_Set_Manager">2.3.7. N4JS Project Type Working Set Manager</a></h4>
+<div class="paragraph">
+<p>This is working set manager is a N4JS specific fully-dynamic working set manager. The working sets will be calculated based on the instances defined by the <code>org.eclipse.n4js.n4mf.ProjectType</code> type. Each accessible N4JS project will be associated to a working set based on the project type. A workspace project will be associated with the <em>Other Projects</em> fallback working set if any of the followings are true to the project:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The project is not accessible. (It does not exist or is not opened.)</p>
+</li>
+<li>
+<p>The project does not configured with <em>Xtext</em> nature.</p>
+</li>
+<li>
+<p>The project does not have an <em>Xtext</em> builder command ID.</p>
+</li>
+<li>
+<p>The project does not have a valid N4 manifest file.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Version 0.9<br>
+Last updated 2019-08-07 15:02:40 CEST
+</div>
+</div>
+<!-- ************* docinfo-footer *************************************************************** -->
+<div class="Grid social" style="color:#d5dfea">
+  <div class="Cell Cell--2-12 m-Cell--withMargin">
+    <h2>Quick Links</h2>
+    <ul>
+      <li><a href="../downloads.html">Download</a></li>
+      <li><a href="../userguides/index.html">Documentation</a></li>
+      <li><a href="https://github.com/eclipse/n4js/">Source</a></li>
+      <li><a href="https://github.com/eclipse/n4js/issues">Issues</a></li>
+    </ul>
+  </div>
+  <div class="Cell Cell--2-12 m-Cell--withMargin">
+    <br/><br/>
+    <ul>
+      <li><a href="https://www.eclipse.org/forums/index.php/f/365/">Forum</a></li>
+      <li><a href="http://n4js.blogspot.de/">Blog</a></li>
+      <li><a href="https://dev.eclipse.org/mailman/listinfo/n4js-dev">Mailing List</a></li>
+      <li><a href="https://projects.eclipse.org/projects/technology.n4js">Eclipse Project Page</a></li>
+      <li><a href="https://twitter.com/n4jsdev">Tweets by n4jsdev</a></li>
+    </ul>
+  </div>
+  <div class="Cell Cell--2-12 m-Cell--withMargin">
+    <br/><br/>
+    <ul>
+      <li><a href="http://www.eclipse.org/">Eclipse Home</a></li>
+      <li><a href="http://www.eclipse.org/legal/privacy.php">Privacy Policy</a></li>
+      <li><a href="http://www.eclipse.org/legal/termsofuse.php">Terms of Use</a></li>
+      <li><a href="http://www.eclipse.org/legal/copyright.php">Copyright Agent</a></li>
+      <li><a href="http://www.eclipse.org/legal/">Legal</a></li>
+    </ul>
+  </div>
+  <div style="clear: both; height: 0; overflow: hidden;"></div>
+</div>
+
+<!-- ************* UI Scripts ************* -->
+<script type="text/javascript" src="scripts/back-to-top.js"></script>
+
+<script type="text/javascript" src="scripts/treeview.js"></script>
+<script type="text/javascript" src="scripts/toc.js"></script>
+
+<!-- ************* Prism.js Syntax Highlighting ************* -->
+<script src="scripts/prism.js"></script>
+
+<script type="text/javascript">
+	// Add the 'toclist' id for search function
+	$(".toc2 > ul").attr('id', 'toclist');
+	// Generate a Search input form
+	$("#toclist > li:first-of-type").before('<input type="text" id="pagesearch" onkeyup="search()" placeholder="Search for section...">');
+	$("#toclist > li:first-of-type").before('<i id="clear" class="fa fa-times-circle-o"></i>');
+	$("#clear").click(function(){
+	    $("#pagesearch").val('');
+	    search();
+	    $('.toc2 > ul').treeView('collapseAll');
+	});
+	// intialize Treeview.js
+	$(".toc2 > ul").treeView();
+	// Initialize Scrollspy
+</script>
+<!-- ************* docinfo-footer *************************************************************** -->
+</body>
+</html>

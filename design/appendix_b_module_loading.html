@@ -1,0 +1,3929 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 1.5.5">
+<meta name="author" content="2019-08-07 15:02:40 CEST">
+<title>N4JS Design Specification</title>
+<link rel="stylesheet" href="styles/spec.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
+<!-- ************* docinfo ******************************************************************* -->
+
+
+<!-- ************* Favicon ************-->
+<link rel="icon" href="images/favicon.ico" />
+
+<!-- ************* Back-to-top JQuery ************* -->
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
+
+
+<link href="styles/prism.min.css" rel="stylesheet" />
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+<!-- ************* Styles ************* -->
+<link rel="stylesheet" type="text/css" href="styles/n4jsspec-adoc.css">
+
+
+<!-- ****************** NavBar ****************** -->
+<div id="menubar">
+	<div class="banner">
+        <a href="https://www.eclipse.org/n4js/#"><img id="logo" src="images/n4js-logo.png" alt="Eclipse N4JS"></a>
+    </div>
+<ul>
+  <li><a href="index.html">Index</a></li>
+</ul>
+</div>
+<!-- ************* docinfo ******************************************************************* -->
+<style>
+      .admonitionblock td.icon .icon-todo:before{content:"\f249";color:#f4ee42}
+    </style>
+</head>
+<body class="book toc2 toc-left">
+<div id="header">
+<h1>N4JS Design Specification</h1>
+<div class="details">
+<span id="author" class="author">2019-08-07 15:02:40 CEST</span><br>
+<span id="revnumber">version 0.9</span>
+</div>
+<div id="toc" class="toc2">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="introduction.html#_introduction">1. Introduction</a>
+<ul class="sectlevel2">
+<li><a href="introduction.html#notation">1.1. Notation</a></li>
+<li><a href="introduction.html#sec:IDE_Overview">1.2. IDE Components</a>
+<ul class="sectlevel3">
+<li><a href="introduction.html#sec:Naming_Conventions">1.2.1. Naming Conventions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="eclipse_setup.html#_eclipse-setup">2. Eclipse Setup</a>
+<ul class="sectlevel2">
+<li><a href="eclipse_setup.html#_system-requirements">2.1. System Requirements</a></li>
+<li><a href="eclipse_setup.html#_contribute">2.2. Contribute</a>
+<ul class="sectlevel3">
+<li><a href="eclipse_setup.html#_eclipse-installer">2.2.1. Eclipse Installer</a>
+<ul class="sectlevel4">
+<li><a href="eclipse_setup.html#_changing-the-setup-script">2.2.1.1. Changing the Setup Script</a></li>
+</ul>
+</li>
+<li><a href="eclipse_setup.html#_manual-ide-configuration">2.2.2. Manual IDE Configuration</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="release_engineering.html#_release-engineering">3. Release Engineering</a>
+<ul class="sectlevel2">
+<li><a href="release_engineering.html#_nightly-build-on-eclipse-infrastructure">3.1. Nightly build on Eclipse infrastructure</a></li>
+<li><a href="release_engineering.html#_build-the-n4js-ide-from-command-line">3.2. Build the N4JS IDE from command line</a>
+<ul class="sectlevel3">
+<li><a href="release_engineering.html#_publish-maven-tooling-code-org-eclipse-n4js-releng-util-code">3.2.1. Publish maven-tooling <code>org.eclipse.n4js.releng.util</code></a></li>
+<li><a href="release_engineering.html#sec:test-verdaccio">3.2.2. Test Verdaccio containing n4js-libs</a></li>
+<li><a href="release_engineering.html#_generation-of-eclipse-help-for-spec-and-design-document">3.2.3. Generation of Eclipse help for spec and design document</a></li>
+</ul>
+</li>
+<li><a href="release_engineering.html#_updating-frameworks-and-dependencies">3.3. Updating frameworks and dependencies</a>
+<ul class="sectlevel3">
+<li><a href="release_engineering.html#_update-of-eclipse-emf-xtext-etc">3.3.1. Update of Eclipse, EMF, Xtext, etc.</a></li>
+<li><a href="release_engineering.html#_update-of-the-embedded-jre">3.3.2. Update of the embedded JRE</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="tips_and_tricks.html#_tips-and-tricks">4. Tips and Tricks</a>
+<ul class="sectlevel2">
+<li><a href="tips_and_tricks.html#_naming">4.1. Naming</a></li>
+<li><a href="tips_and_tricks.html#_logging">4.2. Logging</a></li>
+<li><a href="tips_and_tricks.html#_cancellation-handling">4.3. Cancellation Handling</a></li>
+<li><a href="tips_and_tricks.html#_caching">4.4. Caching</a></li>
+<li><a href="tips_and_tricks.html#_dependency-injection">4.5. Dependency Injection</a></li>
+<li><a href="tips_and_tricks.html#_miscellaneous">4.6. Miscellaneous</a></li>
+</ul>
+</li>
+<li><a href="parser.html#_parser">5. Parser</a>
+<ul class="sectlevel2">
+<li><a href="parser.html#sec:Parser_Overview">5.1. Overview</a></li>
+<li><a href="parser.html#sec:N4JS_Parser">5.2. N4JS Parser</a></li>
+<li><a href="parser.html#sec:Parser_Generation_Post_Processing">5.3. Parser Generation Post-Processing</a>
+<ul class="sectlevel3">
+<li><a href="parser.html#sec:Automatic_Semicolon_Insertion">5.3.1. Automatic Semicolon Insertion</a>
+<ul class="sectlevel4">
+<li><a href="parser.html#sec:Injected_code_in_the_Antlr_grammar_file">5.3.1.1. Injected code in the Antlr grammar file</a></li>
+<li><a href="parser.html#sec:Customized_error_recovery">5.3.1.2. Customized error recovery</a></li>
+</ul>
+</li>
+<li><a href="parser.html#sec:_No_line_terminator_allowed_here__handling">5.3.2. Async and <code>No line terminator allowed here</code> Handling</a></li>
+<li><a href="parser.html#sec:Regular_Expression">5.3.3. Regular Expression</a></li>
+<li><a href="parser.html#sec:Unicode">5.3.4. Unicode</a></li>
+<li><a href="parser.html#sec:Literals">5.3.5. Literals</a></li>
+</ul>
+</li>
+<li><a href="parser.html#sec:Modifiers">5.4. Modifiers</a></li>
+<li><a href="parser.html#sec:Conflict_Resolutions">5.5. Conflict Resolutions</a>
+<ul class="sectlevel3">
+<li><a href="parser.html#sec:Reserved_Keywords_vs__Identifier_Names">5.5.1. Reserved Keywords vs. Identifier Names</a></li>
+<li><a href="parser.html#sec:Operators_and_Generics">5.5.2. Operators and Generics</a></li>
+</ul>
+</li>
+<li><a href="parser.html#sec:Content_Assist_Parser">5.6. Content-Assist Parser</a></li>
+</ul>
+</li>
+<li><a href="type_system.html#_type-system">6. Type System</a>
+<ul class="sectlevel2">
+<li><a href="type_system.html#sec:Type_Model_and_Grammar">6.1. Type Model and Grammar</a>
+<ul class="sectlevel3">
+<li><a href="type_system.html#sec:Type_Model_Overview">6.1.1. Type Model Overview</a></li>
+<li><a href="type_system.html#sec:Built_in_Types">6.1.2. Built-in and Primitive Types</a></li>
+<li><a href="type_system.html#sec:Type_Model_DSL">6.1.3. Type Model DSL</a></li>
+</ul>
+</li>
+<li><a href="type_system.html#sec:Type_System_Implementation">6.2. Type System Implementation</a></li>
+<li><a href="type_system.html#sec:Type_Inference_combined_with_AST_Traversal">6.3. Type Inference of AST</a>
+<ul class="sectlevel3">
+<li><a href="type_system.html#sec:Type_Inference_combined_with_AST_Traversal__Background">6.3.1. Background</a></li>
+<li><a href="type_system.html#sec:Triggering_Type_Inference_of_AST">6.3.2. Triggering</a></li>
+<li><a href="type_system.html#sec:Traversal_Order_During_Type_Inference_of_AST">6.3.3. Traversal Order</a></li>
+<li><a href="type_system.html#sec:Cross_References_During_Type_Inference_of_AST">6.3.4. Cross-References</a></li>
+<li><a href="type_system.html#sec:Function_Accessor_Bodies_During_Type_Inference_of_AST">6.3.5. Function/Accessor Bodies</a></li>
+<li><a href="type_system.html#sec:Poly_Expressions_During_Type_Inference_of_AST">6.3.6. Poly Expressions</a></li>
+<li><a href="type_system.html#sec:Constraint_Solver_used_During_Type_Inference_of_AST">6.3.7. Constraint Solver</a></li>
+<li><a href="type_system.html#sec:Type_Guards_During_Type_Inference_of_AST">6.3.8. Type Guards</a></li>
+</ul>
+</li>
+<li><a href="type_system.html#sec:Structural_Typing">6.4. Structural Typing</a></li>
+</ul>
+</li>
+<li><a href="type_index.html#_type-index">7. Type Index</a>
+<ul class="sectlevel2">
+<li><a href="type_index.html#sec:Type_Index_Design_Rationale">7.1. Design Rationale</a>
+<ul class="sectlevel3">
+<li><a href="type_index.html#sec:Getting_the_Xtext_Index_Content_IResourceDescriptions">7.1.1. Getting the Xtext Index (<code>IResourceDescriptions</code>) Content</a></li>
+</ul>
+</li>
+<li><a href="type_index.html#sec:Design_Overview">7.2. Design Overview</a></li>
+<li><a href="type_index.html#sec:N4JS_Resource_Load_States">7.3. N4JS Resource Load States</a></li>
+<li><a href="type_index.html#sec:Type_Builder">7.4. Types Builder</a>
+<ul class="sectlevel3">
+<li><a href="type_index.html#sec:Type_Inference_not_allowed_in_Type_Builder">7.4.1. Type Inference not allowed in Types Builder</a></li>
+<li><a href="type_index.html#sec:ComputedTypeReferences">7.4.2. Deferred Type References</a></li>
+<li><a href="type_index.html#sec:Use_cases_of_ComputedTypeRef">7.4.3. Use cases of DeferredTypeRef</a></li>
+</ul>
+</li>
+<li><a href="type_index.html#sec:Incremental_Builder_Overview">7.5. Incremental Builder (Overview)</a>
+<ul class="sectlevel3">
+<li><a href="type_index.html#sec:Incremental_Builder_Overview__XtextBuilder">7.5.1. XtextBuilder</a></li>
+<li><a href="type_index.html#sec:Incremental_Builder_Overview__IBuilderState">7.5.2. IBuilderState</a>
+<ul class="sectlevel4">
+<li><a href="type_index.html#copy-and-update-xtext-index">7.5.2.1. Copy and Update Xtext Index</a></li>
+<li><a href="type_index.html#build-state-setup-phase">7.5.2.2. Build State Setup Phase</a></li>
+<li><a href="type_index.html#process-queued-uris">7.5.2.3. Process Queued URIs</a></li>
+<li><a href="type_index.html#queueing-affected-resources">7.5.2.4. Queueing Affected Resources</a></li>
+</ul>
+</li>
+<li><a href="type_index.html#sec:Incremental_Builder_Overview__Example">7.5.3. Example</a></li>
+</ul>
+</li>
+<li><a href="type_index.html#dirty-state-handling">7.6. Dirty state handling</a>
+<ul class="sectlevel3">
+<li><a href="type_index.html#use-case-restoring-types-from-user-data">7.6.1. Use case: Restoring types from user data</a></li>
+<li><a href="type_index.html#use-case-updating-the-xtext-index">7.6.2. Use case: Updating the Xtext index</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="project_model.html#_project-model">8. Project Model</a>
+<ul class="sectlevel2">
+<li><a href="project_model.html#sec:Package_json">8.1. Package.json File</a></li>
+<li><a href="project_model.html#_accessing-project-information">8.2. Accessing Project Information</a>
+<ul class="sectlevel3">
+<li><a href="project_model.html#sec:IN4JSCore">8.2.1. IN4JSCore</a></li>
+<li><a href="project_model.html#sec:N4JSModel">8.2.2. N4JSModel</a></li>
+<li><a href="project_model.html#sec:N4JSWorkspace">8.2.3. N4JSWorkspace</a></li>
+<li><a href="project_model.html#sec:N4JSProject">8.2.4. N4JSProject</a></li>
+<li><a href="project_model.html#sec:SourceContainer">8.2.5. SourceContainer</a></li>
+<li><a href="project_model.html#sec:N4JSProjectsStateHelper">8.2.6. N4JSProjectsStateHelper</a></li>
+</ul>
+</li>
+<li><a href="project_model.html#sec:Caching">8.3. Caching</a>
+<ul class="sectlevel3">
+<li><a href="project_model.html#_caching-of-externallibraryworkspace">8.3.1. Caching of ExternalLibraryWorkspace</a></li>
+<li><a href="project_model.html#_caching-of-n4jsprojectsstatehelper">8.3.2. Caching of N4JSProjectsStateHelper</a></li>
+</ul>
+</li>
+<li><a href="project_model.html#sec:WildcardPathFilter">8.4. WildcardPathFilter</a></li>
+<li><a href="project_model.html#sec:ProjectUtils">8.5. ProjectUtils</a></li>
+</ul>
+</li>
+<li><a href="binding.html#_binding">9. Binding</a>
+<ul class="sectlevel2">
+<li><a href="binding.html#sec:Binding_Design_Rationale">9.1. Design Rationale</a></li>
+<li><a href="binding.html#sec:Binding_to_Members">9.2. Binding to Members</a></li>
+<li><a href="binding.html#sec:Binding_Getter_Setter">9.3. Getter / Setter Binding</a></li>
+<li><a href="binding.html#chap:Statics">9.4. Static Member Binding</a></li>
+<li><a href="binding.html#sec:Binding_Enumeration">9.5. Enumeration Literals Binding</a></li>
+<li><a href="binding.html#sec:Accessibility_of_types_and_members">9.6. Accessibility of types and members</a></li>
+<li><a href="binding.html#sec:Member_Scope_Example">9.7. Member Scope Example</a></li>
+<li><a href="binding.html#sec:Scoping_for_Members_of_Composed_Type_Explained">9.8. Scoping for Members of Composed Type (Union/Intersection) Example</a></li>
+<li><a href="binding.html#sec:Binding_of_Structurally_References_Types">9.9. Structurally References Types</a></li>
+<li><a href="binding.html#sec:Building">9.10. Building</a>
+<ul class="sectlevel3">
+<li><a href="binding.html#sec:Build_Phases">9.10.1. Build Phases</a></li>
+<li><a href="binding.html#sec:Build_Scenarios">9.10.2. Build Scenarios</a></li>
+<li><a href="binding.html#sec:Lazy_linking_problem">9.10.3. Lazy linking problem</a></li>
+</ul>
+</li>
+<li><a href="binding.html#sec:Proxies_and_Proxy_Resolution">9.11. Proxies and Proxy Resolution (Overview)</a>
+<ul class="sectlevel3">
+<li><a href="binding.html#xtexts-lazy-linking-proxies">9.11.1. Xtext’s Lazy Linking Proxies</a></li>
+<li><a href="binding.html#standard-emf-proxies">9.11.2. Standard EMF Proxies</a></li>
+<li><a href="binding.html#_how-is-proxy-resolution-triggered">9.11.3. How is Proxy Resolution Triggered?</a></li>
+<li><a href="binding.html#_when-is-proxy-resolution-allowed">9.11.4. When is Proxy Resolution Allowed?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="validation.html#_validation">10. Validation</a>
+<ul class="sectlevel2">
+<li><a href="validation.html#sec:validation_overview">10.1. Validation overview</a></li>
+<li><a href="validation.html#sec:validation_control_flow">10.2. Validation control flow</a></li>
+<li><a href="validation.html#sec:validation_issue_ids">10.3. Issue IDs and Messages</a></li>
+<li><a href="validation.html#sec:validation_usage_patterns">10.4. Usage Pattern</a></li>
+<li><a href="validation.html#sec:validation_links">10.5. Links</a></li>
+</ul>
+</li>
+<li><a href="references.html#_references">11. References</a>
+<ul class="sectlevel2">
+<li><a href="references.html#sec:usecases">11.1. Use cases</a></li>
+<li><a href="references.html#sec:calculation_algorithm">11.2. Calculation algorithm</a>
+<ul class="sectlevel3">
+<li><a href="references.html#sec:Xtext_default_implementation">11.2.1. Xtext default implementation</a></li>
+<li><a href="references.html#sec:N4_implementation">11.2.2. N4JS implementation</a></li>
+</ul>
+</li>
+<li><a href="references.html#sec:PerformanceOfDependencyCalculation">11.3. Performance Of Dependency Calculation</a></li>
+<li><a href="references.html#sec:kinds_of_references">11.4. Kinds of references</a>
+<ul class="sectlevel3">
+<li><a href="references.html#sec:Cross_References_to_be_ignored">11.4.1. Cross References to be ignored</a></li>
+<li><a href="references.html#sec:Cross_References_to_be_handled">11.4.2. Cross References to be handled</a></li>
+</ul>
+</li>
+<li><a href="references.html#sec:transitive_dependencies">11.5. Transitive dependencies</a></li>
+<li><a href="references.html#sec:find-references">11.6. Find references</a>
+<ul class="sectlevel3">
+<li><a href="references.html#_background">11.6.1. Background</a></li>
+<li><a href="references.html#_how-find-references-work">11.6.2. How Find References Work</a>
+<ul class="sectlevel4">
+<li><a href="references.html#_step-1-convert-cursor-position-to-declared-element">11.6.2.1. Step 1: Convert Cursor Position to Declared Element</a></li>
+<li><a href="references.html#_step-2-convert-declared-element-to-target-uris">11.6.2.2. Step 2: Convert Declared Element to Target URIs</a></li>
+<li><a href="references.html#_step-3-filter-potential-resources">11.6.2.3. Step 3: Filter Potential Resources</a></li>
+<li><a href="references.html#_step-4-search-references-in-resource">11.6.2.4. Step 4: Search References in Resource</a></li>
+<li><a href="references.html#_limitations-and-possible-enhancements">11.6.2.5. Limitations and Possible Enhancements</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="compilation.html#_compilation">12. Compilation</a>
+<ul class="sectlevel2">
+<li><a href="compilation.html#chap:compilation">12.1. Introduction</a>
+<ul class="sectlevel3">
+<li><a href="compilation.html#sec:general_design_rationals">12.1.1. General design rationals</a>
+<ul class="sectlevel4">
+<li><a href="compilation.html#sec:logging_and_error_reporting">12.1.1.1. Logging and error reporting</a></li>
+<li><a href="compilation.html#sec:progress_monitor">12.1.1.2. Progress monitor</a></li>
+</ul>
+</li>
+<li><a href="compilation.html#sec:Xtext_Integration">12.1.2. Xtext Integration</a>
+<ul class="sectlevel4">
+<li><a href="compilation.html#sec:xtext_default_behaviour">12.1.2.1. Xtext default behaviour</a></li>
+<li><a href="compilation.html#sec:n4js_requirements">12.1.2.2. N4JS requirements</a></li>
+<li><a href="compilation.html#sec:compiler_discovery_in_ui">12.1.2.3. Compiler discovery in UI</a></li>
+<li><a href="compilation.html#sec:compiler_discovery_in_headless">12.1.2.4. Compiler discovery in headless</a></li>
+<li><a href="compilation.html#sec:general_generator_implementation">12.1.2.5. General generator implementation</a></li>
+<li><a href="compilation.html#sec:general_generator_activation">12.1.2.6. General generator activation</a></li>
+</ul>
+</li>
+<li><a href="compilation.html#sec:Overview_of_Input_Models">12.1.3. Overview of the Input Models</a></li>
+</ul>
+</li>
+<li><a href="compilation.html#sec:Core_Generator">12.2. Generators</a>
+<ul class="sectlevel3">
+<li><a href="compilation.html#sec:Compiler_Components">12.2.1. Generator Components</a></li>
+<li><a href="compilation.html#sec:Generator_architecture">12.2.2. Generator architecture</a></li>
+<li><a href="compilation.html#sec:Unified_Compiler_Configuration">12.2.3. Unified Compiler Configuration</a></li>
+</ul>
+</li>
+<li><a href="compilation.html#sec:Transpilers">12.3. Transpilers</a>
+<ul class="sectlevel3">
+<li><a href="compilation.html#sec:Phases">12.3.1. Overview</a></li>
+<li><a href="compilation.html#relation-between-ast-and-im">12.3.2. Relation between AST and IM</a></li>
+<li><a href="compilation.html#implementation-overview">12.3.3. Implementation Overview</a></li>
+<li><a href="compilation.html#sec:Guidelines_for_Implementing_Transformations">12.3.4. Guidelines for Implementing Transformations</a></li>
+<li><a href="compilation.html#symbol-table-in-the-im">12.3.5. Symbol Table in the IM</a></li>
+</ul>
+</li>
+<li><a href="compilation.html#sec:N4JS_to_EcmaScript_Transpiler">12.4. N4JS-to-EcmaScript Transpiler</a>
+<ul class="sectlevel3">
+<li><a href="compilation.html#sec:Overview_of_Transformations">12.4.1. Overview of Transformations</a></li>
+<li><a href="compilation.html#sec:Transpiling_members">12.4.2. Transpiling members</a>
+<ul class="sectlevel4">
+<li><a href="compilation.html#sec:Transpiling_members__Delegating_members">12.4.2.1. Techniques for special member handling</a></li>
+<li><a href="compilation.html#sec:Transpiling_members__Partial_shadowing_of_getter_setter_pairs">12.4.2.2. Partial shadowing</a></li>
+<li><a href="compilation.html#sec:Transpiling_members__Consuming_or_inheriting_members_of_an_interface">12.4.2.3. Consuming or inheriting members of an interface</a></li>
+<li><a href="compilation.html#sec:Transpiling_members__Static_polyfill">12.4.2.4. Static polyfill</a></li>
+<li><a href="compilation.html#sec:Transpiling_members__API_implementation_stubs">12.4.2.5. API / implementation stubs</a></li>
+</ul>
+</li>
+<li><a href="compilation.html#sec:Support_for_incomplete_API_implementation_testing_in_the_N4JS_to_EcmaScript_5_Transpiler">12.4.3. Support for incomplete API implementation testing</a>
+<ul class="sectlevel4">
+<li><a href="compilation.html#sec:Modifications_in_Impl_projects">12.4.3.1. Modifications in Impl projects</a></li>
+<li><a href="compilation.html#sec:Implementation_of_stub_generation">12.4.3.2. Implementation of stub-generation</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="compilation.html#sec:n4jsc_Headless_Compiler_Interface">12.5. n4jsc Headless Compiler Interface</a>
+<ul class="sectlevel3">
+<li><a href="compilation.html#sec:building_the_headless_compiler">12.5.1. building the headless compiler</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="execution.html#_execution">13. Execution</a>
+<ul class="sectlevel2">
+<li><a href="execution.html#sec:N4JS_Project_Execution_And_Linking_Model">13.1. N4JS Project Execution And Linking Model</a>
+<ul class="sectlevel3">
+<li><a href="execution.html#subsec:N4JS_Execution_With_NodeJS">13.1.1. N4JS Execution With NodeJS</a></li>
+</ul>
+</li>
+<li><a href="execution.html#sec:N4JS_Execution_And_Linking_File">13.2. N4JS Execution And Linking File</a>
+<ul class="sectlevel3">
+<li><a href="execution.html#subsec:NodeJS_Specific_ELF">13.2.1. NodeJS Specific ELF</a></li>
+</ul>
+</li>
+<li><a href="execution.html#sec:Runners-execution">13.3. Runners</a>
+<ul class="sectlevel3">
+<li><a href="execution.html#subsec:N4_Runtime_Environments_Convention">13.3.1. N4 Runtime Environments Convention</a></li>
+<li><a href="execution.html#subsec:Passing_Information_from_IDE_to_Execution_Code_in_Runtime_Environment">13.3.2. Passing Information from IDE to Execution Code in Runtime Environment</a></li>
+<li><a href="execution.html#subsec:Runners_Design">13.3.3. Runners Design</a></li>
+</ul>
+</li>
+<li><a href="execution.html#sec:Legacy_Execution_Engine">13.4. Legacy Execution Engine</a></li>
+<li><a href="execution.html#sec:Design">13.5. Design</a>
+<ul class="sectlevel3">
+<li><a href="execution.html#sec:Usage_Outside_N4JSIDE">13.5.1. Usage Outside N4JSIDE</a>
+<ul class="sectlevel4">
+<li><a href="execution.html#sec:Use_Node_with_Maven">13.5.1.1. Use Node with Maven</a></li>
+</ul>
+</li>
+<li><a href="execution.html#sec:Usage_Inside_N4JSIDE">13.5.2. Usage Inside N4JSIDE</a></li>
+</ul>
+</li>
+<li><a href="execution.html#sec:Runtime_Injection">13.6. Runtime Injection</a>
+<ul class="sectlevel3">
+<li><a href="execution.html#sec:Running_String_Code">13.6.1. Running String Code</a></li>
+<li><a href="execution.html#sec:Running_File_Code">13.6.2. Running File Code</a></li>
+<li><a href="execution.html#sec:Injection_Code_Example">13.6.3. Injection Code Example</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="tests.html#_tests">14. Tests</a>
+<ul class="sectlevel2">
+<li><a href="tests.html#sec:Performance_Tests">14.1. Performance Tests</a>
+<ul class="sectlevel3">
+<li><a href="tests.html#sec:Synthetic_Performance_Tests">14.1.1. Synthetic Performance Tests</a>
+<ul class="sectlevel4">
+<li><a href="tests.html#sec:Design_of_Generator">14.1.1.1. Design of Generator</a></li>
+<li><a href="tests.html#sec:Design_of_Performance_Test_Execution">14.1.1.2. Design of Performance Test Configuration and Execution</a></li>
+<li><a href="tests.html#sec:JUnit_Configuration">14.1.1.3. JUnit Configuration</a></li>
+<li><a href="tests.html#sec:JUnitBenchmark_Test_Configuration">14.1.1.4. JUnitBenchmark Test Configuration</a></li>
+<li><a href="tests.html#sec:JUnitBenchmark_Report_Configuration">14.1.1.5. JUnitBenchmark Report Configuration</a></li>
+<li><a href="tests.html#sec:JUnitBenchmark_Run_Configuration">14.1.1.6. JUnitBenchmark Run Configuration</a></li>
+<li><a href="tests.html#sec:JUnitBenchmark_Example">14.1.1.7. JUnitBenchmark Example</a></li>
+<li><a href="tests.html#sec:Note_on_Jenkins_Job">14.1.1.8. Note on Jenkins Job</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="tests.html#sec:ECMA_Tests">14.2. ECMA Tests</a>
+<ul class="sectlevel3">
+<li><a href="tests.html#sec:Grammar_Tests">14.2.1. Grammar Tests</a>
+<ul class="sectlevel4">
+<li><a href="tests.html#sec:Negative_Tests">14.2.1.1. Negative Tests</a></li>
+<li><a href="tests.html#sec:Test_Exclusion">14.2.1.2. Test Exclusion</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="tests.html#sec:Integration_Tests">14.3. Integration Tests</a></li>
+<li><a href="tests.html#sec:Test_Helpers">14.4. Test Helpers</a>
+<ul class="sectlevel3">
+<li><a href="tests.html#sec:Parameterized_N4JS_Tests">14.4.1. Parameterized N4JS tests</a>
+<ul class="sectlevel4">
+<li><a href="tests.html#sec:ParameterizedXtextRunner">14.4.1.1. ParameterizedXtextRunner</a></li>
+<li><a href="tests.html#sec:TestCodeProvider">14.4.1.2. TestCodeProvider</a></li>
+<li><a href="tests.html#sec:Example_Of_Parameterized_Parser_Test">14.4.1.3. Example of parameterized parser test</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="tests.html#sec:Issue_Suppression">14.5. Issue Suppression</a></li>
+<li><a href="tests.html#sec:Xpect_Tests">14.6. Xpect Tests</a>
+<ul class="sectlevel3">
+<li><a href="tests.html#sec:Xpect_Test_Setup">14.6.1. Xpect Test Setup</a></li>
+<li><a href="tests.html#sec:Xpect_Issue_Suppression">14.6.2. Xpect Issue Suppression</a></li>
+<li><a href="tests.html#sec:Xpect_Provided_Test_Methods">14.6.3. Xpect Provided Test Methods</a>
+<ul class="sectlevel4">
+<li><a href="tests.html#errors">14.6.3.1. errors</a></li>
+<li><a href="tests.html#warnings">14.6.3.2. warnings</a></li>
+</ul>
+</li>
+<li><a href="tests.html#sec:N4JS_Specific_Xpect_Test_Methods">14.6.4. N4JS Specific Xpect Test Methods</a>
+<ul class="sectlevel4">
+<li><a href="tests.html#sec:XPECT_noerrors">14.6.4.1. noerrors and nowarnings</a></li>
+<li><a href="tests.html#sec:XPECT_scope">14.6.4.2. scope</a></li>
+<li><a href="tests.html#sec:XPECT_scopeWithPosition">14.6.4.3. scopeWithPosition</a></li>
+<li><a href="tests.html#sec:XPECT_scopeWithResource">14.6.4.4. scopeWithResource</a></li>
+<li><a href="tests.html#sec:XPECT_binding">14.6.4.5. binding</a></li>
+<li><a href="tests.html#sec:XPECT_linkedPathname">14.6.4.6. linkedPathname</a></li>
+<li><a href="tests.html#sec:XPECT_type_of">14.6.4.7. type of</a></li>
+<li><a href="tests.html#sec:XPECT_expectedType">14.6.4.8. expectedType</a></li>
+<li><a href="tests.html#sec:XPECT_elementKeyword">14.6.4.9. elementKeyword</a></li>
+<li><a href="tests.html#sec:XPECT_accessModifier">14.6.4.10. accessModifier</a></li>
+<li><a href="tests.html#sec:XPECT_compileResult">14.6.4.11. compileResult</a></li>
+<li><a href="tests.html#sec:XPECT_output">14.6.4.12. output</a></li>
+<li><a href="tests.html#sec:XPECT_outputRegEx">14.6.4.13. outputRegEx</a></li>
+<li><a href="tests.html#sec:XPECT_calculatedAccessModifier">14.6.4.14. calculatedAccessModifier</a></li>
+<li><a href="tests.html#sec:XPECT_spec">14.6.4.15. spec</a></li>
+<li><a href="tests.html#sec:XPECT_deadCode">14.6.4.16. deadCode</a></li>
+<li><a href="tests.html#sec:XPECT_returnOrThrows">14.6.4.17. returnOrThrows</a></li>
+<li><a href="tests.html#sec:XPECT_lint">14.6.4.18. lint</a></li>
+<li><a href="tests.html#sec:XPECT_lintFails">14.6.4.19. lintFails</a></li>
+</ul>
+</li>
+<li><a href="tests.html#sec:FIXME_Xpect_modifier">14.6.5. FIXME Xpect modifier</a></li>
+<li><a href="tests.html#sec:Expectmatrix_Xpect_Test_Methods">14.6.6. Expectmatrix Xpect tests</a></li>
+<li><a href="tests.html#xpect-lint-tests">14.6.7. Xpect Lint Tests</a></li>
+</ul>
+</li>
+<li><a href="tests.html#xpect-proposal-tests">14.7. Xpect Proposal Tests</a>
+<ul class="sectlevel3">
+<li><a href="tests.html#sec:Validation_vs__Non_Validation">14.7.1. Validation vs. Non-Validation</a></li>
+<li><a href="tests.html#sec:General_Proposal_Test_Features">14.7.2. General Proposal Test Features</a>
+<ul class="sectlevel4">
+<li><a href="tests.html#sec:Test_Variables">14.7.2.1. Test Variables</a></li>
+<li><a href="tests.html#sec:Location_and_Selection">14.7.2.2. at – Location and Selection</a></li>
+<li><a href="tests.html#sec:Multi_Line_Expectations_in_Proposal_Tests">14.7.2.3. Multi Line Expectations in Proposal Tests</a></li>
+<li><a href="tests.html#sec:Timeout">14.7.2.4. Timeout and Performance</a></li>
+</ul>
+</li>
+<li><a href="tests.html#proposals-verify-existence-of-proposals">14.7.3. proposals – Verify Existence of Proposals</a></li>
+<li><a href="tests.html#sec:Verify_displayed_string">14.7.4. display – Verify displayed string</a></li>
+<li><a href="tests.html#sec:Apply_Proposal">14.7.5. apply – Apply Proposal</a>
+<ul class="sectlevel4">
+<li><a href="tests.html#resource-application-in-other-files">14.7.5.1. resource – application in other files</a></li>
+</ul>
+</li>
+<li><a href="tests.html#sec:Content_Assist_Cycling">14.7.6. kind – Content Assist Cycling</a></li>
+<li><a href="tests.html#fileValidVerify-validation-status">14.7.7. fileValid – Verify validation status</a></li>
+</ul>
+</li>
+<li><a href="tests.html#sec:Apply_Proposal_And_Execute_Tests">14.8. Apply Proposal And Execute Tests</a></li>
+<li><a href="tests.html#sec:Organize_Imports_Test">14.9. Organize Imports Test</a>
+<ul class="sectlevel3">
+<li><a href="tests.html#organizeimports">14.9.1. organizeImports</a></li>
+</ul>
+</li>
+<li><a href="tests.html#sec:Access_Control_Test">14.10. Access Control Test</a>
+<ul class="sectlevel3">
+<li><a href="tests.html#test-scenarios">14.10.1. Test Scenarios</a></li>
+<li><a href="tests.html#n4js-code-generator">14.10.2. N4JS Code Generator</a></li>
+<li><a href="tests.html#xtext-issue-matcher">14.10.3. Xtext Issue Matcher</a></li>
+</ul>
+</li>
+<li><a href="tests.html#sec:Smoke_Tests">14.11. Smoke Tests</a>
+<ul class="sectlevel3">
+<li><a href="tests.html#how-to-handle-smoke-test-errors">14.11.1. How to handle smoke test errors?</a></li>
+<li><a href="tests.html#smoketester-and-exceptionanalyzer">14.11.2. SmokeTester and ExceptionAnalyzer</a></li>
+</ul>
+</li>
+<li><a href="tests.html#sec:UI_Tests_with_SWTBot">14.12. UI Tests with SWTBot</a>
+<ul class="sectlevel3">
+<li><a href="tests.html#writing-swtbot-tests">14.12.1. Writing SWTBot Tests</a></li>
+<li><a href="tests.html#running-swtbot-tests">14.12.2. Running SWTBot Tests</a></li>
+</ul>
+</li>
+<li><a href="tests.html#sec:Debugging_UI_Tests">14.13. Debugging UI Tests</a>
+<ul class="sectlevel3">
+<li><a href="tests.html#sec:Connecting_to_the_X_server_on_the_build_node">14.13.1. Connecting to the X-server on the build-node</a></li>
+<li><a href="tests.html#sec:Tools_to_investigate_the_java_stack">14.13.2. Tools to investigate the java-stack</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="ui_concepts.html#_ui-concepts">15. UI Concepts</a>
+<ul class="sectlevel2">
+<li><a href="ui_concepts.html#sec:User_Interface_Concepts">15.1. User Interface Concepts</a>
+<ul class="sectlevel3">
+<li><a href="ui_concepts.html#sec:Eclipse_UI_Concepts">15.1.1. Eclipse UI Concepts</a>
+<ul class="sectlevel4">
+<li><a href="ui_concepts.html#sec:Label_Provider">15.1.1.1. Label Provider</a></li>
+<li><a href="ui_concepts.html#sec:Markers">15.1.1.2. Markers</a></li>
+<li><a href="ui_concepts.html#sec:Commands__Toolbar_and_Menus">15.1.1.3. Commands, Toolbar and Menus</a></li>
+<li><a href="ui_concepts.html#sec:Content_Assist">15.1.1.4. Content Assist</a></li>
+<li><a href="ui_concepts.html#sec:Quick_Fixes">15.1.1.5. Quick Fixes</a></li>
+<li><a href="ui_concepts.html#sec:Quick_Assist">15.1.1.6. Quick Assist</a></li>
+<li><a href="ui_concepts.html#sec:Clean_Up_Actions">15.1.1.7. Clean Up Actions</a></li>
+<li><a href="ui_concepts.html#sec:Save_Actions">15.1.1.8. Save Actions</a></li>
+<li><a href="ui_concepts.html#sec:Auto_Edit">15.1.1.9. Auto Edit</a></li>
+<li><a href="ui_concepts.html#sec:Template_Proposals">15.1.1.10. Template Proposals</a></li>
+<li><a href="ui_concepts.html#sec:Outline_View___Quick_Outline">15.1.1.11. Outline View / Quick Outline</a></li>
+<li><a href="ui_concepts.html#sec:Navigator__Package_Explorer__Project_Explorer">15.1.1.12. Navigator, Package Explorer, Project Explorer</a></li>
+<li><a href="ui_concepts.html#sec:Hyperlinking_and_Navigation">15.1.1.13. Hyperlinking and Navigation</a></li>
+<li><a href="ui_concepts.html#sec:Syntax_and_Semantic_Coloring">15.1.1.14. Syntax and Semantic Coloring</a></li>
+<li><a href="ui_concepts.html#sec:Code_Formatter">15.1.1.15. Code Formatter</a></li>
+<li><a href="ui_concepts.html#sec:Wizards">15.1.1.16. Wizards</a></li>
+<li><a href="ui_concepts.html#sec:Cheat_Sheets">15.1.1.17. Cheat Sheets</a></li>
+<li><a href="ui_concepts.html#sec:Context_sensitive_Help">15.1.1.18. Context-sensitive Help</a></li>
+<li><a href="ui_concepts.html#sec:Hovers">15.1.1.19. Hovers</a></li>
+<li><a href="ui_concepts.html#sec:Folding">15.1.1.20. Folding</a></li>
+<li><a href="ui_concepts.html#sec:Customizable_validation___severity">15.1.1.21. Customizable validation / severity</a></li>
+<li><a href="ui_concepts.html#sec:Proposals">15.1.1.22. Proposals</a></li>
+</ul>
+</li>
+<li><a href="ui_concepts.html#sec:Non_Eclipse_UI_Concepts">15.1.2. Non-Eclipse UI Concepts</a>
+<ul class="sectlevel4">
+<li><a href="ui_concepts.html#sec:Overlays">15.1.2.1. Overlays</a></li>
+<li><a href="ui_concepts.html#sec:Goto__Inferred__Type">15.1.2.2. Goto (Inferred) Type</a></li>
+<li><a href="ui_concepts.html#sec:Postfix_Completion">15.1.2.3. Postfix Completion</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="ui_concepts.html#_user-interface-resources">15.2. User Interface Resources</a>
+<ul class="sectlevel3">
+<li><a href="ui_concepts.html#_icons">15.2.1. Icons</a>
+<ul class="sectlevel4">
+<li><a href="ui_concepts.html#_eclipse-platform-icons">15.2.1.1. Eclipse Platform Icons</a></li>
+<li><a href="ui_concepts.html#_n4js-specific-icons">15.2.1.2. N4JS Specific Icons</a></li>
+<li><a href="ui_concepts.html#_high-resolution-icons">15.2.1.3. High Resolution Icons</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="formatting.html#_formatting">16. Formatting</a>
+<ul class="sectlevel2">
+<li><a href="formatting.html#sec:FmtObjective">16.1. Objective</a>
+<ul class="sectlevel3">
+<li><a href="formatting.html#sec:FmtFormatting_Comments">16.1.1. Formatting Comments</a></li>
+</ul>
+</li>
+<li><a href="formatting.html#sec:FmtArchitecture">16.2. Architecture</a>
+<ul class="sectlevel3">
+<li><a href="formatting.html#sec:Implementation_example">16.2.1. Implementation example</a></li>
+</ul>
+</li>
+<li><a href="formatting.html#sec:FmtFormatter_Implementation_Guidelines">16.3. Formatter Implementation Guidelines</a></li>
+<li><a href="formatting.html#sec:FmtConfiguration">16.4. Configuration</a></li>
+<li><a href="formatting.html#sec:FmtUI_Integration">16.5. UI Integration</a></li>
+<li><a href="formatting.html#sec:FmtUnit_Testing_with_Xpect">16.6. Unit Testing with Xpect</a></li>
+</ul>
+</li>
+<li><a href="external_libraries.html#_external-libraries">17. External Libraries</a>
+<ul class="sectlevel2">
+<li><a href="external_libraries.html#sec:Major_Components">17.1. Major Components</a>
+<ul class="sectlevel3">
+<li><a href="external_libraries.html#subsec:External_Resources">17.1.1. External Resources</a></li>
+<li><a href="external_libraries.html#subsec:External_Library_Workspace">17.1.2. External Library Workspace</a></li>
+<li><a href="external_libraries.html#subsec:External_Library_Preference_Store">17.1.3. External Library Preference Store</a></li>
+<li><a href="external_libraries.html#subsec:npm_Manager">17.1.4. Library Manager</a></li>
+<li><a href="external_libraries.html#subsec:External_Library_Builder_Helper">17.1.5. External Library Builder</a></li>
+<li><a href="external_libraries.html#subsec:External_Library_Xtext_Index_Persister">17.1.6. External Library Xtext Index Persister</a></li>
+<li><a href="external_libraries.html#subsec:External_Library_Preference_Page">17.1.7. External Library Preference Page</a></li>
+</ul>
+</li>
+<li><a href="external_libraries.html#sec:Headless_External_Library_Support">17.2. Headless External Library Support</a>
+<ul class="sectlevel3">
+<li><a href="external_libraries.html#_custom-npm-settings">17.2.1. Custom npm settings</a></li>
+</ul>
+</li>
+<li><a href="external_libraries.html#sec:lmFutureWork">17.3. Future Work</a>
+<ul class="sectlevel3">
+<li><a href="external_libraries.html#subsec:lmMultipleDependencyScope">17.3.1. Multiple Dependency Scope</a></li>
+<li><a href="external_libraries.html#subsec:lmRunTestsFromLibrary">17.3.2. Run Tests from TestLibrary</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="json_support.html#sec:JSON_Support">18. JSON Support</a>
+<ul class="sectlevel2">
+<li><a href="json_support.html#sec:JSON_Parser">18.1. JSON Parser</a>
+<ul class="sectlevel3">
+<li><a href="json_support.html#sec:JSON_Parser_Unicode_Escaping">18.1.1. Escaping Unicode Control Characters in String Literals</a></li>
+<li><a href="json_support.html#sec:JSON_Parser_Empty_Text">18.1.2. Empty Text</a></li>
+<li><a href="json_support.html#sec:JSON_Parser_Nested_Structures">18.1.3. Nested Structures</a></li>
+<li><a href="json_support.html#sec:JSON_Parser_Whitespace">18.1.4. Whitespace</a></li>
+<li><a href="json_support.html#sec:JSON_Parser_Comments">18.1.5. Comments</a></li>
+</ul>
+</li>
+<li><a href="json_support.html#sec:JSON_Language_Extensions">18.2. JSON Language Extensions</a>
+<ul class="sectlevel3">
+<li><a href="json_support.html#sec:JSON_Validator_Extensions">18.2.1. JSON Validator Extensions</a>
+<ul class="sectlevel4">
+<li><a href="json_support.html#sec:File_Specitic_Validator_Extensions">18.2.1.1. File-Specific Validator Extensions</a></li>
+<li><a href="json_support.html#sec:JSON_Declarative_JSON_Validator_Extensions">18.2.1.2. Declarative JSON Validator Extensions</a></li>
+</ul>
+</li>
+<li><a href="json_support.html#_json-resource-description-strategy">18.2.2. JSON Resource Description Strategy</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="jsdoc.html#_jsdoc">19. JSDoc</a>
+<ul class="sectlevel2">
+<li><a href="jsdoc.html#sec:Design_Rationale">19.1. Design Rationale</a>
+<ul class="sectlevel3">
+<li><a href="jsdoc.html#_general-design">19.1.1. General Design</a></li>
+<li><a href="jsdoc.html#sec:Type_Expressions">19.1.2. Type Expressions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="docexporter.html#_docexporter">20. DocExporter</a>
+<ul class="sectlevel2">
+<li><a href="docexporter.html#sec:Specification_Exporter">20.1. Specification Exporter</a></li>
+</ul>
+</li>
+<li><a href="rename_refactoring.html#_rename-refactoring">21. Rename Refactoring</a>
+<ul class="sectlevel2">
+<li><a href="rename_refactoring.html#_rename-refactoring-ui-interaction">21.1. Rename Refactoring UI interaction</a></li>
+<li><a href="rename_refactoring.html#_renameelementprocessor-interaction">21.2. RenameElementProcessor interaction</a></li>
+</ul>
+</li>
+<li><a href="flow_graphs.html#chap:flowgraphs">22. Flow Graphs</a>
+<ul class="sectlevel2">
+<li><a href="flow_graphs.html#sec:flowgraphs_overview">22.1. Flow graphs overview</a>
+<ul class="sectlevel3">
+<li><a href="flow_graphs.html#_internal-graph">22.1.1. Internal graph</a></li>
+<li><a href="flow_graphs.html#_optimizations">22.1.2. Optimizations</a></li>
+<li><a href="flow_graphs.html#_api-for-client-analyses">22.1.3. API for client analyses</a>
+<ul class="sectlevel4">
+<li><a href="flow_graphs.html#_mapping-from-internal-to-ast-elements">22.1.3.1. Mapping from internal to AST elements</a></li>
+<li><a href="flow_graphs.html#_graph-visitor">22.1.3.2. Graph visitor</a></li>
+<li><a href="flow_graphs.html#_graph-explorer">22.1.3.3. Graph explorer</a></li>
+<li><a href="flow_graphs.html#_branch-walker">22.1.3.4. Branch walker</a></li>
+<li><a href="flow_graphs.html#_example-1-compute-string-for-each-path">22.1.3.5. Example 1: Compute string for each path</a></li>
+<li><a href="flow_graphs.html#_path-quantor">22.1.3.6. Path quantor</a></li>
+</ul>
+</li>
+<li><a href="flow_graphs.html#_control-flow-analyses">22.1.4. Control flow analyses</a>
+<ul class="sectlevel4">
+<li><a href="flow_graphs.html#_dead-code-analysis">22.1.4.1. Dead code analysis</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="flow_graphs.html#sec:dataflow">22.2. Dataflow</a>
+<ul class="sectlevel3">
+<li><a href="flow_graphs.html#_dataflow-graph">22.2.1. Dataflow graph</a></li>
+<li><a href="flow_graphs.html#_dataflow-analyses">22.2.2. Dataflow analyses</a>
+<ul class="sectlevel4">
+<li><a href="flow_graphs.html#_def-def-def-nothing-analysis">22.2.2.1. Def&#8594;Def / Def&#8594;Nothing analysis</a></li>
+<li><a href="flow_graphs.html#_def-use-decl-analysis">22.2.2.2. Def|Use&#8592;Decl analysis</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="publish_npms.html#sec:publish-npms-to-public">23. Publish npms</a>
+<ul class="sectlevel2">
+<li><a href="publish_npms.html#sec:publish-npms-n4js-maven">23.1. Publish n4js-libs to during  maven build</a></li>
+</ul>
+</li>
+<li><a href="appendix_a_hints.html#sec:Hints">Appendix A: Hints</a>
+<ul class="sectlevel2">
+<li><a href="appendix_a_hints.html#sec:XtextInjection">A.1. Xtext Injection</a>
+<ul class="sectlevel3">
+<li><a href="appendix_a_hints.html#sec:DI_MultipleInjectors_Singletons">A.1.1. Multiple Injectors and Singletons</a>
+<ul class="sectlevel4">
+<li><a href="appendix_a_hints.html#sec:DI_avoid_duplicate_singletons">A.1.1.1. Avoiding duplicate singletons</a>
+<ul class="sectlevel5">
+<li><a href="appendix_a_hints.html#sec:DI_binding_in_shared">A.1.1.1.1. Defining binding in the shared injector</a></li>
+<li><a href="appendix_a_hints.html#sec:DI_binding_in_custom">A.1.1.1.2. Defining binding in the custom injector</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="appendix_a_hints.html#sec:DI_Hints">A.1.2. Dependency Injection Hints</a>
+<ul class="sectlevel4">
+<li><a href="appendix_a_hints.html#sec:DI_custom_bundle">A.1.2.1. Use DI in custom bundle, use DI with extensions</a>
+<ul class="sectlevel5">
+<li><a href="appendix_a_hints.html#sec:DI_custom_bundle_problem">A.1.2.1.1. Problem</a></li>
+<li><a href="appendix_a_hints.html#sec:DI_custom_bundle_solution">A.1.2.1.2. Solution</a></li>
+</ul>
+</li>
+<li><a href="appendix_a_hints.html#sec:Access_Other_DSL_Injector">A.1.2.2. How do I get the Guice Injector of my language?</a>
+<ul class="sectlevel5">
+<li><a href="appendix_a_hints.html#sec:DSL_Injector_UI_context">A.1.2.2.1. UI context</a></li>
+<li><a href="appendix_a_hints.html#sec:DSL_Injector_Non_UI_context">A.1.2.2.2. Non UI context but with injection context</a></li>
+<li><a href="appendix_a_hints.html#sec:DSL_Injector_Non_UI_non_injection_context">A.1.2.2.3. Non UI context without injection context</a></li>
+</ul>
+</li>
+<li><a href="appendix_a_hints.html#sec:Cancel_Indicator">A.1.2.3. How do I get cancel indicators in different contexts?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="appendix_a_hints.html#sec:Eclipse">A.2. Eclipse</a>
+<ul class="sectlevel3">
+<li><a href="appendix_a_hints.html#sec:Show_Xtext_Index">A.2.1. Show the current Xtext index</a></li>
+<li><a href="appendix_a_hints.html#sec:Plugin_spy">A.2.2. Plug-in spy</a></li>
+</ul>
+</li>
+<li><a href="appendix_a_hints.html#sec:Maven-hints">A.3. Maven</a>
+<ul class="sectlevel3">
+<li><a href="appendix_a_hints.html#how-to-check-for-maven-mojo-updates">A.3.1. How to check for Maven MOJO updates</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#_module-loading">Appendix B: Module Loading</a>
+<ul class="sectlevel2">
+<li><a href="#sec:Dependency_Management">B.1. Dependency Management</a></li>
+<li><a href="#ecmascript-modules">B.2. ECMAScript Modules</a>
+<ul class="sectlevel3">
+<li><a href="#sec:ES5_Modules_Systems">B.2.1. ES5 Modules Systems</a></li>
+<li><a href="#sec:ES6_Modules">B.2.2. ES6 Modules</a></li>
+</ul>
+</li>
+<li><a href="#sec:ECMAScript_Module_Loaders">B.3. ECMAScript Module Loaders</a>
+<ul class="sectlevel3">
+<li><a href="#sec:ES6_Module_Loaders">B.3.1. ES6 Module Loaders</a></li>
+<li><a href="#sec:Polyfills_for_ES6_Module_Loaders">B.3.2. Polyfills for ES6 Module Loaders</a>
+<ul class="sectlevel4">
+<li><a href="#sec:es6_module_loader">B.3.2.1. es6-module-loader</a></li>
+<li><a href="#sec:SystemJS">B.3.2.2. SystemJS</a></li>
+<li><a href="#sec:Demo">B.3.2.3. Demo</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#case-study-typescript">B.4. Case Study : TypeScript</a>
+<ul class="sectlevel3">
+<li><a href="#sec:ES6_Modules_Support">B.4.1. ES6 Modules Support</a></li>
+<li><a href="#sec:TypeScript_and_Module_Loading">B.4.2. TypeScript and Module Loading</a></li>
+</ul>
+</li>
+<li><a href="#sec:Cyclic_Dependencies">B.5. Cyclic Dependencies</a>
+<ul class="sectlevel3">
+<li><a href="#sec:Setup">B.5.1. Setup</a></li>
+<li><a href="#sec:Transpile_and_Execute">B.5.2. Transpile and Execute</a>
+<ul class="sectlevel4">
+<li><a href="#sec:Module_Format___AMD">B.5.2.1. Module Format = AMD</a></li>
+<li><a href="#sec:Module_Format___CommonJS">B.5.2.2. Module Format = CommonJS</a></li>
+<li><a href="#sec:Module_Format___SystemJS">B.5.2.3. Module Format = SystemJS</a></li>
+</ul>
+</li>
+<li><a href="#sec:Conclusion">B.5.3. Conclusion</a></li>
+</ul>
+</li>
+<li><a href="#system.register-as-transpilation-target">B.6. System.register as transpilation target</a>
+<ul class="sectlevel3">
+<li><a href="#sec:Introduction">B.6.1. Introduction</a>
+<ul class="sectlevel4">
+<li><a href="#sec:External_Transpilers">B.6.1.1. External Transpilers</a></li>
+<li><a href="#sec:Example_of_a_System_register_module">B.6.1.2. Example of a System.register module</a></li>
+</ul>
+</li>
+<li><a href="#sec:Structure_of_a_System_register_module">B.6.2. Structure of a System.register module</a></li>
+<li><a href="#_transpilation-hints">B.6.3. Transpilation Hints</a>
+<ul class="sectlevel4">
+<li><a href="#sec:Handling_Imports">B.6.3.1. Handling Imports</a></li>
+<li><a href="#sec:__exportFn__">B.6.3.2. &lt;&lt;exportFn&gt;&gt;</a></li>
+<li><a href="#sec:Handling_Exports">B.6.3.3. Handling Exports</a></li>
+</ul>
+</li>
+<li><a href="#sec:Examples_w__Circular_Dependencies">B.6.4. Examples w/ Circular Dependencies</a></li>
+<li><a href="#sec:N4JS_Examples_w__Circular_Dependencies">B.6.5. N4JS Examples w/ Circular Dependencies</a>
+<ul class="sectlevel4">
+<li><a href="#sec:Unresolved_Cyclic_Dependencies">B.6.5.1. Unresolved Cyclic Dependencies</a></li>
+<li><a href="#sec:Variables___Functions">B.6.5.2. Examples with Variables &amp; Functions</a></li>
+<li><a href="#sec:Classes">B.6.5.3. Examples with Classes</a></li>
+<li><a href="#sec:Examples_with_SubClassing">B.6.5.4. Examples with SubClassing</a></li>
+<li><a href="#sec:Miscellaneous">B.6.5.5. Miscellaneous</a></li>
+</ul>
+</li>
+<li><a href="#_resources">B.6.6. Resources</a></li>
+</ul>
+</li>
+<li><a href="#sec:CommonJS_as_transpilation_target">B.7. CommonJS as transpilation target</a>
+<ul class="sectlevel3">
+<li><a href="#_introduction-2">B.7.1. Introduction</a></li>
+<li><a href="#sec:Transpilation_Hints">B.7.2. Transpilation Hints</a>
+<ul class="sectlevel4">
+<li><a href="#sec:Import_Statements">B.7.2.1. Import Statements</a></li>
+<li><a href="#sec:Export_Statements">B.7.2.2. Export Statements</a></li>
+<li><a href="#sec:Tracking_Live_Bindings">B.7.2.3. Tracking Live Bindings</a></li>
+<li><a href="#sec:A_complete_example">B.7.2.4. A complete example</a></li>
+</ul>
+</li>
+<li><a href="#_resources-2">B.7.3. Resources</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="appendix_c_license.html#sec:License">Appendix C: License</a></li>
+<li><a href="appendix_d_acronyms.html#sec:Acronyms">Appendix D: Acronyms</a></li>
+<li><a href="appendix_e_bibliography_and_footnotes.html#_bibliography-and-footnotes">Appendix E: Bibliography and Footnotes</a></li>
+</ul>
+</div>
+</div>
+<div id="content"><div class="sect1">
+<h2 id="_module-loading"><a class="anchor" href="#_module-loading"></a><a class="link" href="#_module-loading">Appendix B: Module Loading</a></h2>
+<div class="sectionbody">
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title=""></i>
+</td>
+<td class="content">
+This chapter is outdated and basically kept for historical reasons.
+</td>
+</tr>
+</table>
+</div>
+<div class="sect2">
+<h3 id="sec:Dependency_Management"><a class="anchor" href="#sec:Dependency_Management"></a><a class="link" href="#sec:Dependency_Management">B.1. Dependency Management</a></h3>
+<div class="paragraph">
+<p>There exist several types of dependencies between modules, distinguishable by the time when the dependency is relevant. We first define these dependencies lazily to give an impression of the problem, at more rigorously later on.</p>
+</div>
+<div class="paragraph">
+<p>Dependency needed at compile time. These type of dependency is removed by the compiler. These are basically type references used in variable or function declarations.</p>
+</div>
+<div class="paragraph">
+<p>Runtime dependencies are to be handled at runtime in general. We distinguish two special types of runtime dependencies:</p>
+</div>
+<div class="paragraph">
+<p>A loadtime dependency is a special runtime dependency that needs to be resolved before a module is initialized, that is, when all top-level statements of a module, containing class declarations, are executed. This usually is a types super type (e.g., super class), or a call to a function (defined in a different module) in a static initializer or module top level statement.</p>
+</div>
+<div class="paragraph">
+<p>An execution time dependency is a non-initialization runtime dependency. That is, when a method is called (from another module), this is execution time.</p>
+</div>
+<div class="paragraph">
+<p>Of course, before a module can be loaded, it needs to be fetched (i.e., the actual code has to be retrieved by the browser).</p>
+</div>
+<div class="paragraph">
+<p>We can define sets containing modules which a given module depends on. Note that these sets contain each other, as shown in <a href="#fig:euler_dependencies">Euler Dependencies</a>. However, we define disjoint sets in which a dependency to another type is only contained in one of the sets.</p>
+</div>
+<div id="fig:euler_dependencies" class="imageblock center">
+<div class="content">
+<img src="chapters/a10_moduleLoading/images/euler_dependencies.svg" alt="euler dependencies">
+</div>
+<div class="title">Figure 65. Euler diagram of dependency sets</div>
+</div>
+<div class="paragraph">
+<p>Given a code sequence , we define the set of accessed modules in it as .</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>describes all function calls happening in code block , i.e. . In case  calls on functions , we define a function’s body code sequence as .</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The complete set of accessed modules for a particular code sequence  is then defined as
+]</p>
+</div>
+<div class="paragraph">
+<p>We explicitly allow a function to be excluded from being incorporated in the above algorithm by annotating it.</p>
+</div>
+<div class="paragraph">
+<p>The set of load-time-dependencies for a module  with initializer code  is then defined as math:[\[\begin{aligned}
+load-time-deps := AccessdModules( SuperClass(M) ) + AccessdModules( IC(M) ) \end{aligned}\]]</p>
+</div>
+</div>
+<div class="sect2 language-javascript">
+<h3 id="ecmascript-modules"><a class="anchor" href="#ecmascript-modules"></a><a class="link" href="#ecmascript-modules">B.2. ECMAScript Modules</a></h3>
+<div class="sect3">
+<h4 id="sec:ES5_Modules_Systems"><a class="anchor" href="#sec:ES5_Modules_Systems"></a><a class="link" href="#sec:ES5_Modules_Systems">B.2.1. ES5 Modules Systems</a></h4>
+<div class="paragraph">
+<p>Before ES6, Javascript had no built in support for modules. To overcome this hurdle, the two widely accepted formats have been :</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><code>CommonJS</code> : Primarily aimed at synchronous module loading. The main implementation of this format is seen in <code>Node.js</code></p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-javascript" data-lang="javascript">var value = 100;
+function inc() {
+    value++;
+}
+
+module.exports = {
+    value : value,
+    inc : inc
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Import via require.</p>
+</div>
+</li>
+<li>
+<p><code>AMD</code> : Primarily aimed at asynchronous module loading in browsers. The main implementation of this format is seen in <code>RequireJS</code>.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>define('myModule', ['mod1', 'mod2'], function (mod1, mod2) {
+        return {
+            myFunc: function(x, y) {
+                ..
+            }
+        };
+    };
+});</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>passive</code> format</p>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect3">
+<h4 id="sec:ES6_Modules"><a class="anchor" href="#sec:ES6_Modules"></a><a class="link" href="#sec:ES6_Modules">B.2.2. ES6 Modules</a></h4>
+<div class="paragraph">
+<p>The ES6 spec introduces <a href="http://www.ecma-international.org/ecma-262/6.0/#sec-modules">modules</a>. ES6 modules resemble <code>CommonJS</code> syntax with <code>AMD</code> like asynchronous loading support.</p>
+</div>
+<div class="paragraph">
+<p>Apart from the syntactic details, the highlights of ES6 modules are :</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>ES6 modules support (multiple) named exports.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>export const VERSION = "1.0.1";
+export function inc(x) {
+    return x + 1;
+}</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>ES6 modules support default exports.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>export default function (x) {
+    return x+1;
+}</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>As specified <a href="http://www.ecma-international.org/ecma-262/6.0/#sec-createimportbinding">here</a>, ES6 modules export live immutable bindings (instead of values).</p>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title=""></i>
+</td>
+<td class="content">
+This behaviour is different from that of <code>CommonJS</code> and <code>AMD</code> modules where a snapshot of the value is exported.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>An example demonstrating the behavioural difference :</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>//-------------src.js------------
+var value = 100;
+function inc() {
+    value++;
+}
+
+module.exports = {
+    value : value,
+    inc : inc
+}
+//-------------main.js------------
+var src = require("./src"); //import src
+
+console.log(src.value); //prints 100
+src.inc();
+
+console.log(src.value); //prints 100 &lt;--- The value does not update.
+
+src.value = 65;
+console.log(src.value); //prints 65 &lt;--- The imported value is mutable.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The same example with ES6 modules :</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>//-------------src.js------------
+export var value = 100; // &lt;--- ES6 syntax
+export function inc() { // &lt;--- ES6 syntax
+    value++;
+}
+
+//-------------main.js------------
+import {value, inc} from "src" // &lt;--- ES6 syntax
+
+console.log(value); //prints 100
+inc();
+
+console.log(value); //prints 101 &lt;--- The value is a live binding.
+
+value = 65; // &lt;--- throws an Error implying the binding is immutable.</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>ES6 modules impose a static module structure i.e. the imports and exports can be determined at compile time (statically).</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect2 language-n4js">
+<h3 id="sec:ECMAScript_Module_Loaders"><a class="anchor" href="#sec:ECMAScript_Module_Loaders"></a><a class="link" href="#sec:ECMAScript_Module_Loaders">B.3. ECMAScript Module Loaders</a></h3>
+<div class="paragraph">
+<p>For resolving module dependencies and loading modules, the JS landscape provides a few different module loaders.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><code>RequireJS</code> is the loader of choice for in browser, <code>AMD</code> style modules. We currently transpile our code into an AMD-style format to allow it running in both Browser and Node.js environments.</p>
+</li>
+<li>
+<p><code>Node.js</code> provides a native loader implementation for <code>CommonJS</code> style modules.</p>
+</li>
+<li>
+<p>For browsers (primarily), tools like <a href="http://webpack.github.io/"><code>Webpack</code></a> and <a href="http://browserify.org/"><code>Browserify</code></a> exist. These tools analyse the dependency graph of the entire project and then bundle up all the dependencies in a single file. <code>Browserify</code> only supports <code>CommonJS</code> modules where as <code>Webpack</code> works with both <code>CommonJS</code> &amp; <code>AMD</code> style modules.</p>
+</li>
+<li>
+<p>At the time of writing this document (August 2015), there does not exist any native implementation for ES6 modules by any Javascript host environments i.e. ES6 modules are not natively supported by browsers or <code>Node.js</code>, as of now.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>[fig:moduelLoader] shows an overview.</p>
+</div>
+<div id="fig:moduleLoader" class="imageblock center">
+<div class="content">
+<img src="chapters/a10_moduleLoading/images/moduleLoader.svg" alt="moduleLoader">
+</div>
+<div class="title">Figure 66. Module Loader and Transpilers, Overview</div>
+</div>
+<div class="sect3">
+<h4 id="sec:ES6_Module_Loaders"><a class="anchor" href="#sec:ES6_Module_Loaders"></a><a class="link" href="#sec:ES6_Module_Loaders">B.3.1. ES6 Module Loaders</a></h4>
+<div class="paragraph">
+<p>The ES6 spec started out with ES6 Module Loader details as part of the spec. However the Working Group later decided to not proceed with it. The specification for ES6 Module Loader is now a separate specification [<a href="appendix_e_bibliography_and_footnotes.html#WhatWGLoader">WhatWGLoader</a>].</p>
+</div>
+<div class="paragraph">
+<p>The aim of this specification is:</p>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>This specification describes the behavior of loading JavaScript modules from a JavaScript host environment. It also provides APIs for intercepting the module loading process and customizing loading behavior.</p>
+</div>
+</blockquote>
+</div>
+<div class="paragraph">
+<p>The <a href="https://github.com/whatwg/loader#implementation-status">Implementation status</a> of the spec states :</p>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>It is too early to know about the Loader, first we need ES2015 modules implemented by the various engines.</p>
+</div>
+</blockquote>
+</div>
+</div>
+<div class="sect3">
+<h4 id="sec:Polyfills_for_ES6_Module_Loaders"><a class="anchor" href="#sec:Polyfills_for_ES6_Module_Loaders"></a><a class="link" href="#sec:Polyfills_for_ES6_Module_Loaders">B.3.2. Polyfills for ES6 Module Loaders</a></h4>
+<div class="paragraph">
+<p>Although there is no native support for ES6 module loading, there are a few attempts to polyfill this gap.</p>
+</div>
+<div class="sect4">
+<h5 id="sec:es6_module_loader"><a class="anchor" href="#sec:es6_module_loader"></a><a class="link" href="#sec:es6_module_loader">B.3.2.1. es6-module-loader</a></h5>
+<div class="paragraph">
+<p>The <a href="https://github.com/ModuleLoader/es6-module-loader"><code>es6-module-loader</code></a> project provides a polyfill for the ES6 Module Loader implementation. It dynamically loads ES6 modules in browsers and <code>Node.js</code> with support for loading existing and custom module formats through loader hooks.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="sec:SystemJS"><a class="anchor" href="#sec:SystemJS"></a><a class="link" href="#sec:SystemJS">B.3.2.2. SystemJS</a></h5>
+<div class="paragraph">
+<p>Building upon <code>es6-module-loader</code>, <a href="https://github.com/systemjs/systemjs"><code>SystemJS</code></a> supports loading ES6 modules along with <code>AMD</code>, <code>CommonJS</code> and global scripts in the browser and <code>Node.js</code>.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title=""></i>
+</td>
+<td class="content">
+In order to use ES6 modules (written in ES6 syntax) the code first needs to be transpiled to ES5. For this purpose, <code>SystemJS</code> provides an option to use <a href="https://github.com/google/traceur-compiler"><code>Traceur</code></a> compiler or <a href="https://babeljs.io/"><code>Babel</code></a>.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect4">
+<h5 id="sec:Demo"><a class="anchor" href="#sec:Demo"></a><a class="link" href="#sec:Demo">B.3.2.3. Demo</a></h5>
+<div class="paragraph">
+<p>A demonstration of how to how to use ES6 modules with <code>Babel</code> and <code>SystemJS</code> in <code>Node.js</code> as of today (August 2015).</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Create an ES6 module as shown:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>export var value = 100; // &lt;--- named export of a variable
+export function inc() { // &lt;--- named export of a function
+    value++;
+}</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Import the bindings from the module as shown:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>import {value, inc} from "src"
+
+var importedValue = value; // &lt;--- using the imported value
+inc(); // &lt;--- using the imported function</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Transpile these two files using <code>Babel</code> to ES5 with the target module format as <code>system</code>, as shown:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>$ babel &lt;inputdir&gt; --out-dir &lt;outputdir&gt; --modules system</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>The transpiled output should be resemble the following:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>System.register([], function (_export) {
+    "use strict";
+
+    var value;
+
+    _export("inc", inc);
+
+    function inc() {
+        _export("value", value += 1);
+    }
+
+    return {
+        setters: [],
+        execute: function () {
+            value = 100;
+
+            _export("value", value);
+        }
+    };
+});</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>System.register(["src"], function (_export) {
+  "use strict";
+
+  var value, inc, importedValue;
+  return {
+    setters: [function (_src) {
+      value = _src.value;
+      inc = _src.inc;
+    }],
+    execute: function () {
+      importedValue = value;
+      inc();
+    }
+  };
+});</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Finally run the above transpiled files, as shown:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>var System = require('systemjs'); // &lt;--- Require SystemJS
+System.transpiler = 'babel'; // &lt;--- Configure SystemJS
+
+System.import('main'); // &lt;--- Import the transpiled "main" module.</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2 language-typescript">
+<h3 id="case-study-typescript"><a class="anchor" href="#case-study-typescript"></a><a class="link" href="#case-study-typescript">B.4. Case Study : TypeScript</a></h3>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title=""></i>
+</td>
+<td class="content">
+<a id="sec:Case_Study___TypeScript"></a> This section is NOT an exhaustive introduction to Microsoft’s <code>TypeScript</code>, but a narrowed down analysis of certain aspects of <code>TypeScript</code>.
+</td>
+</tr>
+</table>
+</div>
+<div class="sect3">
+<h4 id="sec:ES6_Modules_Support"><a class="anchor" href="#sec:ES6_Modules_Support"></a><a class="link" href="#sec:ES6_Modules_Support">B.4.1. ES6 Modules Support</a></h4>
+<div class="paragraph">
+<p><code>TypeScript</code> language has recently added support for ES6 modules. From the <a href="https://github.com/Microsoft/TypeScript/wiki/What%27s-new-in-TypeScript#es6-modules">wiki</a> :</p>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p><code>TypeScript</code> 1.5 supports <code>ECMAScript 6</code> (ES6) modules. ES6 modules are effectively <code>TypeScript</code> external modules with a new syntax: ES6 modules are separately loaded source files that possibly import other modules and provide a number of externally accessible exports. ES6 modules feature several new export and import declarations.</p>
+</div>
+</blockquote>
+</div>
+</div>
+<div class="sect3">
+<h4 id="sec:TypeScript_and_Module_Loading"><a class="anchor" href="#sec:TypeScript_and_Module_Loading"></a><a class="link" href="#sec:TypeScript_and_Module_Loading">B.4.2. TypeScript and Module Loading</a></h4>
+<div class="paragraph">
+<p><code>TypeScript</code> does not concern itself with providing a module loader. It is the responsibility of the host environment. However <code>TypeScript</code>’s compiler provides options to transpile the modules to different formats like <code>AMD</code>, <code>CommonJS</code>, <code>ES6</code> etc. It is the developer’s responsibility to choose an appropriate format and then use the modules with a correct module loader.</p>
+</div>
+<div class="paragraph">
+<p>From the <a href="https://github.com/Microsoft/TypeScript/issues/2242">wiki</a> again :</p>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>TypeScript supports down-level compilation of external modules using the new ES6 syntax. When compiling with <code>-t ES3</code> or <code>-t ES5</code> a module format must be chosen using <code>-m CommonJS</code> or <code>-m AMD</code>. When compiling with <code>-t ES6</code> the module format is implicitly assumed to be <code>ECMAScript 6</code> and the compiler simply emits the original code with type annotations removed. When compiling down-level for <code>CommonJS</code> or <code>AMD</code>, named exports are emitted as properties on the loader supplied exports instance. This includes default exports which are emitted as assignments to exports.default.</p>
+</div>
+</blockquote>
+</div>
+<div class="paragraph">
+<p>Consider the following module <code>src.ts</code> :</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>export var value = 100; //&lt;--- ES6 syntax
+
+export function inc() {  //&lt;--- ES6 syntax
+    value++;
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Compiling it to <code>SystemJS</code> format produces :</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>System.register([], function(exports_1) {
+    var value;
+    function inc() {
+        (exports_1("value", ++value) - 1);
+    }
+    exports_1("inc", inc);
+    return {
+        setters:[],
+        execute: function() {
+            exports_1("value", value = 100); //&lt;--- ES6 syntax
+        }
+    }
+});</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Compiling it to <code>CommonJS</code> format produces :</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>exports.value = 100; //&lt;--- ES6 syntax
+function inc() {
+    exports.value++;
+}
+exports.inc = inc;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Compiling it to <code>AMD</code> format produces :</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>define(["require", "exports"], function (require, exports) {
+    exports.value = 100; //&lt;--- ES6 syntax
+    function inc() {
+        exports.value++;
+    }
+    exports.inc = inc;
+});</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Compiling it to <code>UMD</code> format produces :</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>(function (deps, factory) {
+    if (typeof module === 'object' &amp;&amp; typeof module.exports === 'object') {
+        var v = factory(require, exports); if (v !== undefined) module.exports = v;
+    }
+    else if (typeof define === 'function' &amp;&amp; define.amd) {
+        define(deps, factory);
+    }
+})(["require", "exports"], function (require, exports) {
+    exports.value = 100; //&lt;--- ES6 syntax
+    function inc() {
+        exports.value++;
+    }
+    exports.inc = inc;
+});</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>NOTE :</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Visual Studio 2015 does not <a href="http://visualstudio.uservoice.com/forums/121579-visual-studio/suggestions/7017377-support-for-es6-modules">support</a> ES6 modules at this time.</p>
+</li>
+<li>
+<p><code>SystemJS</code> supports <code>TypeScript</code> as a compiler. This implies <code>TypeScript</code> modules can be transpiled to be used with <code>SystemJS</code> as the module loader.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect2 language-js">
+<h3 id="sec:Cyclic_Dependencies"><a class="anchor" href="#sec:Cyclic_Dependencies"></a><a class="link" href="#sec:Cyclic_Dependencies">B.5. Cyclic Dependencies</a></h3>
+<div class="paragraph">
+<p>To better analyse and evaluate <code>SystemJS</code> module loader and different module formats, let’s look at a cyclic dependency example from a (extremely simplified) stdlib task <code>FixedPoint6</code>. The outline for the example is :</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Prepare 2 ES6 modules with a circular dependency.</p>
+</li>
+<li>
+<p>Then transpile these modules to different module formats (e.g. <code>AMD</code>, &amp; <code>SystemJS</code>).</p>
+</li>
+<li>
+<p>With <code>SystemJS</code> as the module loader, execute the test for every transpiled module format.</p>
+</li>
+</ol>
+</div>
+<div class="sect3">
+<h4 id="sec:Setup"><a class="anchor" href="#sec:Setup"></a><a class="link" href="#sec:Setup">B.5.1. Setup</a></h4>
+<div class="paragraph">
+<p>Consider the following ES6 listings:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>RoundingMode</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>export default {
+    FLOOR : "FLOOR",
+    CEILING : "CEILING"
+}</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>MathContext</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>import { default as FixedPoint6 } from "FixedPoint6";
+import { default as RoundingMode } from "RoundingMode";
+
+let MathContext = class {
+    constructor(mode) {
+        this.mode = mode;
+    }
+
+    divide(fp1, fp2) {
+        var quotient = FixedPoint6.getQuotient(fp1, fp2);
+
+        if(this.mode === RoundingMode.CEILING) {
+            return new FixedPoint6(Math.ceil(quotient));
+        } else if(this.mode === RoundingMode.FLOOR) {
+            return new FixedPoint6(Math.floor(quotient));
+        } else {
+            throw new Error("Incorrect RoundingMode");
+        }
+    }
+}
+
+MathContext.FLOOR = new MathContext(RoundingMode.FLOOR);
+MathContext.CEILING = new MathContext(RoundingMode.CEILING);
+
+export default MathContext;</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>FixedPoint6</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>import { default as MathContext } from "MathContext";
+
+export default class FixedPoint6 {
+    constructor(number) {
+        this.value = number;
+    }
+
+    static getQuotient(fp1, fp2) {
+        return fp1.value/fp2.value;
+    }
+
+    divide(fp) {
+        return FixedPoint6.defaultContext.divide(this, fp);
+    }
+}
+
+FixedPoint6.defaultContext = MathContext.FLOOR;</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Test</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>import { default as FixedPoint6 } from "FixedPoint6";
+import { default as MathContext } from "MathContext";
+import { default as RoundingMode } from 'RoundingMode';
+
+var fp1 = new FixedPoint6(20.5);
+var fp2 = new FixedPoint6(10);
+
+var fp3 = fp1.divide(fp2);
+console.log(fp1, fp2, fp3);</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Runner : This is the runner file to execute the test (after transpilation).</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>var System = require('systemjs');
+System.transpiler = 'babel';
+
+System.config({
+    baseURL: './build',
+    "paths": {
+        "*": "*.js"
+    }
+});
+
+System.import('test').catch(function(e) {
+    console.log(e);
+})</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Clearly <code>MathContext</code> &amp; <code>FixedPoint6</code> have a circular dependency upon each other.</p>
+</div>
+</div>
+<div class="sect3 language-js">
+<h4 id="sec:Transpile_and_Execute"><a class="anchor" href="#sec:Transpile_and_Execute"></a><a class="link" href="#sec:Transpile_and_Execute">B.5.2. Transpile and Execute</a></h4>
+<div class="paragraph">
+<p>Transpile the above setup to different formats and execute the code using <code>SystemJS</code> module loader :</p>
+</div>
+<div class="sect4">
+<h5 id="sec:Module_Format___AMD"><a class="anchor" href="#sec:Module_Format___AMD"></a><a class="link" href="#sec:Module_Format___AMD">B.5.2.1. Module Format = AMD</a></h5>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Compile the previous set up using <code>babel</code> as the transpiler with <code>AMD</code> modules :</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>babel src -w --out-dir build --modules amd</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Run the transpiled <code>test.js</code> with :</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>node runner.js</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>The execution would fail with an error like the following :</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>Error: _FixedPoint62.default.getQuotient is not a function</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect4">
+<h5 id="sec:Module_Format___CommonJS"><a class="anchor" href="#sec:Module_Format___CommonJS"></a><a class="link" href="#sec:Module_Format___CommonJS">B.5.2.2. Module Format = CommonJS</a></h5>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Compile the previous set up using <code>babel</code> as the transpiler with <code>CommonJS</code> modules :</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>babel src -w --out-dir build --modules common</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Run the transpiled <code>test.js</code> with :</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>node runner.js</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>The execution is successful and logs the following results :</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>{ value: 20.5 } { value: 10 } { value: 2 }</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect4">
+<h5 id="sec:Module_Format___SystemJS"><a class="anchor" href="#sec:Module_Format___SystemJS"></a><a class="link" href="#sec:Module_Format___SystemJS">B.5.2.3. Module Format = SystemJS</a></h5>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Compile the previous set up using <code>babel</code> as the transpiler with <code>SystemJS</code> modules :</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>babel src -w --out-dir build --modules system</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Run the transpiled <code>test.js</code> with :</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>node runner.js</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>The execution is successful and logs the following results :</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>{ value: 20.5 } { value: 10 } { value: 2 }</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="sec:Conclusion"><a class="anchor" href="#sec:Conclusion"></a><a class="link" href="#sec:Conclusion">B.5.3. Conclusion</a></h4>
+<div class="paragraph">
+<p>As observed, the test is executed successfully with <code>CommonJS</code> &amp; <code>SystemJS</code> module formats. It however fails with <code>AMD</code> format (due to the circular dependency).</p>
+</div>
+</div>
+</div>
+<div class="sect2 language-n4js">
+<h3 id="system.register-as-transpilation-target"><a class="anchor" href="#system.register-as-transpilation-target"></a><a class="link" href="#system.register-as-transpilation-target">B.6. System.register as transpilation target</a></h3>
+<div class="paragraph">
+<p>In order to integrate <code>SystemJS</code> as the module loader, the recommended module format is <code>System.register</code>. This section serves as a guide (&amp; implementation hint) to transpile N4JS modules with <code>System.register</code> as the module format.</p>
+</div>
+<div class="sect3">
+<h4 id="sec:Introduction"><a class="anchor" href="#sec:Introduction"></a><a class="link" href="#sec:Introduction">B.6.1. Introduction</a></h4>
+<div class="paragraph">
+<p>This format is best explained from its <a href="https://github.com/ModuleLoader/es6-module-loader/blob/master/docs/system-register.md">documentation</a> :</p>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>System.register can be considered as a new module format designed to support the exact semantics of ES6 modules within ES5. It is a format that was developed out of collaboration and is supported as a module output in Traceur (as instantiate), Babel and TypeScript (as system). All dynamic binding and circular reference behaviors supported by ES6 modules are supported by this format. In this way it acts as a safe and comprehensive target format for the polyfill path into ES6 modules.</p>
+</div>
+<div class="paragraph">
+<p>To run the format, a suitable loader implementation needs to be used that understands how to execute it. Currently these include SystemJS, SystemJS Self-Executing Bundles and ES6 Micro Loader. The ES6 Module Loader polyfill also uses this format internally when transpiling and executing ES6.</p>
+</div>
+</blockquote>
+</div>
+<div class="paragraph">
+<p>The <code>System.register</code> format is not very well documented. However, this format is supported by all major transpilers out there i.e. <code>BabelJS</code>, <code>Traceur</code> &amp; <code>TypeScript</code> transpilers. In fact, the primary resource of this documentation has been the outputs generated by these transpilers.</p>
+</div>
+<div class="sect4">
+<h5 id="sec:External_Transpilers"><a class="anchor" href="#sec:External_Transpilers"></a><a class="link" href="#sec:External_Transpilers">B.6.1.1. External Transpilers</a></h5>
+<div class="paragraph">
+<p>In order to follow along, it will be best to try out different ES6 syntax being transpiled to <code>System.register</code> format by these transpilers.</p>
+</div>
+<div class="paragraph">
+<p>The following instructions will be useful :</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Transpile with Traceur</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">traceur --dir &lt;SOURCE_DIR&gt; &lt;OUTPUT_DIR&gt; --experimental --modules=instantiate</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Transpile with Babel</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">babel &lt;SOURCE_DIR&gt; --out-dir &lt;OUTPUT_DIR&gt; --modules system</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Transpile with TypeScript</p>
+<div class="paragraph">
+<p>Create a file by the name of <code>tsconfig.json</code> in the project folder, with the following contents :</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-json" data-lang="json">{
+    "compilerOptions": {
+        "module": "system",
+        "target": "ES5",
+        "outDir": &lt;OUTPUT_DIR&gt;,
+        "rootDir": &lt;SOURCE_DIR&gt;
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Then transpile with :</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-javascript" data-lang="javascript">tsc</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect4">
+<h5 id="sec:Example_of_a_System_register_module"><a class="anchor" href="#sec:Example_of_a_System_register_module"></a><a class="link" href="#sec:Example_of_a_System_register_module">B.6.1.2. Example of a System.register module</a></h5>
+<div class="paragraph">
+<p>For the following ES6 code :</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-javascript" data-lang="javascript">import { p as q } from './dep';
+
+var s = 'local';
+
+export function func() {
+    return q;
+}
+
+export class C {}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>Babel</code> transpiler generates the following code (w/ <code>System.register</code> format):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-javascript" data-lang="javascript">System.register(['./dep'], function (_export) {
+    'use strict';
+
+    var q, s, C;
+
+    _export('func', func);
+
+    function _classCallCheck(instance, Constructor) { .. }
+
+    function func() {
+        return q;
+    }
+
+    return {
+        setters: [function (_dep) {
+            q = _dep.p;
+        }],
+        execute: function () {
+            s = 'local';
+
+            C = function C() {
+                _classCallCheck(this, C);
+            };
+
+            _export('C', C);
+        }
+    };
+});</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="sec:Structure_of_a_System_register_module"><a class="anchor" href="#sec:Structure_of_a_System_register_module"></a><a class="link" href="#sec:Structure_of_a_System_register_module">B.6.2. Structure of a System.register module</a></h4>
+<div class="paragraph">
+<p>Broadly speaking, a <code>System.register</code> module has the following structure :</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-javascript" data-lang="javascript">System.register(&lt;&lt;DEPENDENCIES ARRAY&gt;&gt;, function(&lt;&lt;exportFn&gt;&gt;) {
+    &lt;&lt;DECLARATION SCOPE&gt;&gt;
+
+    return {
+        setters: &lt;&lt;SETTERS ARRAY&gt;&gt;,
+        execute: function() {
+            &lt;&lt;EXECUTABLES&gt;&gt;
+        }
+    };
+});</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Highlights :</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>System.register(&#8230;&#8203;)</code> is called with 2 arguments :</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>&lt;&lt;DEPENDENCIES ARRAY&gt;&gt;</code> : an array of dependencies (similar to <code>AMD</code>) extracted from the <code>ES6 import</code> statements.</p>
+</li>
+<li>
+<p>a function (<code>FN</code>) :</p>
+<div class="ulist">
+<ul>
+<li>
+<p>accepts a parameter called <code>&lt;&lt;exportFn&gt;&gt;</code>. This <code>&lt;&lt;exportFn&gt;&gt;</code> (provided by <code>SystemJS</code>) keeps a track of all the exports of this module &amp; will inform all the importing modules of any changes.</p>
+</li>
+<li>
+<p>contains a <code>&lt;&lt;DECLARATION SCOPE&gt;&gt;</code> where all the functions and variables (from the source code) get hoisted to.</p>
+</li>
+<li>
+<p>returns an object with 2 properties :</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>setters</code> : The <code>&lt;&lt;SETTERS ARRAY&gt;&gt;</code> is simply an array of functions. Each of these functions represents the imported-bindings from the <code>&lt;&lt;DEPENDENCIES ARRAY&gt;&gt;</code>. The <code>&lt;&lt;SETTERS ARRAY&gt;&gt;</code> and <code>&lt;&lt;DEPENDENCIES ARRAY&gt;&gt;</code> follow the same order.</p>
+</li>
+<li>
+<p><code>execute</code> : <code>&lt;&lt;EXECUTABLES&gt;&gt;</code> is the rest of the body of the source code.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_transpilation-hints"><a class="anchor" href="#_transpilation-hints"></a><a class="link" href="#_transpilation-hints">B.6.3. Transpilation Hints</a></h4>
+<div class="paragraph">
+<p>By observing the existing transpilers’ output, this sub-section provides insights into the process of transpiling to this format :</p>
+</div>
+<div class="sect4">
+<h5 id="sec:Handling_Imports"><a class="anchor" href="#sec:Handling_Imports"></a><a class="link" href="#sec:Handling_Imports">B.6.3.1. Handling Imports</a></h5>
+<div class="paragraph">
+<p>The following are ES6 code snippets with some <code>import</code> statements :</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Simple Import Statement</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-javascript" data-lang="javascript">import {b1} from 'B';</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A valid <code>System.register</code> output for this snippet would look like :</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>System.register(['B'], function (&lt;&lt;exportFn&gt;&gt;) { //(1.)
+
+  var b1;  //(2.)
+
+  return {
+
+    //(3.)
+    setters: [function (_B) {
+      b1 = _B.b1; //(4.)
+    }],
+
+    execute: function () {}
+  };
+});</code></pre>
+</div>
+</div>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+highlights
+</td>
+<td class="hdlist2">
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>The <code>&lt;&lt;DEPENDENCIES ARRAY&gt;&gt;</code> is just <code>[’B’]</code>.</p>
+</li>
+<li>
+<p>The <code>&lt;&lt;DECLARATION SCOPE&gt;&gt;</code> simply declares the imported binding <code>v1</code> as a variable.</p>
+</li>
+<li>
+<p>The <code>&lt;&lt;SETTERS ARRAY&gt;&gt;</code> has 1 function. This function corresponds to the single dependency (<code>’B’</code>) from (1.)</p>
+</li>
+<li>
+<p>The setter function accepts one argument (the exported object from <code>’B’</code> as <code>_B</code> . It then sets the local binding (i.e. local variable <code>v1</code>) to <code>_B.b1</code>.</p>
+</li>
+</ol>
+</div>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Takeaway
+</td>
+<td class="hdlist2">
+<div class="ulist">
+<ul>
+<li>
+<p>An <code>import</code> statement is broken down into <code>&lt;&lt;DEPENDENCIES ARRAY&gt;&gt;</code> &amp; <code>&lt;&lt;SETTERS ARRAY&gt;&gt;</code>.</p>
+</li>
+<li>
+<p>Whenever the value of <code>b1</code> inside <code>B</code> is changed, <code>SystemJS</code> will execute the corresponding <code>setter function</code> in this module i.e. the 1st function in this case.</p>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>Multiple Import Statements</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>import { a1 as a0 } from 'A';
+import {b1} from 'B';
+import { c1 as c0 } from 'C';
+import {b2, b3} from 'B';
+import {default} from 'C';
+import {a2} from 'A';</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A valid <code>System.register</code> output for this snippet would look like :</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>System.register(['A', 'B', 'C'], function (&lt;&lt;exportFn&gt;&gt;) { //(1.)
+
+  var a0, a2, b1, b2, b3, c0, default;  //(2.)
+
+  return {
+
+    //(3.)
+    setters: [function (_A) {
+      a0 = _A.a1;         //(4.1.)
+      a2 = _A.a2;         //(4.2.)
+    }, function (_B) {
+      b1 = _B.b1;
+      b2 = _B.b2;
+      b3 = _B.b3;
+    }, function (_C) {
+      c0 = _C.c1;
+      default = _C['default'];
+    }],
+
+
+    execute: function () {}
+  };
+});</code></pre>
+</div>
+</div>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+highlights
+</td>
+<td class="hdlist2">
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>The <code>&lt;&lt;DEPENDENCIES ARRAY&gt;&gt;</code> is now a unique array <code>[’A’, ’B’, ’C’]</code>. Note that there are no duplicates.</p>
+</li>
+<li>
+<p>The <code>&lt;&lt;DECLARATION SCOPE&gt;&gt;</code> simply declares all the imported bindings as variables.</p>
+</li>
+<li>
+<p>The <code>&lt;&lt;SETTERS ARRAY&gt;&gt;</code> now has 3 functions. These 3 functions match the ordering of the <code>&lt;&lt;DEPENDENCIES ARRAY&gt;&gt;</code>.</p>
+</li>
+<li>
+<p>The setter function accepts one argument (the exported object from the dependency) It then sets the local bindings (i.e. local variables) from the exported value of the dependency.</p>
+</li>
+</ol>
+</div>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Takeaway
+</td>
+<td class="hdlist2">
+<div class="ulist">
+<ul>
+<li>
+<p>Whenever an exported value from <code>A</code> is changed, <code>SystemJS</code> will execute the first <code>setter function</code> in this module.</p>
+</li>
+<li>
+<p>Whenever an exported value from <code>B</code> is changed, <code>SystemJS</code> will execute the second <code>setter function</code> in this module.</p>
+</li>
+<li>
+<p>Whenever an exported value from <code>C</code> is changed, <code>SystemJS</code> will execute the third <code>setter function</code> in this module.</p>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect4">
+<h5 id="sec:__exportFn__"><a class="anchor" href="#sec:__exportFn__"></a><a class="link" href="#sec:__exportFn__">B.6.3.2. &lt;&lt;exportFn&gt;&gt;</a></h5>
+<div class="paragraph">
+<p>Before moving on to handling exports, let’s focus on the SystemJS provided <code>&lt;&lt;exportFn&gt;&gt;</code>.</p>
+</div>
+<div class="paragraph">
+<p>This function looks similar to the following :</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>function (name, value) {     //(1.)
+      module.locked = true;
+
+      if (typeof name == 'object') {
+        for (var p in name)
+          exports[p] = name[p];      //(2.1.)
+      }
+      else {
+        exports[name] = value;      //(2.2.)
+      }
+
+      for (var i = 0, l = module.importers.length; i &lt; l; i++) {
+        var importerModule = module.importers[i];
+        if (!importerModule.locked) {
+          var importerIndex = indexOf.call(importerModule.dependencies, module);
+          importerModule.setters[importerIndex](exports);     //(3.)
+        }
+      }
+
+      module.locked = false;
+      return value; //(4.)
+}</code></pre>
+</div>
+</div>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+highlights
+</td>
+<td class="hdlist2">
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>The <code>&lt;&lt;exportFn&gt;&gt;</code> takes 2 arguments : <code>name</code> &amp; <code>value</code>.</p>
+</li>
+<li>
+<p>It maintains an <code>exports</code> object with <code>name</code> &amp; <code>value</code>.</p>
+</li>
+<li>
+<p>For every module which imports the current module, it executes the corresponding <code>setter function</code>.</p>
+</li>
+<li>
+<p>It returns the <code>value</code>.</p>
+</li>
+</ol>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+Takeaway
+</td>
+<td class="hdlist2">
+<p>This <code>&lt;&lt;exportFn&gt;&gt;</code> is responsible for pushing the changes from a module to every importing module thereby implementing the live binding.</p>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect4">
+<h5 id="sec:Handling_Exports"><a class="anchor" href="#sec:Handling_Exports"></a><a class="link" href="#sec:Handling_Exports">B.6.3.3. Handling Exports</a></h5>
+<div class="paragraph">
+<p>Now let’s focus on handling <code>export</code> statements.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Simple Exports Statement</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>export var v =1;
+export function f(){}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A valid <code>System.register</code> output for this snippet would look like :</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>System.register([], function (_export) {  //(1.)
+
+   //(2.)
+  var v;
+  function f() {}
+
+  _export("f", f); //(4.1)
+
+  return {
+    setters: [],
+
+    //(3.)
+    execute: function () {
+      v = 1;  //(3.1.)
+
+      _export("v", v); //(4.2.)
+    }
+  };
+});</code></pre>
+</div>
+</div>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+highlights
+</td>
+<td class="hdlist2">
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>The <code>&lt;&lt;exportFn&gt;&gt;</code> is named to as <code>_export</code>. (This is an implementation decision by Babel.) The name should be unique to not conflict with any user-defined variable/function names.</p>
+</li>
+<li>
+<p>The <code>&lt;&lt;DECLARATION SCOPE&gt;&gt;</code> hoists the exported variable <code>v</code> and the function <code>f</code>.</p>
+</li>
+<li>
+<p>The <code>&lt;&lt;EXECUTABLES&gt;&gt;</code> zone now contains the executable code from the source module.</p>
+</li>
+<li>
+<p>Initialise the variable <code>v1</code> with the value extracted from the source. This essentially is the executable part of the module.</p>
+</li>
+<li>
+<p>The <code>export</code> function expression results in a call to the <code>_exports</code> function as: <code>_export(f, f)</code></p>
+</li>
+<li>
+<p>The <code>export</code> statement results in a call to the <code>_export</code> function as: <code>_export(v, v)</code></p>
+</li>
+</ol>
+</div>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Takeaway
+</td>
+<td class="hdlist2">
+<div class="ulist">
+<ul>
+<li>
+<p>The module’s exports statements are separated from the hoistable and executable statements.</p>
+</li>
+<li>
+<p>All the exported bindings are tracked by wrapping them inside the <code>&lt;&lt;exportFn&gt;&gt;</code>.</p>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>Tracking Exported Bindings</p>
+<div class="paragraph">
+<p>To maintain live bindings, <code>SystemJS</code> needs to track any changes to exported bindings in order to call the <code>setter</code> functions of importing modules. Let’s look at an example for that :</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>export var v1 = 1;
+export var v2 = 2;
+export var v3 = 3;
+export function f() {}
+
+v1++; //(1.)
+++v2; //(2.)
+v3 += 5; //(3.)
+f = null; //(4.)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>Babel</code> output for this snippet looks like :</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>System.register([], function (_export) {
+
+  var v1, v2, v3;
+
+  _export("f", f);
+
+  function f() {}
+
+  return {
+    setters: [],
+
+    execute: function () {
+      v1 = 1;
+
+      _export("v1", v1);
+
+      v2 = 2;
+
+      _export("v2", v2);
+
+      v3 = 3;
+
+      _export("v3", v3);
+
+      _export("v1", v1 += 1); //(1.)
+      _export("v2", v2 += 1); //(2.)
+      _export("v3", v3 += 5); //(3.)
+      _export("f", f = null); //(4.)
+    }
+  };
+});</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>Traceur</code> output for this snippet looks like :</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>System.register([], function($__export) {
+
+  var v1, v2, v3;
+  function f() {}
+
+  $__export("f", f);
+
+  return {
+    setters: [],
+
+    execute: function() {
+      v1 = 1;
+      $__export("v1", v1);
+      v2 = 2;
+      $__export("v2", v2);
+      v3 = 3;
+      $__export("v3", v3);
+
+      ($__export("v1", v1 + 1), v1++); //(1.)
+      $__export("v2", ++v2); //(2.)
+      $__export("v3", v3 += 5); //(3.)
+      $__export("f", f = null); //(4.)
+    }
+  };
+});</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>TypeScript</code> output for this snippet looks like :</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>System.register([], function(exports_1) {
+    var v1, v2, v3;
+    function f() { }
+
+    exports_1("f", f);
+
+    return {
+        setters:[],
+
+        execute: function() {
+            exports_1("v1", v1 = 1);
+            exports_1("v2", v2 = 2);
+            exports_1("v3", v3 = 3);
+
+            (exports_1("v1", ++v1) - 1); //(1.)
+            exports_1("v2", ++v2); //(2.)
+            exports_1("v3", v3 += 5); //(3.)
+            f = null; //(4.)
+        }
+    }
+});</code></pre>
+</div>
+</div>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+highlights
+</td>
+<td class="hdlist2">
+<div class="ulist">
+<ul>
+<li>
+<p>The re-assignment of <code>v1, v2, v3 and f</code> is wrapped inside a call to the <code>&lt;&lt;exportFn&gt;&gt;</code> with the updated value.</p>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Takeaway
+</td>
+<td class="hdlist2">
+<div class="ulist">
+<ul>
+<li>
+<p>While transpiling we need to detect if any exported binding is reassigned. In that case invoke the <code>&lt;&lt;exportFn&gt;&gt;</code> immediately with the new value.</p>
+</li>
+<li>
+<p>Different transpilers perform different optimization tricks, which may be worth looking at.</p>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>Exporting a Class extending an imported Class.</p>
+<div class="paragraph">
+<p>Let’s look at the following class declaration :</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>import {A} from "A"; //&lt;-- import class A
+
+export class C extends A {}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>Babel</code> output for this snippet looks like :</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>System.register(["A"], function (_export) {
+
+  var A, C;
+
+  var _get = function get(_x, _x2, _x3) { ... };
+
+  function _classCallCheck(instance, Constructor) { ... }
+
+  function _inherits(subClass, superClass) { ... }
+
+  return {
+    setters: [function (_A2) {
+      A = _A2.A;
+    }],
+
+    execute: function () { //(1.)
+      C = (function (_A) {
+        _inherits(C, _A);
+
+        function C() {
+          _classCallCheck(this, C);
+
+          _get(Object.getPrototypeOf(C.prototype), "constructor", this).apply(this, arguments);
+        }
+
+        return C;
+      })(A);
+
+      _export("C", C);
+    }
+  };
+});</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>Traceur</code> output for this snippet looks like :</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>System.register(["A"], function($__export) {
+  var A, C;
+
+  return {
+    setters: [function($__m) {
+      A = $__m.A;
+    }],
+
+    execute: function() { //(1.)
+      C = $traceurRuntime.initTailRecursiveFunction(function($__super) {
+        return $traceurRuntime.call(function($__super) {
+          function C() {
+            $traceurRuntime.superConstructor(C).apply(this, arguments);
+          }
+          return $traceurRuntime.continuation($traceurRuntime.createClass, $traceurRuntime, [C, {}, {}, $__super]);
+        }, this, arguments);
+      })(A);
+      $__export("C", C);
+    }
+  };
+});</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>TypeScript</code> output for this snippet looks like :</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>System.register(["A"], function(exports_1) {
+    var __extends = function(){ ... }
+    var A_1;
+    var C;
+
+    return {
+        setters:[
+            function (A_1_1) {
+                A_1 = A_1_1;
+            }],
+
+        execute: function() { //(1.)
+            C = (function (_super) {
+                __extends(C, _super);
+                function C() {
+                    _super.apply(this, arguments);
+                }
+                return C;
+            })(A_1.A);
+            exports_1("C", C);
+        }
+    }
+});</code></pre>
+</div>
+</div>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+highlights
+</td>
+<td class="hdlist2">
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Notice how the construction of class <code>C</code> has now been deferred to the <code>&lt;&lt;EXECUTABLES&gt;&gt;</code> zone. It is because <code>C</code> depends on <code>A</code> being imported first.</p>
+</li>
+</ol>
+</div>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Takeaway
+</td>
+<td class="hdlist2">
+<div class="ulist">
+<ul>
+<li>
+<p>The <code>&lt;&lt;DECLARATION SCOPE&gt;&gt;</code> is for hoisting only independent entities i.e. the ones that do not depend upon any imports. Everything else is moved to the <code>&lt;&lt;EXECUTABLES&gt;&gt;</code> region.</p>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="sec:Examples_w__Circular_Dependencies"><a class="anchor" href="#sec:Examples_w__Circular_Dependencies"></a><a class="link" href="#sec:Examples_w__Circular_Dependencies">B.6.4. Examples w/ Circular Dependencies</a></h4>
+<div class="paragraph">
+<p>This section focuses on circular dependencies. The goal is to see how the transpiled output looks like and if the execution is possible.</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div class="paragraph">
+<p>Source files:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>import B from "B";
+
+export default class A {}
+A.b = new B(); //&lt;---</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>import A from "A";
+
+export default class B {}
+B.a = new A(); //&lt;---</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Transpiled Outputs (w/ Babel):<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>System.register(["B"], function (_export) {
+  "use strict";
+
+  var B, A;
+
+  function _classCallCheck(instance, Constructor) {...}
+
+  return {
+    setters: [function (_B) {
+      B = _B["default"];
+    }],
+    execute: function () {
+      A = function A() {
+        _classCallCheck(this, A);
+      };
+
+      _export("default", A);
+
+      A.b = new B();
+    }
+  };
+});</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>System.register(["A"], function (_export) {
+  "use strict";
+
+  var A, B;
+
+  function _classCallCheck(instance, Constructor) {...}
+
+  return {
+    setters: [function (_A) {
+      A = _A["default"];
+    }],
+    execute: function () {
+      B = function B() {
+        _classCallCheck(this, B);
+      };
+
+      _export("default", B);
+
+      B.a = new A();
+    }
+  };
+});</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Execution Result<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>var System = require('systemjs');
+
+System.import('A', 'B').then(function(resp) {
+    var a = new A();
+    var b = new B();
+}).catch(function(e) {
+    console.log(e);
+});</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>Babel : [Error: undefined is not a function]</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div class="paragraph">
+<p>Source files:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>import {B} from "B";
+
+export class A extends B{}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>import {A} from "A";
+
+export class B{}
+class C extends A{}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Transpiled Outputs (w/ Babel) :<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>System.register(["B"], function (_export) {
+  "use strict";
+
+  var B, A;
+
+  var _get = function get(_x, _x2, _x3) { ... };
+
+  function _classCallCheck(instance, Constructor) { ... }
+
+  function _inherits(subClass, superClass) {...}
+
+  return {
+    setters: [function (_B2) {
+      B = _B2.B;
+    }],
+    execute: function () {
+      A = (function (_B) {
+        _inherits(A, _B);
+
+        function A() {
+          _classCallCheck(this, A);
+
+          _get(Object.getPrototypeOf(A.prototype), "constructor", this).apply(this, arguments);
+        }
+
+        return A;
+      })(B);
+
+      _export("A", A);
+    }
+  };
+});</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>System.register(["A"], function (_export) {
+  "use strict";
+
+  var A, B, C;
+
+  var _get = function get(_x, _x2, _x3) { ... };
+
+  function _inherits(subClass, superClass) { ... }
+
+  function _classCallCheck(instance, Constructor) { ... }
+
+  return {
+    setters: [function (_A2) {
+      A = _A2.A;
+    }],
+    execute: function () {
+      B = function B() {
+        _classCallCheck(this, B);
+      };
+
+      _export("B", B);
+
+      C = (function (_A) {
+        _inherits(C, _A);
+
+        function C() {
+          _classCallCheck(this, C);
+
+          _get(Object.getPrototypeOf(C.prototype), "constructor", this).apply(this, arguments);
+        }
+
+        return C;
+      })(A);
+    }
+  };
+});</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Execution Result<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>var System = require('systemjs');
+
+System.import('A','B').then(function(resp) {
+    var a = new A();
+}).catch(function(e) {
+    console.log(e);
+});</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>TypeScript : [Error: Cannot read property 'prototype' of undefined]
+Babel : [Error: Super expression must either be null or a function, not undefined]</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div class="paragraph">
+<p>Source files:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>import B from "B";
+
+class A extends B {}
+export default class X {}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>import X from "A";
+
+export default class B {}
+class Y extends X {}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Transpiled Outputs (w/ Babel):<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>System.register(["B"], function (_export) {
+  "use strict";
+
+  var B, A, X;
+
+  var _get = function get(_x, _x2, _x3) { ... };
+
+  function _classCallCheck(instance, Constructor) { ... }
+
+  function _inherits(subClass, superClass) { ... }
+
+  return {
+    setters: [function (_B2) {
+      B = _B2["default"];
+    }],
+    execute: function () {
+      A = (function (_B) {
+        _inherits(A, _B);
+
+        function A() {
+          _classCallCheck(this, A);
+
+          _get(Object.getPrototypeOf(A.prototype), "constructor", this).apply(this, arguments);
+        }
+
+        return A;
+      })(B);
+
+      X = function X() {
+        _classCallCheck(this, X);
+      };
+
+      _export("default", X);
+    }
+  };
+});</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>System.register(["A"], function (_export) {
+  "use strict";
+
+  var X, B, Y;
+
+  var _get = function get(_x, _x2, _x3) { ... };
+
+  function _inherits(subClass, superClass) { ... }
+
+  function _classCallCheck(instance, Constructor) { ... }
+
+  return {
+    setters: [function (_A) {
+      X = _A["default"];
+    }],
+    execute: function () {
+      B = function B() {
+        _classCallCheck(this, B);
+      };
+
+      _export("default", B);
+
+      Y = (function (_X) {
+        _inherits(Y, _X);
+
+        function Y() {
+          _classCallCheck(this, Y);
+
+          _get(Object.getPrototypeOf(Y.prototype), "constructor", this).apply(this, arguments);
+        }
+
+        return Y;
+      })(X);
+    }
+  };
+});</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Execution Result<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>var System = require('systemjs');
+
+System.import('A').then(function(resp) {
+    var a = new A();
+}).catch(function(e) {
+    console.log(e);
+});</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>TypeScript : [Error: Cannot read property 'prototype' of undefined]
+Babel : [[Error: Super expression must either be null or a function, not undefined]]</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="sec:N4JS_Examples_w__Circular_Dependencies"><a class="anchor" href="#sec:N4JS_Examples_w__Circular_Dependencies"></a><a class="link" href="#sec:N4JS_Examples_w__Circular_Dependencies">B.6.5. N4JS Examples w/ Circular Dependencies</a></h4>
+<div class="paragraph">
+<p>In order to improve our precision in conversing and discussing about different kinds of circular dependencies, this section provides the most basic examples of different kinds.</p>
+</div>
+<div class="sect4">
+<h5 id="sec:Unresolved_Cyclic_Dependencies"><a class="anchor" href="#sec:Unresolved_Cyclic_Dependencies"></a><a class="link" href="#sec:Unresolved_Cyclic_Dependencies">B.6.5.1. Unresolved Cyclic Dependencies</a></h5>
+<div class="paragraph">
+<p>Below examples demonstrate cases when cyclic dependency cannot be resolved at all and will cause runtime errors.</p>
+</div>
+<div class="exampleblock">
+<div class="title">Example 5. Circular dependency resolution 1</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>import b from "B"
+
+export public var number a = 1;
+export public var number a2 = b + 1;</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>import a from "A"
+
+export public var number b = a + 1;</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>import a2 from "A"
+console.log(a2); //&lt;-- should be 3. not NaN.</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="exampleblock">
+<div class="title">Example 6. Circular dependency resolution 2</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>import B from "B"
+
+export public class A {
+    static a = B.b + 1;
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>import A from "A"
+export public class B {
+    static b = 1;
+}
+export public class B2 {
+    static b2 = A.a;
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>import B2 from "B"
+console.log(B2.b2); //should log 2</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="exampleblock">
+<div class="title">Example 7. Circular dependency resolution 3</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>import B from "B"
+export public class A {
+    B b = new B();
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>import A from "A"
+export public class B {
+    A a = new A();
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>import A from "A"
+new A(); // should not cause a runtime error.</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="sec:Variables___Functions"><a class="anchor" href="#sec:Variables___Functions"></a><a class="link" href="#sec:Variables___Functions">B.6.5.2. Examples with Variables &amp; Functions</a></h5>
+<div class="exampleblock">
+<div class="title">Example 8. Circular dependency resolution 4</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>import b_fun from "B"
+
+export public var a2 = b_fun();
+export public var a = 1;</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>import a from "A"
+
+export public function b_fun() {
+    return a + 1;
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>import a2 from "A"
+console.log(a2); //&lt;-- should be 2. not NaN.</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="sec:Classes"><a class="anchor" href="#sec:Classes"></a><a class="link" href="#sec:Classes">B.6.5.3. Examples with Classes</a></h5>
+<div class="exampleblock">
+<div class="title">Example 9. Circular dependency resolution 5</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>import B from "B"
+export public class A {
+    static a1 = 1;
+    static a2 = B.b1;
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>import A from "A"
+export public class B {
+    static b1 = A.a1;
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>import A from "A"
+console.log(A.a1); //should log 1. not an error.</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="exampleblock">
+<div class="title">Example 10. Circular dependency resolution 6</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>import B from "B"
+export public class A {
+    static a1 = 1;
+    static a2 = B.b1;
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>import A from "A"
+export public class B {
+    static b1 = -1;
+    static b2 = A.a1;
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>import A from "A"
+console.log(A.a1);//should log 1. not an error.</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="exampleblock">
+<div class="title">Example 11. Circular dependency resolution 7</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>import B from "B"
+export public class A {
+    static a = new B();
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>import A from "A"
+export public class B {
+    static b = new A();
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>import A from "A"
+new A(); //should succeed.</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="sec:Examples_with_SubClassing"><a class="anchor" href="#sec:Examples_with_SubClassing"></a><a class="link" href="#sec:Examples_with_SubClassing">B.6.5.4. Examples with SubClassing</a></h5>
+<div class="exampleblock">
+<div class="title">Example 12. Circular dependency resolution 8</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>import B from "B"
+export public class A {}
+export public class C extends B {}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>import A from "A"
+export public class B extends A{}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>import C from "A"
+new C();//should succeed.</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="exampleblock">
+<div class="title">Example 13. Circular dependency resolution 9</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>import B from "B"
+export public class A {}
+export public class C {
+    c = new B();
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>import A from "A"
+export public class B extends A{}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>import C from "A"
+new C(); //should succeed.</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="sec:Miscellaneous"><a class="anchor" href="#sec:Miscellaneous"></a><a class="link" href="#sec:Miscellaneous">B.6.5.5. Miscellaneous</a></h5>
+<div class="exampleblock">
+<div class="title">Example 14. Circular dependency resolution 10</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>import B from "B"
+export public class A {}
+new B();</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>import A from "A"
+export public class B {}
+new A();</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>import A from "A"
+new A() //should succeed.</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="exampleblock">
+<div class="title">Example 15. Circular dependency resolution 11</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>import B from "B"
+export public class A {}
+B.b1;</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>import A from "A"
+export public class B {
+    static b1;
+}
+new A();</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>import A from "A"
+new A() //should succeed.</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_resources"><a class="anchor" href="#_resources"></a><a class="link" href="#_resources">B.6.6. Resources</a></h4>
+<div class="paragraph">
+<p><a href="https://github.com/ModuleLoader/es6-module-loader/blob/master/docs/system-register.md">Wiki</a></p>
+</div>
+</div>
+</div>
+<div class="sect2 language-js">
+<h3 id="sec:CommonJS_as_transpilation_target"><a class="anchor" href="#sec:CommonJS_as_transpilation_target"></a><a class="link" href="#sec:CommonJS_as_transpilation_target">B.7. CommonJS as transpilation target</a></h3>
+<div class="paragraph">
+<p>To provide better compatibility with <code>npm</code> eco-system, we want to transpile <code>N4JS</code> code to <code>CommonJS</code> module format.</p>
+</div>
+<div class="sect3">
+<h4 id="_introduction-2"><a class="anchor" href="#_introduction-2"></a><a class="link" href="#_introduction-2">B.7.1. Introduction</a></h4>
+<div class="paragraph">
+<p>A sample <code>CommonJS</code> module :</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>var lib1 = require("/lib1"); //&lt;-- require
+var lib2 = require("/lib2"); //&lt;-- require
+
+function fn() {
+    //...something using 'lib1' &amp; 'lib2'
+}
+
+exports.usefulFn = fn; //&lt;--exports
+exports.uselessValue = 42; //&lt;--exports</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <a href="http://www.commonjs.org/specs/modules/1.0/">CommonJS spec</a> describes the salient features of module format as (quoted verbatim) :</p>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>Module Context</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>In a module, there is a free variable "require", that is a
+function.</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>The "require" function accepts a module identifier.</p>
+</li>
+<li>
+<p>"require" returns the exported API of the foreign module.</p>
+</li>
+<li>
+<p>If there is a dependency cycle, the foreign module may
+not have finished executing at the time it is required by one
+of its transitive dependencies; in this case, the object
+returned by "require" must contain at least the exports
+that the foreign module has prepared before the call to
+require that led to the current module&#8217;s execution.</p>
+</li>
+<li>
+<p>If the requested module cannot be returned, "require"
+must throw an error.</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>In a module, there is a free variable called "exports",
+that is an object that the module may add its API to as it
+executes.</p>
+</li>
+<li>
+<p>modules must use the "exports" object as the only means
+of exporting.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Module Identifiers</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>A module identifier is a String of "terms" delimited by forward
+slashes.</p>
+</li>
+<li>
+<p>A term must be a camelCase identifier, ".", or "..".</p>
+</li>
+<li>
+<p>Module identifiers may not have file-name extensions like ".js".</p>
+</li>
+<li>
+<p>Module identifiers may be "relative" or "top-level". A module
+identifier is "relative" if the first term is "." or "..".</p>
+</li>
+<li>
+<p>Top-level identifiers are resolved off the conceptual module
+name space root.</p>
+</li>
+<li>
+<p>Relative identifiers are resolved relative to the identifier of
+the module in which "require" is written and called.</p>
+</li>
+</ol>
+</div>
+</blockquote>
+</div>
+</div>
+<div class="sect3">
+<h4 id="sec:Transpilation_Hints"><a class="anchor" href="#sec:Transpilation_Hints"></a><a class="link" href="#sec:Transpilation_Hints">B.7.2. Transpilation Hints</a></h4>
+<div class="paragraph">
+<p>This section examines how <code>Babel</code> transpiles <code>ES6</code> modules to <code>CommonJS</code> format. By observing the transpiled output from <code>Babel</code>, we can gather insights for transpiling <code>N4JS</code> modules to <code>CommonJS</code> format.</p>
+</div>
+<div class="sect4">
+<h5 id="sec:Import_Statements"><a class="anchor" href="#sec:Import_Statements"></a><a class="link" href="#sec:Import_Statements">B.7.2.1. Import Statements</a></h5>
+<div class="exampleblock">
+<div class="title">Example 16. Import an entire module (for side effects only)</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>import "B";
+console.log(B);</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>"use strict";
+
+require("B");
+console.log(B);</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="exampleblock">
+<div class="title">Example 17. Import single member of a module</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>import {b1} from "B";
+b1;</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>"use strict";
+
+var _B = require("B");
+_B.b1;</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="exampleblock">
+<div class="title">Example 18. Import multiple members of a module</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>import {b1, b2} from "B";
+b1;
+b2;</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>"use strict";
+
+var _B = require("B");
+
+_B.b1;
+_B.b2;</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="exampleblock">
+<div class="title">Example 19. Import a single member of a module w/ an alias</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>import {b3 as b4} from "B";
+b4 + 1;</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>"use strict";
+
+var _B = require("B");
+
+_B.b3 + 1;</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="exampleblock">
+<div class="title">Example 20. Import multiple members of a module w/ aliases</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>import {b3 as b4, b5 as b6} from "B";
+b4 + 1;
+b6 + 1;</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>"use strict";
+
+var _B = require("B");
+
+_B.b3 + 1;
+_B.b5 + 1;</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="exampleblock">
+<div class="title">Example 21. Import ALL the bindings of a module</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>import * as B from "B";
+console.log(B);</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>"use strict";
+
+function _interopRequireWildcard(obj) {
+    //Babel internally tracks ES6 modules using a flag "__esModule".
+    if (obj &amp;&amp; obj.__esModule) {
+        return obj;
+    } else {
+        //Copy over all the exported members.
+        var newObj = {};
+        if (obj != null) {
+            for (var key in obj) {
+                if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key];
+            }
+        }
+
+        //Set the "default" as the obj itself (ES6 default export)
+        newObj["default"] = obj;
+        return newObj;
+    }
+}
+
+var _B = require("B");
+
+var B = _interopRequireWildcard(_B);
+
+console.log(B);</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="exampleblock">
+<div class="title">Example 22. Import the default export of a module</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>import B from "B";
+console.log(B);</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>"use strict";
+
+//For importing a default export,
+//Babel checks if the obj is an ES6 module or not.
+function _interopRequireDefault(obj) {
+    return obj &amp;&amp; obj.__esModule ? obj : { "default": obj };
+}
+
+var _B = require("B");
+
+var _B2 = _interopRequireDefault(_B);
+
+console.log(_B2["default"]);</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="sec:Export_Statements"><a class="anchor" href="#sec:Export_Statements"></a><a class="link" href="#sec:Export_Statements">B.7.2.2. Export Statements</a></h5>
+<div class="exampleblock">
+<div class="title">Example 23. Export a member</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>let a = 1;
+export {a};</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>"use strict";
+
+//Babel makes a note that this is as an ES6 module.
+//This information is later used when this module is imported.
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var a = 1;
+
+exports.a = a;</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="exampleblock">
+<div class="title">Example 24. Export multiple members</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>let a = 1;
+let b = true;
+
+export {a, b};</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var a = 1;
+var b = true;
+
+exports.a = a;
+exports.b = b;</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="exampleblock">
+<div class="title">Example 25. Export using alias</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>let a =1;
+export {a as b};</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var a = 1;
+exports.b = a;</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="exampleblock">
+<div class="title">Example 26. Multiple exports using alias</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>let a = 1, b = 2;
+export {a as A, b as B};</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var a = 1,
+    b = 2;
+exports.A = a;
+exports.B = b;</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="exampleblock">
+<div class="title">Example 27. Simple default export</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>export default 42;</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports["default"] = 42; //&lt;-- default export is treated as a special named export
+module.exports = exports["default"]; //&lt;-- IMPORTANT</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="exampleblock">
+<div class="title">Example 28. Default export using an alias</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>let x =10;
+export {x as default};</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var x = 10;
+exports["default"] = x;
+module.exports = exports["default"];</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="exampleblock">
+<div class="title">Example 29. Default export w/ named export</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>let a = 1;
+export {a};
+export default 42;</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var a = 1;
+exports.a = a;
+exports["default"] = 42;</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="exampleblock">
+<div class="title">Example 30. Default export a class</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>export default class A  {}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+function _classCallCheck(...) { ... }
+
+var A = function A() {
+  _classCallCheck(this, A);
+};
+
+exports["default"] = A;
+module.exports = exports["default"];</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="exampleblock">
+<div class="title">Example 31. Wildcard re-export</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>export * from "A"</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+function _interopExportWildcard(obj, defaults) {
+    var newObj = defaults({}, obj);
+    delete newObj["default"]; //&lt;-- A module's default export can not be re-exported.
+    return newObj;
+}
+
+function _defaults(obj, defaults) {
+    var keys = Object.getOwnPropertyNames(defaults);
+    for (var i = 0; i &lt; keys.length; i++) {
+        var key = keys[i];
+        var value = Object.getOwnPropertyDescriptor(defaults, key);
+        if (value &amp;&amp; value.configurable &amp;&amp; obj[key] === undefined) {
+            Object.defineProperty(obj, key, value);
+        }
+    }
+    return obj;
+}
+
+var _A = require("A");
+
+_defaults(exports, _interopExportWildcard(_A, _defaults));</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="exampleblock">
+<div class="title">Example 32. Specific member re-export</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>export {a1, a2} from "A";</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _A = require("A");
+
+Object.defineProperty(exports, "a1", {
+  enumerable: true,
+  get: function get() {
+    return _A.a1;
+  }
+});
+Object.defineProperty(exports, "a2", {
+  enumerable: true,
+  get: function get() {
+    return _A.a2;
+  }
+});</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="exampleblock">
+<div class="title">Example 33. Specific member re-export using alias</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>export {a1 as A1, a2 as A2} from "A";</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _A = require("A");
+
+Object.defineProperty(exports, "A1", {
+  enumerable: true,
+  get: function get() {
+    return _A.a1;
+  }
+});
+Object.defineProperty(exports, "A2", {
+  enumerable: true,
+  get: function get() {
+    return _A.a2;
+  }
+});</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="sec:Tracking_Live_Bindings"><a class="anchor" href="#sec:Tracking_Live_Bindings"></a><a class="link" href="#sec:Tracking_Live_Bindings">B.7.2.3. Tracking Live Bindings</a></h5>
+<div class="paragraph">
+<p>As specified in the section about <code>ES6 Modules</code> (<a href="#sec:ES6_Modules">ES6 Modules</a>), <code>ES6 Modules</code> export live immutable bindings. The following listings demonstrate how <code>Babel</code> achieves this.</p>
+</div>
+<div class="exampleblock">
+<div class="title">Example 34. Tracking Live Binding</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>export var a = 1;
+a++;</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var a = 1;
+exports.a = a;
+exports.a = a += 1; //&lt;-- Exported value is tracked.</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="sec:A_complete_example"><a class="anchor" href="#sec:A_complete_example"></a><a class="link" href="#sec:A_complete_example">B.7.2.4. A complete example</a></h5>
+<div class="paragraph">
+<p>The following listings present a simple but complete example of ES6 export, import and live-binding concepts. It uses 3 simple <code>ES6 modules</code> called <code>A.js, B.js and Main.js</code>. The modules are listed alongside their <code>CommonJS</code> versions generated by <code>Babel</code>.</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>export var a = 1; //&lt;-- exports a number
+
+export function incA() { //&lt;-- exports a function
+    a++;
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+exports.incA = incA;
+var a = 1;
+
+exports.a = a;
+
+function incA() {
+    exports.a = a += 1;
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>import {incA} from "./A"; //&lt;-- Imports the function from A.js
+
+export function incB() { //&lt;-- Exports a function that calls the imported function from A.js
+    incA();
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.incB = incB;
+
+var _A = require("./A");
+
+function incB() {
+    _A.incA();
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>import {a} from "./A"; //&lt;-- Imports the exported number from A.js
+import {incB} from "./B"; //&lt;-- Imports the exported function from B.js
+
+console.log(a); //&lt;-- Prints "1"
+incB(); //&lt;-- This will call the "incA" function of A.js
+console.log(a); //&lt;--Prints "2". The imported value "a" is updated.</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>"use strict";
+
+var _A = require("./A");
+
+var _B = require("./B");
+
+console.log(_A.a);
+_B.incB();
+console.log(_A.a);</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_resources-2"><a class="anchor" href="#_resources-2"></a><a class="link" href="#_resources-2">B.7.3. Resources</a></h4>
+<div class="paragraph">
+<p><a href="http://exploringjs.com/es6/ch_modules.html">Exploring ES6 by Dr. Axel Rauschmayer</a></p>
+</div>
+<div class="paragraph">
+<p><a href="http://www.commonjs.org/specs/modules/1.0/">CommonJS spec</a></p>
+</div>
+<div class="paragraph">
+<p><a href="http://benjamn.github.io/empirenode-2015/">The Importance of import and export</a></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Version 0.9<br>
+Last updated 2019-08-07 15:02:40 CEST
+</div>
+</div>
+<!-- ************* docinfo-footer *************************************************************** -->
+<div class="Grid social" style="color:#d5dfea">
+  <div class="Cell Cell--2-12 m-Cell--withMargin">
+    <h2>Quick Links</h2>
+    <ul>
+      <li><a href="../downloads.html">Download</a></li>
+      <li><a href="../userguides/index.html">Documentation</a></li>
+      <li><a href="https://github.com/eclipse/n4js/">Source</a></li>
+      <li><a href="https://github.com/eclipse/n4js/issues">Issues</a></li>
+    </ul>
+  </div>
+  <div class="Cell Cell--2-12 m-Cell--withMargin">
+    <br/><br/>
+    <ul>
+      <li><a href="https://www.eclipse.org/forums/index.php/f/365/">Forum</a></li>
+      <li><a href="http://n4js.blogspot.de/">Blog</a></li>
+      <li><a href="https://dev.eclipse.org/mailman/listinfo/n4js-dev">Mailing List</a></li>
+      <li><a href="https://projects.eclipse.org/projects/technology.n4js">Eclipse Project Page</a></li>
+      <li><a href="https://twitter.com/n4jsdev">Tweets by n4jsdev</a></li>
+    </ul>
+  </div>
+  <div class="Cell Cell--2-12 m-Cell--withMargin">
+    <br/><br/>
+    <ul>
+      <li><a href="http://www.eclipse.org/">Eclipse Home</a></li>
+      <li><a href="http://www.eclipse.org/legal/privacy.php">Privacy Policy</a></li>
+      <li><a href="http://www.eclipse.org/legal/termsofuse.php">Terms of Use</a></li>
+      <li><a href="http://www.eclipse.org/legal/copyright.php">Copyright Agent</a></li>
+      <li><a href="http://www.eclipse.org/legal/">Legal</a></li>
+    </ul>
+  </div>
+  <div style="clear: both; height: 0; overflow: hidden;"></div>
+</div>
+
+<!-- ************* UI Scripts ************* -->
+<script type="text/javascript" src="scripts/back-to-top.js"></script>
+
+<script type="text/javascript" src="scripts/treeview.js"></script>
+<script type="text/javascript" src="scripts/toc.js"></script>
+
+<!-- ************* Prism.js Syntax Highlighting ************* -->
+<script src="scripts/prism.js"></script>
+
+<script type="text/javascript">
+	// Add the 'toclist' id for search function
+	$(".toc2 > ul").attr('id', 'toclist');
+	// Generate a Search input form
+	$("#toclist > li:first-of-type").before('<input type="text" id="pagesearch" onkeyup="search()" placeholder="Search for section...">');
+	$("#toclist > li:first-of-type").before('<i id="clear" class="fa fa-times-circle-o"></i>');
+	$("#clear").click(function(){
+	    $("#pagesearch").val('');
+	    search();
+	    $('.toc2 > ul').treeView('collapseAll');
+	});
+	// intialize Treeview.js
+	$(".toc2 > ul").treeView();
+	// Initialize Scrollspy
+</script>
+<!-- ************* docinfo-footer *************************************************************** -->
+</body>
+</html>

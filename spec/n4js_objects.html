@@ -1,0 +1,1312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 1.5.5">
+<meta name="author" content="2019-08-07 15:02:40 CEST">
+<title>N4JS Language Specification</title>
+<link rel="stylesheet" href="styles/spec.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
+<!-- ************* docinfo ******************************************************************* -->
+
+
+<!-- ************* Favicon ************-->
+<link rel="icon" href="images/favicon.ico" />
+
+<!-- ************* Back-to-top JQuery ************* -->
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
+
+
+<link href="styles/prism.min.css" rel="stylesheet" />
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+<!-- ************* Styles ************* -->
+<link rel="stylesheet" type="text/css" href="styles/n4jsspec-adoc.css">
+
+
+<!-- ****************** NavBar ****************** -->
+<div id="menubar">
+	<div class="banner">
+        <a href="https://www.eclipse.org/n4js/#"><img id="logo" src="images/n4js-logo.png" alt="Eclipse N4JS"></a>
+    </div>
+<ul>
+  <li><a href="index.html">Index</a></li>
+</ul>
+</div>
+<!-- ************* docinfo ******************************************************************* -->
+<style>
+      .admonitionblock td.icon .icon-todo:before{content:"\f249";color:#f4ee42}
+    </style>
+</head>
+<body class="book toc2 toc-left">
+<div id="header">
+<h1>N4JS Language Specification</h1>
+<div class="details">
+<span id="author" class="author">2019-08-07 15:02:40 CEST</span><br>
+<span id="revnumber">version 0.9</span>
+</div>
+<div id="toc" class="toc2">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="introduction.html#_introduction">1. Introduction</a>
+<ul class="sectlevel2">
+<li><a href="introduction.html#_notation">1.1. Notation</a>
+<ul class="sectlevel3">
+<li><a href="introduction.html#_grammar-notation">1.1.1. Grammar Notation</a></li>
+<li><a href="introduction.html#_type-judgments-and-rules-and-constraints-notation">1.1.2. Type Judgments and Rules and Constraints Notation</a>
+<ul class="sectlevel4">
+<li><a href="introduction.html#_typing-rules-and-judgments">1.1.2.1. Typing Rules and Judgments</a></li>
+<li><a href="introduction.html#_types-of-an-element">1.1.2.2. Types of an Element</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="introduction.html#_auxiliary-functions">1.2. Auxiliary Functions</a>
+<ul class="sectlevel3">
+<li><a href="introduction.html#_binding">1.2.1. Binding</a></li>
+<li><a href="introduction.html#_merging-types">1.2.2. Merging Types</a>
+<ul class="sectlevel4">
+<li><a href="introduction.html#_logic-formulas">1.2.2.1. Logic Formulas</a></li>
+</ul>
+</li>
+<li><a href="introduction.html#_symbols-and-font-convention">1.2.3. Symbols and Font Convention</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="grammar.html#_grammar">2. Grammar</a>
+<ul class="sectlevel2">
+<li><a href="grammar.html#_lexical-conventions">2.1. Lexical Conventions</a>
+<ul class="sectlevel3">
+<li><a href="grammar.html#_identifier-names-and-identifiers">2.1.1. Identifier Names and Identifiers</a></li>
+<li><a href="grammar.html#_this-keyword">2.1.2. This Keyword</a></li>
+<li><a href="grammar.html#_regular-expression-literals">2.1.3. Regular Expression Literals</a></li>
+<li><a href="grammar.html#_automatic-semicolon-insertion">2.1.4. Automatic Semicolon Insertion</a></li>
+<li><a href="grammar.html#_jsdoc">2.1.5. JSDoc</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="names.html#_names">3. Names</a>
+<ul class="sectlevel2">
+<li><a href="names.html#_access-control">3.1. Access Control</a></li>
+<li><a href="names.html#_accessibility-of-types-top-level-variables-and-function-declarations">3.2. Accessibility of Types, Top-Level Variables and Function Declarations</a>
+<ul class="sectlevel3">
+<li><a href="names.html#_accessibility-of-members">3.2.1. Accessibility of Members</a></li>
+<li><a href="names.html#_valid-names">3.2.2. Valid Names</a></li>
+<li><a href="names.html#_qualified-names">3.2.3. Qualified Names</a></li>
+<li><a href="names.html#_name-duplicates">3.2.4. Name Duplicates</a>
+<ul class="sectlevel4">
+<li><a href="names.html#_lexical-environment">3.2.4.1. Lexical Environment</a></li>
+<li><a href="names.html#_duplicates-and-shadowing">3.2.4.2. Duplicates and Shadowing</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="types.html#_types">4. Types</a>
+<ul class="sectlevel2">
+<li><a href="types.html#_overview">4.1. Overview</a></li>
+<li><a href="types.html#_type-expressions">4.2. Type Expressions</a>
+<ul class="sectlevel3">
+<li><a href="types.html#_syntax">4.2.1. Syntax</a></li>
+<li><a href="types.html#_properties">4.2.2. Properties</a></li>
+<li><a href="types.html#_semantics">4.2.3. Semantics</a></li>
+</ul>
+</li>
+<li><a href="types.html#_type-inference">4.3. Type Inference</a></li>
+<li><a href="types.html#_generic-and-parameterized-types">4.4. Generic and Parameterized Types</a>
+<ul class="sectlevel3">
+<li><a href="types.html#_generic-types">4.4.1. Generic Types</a></li>
+<li><a href="types.html#_type-variables">4.4.2. Type Variables</a></li>
+<li><a href="types.html#_parameterized-types">4.4.3. Parameterized Types</a></li>
+</ul>
+</li>
+<li><a href="types.html#_primitive-ecmascript-types">4.5. Primitive ECMAScript Types</a>
+<ul class="sectlevel3">
+<li><a href="types.html#_undefined-type">4.5.1. Undefined Type</a></li>
+<li><a href="types.html#_null-type">4.5.2. Null Type</a></li>
+<li><a href="types.html#_primitive-boolean-type">4.5.3. Primitive Boolean Type</a></li>
+<li><a href="types.html#_primitive-string-type">4.5.4. Primitive String Type</a></li>
+<li><a href="types.html#_primitive-number-type">4.5.5. Primitive Number Type</a></li>
+<li><a href="types.html#_primitive-type-int">4.5.6. Primitive Type int</a></li>
+<li><a href="types.html#_primitive-symbol-type">4.5.7. Primitive Symbol Type</a></li>
+</ul>
+</li>
+<li><a href="types.html#_primitive-n4js-types">4.6. Primitive N4JS Types</a>
+<ul class="sectlevel3">
+<li><a href="types.html#_any-type">4.6.1. Any Type</a>
+<ul class="sectlevel4">
+<li><a href="types.html#any-type-semantics">4.6.1.1. Semantics</a></li>
+<li><a href="types.html#any-type-type-inference">4.6.1.2. Type Inference</a>
+<ul class="sectlevel5">
+<li><a href="types.html#_default-type-of-variables">4.6.1.2.1. Default Type of Variables</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="types.html#_void-type">4.6.2. Void Type</a>
+<ul class="sectlevel4">
+<li><a href="types.html#void-type-semantics">4.6.2.1. Semantics</a></li>
+</ul>
+</li>
+<li><a href="types.html#_unknown-type">4.6.3. Unknown Type</a></li>
+<li><a href="types.html#_primitive-pathselector-and-i18nkey">4.6.4. Primitive Pathselector and I18nKey</a>
+<ul class="sectlevel4">
+<li><a href="types.html#pathselector-semantics">4.6.4.1. Semantics</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="types.html#_built-in-ecmascript-object-types">4.7. Built-in ECMAScript Object Types</a>
+<ul class="sectlevel3">
+<li><a href="types.html#ECMAScript-objects-semantics">4.7.1. Semantics</a></li>
+<li><a href="types.html#_object-type">4.7.2. Object Type</a></li>
+<li><a href="types.html#_function-object-type">4.7.3. Function-Object-Type</a></li>
+<li><a href="types.html#_array-object-type">4.7.4. Array Object Type</a></li>
+<li><a href="types.html#_string-object-type">4.7.5. String Object Type</a></li>
+<li><a href="types.html#_boolean-object-type">4.7.6. Boolean Object Type</a></li>
+<li><a href="types.html#_number-object-type">4.7.7. Number Object Type</a></li>
+<li><a href="types.html#_global-object-type">4.7.8. Global Object Type</a></li>
+<li><a href="types.html#_symbol">4.7.9. Symbol</a></li>
+<li><a href="types.html#_promise">4.7.10. Promise</a></li>
+<li><a href="types.html#_iterator-interface">4.7.11. Iterator Interface</a></li>
+<li><a href="types.html#_iterable-interface">4.7.12. Iterable Interface</a></li>
+</ul>
+</li>
+<li><a href="types.html#_built-in-n4js-types">4.8. Built-In N4JS Types</a>
+<ul class="sectlevel3">
+<li><a href="types.html#_n4object">4.8.1. N4Object</a>
+<ul class="sectlevel4">
+<li><a href="types.html#N4Object-semantics">4.8.1.1. Semantics</a></li>
+</ul>
+</li>
+<li><a href="types.html#_n4class">4.8.2. N4Class</a></li>
+<li><a href="types.html#IterableN">4.8.3. IterableN</a></li>
+</ul>
+</li>
+<li><a href="types.html#_type-modifiers">4.9. Type Modifiers</a>
+<ul class="sectlevel3">
+<li><a href="types.html#Type_Modifiers_Dynamic">4.9.1. Dynamic</a></li>
+<li><a href="types.html#_optional-return-types">4.9.2. Optional Return Types</a></li>
+</ul>
+</li>
+<li><a href="types.html#_union-and-intersection-type-composed-types">4.10. Union and Intersection Type (Composed Types)</a>
+<ul class="sectlevel3">
+<li><a href="types.html#_union-type">4.10.1. Union Type</a>
+<ul class="sectlevel4">
+<li><a href="types.html#union-type-syntax">4.10.1.1. Syntax</a></li>
+<li><a href="types.html#union-type-semantics">4.10.1.2. Semantics</a></li>
+<li><a href="types.html#_warnings">4.10.1.3. Warnings</a></li>
+</ul>
+</li>
+<li><a href="types.html#_intersection-type">4.10.2. Intersection Type</a>
+<ul class="sectlevel4">
+<li><a href="types.html#intersection-type-syntax">4.10.2.1. Syntax</a></li>
+<li><a href="types.html#intersection-type-semantics">4.10.2.2. Semantics</a></li>
+<li><a href="types.html#_warnings-2">4.10.2.3. Warnings</a></li>
+</ul>
+</li>
+<li><a href="types.html#_composed-types-in-wildcards">4.10.3. Composed Types in Wildcards</a></li>
+<li><a href="types.html#_property-access-for-composed-types">4.10.4. Property Access for Composed Types</a>
+<ul class="sectlevel4">
+<li><a href="types.html#_properties-of-union-type">4.10.4.1. Properties of Union Type</a>
+<ul class="sectlevel5">
+<li><a href="types.html#_remarks-on-union-type-s-members">4.10.4.1.1. Remarks on union type’s members:</a></li>
+</ul>
+</li>
+<li><a href="types.html#_properties-of-intersection-type">4.10.4.2. Properties of Intersection Type</a>
+<ul class="sectlevel5">
+<li><a href="types.html#_remarks-on-intersection-type-s-methods">4.10.4.2.1. Remarks on intersection type’s methods:</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="types.html#_constructor-and-classifier-type">4.11. Constructor and Classifier Type</a>
+<ul class="sectlevel3">
+<li><a href="types.html#_syntax-3">4.11.1. Syntax</a></li>
+<li><a href="types.html#_semantics-2">4.11.2. Semantics</a></li>
+<li><a href="types.html#_constructors-and-prototypes-in-ecmascript-2015">4.11.3. Constructors and Prototypes in ECMAScript 2015</a></li>
+</ul>
+</li>
+<li><a href="types.html#_this-type">4.12. This Type</a>
+<ul class="sectlevel3">
+<li><a href="types.html#this-type-syntax">4.12.1. Syntax</a></li>
+<li><a href="types.html#this-keyword-semantics">4.12.2. Semantics</a></li>
+</ul>
+</li>
+<li><a href="types.html#_enums">4.13. Enums</a>
+<ul class="sectlevel3">
+<li><a href="types.html#_enums-n4js">4.13.1. Enums (N4JS)</a>
+<ul class="sectlevel4">
+<li><a href="types.html#enums-syntax">4.13.1.1. Syntax</a></li>
+<li><a href="types.html#enums-semantics">4.13.1.2. Semantics</a></li>
+</ul>
+</li>
+<li><a href="types.html#_string-based-enums">4.13.2. String-Based Enums</a></li>
+</ul>
+</li>
+<li><a href="types.html#_short-hand-syntax">4.14. Short-Hand Syntax</a>
+<ul class="sectlevel3">
+<li><a href="types.html#_array-short-hand-syntax">4.14.1. Array Short-Hand Syntax</a></li>
+<li><a href="types.html#_iterablen-short-hand-syntax">4.14.2. IterableN Short-Hand Syntax</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="classifiers.html#_classifiers">5. Classifiers</a>
+<ul class="sectlevel2">
+<li><a href="classifiers.html#_n4js-specific-classifiers">5.1. N4JS Specific Classifiers</a>
+<ul class="sectlevel3">
+<li><a href="classifiers.html#_properties-2">5.1.1. Properties</a></li>
+<li><a href="classifiers.html#_common-semantics-of-classifiers">5.1.2. Common Semantics of Classifiers</a></li>
+<li><a href="classifiers.html#_classes">5.1.3. Classes</a>
+<ul class="sectlevel4">
+<li><a href="classifiers.html#_definition-of-classes">5.1.3.1. Definition of Classes</a>
+<ul class="sectlevel5">
+<li><a href="classifiers.html#class-syntax">5.1.3.1.1. Syntax</a></li>
+<li><a href="classifiers.html#class-properties">5.1.3.1.2. Properties</a></li>
+<li><a href="classifiers.html#class-type-inference">5.1.3.1.3. Type Inference</a></li>
+</ul>
+</li>
+<li><a href="classifiers.html#class-semantics">5.1.3.2. Semantics</a></li>
+<li><a href="classifiers.html#_final-modifier">5.1.3.3. Final Modifier</a></li>
+<li><a href="classifiers.html#_abstract-classes">5.1.3.4. Abstract Classes</a></li>
+<li><a href="classifiers.html#_non-instantiable-classes">5.1.3.5. Non-Instantiable Classes</a></li>
+<li><a href="classifiers.html#_superclass">5.1.3.6. Superclass</a></li>
+</ul>
+</li>
+<li><a href="classifiers.html#_interfaces">5.1.4. Interfaces</a>
+<ul class="sectlevel4">
+<li><a href="classifiers.html#_definition-of-interfaces">5.1.4.1. Definition of Interfaces</a>
+<ul class="sectlevel5">
+<li><a href="classifiers.html#interfaces-syntax">5.1.4.1.1. Syntax</a></li>
+<li><a href="classifiers.html#interfaces-properties">5.1.4.1.2. Properties</a></li>
+<li><a href="classifiers.html#interfaces-type-inference">5.1.4.1.3. Type Inference</a></li>
+<li><a href="classifiers.html#interfaces-semantics">5.1.4.1.4. Semantics</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="classifiers.html#_generic-classifiers">5.1.5. Generic Classifiers</a></li>
+<li><a href="classifiers.html#sec:definition-site-variance">5.1.6. Definition-Site Variance</a></li>
+</ul>
+</li>
+<li><a href="classifiers.html#_members">5.2. Members</a>
+<ul class="sectlevel3">
+<li><a href="classifiers.html#_syntax-4">5.2.1. Syntax</a>
+<ul class="sectlevel4">
+<li><a href="classifiers.html#_properties-3">5.2.1.1. Properties</a></li>
+</ul>
+</li>
+<li><a href="classifiers.html#_semantics-3">5.2.2. Semantics</a></li>
+<li><a href="classifiers.html#_methods">5.2.3. Methods</a>
+<ul class="sectlevel4">
+<li><a href="classifiers.html#_syntax-5">5.2.3.1. Syntax</a></li>
+<li><a href="classifiers.html#_properties-4">5.2.3.2. Properties</a></li>
+<li><a href="classifiers.html#_semantics-4">5.2.3.3. Semantics</a></li>
+<li><a href="classifiers.html#_final-methods">5.2.3.4. Final Methods</a></li>
+<li><a href="classifiers.html#_abstract-methods">5.2.3.5. Abstract Methods</a></li>
+<li><a href="classifiers.html#_generic-methods">5.2.3.6. Generic Methods</a></li>
+</ul>
+</li>
+<li><a href="classifiers.html#_default-methods-in-interfaces">5.2.4. Default Methods in Interfaces</a>
+<ul class="sectlevel4">
+<li><a href="classifiers.html#_asynchronous-methods">5.2.4.1. Asynchronous Methods</a></li>
+</ul>
+</li>
+<li><a href="classifiers.html#_constructors">5.2.5. Constructors</a>
+<ul class="sectlevel4">
+<li><a href="classifiers.html#_structural-this-type-in-constructor">5.2.5.1. Structural This Type in Constructor</a></li>
+<li><a href="classifiers.html#spec-constructor">5.2.5.2. @Spec Constructor</a></li>
+<li><a href="classifiers.html#_callable-constructors">5.2.5.3. Callable Constructors</a></li>
+<li><a href="classifiers.html#_covariant-constructors">5.2.5.4. Covariant Constructors</a></li>
+</ul>
+</li>
+<li><a href="classifiers.html#_data-fields">5.2.6. Data Fields</a>
+<ul class="sectlevel4">
+<li><a href="classifiers.html#data-fields-syntax">5.2.6.1. Syntax</a></li>
+<li><a href="classifiers.html#data-fields-properties">5.2.6.2. Properties</a>
+<ul class="sectlevel5">
+<li><a href="classifiers.html#data-fields-semantics">5.2.6.2.1. Semantics</a></li>
+<li><a href="classifiers.html#data-fields-type-inference">5.2.6.2.2. Type Inference</a></li>
+</ul>
+</li>
+<li><a href="classifiers.html#_assignment-modifiers">5.2.6.3. Assignment Modifiers</a></li>
+<li><a href="classifiers.html#_field-accessors-getter-setter">5.2.6.4. Field Accessors (Getter/Setter)</a>
+<ul class="sectlevel5">
+<li><a href="classifiers.html#field-acessors-syntax">5.2.6.4.1. Syntax</a></li>
+<li><a href="classifiers.html#field-acessors-properties">5.2.6.4.2. Properties</a></li>
+<li><a href="classifiers.html#field-accessors-semantics">5.2.6.4.3. Semantics</a></li>
+</ul>
+</li>
+<li><a href="classifiers.html#optional-fields">5.2.6.5. Optional Fields</a>
+<ul class="sectlevel5">
+<li><a href="classifiers.html#_syntax-6">5.2.6.5.1. Syntax</a></li>
+<li><a href="classifiers.html#_semantics-5">5.2.6.5.2. Semantics</a></li>
+<li><a href="classifiers.html#_background">5.2.6.5.3. Background</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="classifiers.html#_static-members">5.2.7. Static Members</a>
+<ul class="sectlevel4">
+<li><a href="classifiers.html#_access-from-and-to-static-members">5.2.7.1. Access From and To Static Members</a></li>
+<li><a href="classifiers.html#_generic-static-methods">5.2.7.2. Generic static methods</a></li>
+<li><a href="classifiers.html#_static-members-of-interfaces">5.2.7.3. Static Members of Interfaces</a></li>
+</ul>
+</li>
+<li><a href="classifiers.html#_redefinition-of-members">5.2.8. Redefinition of Members</a>
+<ul class="sectlevel4">
+<li><a href="classifiers.html#_overriding-of-members">5.2.8.1. Overriding of Members</a></li>
+<li><a href="classifiers.html#_implementation-of-members">5.2.8.2. Implementation of Members</a>
+<ul class="sectlevel5">
+<li><a href="classifiers.html#_member-consumption">5.2.8.2.1. Member Consumption</a></li>
+<li><a href="classifiers.html#_member-implementation">5.2.8.2.2. Member Implementation</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="classifiers.html#_structural-typing">5.3. Structural Typing</a>
+<ul class="sectlevel3">
+<li><a href="classifiers.html#_syntax-7">5.3.1. Syntax</a></li>
+<li><a href="classifiers.html#_definition-site-structural-typing">5.3.2. Definition Site Structural Typing</a></li>
+<li><a href="classifiers.html#_use-site-structural-typing">5.3.3. Use-Site Structural Typing</a></li>
+<li><a href="classifiers.html#structural-readWriteInit-field-typing">5.3.4. Structural Read-only, Write-only and Initializer Field Typing</a></li>
+<li><a href="classifiers.html#_public-setter-annotated-with-code-providesinitializer-code">5.3.5. Public Setter Annotated With <code>ProvidesInitializer</code></a></li>
+<li><a href="classifiers.html#_structural-types-with-optional-fields">5.3.6. Structural Types With Optional Fields</a></li>
+<li><a href="classifiers.html#_structural-types-with-access-modifier">5.3.7. Structural Types With Access Modifier</a></li>
+<li><a href="classifiers.html#_structural-types-with-additional-members">5.3.8. Structural Types With Additional Members</a>
+<ul class="sectlevel4">
+<li><a href="classifiers.html#_syntax-8">5.3.8.1. Syntax</a>
+<ul class="sectlevel5">
+<li><a href="classifiers.html#_semantics-6">5.3.8.1.1. Semantics</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="functions.html#_functions">6. Functions</a>
+<ul class="sectlevel2">
+<li><a href="functions.html#_function-type">6.1. Function Type</a>
+<ul class="sectlevel3">
+<li><a href="functions.html#_properties-5">6.1.1. Properties</a></li>
+<li><a href="functions.html#function-type-inference">6.1.2. Type Inference</a></li>
+<li><a href="functions.html#_autoboxing-of-function-type">6.1.3. Autoboxing of Function Type</a></li>
+<li><a href="functions.html#_arguments-object">6.1.4. Arguments Object</a></li>
+</ul>
+</li>
+<li><a href="functions.html#_ecmascript-5-function-definition">6.2. ECMAScript 5 Function Definition</a>
+<ul class="sectlevel3">
+<li><a href="functions.html#_function-declaration">6.2.1. Function Declaration</a>
+<ul class="sectlevel4">
+<li><a href="functions.html#_syntax-9">6.2.1.1. Syntax</a></li>
+<li><a href="functions.html#_semantics-8">6.2.1.2. Semantics</a></li>
+</ul>
+</li>
+<li><a href="functions.html#_function-expression">6.2.2. Function Expression</a>
+<ul class="sectlevel4">
+<li><a href="functions.html#function-expression-syntax">6.2.2.1. Syntax</a></li>
+<li><a href="functions.html#_semantics-and-type-inference">6.2.2.2. Semantics and Type Inference</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="functions.html#_ecmascript-2015-function-definition">6.3. ECMAScript 2015 Function Definition</a>
+<ul class="sectlevel3">
+<li><a href="functions.html#_formal-parameters">6.3.1. Formal Parameters</a>
+<ul class="sectlevel4">
+<li><a href="functions.html#Type_Modifiers_Optional">6.3.1.1. Optional Parameters</a></li>
+<li><a href="functions.html#Type_Modifiers_Default">6.3.1.2. Default Parameters</a></li>
+<li><a href="functions.html#Type_Modifiers_Variadic">6.3.1.3. Variadic</a></li>
+</ul>
+</li>
+<li><a href="functions.html#_generator-functions">6.3.2. Generator Functions</a>
+<ul class="sectlevel4">
+<li><a href="functions.html#generator-functions-syntax">6.3.2.1. Syntax</a></li>
+<li><a href="functions.html#generator-functions-semantics">6.3.2.2. Semantics</a></li>
+<li><a href="functions.html#_generator-arrow-functions">6.3.2.3. Generator Arrow Functions</a></li>
+</ul>
+</li>
+<li><a href="functions.html#_arrow-function-expression">6.3.3. Arrow Function Expression</a>
+<ul class="sectlevel4">
+<li><a href="functions.html#arrow-function-expression-syntax">6.3.3.1. Syntax</a></li>
+<li><a href="functions.html#arrow-function-expression-semantics-and-type-inference">6.3.3.2. Semantics and Type Inference</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="functions.html#_ecmascript-proposals-function-definition">6.4. ECMAScript Proposals Function Definition</a>
+<ul class="sectlevel3">
+<li><a href="functions.html#_asynchronous-functions">6.4.1. Asynchronous Functions</a>
+<ul class="sectlevel4">
+<li><a href="functions.html#asynchronous-functions-syntax">6.4.1.1. Syntax</a></li>
+<li><a href="functions.html#asynchronous-functions-semantics">6.4.1.2. Semantics</a></li>
+<li><a href="functions.html#_asynchronous-arrow-functions">6.4.1.3. Asynchronous Arrow Functions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="functions.html#_n4js-extended-function-definition">6.5. N4JS Extended Function Definition</a>
+<ul class="sectlevel3">
+<li><a href="functions.html#_generic-functions">6.5.1. Generic Functions</a></li>
+<li><a href="functions.html#_promisifiable-functions">6.5.2. Promisifiable Functions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="conversions_and_reflection.html#_conversions-and-reflection">7. Conversions and Reflection</a>
+<ul class="sectlevel2">
+<li><a href="conversions_and_reflection.html#_autoboxing-and-coercing">7.1. Autoboxing and Coercing</a>
+<ul class="sectlevel3">
+<li><a href="conversions_and_reflection.html#_coercing">7.1.1. Coercing</a></li>
+<li><a href="conversions_and_reflection.html#_autoboxing-of-primitives">7.1.2. Autoboxing of Primitives</a></li>
+<li><a href="conversions_and_reflection.html#_autoboxing-of-function-expressions-and-declarations">7.1.3. Autoboxing of Function Expressions and Declarations</a></li>
+</ul>
+</li>
+<li><a href="conversions_and_reflection.html#_auto-conversion-of-objects">7.2. Auto-Conversion of Objects</a>
+<ul class="sectlevel3">
+<li><a href="conversions_and_reflection.html#_auto-conversion-of-class-instances">7.2.1. Auto-Conversion of Class Instances</a>
+<ul class="sectlevel4">
+<li><a href="conversions_and_reflection.html#_auto-conversion-of-interface-instances">7.2.1.1. Auto-Conversion of Interface Instances</a></li>
+</ul>
+</li>
+<li><a href="conversions_and_reflection.html#_auto-conversion-of-enum-literals">7.2.2. Auto-Conversion of Enum Literals</a></li>
+</ul>
+</li>
+<li><a href="conversions_and_reflection.html#_type-cast-and-type-check">7.3. Type Cast and Type Check</a>
+<ul class="sectlevel3">
+<li><a href="conversions_and_reflection.html#_type-cast">7.3.1. Type Cast</a></li>
+<li><a href="conversions_and_reflection.html#_type-check">7.3.2. Type Check</a></li>
+</ul>
+</li>
+<li><a href="conversions_and_reflection.html#_reflection-meta-information">7.4. Reflection meta-information</a>
+<ul class="sectlevel3">
+<li><a href="conversions_and_reflection.html#_reflection-for-classes">7.4.1. Reflection for Classes</a></li>
+<li><a href="conversions_and_reflection.html#_reflection-for-interfaces">7.4.2. Reflection for Interfaces</a></li>
+<li><a href="conversions_and_reflection.html#_reflection-for-enumerations">7.4.3. Reflection for Enumerations</a></li>
+</ul>
+</li>
+<li><a href="conversions_and_reflection.html#_conversion-of-primitive-types">7.5. Conversion of primitive types</a></li>
+</ul>
+</li>
+<li><a href="expressions.html#_expressions">8. Expressions</a>
+<ul class="sectlevel2">
+<li><a href="expressions.html#_ecmascript-5-expressions">8.1. ECMAScript 5 Expressions</a>
+<ul class="sectlevel3">
+<li><a href="expressions.html#_the-this-literal">8.1.1. The this Literal</a></li>
+<li><a href="expressions.html#_identifier">8.1.2. Identifier</a></li>
+<li><a href="expressions.html#_literals">8.1.3. Literals</a>
+<ul class="sectlevel4">
+<li><a href="expressions.html#_integer-literals">8.1.3.1. Integer Literals</a></li>
+</ul>
+</li>
+<li><a href="expressions.html#_array-literal">8.1.4. Array Literal</a></li>
+<li><a href="expressions.html#_object-literal">8.1.5. Object Literal</a>
+<ul class="sectlevel4">
+<li><a href="expressions.html#_properties-6">8.1.5.1. Properties</a></li>
+<li><a href="expressions.html#_scoping-and-linking">8.1.5.2. Scoping and linking</a></li>
+</ul>
+</li>
+<li><a href="expressions.html#_parenthesized-expression-and-grouping-operator">8.1.6. Parenthesized Expression and Grouping Operator</a></li>
+<li><a href="expressions.html#_property-accessors">8.1.7. Property Accessors</a>
+<ul class="sectlevel4">
+<li><a href="expressions.html#properties-1">8.1.7.1. Properties</a></li>
+</ul>
+</li>
+<li><a href="expressions.html#_new-expression">8.1.8. New Expression</a></li>
+<li><a href="expressions.html#_function-expression-2">8.1.9. Function Expression</a></li>
+<li><a href="expressions.html#_function-calls">8.1.10. Function Calls</a></li>
+<li><a href="expressions.html#_postfix-expression">8.1.11. Postfix Expression</a></li>
+<li><a href="expressions.html#_unary-expression">8.1.12. Unary Expression</a></li>
+<li><a href="expressions.html#_multiplicative-expression">8.1.13. Multiplicative Expression</a></li>
+<li><a href="expressions.html#_additive-expression">8.1.14. Additive Expression</a>
+<ul class="sectlevel4">
+<li><a href="expressions.html#type-inference-10">8.1.14.1. Type Inference</a></li>
+</ul>
+</li>
+<li><a href="expressions.html#_bitwise-shift-expression">8.1.15. Bitwise Shift Expression</a></li>
+<li><a href="expressions.html#_relational-expression">8.1.16. Relational Expression</a></li>
+<li><a href="expressions.html#_equality-expression">8.1.17. Equality Expression</a></li>
+<li><a href="expressions.html#_binary-bitwise-expression">8.1.18. Binary Bitwise Expression</a></li>
+<li><a href="expressions.html#_binary-logical-expression">8.1.19. Binary Logical Expression</a></li>
+<li><a href="expressions.html#_conditional-expression">8.1.20. Conditional Expression</a></li>
+<li><a href="expressions.html#_assignment-expression">8.1.21. Assignment Expression</a></li>
+<li><a href="expressions.html#_comma-expression">8.1.22. Comma Expression</a></li>
+</ul>
+</li>
+<li><a href="expressions.html#_ecmascript-6-expressions">8.2. ECMAScript 6 Expressions</a>
+<ul class="sectlevel3">
+<li><a href="expressions.html#_the-super-keyword">8.2.1. The super Keyword</a></li>
+</ul>
+</li>
+<li><a href="expressions.html#_ecmascript-7-expressions">8.3. ECMAScript 7 Expressions</a>
+<ul class="sectlevel3">
+<li><a href="expressions.html#_await-expression">8.3.1. Await Expression</a></li>
+</ul>
+</li>
+<li><a href="expressions.html#_n4js-specific-expressions">8.4. N4JS Specific Expressions</a>
+<ul class="sectlevel3">
+<li><a href="expressions.html#_class-expression">8.4.1. Class Expression</a></li>
+<li><a href="expressions.html#_cast-as-expression">8.4.2. Cast (As) Expression</a>
+<ul class="sectlevel4">
+<li><a href="expressions.html#cast-as-expression-semantics-type-inference">8.4.2.1. Semantics and Type Inference</a></li>
+</ul>
+</li>
+<li><a href="expressions.html#Import_Calls">8.4.3. Import Calls</a></li>
+</ul>
+</li>
+<li><a href="expressions.html#compile-time-expressions">8.5. Compile-Time Expressions</a></li>
+</ul>
+</li>
+<li><a href="statements.html#_statements">9. Statements</a>
+<ul class="sectlevel2">
+<li><a href="statements.html#_ecmascript-5-statements">9.1. ECMAScript 5 Statements</a>
+<ul class="sectlevel3">
+<li><a href="statements.html#_function-or-field-accessor-bodies">9.1.1. Function or Field Accessor Bodies</a></li>
+<li><a href="statements.html#_variable-statement">9.1.2. Variable Statement</a></li>
+<li><a href="statements.html#_if-statement">9.1.3. If Statement</a></li>
+<li><a href="statements.html#_iteration-statements">9.1.4. Iteration Statements</a></li>
+<li><a href="statements.html#_return-statement">9.1.5. Return Statement</a></li>
+<li><a href="statements.html#_with-statement">9.1.6. With Statement</a></li>
+<li><a href="statements.html#_switch-statement">9.1.7. Switch Statement</a></li>
+<li><a href="statements.html#_throw-try-and-catch-statements">9.1.8. Throw, Try, and Catch Statements</a></li>
+<li><a href="statements.html#_debugger-statement">9.1.9. Debugger Statement</a></li>
+</ul>
+</li>
+<li><a href="statements.html#_ecmascript-6-statements">9.2. ECMAScript 6 Statements</a>
+<ul class="sectlevel3">
+<li><a href="statements.html#_let">9.2.1. Let</a></li>
+<li><a href="statements.html#_const">9.2.2. Const</a></li>
+<li><a href="statements.html#_for-of-statement">9.2.3. <code>for &#8230;&#8203; of</code> statement</a></li>
+<li><a href="statements.html#_import-statement">9.2.4. Import Statement</a>
+<ul class="sectlevel4">
+<li><a href="statements.html#Dynamic_Imports">9.2.4.1. Dynamic Imports</a></li>
+<li><a href="statements.html#_immutabilaty-of-imports">9.2.4.2. Immutabilaty of Imports</a></li>
+</ul>
+</li>
+<li><a href="statements.html#_export-statement">9.2.5. Export Statement</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="annotations.html#_annotations">10. Annotations</a>
+<ul class="sectlevel2">
+<li><a href="annotations.html#_introduction-2">10.1. Introduction</a>
+<ul class="sectlevel3">
+<li><a href="annotations.html#_syntax-13">10.1.1. Syntax</a></li>
+<li><a href="annotations.html#_properties-7">10.1.2. Properties</a></li>
+<li><a href="annotations.html#_element-specific-annotations">10.1.3. Element-Specific Annotations</a></li>
+<li><a href="annotations.html#_general-annotations">10.1.4. General Annotations</a>
+<ul class="sectlevel4">
+<li><a href="annotations.html#_idebug">10.1.4.1. IDEBUG</a></li>
+</ul>
+</li>
+<li><a href="annotations.html#idebug-syntax">10.1.5. Syntax</a>
+<ul class="sectlevel4">
+<li><a href="annotations.html#_semantics-11">10.1.5.1. Semantics</a></li>
+<li><a href="annotations.html#_suppress-warnings">10.1.5.2. Suppress Warnings</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="annotations.html#_declaration-of-annotations">10.2. Declaration of Annotations</a></li>
+</ul>
+</li>
+<li><a href="extended_fetaures.html#_extended-fetaures">11. Extended Fetaures</a>
+<ul class="sectlevel2">
+<li><a href="extended_fetaures.html#_array-and-object-destructuring">11.1. Array and Object Destructuring</a>
+<ul class="sectlevel3">
+<li><a href="extended_fetaures.html#_syntax-14">11.1.1. Syntax</a></li>
+<li><a href="extended_fetaures.html#_semantics-12">11.1.2. Semantics</a></li>
+</ul>
+</li>
+<li><a href="extended_fetaures.html#_dependency-injection">11.2. Dependency Injection</a>
+<ul class="sectlevel3">
+<li><a href="extended_fetaures.html#_di-components-and-injectors">11.2.1. DI Components and Injectors</a>
+<ul class="sectlevel4">
+<li><a href="extended_fetaures.html#_dicomponent-relations">11.2.1.1. DIComponent Relations</a></li>
+</ul>
+</li>
+<li><a href="extended_fetaures.html#_binders-and-bindings">11.2.2. Binders and Bindings</a></li>
+<li><a href="extended_fetaures.html#_injection-points">11.2.3. Injection Points</a>
+<ul class="sectlevel4">
+<li><a href="extended_fetaures.html#_field-injection">11.2.3.1. Field Injection</a></li>
+<li><a href="extended_fetaures.html#_constructor-injection">11.2.3.2. Constructor Injection</a></li>
+<li><a href="extended_fetaures.html#_method-injection">11.2.3.3. Method Injection</a>
+<ul class="sectlevel5">
+<li><a href="extended_fetaures.html#_provider">11.2.3.3.1. Provider</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="extended_fetaures.html#_n4js-di-life-cycle-and-scopes">11.2.4. N4JS DI Life Cycle and Scopes</a>
+<ul class="sectlevel4">
+<li><a href="extended_fetaures.html#_injection-cylces">11.2.4.1. Injection Cylces</a></li>
+<li><a href="extended_fetaures.html#_default-scope">11.2.4.2. Default Scope</a></li>
+<li><a href="extended_fetaures.html#_singleton-scope">11.2.4.3. Singleton Scope</a></li>
+<li><a href="extended_fetaures.html#_per-injection-chain-singleton">11.2.4.4. Per Injection Chain Singleton</a></li>
+</ul>
+</li>
+<li><a href="extended_fetaures.html#_validation-of-callsites-targeting-n4injector-methods">11.2.5. Validation of callsites targeting N4Injector methods</a></li>
+<li><a href="extended_fetaures.html#_n4js-di-annotations">11.2.6. N4JS DI Annotations</a>
+<ul class="sectlevel4">
+<li><a href="extended_fetaures.html#_n4js-di-generateinjector">11.2.6.1. N4JS DI @GenerateInjector</a></li>
+<li><a href="extended_fetaures.html#_n4js-di-withparentinjector">11.2.6.2. N4JS DI @WithParentInjector</a></li>
+<li><a href="extended_fetaures.html#_n4js-di-usebinder">11.2.6.3. N4JS DI @UseBinder</a></li>
+<li><a href="extended_fetaures.html#_n4js-di-binder">11.2.6.4. N4JS DI @Binder</a></li>
+<li><a href="extended_fetaures.html#_n4js-di-bind">11.2.6.5. N4JS DI @Bind</a></li>
+<li><a href="extended_fetaures.html#_n4js-di-provides">11.2.6.6. N4JS DI @Provides</a></li>
+<li><a href="extended_fetaures.html#_n4js-di-inject">11.2.6.7. N4JS DI @Inject</a></li>
+<li><a href="extended_fetaures.html#_n4js-di-singleton">11.2.6.8. N4JS DI @Singleton</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="extended_fetaures.html#_test-support">11.3. Test Support</a></li>
+<li><a href="extended_fetaures.html#_polyfill-definitions">11.4. Polyfill Definitions</a>
+<ul class="sectlevel3">
+<li><a href="extended_fetaures.html#_runtime-polyfill-definitions">11.4.1. Runtime Polyfill Definitions</a></li>
+<li><a href="extended_fetaures.html#_static-polyfill-definitions">11.4.2. Static Polyfill Definitions</a></li>
+<li><a href="extended_fetaures.html#_transpiling-static-polyfilled-classes">11.4.3. Transpiling static polyfilled classes</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="components.html#_components">12. Components</a>
+<ul class="sectlevel2">
+<li><a href="components.html#_overview-2">12.1. Overview</a></li>
+<li><a href="components.html#Component_Types">12.2. Component Types</a>
+<ul class="sectlevel3">
+<li><a href="components.html#_libraries">12.2.1. Libraries</a></li>
+<li><a href="components.html#_runtime-environment-and-runtime-libraries">12.2.2. Runtime Environment and Runtime Libraries</a></li>
+<li><a href="components.html#_tests">12.2.3. Tests</a></li>
+<li><a href="components.html#_type-definitions">12.2.4. Type Definitions</a></li>
+</ul>
+</li>
+<li><a href="components.html#package-json">12.3. Package.json File</a>
+<ul class="sectlevel3">
+<li><a href="components.html#_basic-properties">12.3.1. Basic Properties</a></li>
+<li><a href="components.html#_n4js-properties">12.3.2. N4JS Properties</a></li>
+<li><a href="components.html#_constraints">12.3.3. Constraints</a></li>
+</ul>
+</li>
+<li><a href="components.html#_support-for-npm-scopes">12.4. Support for NPM Scopes</a></li>
+<li><a href="components.html#sec:N4JS-Type-Definitions">12.5. N4JS Type Definitions</a>
+<ul class="sectlevel3">
+<li><a href="components.html#_specify-type-definition">12.5.1. Specify Type Definition</a></li>
+<li><a href="components.html#_name-conventions">12.5.2. Name Conventions</a></li>
+<li><a href="components.html#_version-conventions">12.5.3. Version Conventions</a>
+<ul class="sectlevel4">
+<li><a href="components.html#_define-a-new-type-definition-package">12.5.3.1. Define a New Type Definition Package</a></li>
+<li><a href="components.html#_using-a-type-definition-package">12.5.3.2. Using a Type Definition Package</a></li>
+<li><a href="components.html#_rational">12.5.3.3. Rational</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="components.html#_modules">12.6. Modules</a></li>
+<li><a href="components.html#_api-and-implementation-component">12.7. API and Implementation Component</a>
+<ul class="sectlevel3">
+<li><a href="components.html#_execution-of-api-and-implementation-components">12.7.1. Execution of API and Implementation Components</a></li>
+<li><a href="components.html#_api-and-implementation-with-di">12.7.2. API and Implementation With DI</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="plainjs.html#_plainjs">13. PlainJS</a>
+<ul class="sectlevel2">
+<li><a href="plainjs.html#_type-inference-and-validation-for-plain-js">13.1. Type Inference and Validation for Plain JS</a></li>
+<li><a href="plainjs.html#_external-declarations">13.2. External Declarations</a>
+<ul class="sectlevel3">
+<li><a href="plainjs.html#_declaring-externals">13.2.1. Declaring externals</a></li>
+<li><a href="plainjs.html#_instantiating-external-classes">13.2.2. Instantiating external classes</a></li>
+<li><a href="plainjs.html#_implementation-of-external-declarations">13.2.3. Implementation of External Declarations</a></li>
+<li><a href="plainjs.html#_example">13.2.4. Example</a></li>
+</ul>
+</li>
+<li><a href="plainjs.html#_global-definitions">13.3. Global Definitions</a></li>
+<li><a href="plainjs.html#_runtime-definitions">13.4. Runtime Definitions</a></li>
+<li><a href="plainjs.html#_applying-polyfills">13.5. Applying Polyfills</a></li>
+</ul>
+</li>
+<li><a href="jsdoc.html#_jsdoc-2">14. JSDoc</a>
+<ul class="sectlevel2">
+<li><a href="jsdoc.html#_general-n4jsdoc-features">14.1. General N4JSDoc Features</a>
+<ul class="sectlevel3">
+<li><a href="jsdoc.html#_provided-inline-tags">14.1.1. Provided Inline Tags</a>
+<ul class="sectlevel4">
+<li><a href="jsdoc.html#jsdoc_tag__code">14.1.1.1. @code</a></li>
+<li><a href="jsdoc.html#jsdoc_tag__link">14.1.1.2. @link</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="jsdoc.html#_n4jsdoc-for-user-projects">14.2. N4JSdoc for User Projects</a>
+<ul class="sectlevel3">
+<li><a href="jsdoc.html#_standard-tags">14.2.1. Standard Tags</a>
+<ul class="sectlevel4">
+<li><a href="jsdoc.html#_-author">14.2.1.1. @author</a></li>
+<li><a href="jsdoc.html#jsdoc_tag_param">14.2.1.2. @param</a></li>
+<li><a href="jsdoc.html#jsdoc_tag_return">14.2.1.3. @return</a></li>
+</ul>
+</li>
+<li><a href="jsdoc.html#_test-related-tags">14.2.2. Test Related Tags</a>
+<ul class="sectlevel4">
+<li><a href="jsdoc.html#jsdoc_tag__testee">14.2.2.1. @testee</a></li>
+<li><a href="jsdoc.html#jsdoc_tag__testeeFromType">14.2.2.2. @testeeFromType</a></li>
+<li><a href="jsdoc.html#_testeeType_and__testeeMember">14.2.2.3. @testeeType and @testeeMember</a></li>
+<li><a href="jsdoc.html#jsdoc_tag_reqid_in_Tests">14.2.2.4. @reqid in Tests</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="jsdoc.html#_n4jsdoc-for-api-and-implementation-projects">14.3. N4JSDoc for API and Implementation Projects</a>
+<ul class="sectlevel3">
+<li><a href="jsdoc.html#jsdoc_tag__apiNote">14.3.1. @apiNote</a></li>
+<li><a href="jsdoc.html#API_Project_Tags">14.3.2. API Project Tags</a>
+<ul class="sectlevel4">
+<li><a href="jsdoc.html#jsdoc_tag_apiState">14.3.2.1. @apiState</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="jsx.html#_jsx">15. JSX</a>
+<ul class="sectlevel2">
+<li><a href="jsx.html#_jsx-support">15.1. JSX Support</a></li>
+<li><a href="jsx.html#_jsx-backend">15.2. JSX Backend</a></li>
+</ul>
+</li>
+<li><a href="grammars.html#_grammars">16. Grammars</a>
+<ul class="sectlevel2">
+<li><a href="grammars.html#_type-expressions-grammar">16.1. Type Expressions Grammar</a></li>
+<li><a href="grammars.html#_n4js-language-grammar">16.2. N4JS Language Grammar</a></li>
+</ul>
+</li>
+<li><a href="jsobjects.html#_jsobjects">17. JSObjects</a>
+<ul class="sectlevel2">
+<li><a href="jsobjects.html#_object">17.1. Object</a></li>
+<li><a href="jsobjects.html#_string">17.2. String</a></li>
+<li><a href="jsobjects.html#_boolean">17.3. Boolean</a></li>
+<li><a href="jsobjects.html#_number">17.4. Number</a>
+<ul class="sectlevel3">
+<li><a href="jsobjects.html#_static-attributes">17.4.1. Static Attributes</a></li>
+</ul>
+</li>
+<li><a href="jsobjects.html#function">17.5. Function</a></li>
+<li><a href="jsobjects.html#_error">17.6. Error</a></li>
+<li><a href="jsobjects.html#_array">17.7. Array</a></li>
+<li><a href="jsobjects.html#_date">17.8. Date</a></li>
+<li><a href="jsobjects.html#_math">17.9. Math</a>
+<ul class="sectlevel3">
+<li><a href="jsobjects.html#static-attributes-1">17.9.1. Static Attributes</a></li>
+</ul>
+</li>
+<li><a href="jsobjects.html#_regexp">17.10. RegExp</a></li>
+<li><a href="jsobjects.html#_json">17.11. JSON</a></li>
+</ul>
+</li>
+<li><a href="#_n4js-objects">18. N4JS Objects</a>
+<ul class="sectlevel2">
+<li><a href="#_reflection-model">18.1. Reflection Model</a></li>
+<li><a href="#_error-types">18.2. Error Types</a>
+<ul class="sectlevel3">
+<li><a href="#_n4apinotimplemented">18.2.1. N4ApiNotImplemented</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="appendix_a_acronyms.html#_acronyms">Appendix A: Acronyms</a></li>
+<li><a href="appendix_b_license.html#sec:License">Appendix B: License</a></li>
+<li><a href="appendix_c_bibliography.html#_bibliography">Appendix C: Bibliography</a></li>
+</ul>
+</div>
+</div>
+<div id="content"><div class="sect1">
+<h2 id="_n4js-objects"><a class="anchor" href="#_n4js-objects"></a><a class="link" href="#_n4js-objects">18. N4JS Objects</a></h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_reflection-model"><a class="anchor" href="#_reflection-model"></a><a class="link" href="#_reflection-model">18.1. Reflection Model</a></h3>
+<div class="paragraph">
+<p>N4JS provided metadata for reflection (and introspection). This
+information is available via instances of some reflection model classes
+(described below) attached to types and (in some cases) functions.</p>
+</div>
+<div class="paragraph">
+<p>The following class diagrams shows the defined classes. Note that for
+performance reasons, the actual structure may vary from the model.</p>
+</div>
+<div id="fig-n4js-reflection-classes" class="imageblock">
+<div class="content">
+<img src="chapters/a03_n4jsobjects/fig/cd_reflectionModel.svg" alt="cd reflectionModel">
+</div>
+<div class="title">Figure 17. N4JS Reflection Classes</div>
+</div>
+<div class="paragraph">
+<p>Remark: This section is work in progress. The final goal is to provide a
+metamodel similar to Ecore, but we will only add new features if needed.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-n4js" data-lang="n4js">/**
+ * Base class for all N4 reflective elements.
+ */
+export public abstract class N4Element extends Object {
+    /**
+     * Annotations attached to this element.
+     */
+    public Array&lt;N4Annotation&gt; annotations = [];
+
+    /**
+     * The origin string formed as &lt;ID-VERSION&gt;, where ID is containing project artefact id, and VERSION is its version
+     */
+    public String origin;
+
+    /**
+     * Returns true if an annotation with the given name is attached to the element.
+     */
+    public boolean hasAnnotation(string name) {
+        return !!this.anyAnnotation(name)
+    }
+
+    /**
+     * Returns any annotation with the given name attached to the element, or null if no such annotation is found.
+     */
+    public N4Annotation anyAnnotation(string name) {
+        for (var i=this.annotations.length-1; i&gt;=0; i--) {
+            var a = this.annotations[i];
+            if (a) {
+                return a;
+            }
+        }
+        return null;
+    }
+    /**
+     * Returns all annotations with the given name attached to the element, or an empty array if no such annotations are found.
+     */
+    public Array&lt;N4Annotation&gt; allAnnotations(string name) {
+        return this.annotations.filter(function(a){return a.name==name});
+    }
+}
+
+/**
+ * Base class for all reflective classes with a name.
+ */
+export public abstract class N4NamedElement extends N4Element {
+    /**
+     * The simple name of a named element.
+     */
+    public string name;
+}
+
+/**
+ * Base class for all reflective classes describing a type (declaration).
+ */
+export public abstract class N4Type extends N4NamedElement {
+    /**
+     * The FQN of the type.
+     */
+    public string fqn;
+
+    /**
+     * Returns true if this N4Class describes an N4-class declaration.
+     */
+    public boolean get isClass() { return false; }
+
+    /**
+     * Returns true if this N4Class describes an N4-interface declaration.
+     */
+    public boolean get isInterface() { return false; }
+
+    /**
+     * Returns true if this N4Class describes an N4-enumeration declaration.
+     */
+    public boolean get isEnum() { return false; }
+}
+
+/**
+ * Base class for meta types of classes or interfaces.
+ */
+export public abstract class N4Classifier extends N4Type {
+
+    /**
+     * The N4Class of the super type, may be null if super type is a not an N4Class.
+     */
+    public N4Class n4superType;
+
+    /**
+     * Array of the FQN of all (transitively) implemented interfaces, i.e. interfaces directly implemented by this class, its super
+     * class or interfaces extended by directly implemented interfaces.
+     */
+    public Array&lt;string&gt; allImplementedInterfaces;
+
+    /**
+     * Array of all owned members, that is members defined in the class directly.
+     * This field is private as it is an internal detail, members are accessed via methods defined in this class.
+     */
+    private Array&lt;N4Member&gt; ownedMembers;
+
+    /**
+     * Array of all consumed members, that is members mixed into the classifier via interface implementation and default methods.
+     * This field is private as it is an internal detail, members are accessed via methods defined in this class.
+     */
+    private Array&lt;N4Member&gt; consumedMembers;
+
+    /**
+     * Only used internally, must not be called by client.
+     */
+    protected constructor(@Spec ~~this spec) {}
+
+    /**
+     * Returns all members defined by this class directly, consumed, and inherited. The boolean flags control which members are returned.
+     *
+     * @param consumed if set, consumed members are returned as well (false by default)
+     * @param inherited if set, inherited members are returned as well (false by default)
+     * @param _static if set, static members are returned, otherwise instance members (false by default).
+     * @return array of members, may be empty but never null
+     */
+    public Array&lt;? extends N4Member&gt; members(boolean? consumed, boolean? inherited, boolean? _static) {
+        return null; // TODO
+    }
+
+    /**
+     * Returns all members defined in this classifier (or inherited) with an annotation
+     * of given name attached to it. The boolean flags control which methods are returned.
+     *
+     * @param name name of annotation to be used as filter
+     * @param consumed if set, consumed members are returned as well (false by default)
+     * @param inherited if set, inherited members are returned as well (false by default)
+     * @param _static if set, static members are returned, otherwise instance members (false by default).
+     * @return array of members, may be empty but never null
+     */
+    public Array&lt;? extends N4Member&gt; membersWithAnnotation(string name, boolean? consumed, boolean? inherited, boolean? _static) {
+        return null; // TODO
+    }
+
+    /**
+     * Returns all data fields defined by this class directly, consumed, and inherited. The boolean flags control which data fields are returned.
+     *
+     * @param consumed if set, consumed data fields are returned as well (false by default)
+     * @param inherited if set, inherited data fields are returned as well (false by default)
+     * @param _static if set, static data fields are returned, otherwise instance members (false by default).
+     * @return array of data fields, may be empty but never null
+     */
+    public Array&lt;? extends N4DataField&gt; dataFields(boolean? consumed, boolean? inherited, boolean? _static) {
+        return null; // TODO
+    }
+
+    /**
+     * Returns all data fields defined in this classifier (or inherited) with an annotation
+     * of given name attached to it. The boolean flags control which data fields are returned.
+     *
+     * @param name name of annotation to be used as filter
+     * @param consumed if set, consumed data fields are returned as well (false by default)
+     * @param inherited if set, inherited data fields are returned as well (false by default)
+     * @param _static if set, static data fields are returned, otherwise instance members (false by default).
+     * @return array of data fields, may be empty but never null
+     */
+    public Array&lt;? extends N4DataField&gt; dataFieldsWithAnnotation(string name, boolean? consumed, boolean? inherited, boolean? _static) {
+        return null; // TODO
+    }
+
+    /**
+     * Returns all methods defined by this class directly, consumed, and inherited. The boolean flags control which methods are returned.
+     *
+     * @param consumed if set, consumed methods are returned as well (false by default)
+     * @param inherited if set, inherited methods are returned as well (false by default)
+     * @param _static if set, static methods are returned, otherwise instance members (false by default).
+     * @return array of methods, may be empty but never null
+     */
+    public Array&lt;? extends N4Method&gt; methods(boolean? consumed, boolean? inherited, boolean? _static) {
+        return null; // TODO
+    }
+
+    /**
+     * Returns all methods defined in this classifier (or inherited) with an annotation
+     * of given name attached to it. The boolean flags control which methods are returned.
+     *
+     * @param name name of annotation to be used as filter
+     * @param consumed if set, consumed methods are returned as well (false by default)
+     * @param inherited if set, inherited methods are returned as well (false by default)
+     * @param _static if set, static methods are returned, otherwise instance members (false by default).
+     * @return array of methods, may be empty but never null
+     */
+    public Array&lt;? extends N4Method&gt; methodsWithAnnotation(string name, boolean? consumed, boolean? inherited, boolean? _static) {
+        return null; // TODO
+    }
+
+
+}
+
+/**
+ * Meta information of an n4 class.
+ */
+export @Final public class N4Class extends N4Classifier {
+
+    /**
+     * Returns the N4Class instance for a given n4object. This is similar to
+     * {@code n4object.constructor.n4type}, however it can also be used in interfaces
+     * to get reflective information of the implementor.
+     */
+    public static N4Class of(N4Object n4object) {
+        return n4object.constructor.n4type
+    }
+
+    /**
+     * Returns true if this N4Class describes an N4-class declaration.
+     */
+    @Override
+    public boolean get isClass() { return true; }
+}
+
+
+/**
+ * Meta information of an n4 interface.
+ */
+export @Final public class N4Interface extends N4Classifier {
+    /**
+     * Returns true if this N4Class describes an N4-interface declaration.
+     */
+    @Override
+    public boolean get isInterface() { return true; }
+}
+
+/**
+ * Description of a member, that is a method or field.
+ */
+export public abstract class N4Member extends N4Element {
+    public string name;
+}
+
+/**
+ * Description of a method.
+ */
+export @Final public class N4Method extends N4Member {
+    public Function jsFunction;
+}
+
+/**
+ * Description of a simple data field.
+ */
+export @Final public class N4DataField extends N4Member {
+}
+
+/**
+ * Description of an accessor, that is a getter or setter.
+ */
+export @Final public class N4Accessor extends N4Member {
+    /**
+     * Flag indicating whether accessor is a getter or setter, internal detail.
+     */
+    private boolean getter;
+    /**
+     * Returns true if accessor is a getter.
+     */
+    public boolean isGetter() { return this.getter; }
+    /**
+     * Returns true if accessor is a setter.
+     */
+    public boolean isSetter() { return ! this.getter; }
+}
+
+/**
+ * Description of an N4Enum
+ */
+export @Final public class N4EnumType extends N4Type {
+    /**
+     * Returns true if this N4Clasifier describes an N4-enumeration declaration.
+     */
+    @Override public boolean get isEnum() { return true; }
+    /**
+     * Returns the N4EnumType instance for a given enum literal. This is similar to
+     * {@code n4enum.constructor.n4type}.
+     */
+    public static N4EnumType of(N4Enum n4enum) {
+        return n4enum.constructor.n4type
+    }
+}
+
+/**
+ * Base class for all enumeration, literals are assumed to be static constant fields of concrete subclasses.
+ */
+export public abstract class N4Enum  extends Object {
+
+    /**
+     * Returns the name of a concrete literal
+     */
+    public abstract string get name();
+
+    /**
+     * Returns the value of a concrete literal. If no value is
+     * explicitly set, it is similar to the name.
+     */
+    public abstract string get value()
+
+    /**
+     * Returns a string representation of a concrete literal, it returns
+     * the same result as value()
+     */
+    @Override public string toString() { return this.value }
+
+    /**
+     * Returns the enum class object of this enum literal for reflection.
+     * The very same meta class object can be retrieved from the enumeration type directly.
+     */
+    public abstract N4Enum get n4Enum()
+
+    /**
+     * Natively overridden by concrete enums.
+     */
+    public static Array&lt;? extends N4Enum&gt; get values() { return null; }
+
+    /**
+     * Natively overridden by concrete enums.
+     */
+    public static N4Enum valueByName(string name) { return null; }
+
+    /**
+     * Returns the meta class object of this class for reflection.
+     * The very same meta class object can be retrieved from an instance by calling
+     * &lt;code&gt;instance.constructor.n4type&lt;/code&gt;
+     */
+    public static N4EnumType get n4type() { return null; }
+}
+
+/**
+ * Annotation with value.
+ */
+export @Final public class N4Annotation extends Object {
+    public string name;
+    public union{string,number} value;
+}
+
+/**
+ * The base class for all instances of n4 classes.
+ */
+export public class N4Object {
+    /**
+     * Returns the meta class object of this class for reflection.
+     * The very same meta class object can be retrieved from an instance by calling
+     * &lt;code&gt;instance.constructor.n4type&lt;/code&gt;
+     */
+    // defined in types model, added by $makeClass:
+    // public static N4Class get n4type() { return null; }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_error-types"><a class="anchor" href="#_error-types"></a><a class="link" href="#_error-types">18.2. Error Types</a></h3>
+<div class="paragraph">
+<p>N4JS provides additional Error types as subtypes of <code>Error</code>.</p>
+</div>
+<div class="sect3 language-n4js">
+<h4 id="_n4apinotimplemented"><a class="anchor" href="#_n4apinotimplemented"></a><a class="link" href="#_n4apinotimplemented">18.2.1. N4ApiNotImplemented</a></h4>
+<div class="paragraph">
+<p>Considering API definitions and concrete implementations of those APIs
+the error <code>N4-Api-Not-Implemented-Error</code> is introduced to specifically report missing implementations.
+Instances of this error type are inserted internally during the
+transpilation of API-implementing projects. Whenever a difference to the
+API in form of a missing implementation is encountered, the transpiler
+will insert stub-code throwing an instance of <code>N4-Api-Not-Implemented-Error</code>.</p>
+</div>
+<div class="paragraph">
+<p>API-testing projects can catch those errors and act accordingly. This
+enables tracking of completeness of implementations by counting the
+occasions an <code>N4-Api-NotImplemented-Error</code> was encountered.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-n4js" data-lang="n4js">/**
+ * Error type reporting a not implemented situation.
+ */
+public class N4ApiNotImplementedError extends Error {  }</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Version 0.9<br>
+Last updated 2019-08-07 15:02:40 CEST
+</div>
+</div>
+<!-- ************* docinfo-footer *************************************************************** -->
+<div class="Grid social" style="color:#d5dfea">
+  <div class="Cell Cell--2-12 m-Cell--withMargin">
+    <h2>Quick Links</h2>
+    <ul>
+      <li><a href="../downloads.html">Download</a></li>
+      <li><a href="../userguides/index.html">Documentation</a></li>
+      <li><a href="https://github.com/eclipse/n4js/">Source</a></li>
+      <li><a href="https://github.com/eclipse/n4js/issues">Issues</a></li>
+    </ul>
+  </div>
+  <div class="Cell Cell--2-12 m-Cell--withMargin">
+    <br/><br/>
+    <ul>
+      <li><a href="https://www.eclipse.org/forums/index.php/f/365/">Forum</a></li>
+      <li><a href="http://n4js.blogspot.de/">Blog</a></li>
+      <li><a href="https://dev.eclipse.org/mailman/listinfo/n4js-dev">Mailing List</a></li>
+      <li><a href="https://projects.eclipse.org/projects/technology.n4js">Eclipse Project Page</a></li>
+      <li><a href="https://twitter.com/n4jsdev">Tweets by n4jsdev</a></li>
+    </ul>
+  </div>
+  <div class="Cell Cell--2-12 m-Cell--withMargin">
+    <br/><br/>
+    <ul>
+      <li><a href="http://www.eclipse.org/">Eclipse Home</a></li>
+      <li><a href="http://www.eclipse.org/legal/privacy.php">Privacy Policy</a></li>
+      <li><a href="http://www.eclipse.org/legal/termsofuse.php">Terms of Use</a></li>
+      <li><a href="http://www.eclipse.org/legal/copyright.php">Copyright Agent</a></li>
+      <li><a href="http://www.eclipse.org/legal/">Legal</a></li>
+    </ul>
+  </div>
+  <div style="clear: both; height: 0; overflow: hidden;"></div>
+</div>
+
+<!-- ************* UI Scripts ************* -->
+<script type="text/javascript" src="scripts/back-to-top.js"></script>
+
+<script type="text/javascript" src="scripts/treeview.js"></script>
+<script type="text/javascript" src="scripts/toc.js"></script>
+
+<!-- ************* Prism.js Syntax Highlighting ************* -->
+<script src="scripts/prism.js"></script>
+
+<script type="text/javascript">
+	// Add the 'toclist' id for search function
+	$(".toc2 > ul").attr('id', 'toclist');
+	// Generate a Search input form
+	$("#toclist > li:first-of-type").before('<input type="text" id="pagesearch" onkeyup="search()" placeholder="Search for section...">');
+	$("#toclist > li:first-of-type").before('<i id="clear" class="fa fa-times-circle-o"></i>');
+	$("#clear").click(function(){
+	    $("#pagesearch").val('');
+	    search();
+	    $('.toc2 > ul').treeView('collapseAll');
+	});
+	// intialize Treeview.js
+	$(".toc2 > ul").treeView();
+	// Initialize Scrollspy
+</script>
+<!-- ************* docinfo-footer *************************************************************** -->
+</body>
+</html>

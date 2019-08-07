@@ -1,0 +1,3341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 1.5.5">
+<meta name="author" content="2019-08-07 15:02:40 CEST">
+<title>N4JS Design Specification</title>
+<link rel="stylesheet" href="styles/spec.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
+<!-- ************* docinfo ******************************************************************* -->
+
+
+<!-- ************* Favicon ************-->
+<link rel="icon" href="images/favicon.ico" />
+
+<!-- ************* Back-to-top JQuery ************* -->
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
+
+
+<link href="styles/prism.min.css" rel="stylesheet" />
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+<!-- ************* Styles ************* -->
+<link rel="stylesheet" type="text/css" href="styles/n4jsspec-adoc.css">
+
+
+<!-- ****************** NavBar ****************** -->
+<div id="menubar">
+	<div class="banner">
+        <a href="https://www.eclipse.org/n4js/#"><img id="logo" src="images/n4js-logo.png" alt="Eclipse N4JS"></a>
+    </div>
+<ul>
+  <li><a href="index.html">Index</a></li>
+</ul>
+</div>
+<!-- ************* docinfo ******************************************************************* -->
+<style>
+      .admonitionblock td.icon .icon-todo:before{content:"\f249";color:#f4ee42}
+    </style>
+</head>
+<body class="book toc2 toc-left">
+<div id="header">
+<h1>N4JS Design Specification</h1>
+<div class="details">
+<span id="author" class="author">2019-08-07 15:02:40 CEST</span><br>
+<span id="revnumber">version 0.9</span>
+</div>
+<div id="toc" class="toc2">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="introduction.html#_introduction">1. Introduction</a>
+<ul class="sectlevel2">
+<li><a href="introduction.html#notation">1.1. Notation</a></li>
+<li><a href="introduction.html#sec:IDE_Overview">1.2. IDE Components</a>
+<ul class="sectlevel3">
+<li><a href="introduction.html#sec:Naming_Conventions">1.2.1. Naming Conventions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="eclipse_setup.html#_eclipse-setup">2. Eclipse Setup</a>
+<ul class="sectlevel2">
+<li><a href="eclipse_setup.html#_system-requirements">2.1. System Requirements</a></li>
+<li><a href="eclipse_setup.html#_contribute">2.2. Contribute</a>
+<ul class="sectlevel3">
+<li><a href="eclipse_setup.html#_eclipse-installer">2.2.1. Eclipse Installer</a>
+<ul class="sectlevel4">
+<li><a href="eclipse_setup.html#_changing-the-setup-script">2.2.1.1. Changing the Setup Script</a></li>
+</ul>
+</li>
+<li><a href="eclipse_setup.html#_manual-ide-configuration">2.2.2. Manual IDE Configuration</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="release_engineering.html#_release-engineering">3. Release Engineering</a>
+<ul class="sectlevel2">
+<li><a href="release_engineering.html#_nightly-build-on-eclipse-infrastructure">3.1. Nightly build on Eclipse infrastructure</a></li>
+<li><a href="release_engineering.html#_build-the-n4js-ide-from-command-line">3.2. Build the N4JS IDE from command line</a>
+<ul class="sectlevel3">
+<li><a href="release_engineering.html#_publish-maven-tooling-code-org-eclipse-n4js-releng-util-code">3.2.1. Publish maven-tooling <code>org.eclipse.n4js.releng.util</code></a></li>
+<li><a href="release_engineering.html#sec:test-verdaccio">3.2.2. Test Verdaccio containing n4js-libs</a></li>
+<li><a href="release_engineering.html#_generation-of-eclipse-help-for-spec-and-design-document">3.2.3. Generation of Eclipse help for spec and design document</a></li>
+</ul>
+</li>
+<li><a href="release_engineering.html#_updating-frameworks-and-dependencies">3.3. Updating frameworks and dependencies</a>
+<ul class="sectlevel3">
+<li><a href="release_engineering.html#_update-of-eclipse-emf-xtext-etc">3.3.1. Update of Eclipse, EMF, Xtext, etc.</a></li>
+<li><a href="release_engineering.html#_update-of-the-embedded-jre">3.3.2. Update of the embedded JRE</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="tips_and_tricks.html#_tips-and-tricks">4. Tips and Tricks</a>
+<ul class="sectlevel2">
+<li><a href="tips_and_tricks.html#_naming">4.1. Naming</a></li>
+<li><a href="tips_and_tricks.html#_logging">4.2. Logging</a></li>
+<li><a href="tips_and_tricks.html#_cancellation-handling">4.3. Cancellation Handling</a></li>
+<li><a href="tips_and_tricks.html#_caching">4.4. Caching</a></li>
+<li><a href="tips_and_tricks.html#_dependency-injection">4.5. Dependency Injection</a></li>
+<li><a href="tips_and_tricks.html#_miscellaneous">4.6. Miscellaneous</a></li>
+</ul>
+</li>
+<li><a href="parser.html#_parser">5. Parser</a>
+<ul class="sectlevel2">
+<li><a href="parser.html#sec:Parser_Overview">5.1. Overview</a></li>
+<li><a href="parser.html#sec:N4JS_Parser">5.2. N4JS Parser</a></li>
+<li><a href="parser.html#sec:Parser_Generation_Post_Processing">5.3. Parser Generation Post-Processing</a>
+<ul class="sectlevel3">
+<li><a href="parser.html#sec:Automatic_Semicolon_Insertion">5.3.1. Automatic Semicolon Insertion</a>
+<ul class="sectlevel4">
+<li><a href="parser.html#sec:Injected_code_in_the_Antlr_grammar_file">5.3.1.1. Injected code in the Antlr grammar file</a></li>
+<li><a href="parser.html#sec:Customized_error_recovery">5.3.1.2. Customized error recovery</a></li>
+</ul>
+</li>
+<li><a href="parser.html#sec:_No_line_terminator_allowed_here__handling">5.3.2. Async and <code>No line terminator allowed here</code> Handling</a></li>
+<li><a href="parser.html#sec:Regular_Expression">5.3.3. Regular Expression</a></li>
+<li><a href="parser.html#sec:Unicode">5.3.4. Unicode</a></li>
+<li><a href="parser.html#sec:Literals">5.3.5. Literals</a></li>
+</ul>
+</li>
+<li><a href="parser.html#sec:Modifiers">5.4. Modifiers</a></li>
+<li><a href="parser.html#sec:Conflict_Resolutions">5.5. Conflict Resolutions</a>
+<ul class="sectlevel3">
+<li><a href="parser.html#sec:Reserved_Keywords_vs__Identifier_Names">5.5.1. Reserved Keywords vs. Identifier Names</a></li>
+<li><a href="parser.html#sec:Operators_and_Generics">5.5.2. Operators and Generics</a></li>
+</ul>
+</li>
+<li><a href="parser.html#sec:Content_Assist_Parser">5.6. Content-Assist Parser</a></li>
+</ul>
+</li>
+<li><a href="type_system.html#_type-system">6. Type System</a>
+<ul class="sectlevel2">
+<li><a href="type_system.html#sec:Type_Model_and_Grammar">6.1. Type Model and Grammar</a>
+<ul class="sectlevel3">
+<li><a href="type_system.html#sec:Type_Model_Overview">6.1.1. Type Model Overview</a></li>
+<li><a href="type_system.html#sec:Built_in_Types">6.1.2. Built-in and Primitive Types</a></li>
+<li><a href="type_system.html#sec:Type_Model_DSL">6.1.3. Type Model DSL</a></li>
+</ul>
+</li>
+<li><a href="type_system.html#sec:Type_System_Implementation">6.2. Type System Implementation</a></li>
+<li><a href="type_system.html#sec:Type_Inference_combined_with_AST_Traversal">6.3. Type Inference of AST</a>
+<ul class="sectlevel3">
+<li><a href="type_system.html#sec:Type_Inference_combined_with_AST_Traversal__Background">6.3.1. Background</a></li>
+<li><a href="type_system.html#sec:Triggering_Type_Inference_of_AST">6.3.2. Triggering</a></li>
+<li><a href="type_system.html#sec:Traversal_Order_During_Type_Inference_of_AST">6.3.3. Traversal Order</a></li>
+<li><a href="type_system.html#sec:Cross_References_During_Type_Inference_of_AST">6.3.4. Cross-References</a></li>
+<li><a href="type_system.html#sec:Function_Accessor_Bodies_During_Type_Inference_of_AST">6.3.5. Function/Accessor Bodies</a></li>
+<li><a href="type_system.html#sec:Poly_Expressions_During_Type_Inference_of_AST">6.3.6. Poly Expressions</a></li>
+<li><a href="type_system.html#sec:Constraint_Solver_used_During_Type_Inference_of_AST">6.3.7. Constraint Solver</a></li>
+<li><a href="type_system.html#sec:Type_Guards_During_Type_Inference_of_AST">6.3.8. Type Guards</a></li>
+</ul>
+</li>
+<li><a href="type_system.html#sec:Structural_Typing">6.4. Structural Typing</a></li>
+</ul>
+</li>
+<li><a href="type_index.html#_type-index">7. Type Index</a>
+<ul class="sectlevel2">
+<li><a href="type_index.html#sec:Type_Index_Design_Rationale">7.1. Design Rationale</a>
+<ul class="sectlevel3">
+<li><a href="type_index.html#sec:Getting_the_Xtext_Index_Content_IResourceDescriptions">7.1.1. Getting the Xtext Index (<code>IResourceDescriptions</code>) Content</a></li>
+</ul>
+</li>
+<li><a href="type_index.html#sec:Design_Overview">7.2. Design Overview</a></li>
+<li><a href="type_index.html#sec:N4JS_Resource_Load_States">7.3. N4JS Resource Load States</a></li>
+<li><a href="type_index.html#sec:Type_Builder">7.4. Types Builder</a>
+<ul class="sectlevel3">
+<li><a href="type_index.html#sec:Type_Inference_not_allowed_in_Type_Builder">7.4.1. Type Inference not allowed in Types Builder</a></li>
+<li><a href="type_index.html#sec:ComputedTypeReferences">7.4.2. Deferred Type References</a></li>
+<li><a href="type_index.html#sec:Use_cases_of_ComputedTypeRef">7.4.3. Use cases of DeferredTypeRef</a></li>
+</ul>
+</li>
+<li><a href="type_index.html#sec:Incremental_Builder_Overview">7.5. Incremental Builder (Overview)</a>
+<ul class="sectlevel3">
+<li><a href="type_index.html#sec:Incremental_Builder_Overview__XtextBuilder">7.5.1. XtextBuilder</a></li>
+<li><a href="type_index.html#sec:Incremental_Builder_Overview__IBuilderState">7.5.2. IBuilderState</a>
+<ul class="sectlevel4">
+<li><a href="type_index.html#copy-and-update-xtext-index">7.5.2.1. Copy and Update Xtext Index</a></li>
+<li><a href="type_index.html#build-state-setup-phase">7.5.2.2. Build State Setup Phase</a></li>
+<li><a href="type_index.html#process-queued-uris">7.5.2.3. Process Queued URIs</a></li>
+<li><a href="type_index.html#queueing-affected-resources">7.5.2.4. Queueing Affected Resources</a></li>
+</ul>
+</li>
+<li><a href="type_index.html#sec:Incremental_Builder_Overview__Example">7.5.3. Example</a></li>
+</ul>
+</li>
+<li><a href="type_index.html#dirty-state-handling">7.6. Dirty state handling</a>
+<ul class="sectlevel3">
+<li><a href="type_index.html#use-case-restoring-types-from-user-data">7.6.1. Use case: Restoring types from user data</a></li>
+<li><a href="type_index.html#use-case-updating-the-xtext-index">7.6.2. Use case: Updating the Xtext index</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="project_model.html#_project-model">8. Project Model</a>
+<ul class="sectlevel2">
+<li><a href="project_model.html#sec:Package_json">8.1. Package.json File</a></li>
+<li><a href="project_model.html#_accessing-project-information">8.2. Accessing Project Information</a>
+<ul class="sectlevel3">
+<li><a href="project_model.html#sec:IN4JSCore">8.2.1. IN4JSCore</a></li>
+<li><a href="project_model.html#sec:N4JSModel">8.2.2. N4JSModel</a></li>
+<li><a href="project_model.html#sec:N4JSWorkspace">8.2.3. N4JSWorkspace</a></li>
+<li><a href="project_model.html#sec:N4JSProject">8.2.4. N4JSProject</a></li>
+<li><a href="project_model.html#sec:SourceContainer">8.2.5. SourceContainer</a></li>
+<li><a href="project_model.html#sec:N4JSProjectsStateHelper">8.2.6. N4JSProjectsStateHelper</a></li>
+</ul>
+</li>
+<li><a href="project_model.html#sec:Caching">8.3. Caching</a>
+<ul class="sectlevel3">
+<li><a href="project_model.html#_caching-of-externallibraryworkspace">8.3.1. Caching of ExternalLibraryWorkspace</a></li>
+<li><a href="project_model.html#_caching-of-n4jsprojectsstatehelper">8.3.2. Caching of N4JSProjectsStateHelper</a></li>
+</ul>
+</li>
+<li><a href="project_model.html#sec:WildcardPathFilter">8.4. WildcardPathFilter</a></li>
+<li><a href="project_model.html#sec:ProjectUtils">8.5. ProjectUtils</a></li>
+</ul>
+</li>
+<li><a href="binding.html#_binding">9. Binding</a>
+<ul class="sectlevel2">
+<li><a href="binding.html#sec:Binding_Design_Rationale">9.1. Design Rationale</a></li>
+<li><a href="binding.html#sec:Binding_to_Members">9.2. Binding to Members</a></li>
+<li><a href="binding.html#sec:Binding_Getter_Setter">9.3. Getter / Setter Binding</a></li>
+<li><a href="binding.html#chap:Statics">9.4. Static Member Binding</a></li>
+<li><a href="binding.html#sec:Binding_Enumeration">9.5. Enumeration Literals Binding</a></li>
+<li><a href="binding.html#sec:Accessibility_of_types_and_members">9.6. Accessibility of types and members</a></li>
+<li><a href="binding.html#sec:Member_Scope_Example">9.7. Member Scope Example</a></li>
+<li><a href="binding.html#sec:Scoping_for_Members_of_Composed_Type_Explained">9.8. Scoping for Members of Composed Type (Union/Intersection) Example</a></li>
+<li><a href="binding.html#sec:Binding_of_Structurally_References_Types">9.9. Structurally References Types</a></li>
+<li><a href="binding.html#sec:Building">9.10. Building</a>
+<ul class="sectlevel3">
+<li><a href="binding.html#sec:Build_Phases">9.10.1. Build Phases</a></li>
+<li><a href="binding.html#sec:Build_Scenarios">9.10.2. Build Scenarios</a></li>
+<li><a href="binding.html#sec:Lazy_linking_problem">9.10.3. Lazy linking problem</a></li>
+</ul>
+</li>
+<li><a href="binding.html#sec:Proxies_and_Proxy_Resolution">9.11. Proxies and Proxy Resolution (Overview)</a>
+<ul class="sectlevel3">
+<li><a href="binding.html#xtexts-lazy-linking-proxies">9.11.1. Xtext’s Lazy Linking Proxies</a></li>
+<li><a href="binding.html#standard-emf-proxies">9.11.2. Standard EMF Proxies</a></li>
+<li><a href="binding.html#_how-is-proxy-resolution-triggered">9.11.3. How is Proxy Resolution Triggered?</a></li>
+<li><a href="binding.html#_when-is-proxy-resolution-allowed">9.11.4. When is Proxy Resolution Allowed?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="validation.html#_validation">10. Validation</a>
+<ul class="sectlevel2">
+<li><a href="validation.html#sec:validation_overview">10.1. Validation overview</a></li>
+<li><a href="validation.html#sec:validation_control_flow">10.2. Validation control flow</a></li>
+<li><a href="validation.html#sec:validation_issue_ids">10.3. Issue IDs and Messages</a></li>
+<li><a href="validation.html#sec:validation_usage_patterns">10.4. Usage Pattern</a></li>
+<li><a href="validation.html#sec:validation_links">10.5. Links</a></li>
+</ul>
+</li>
+<li><a href="references.html#_references">11. References</a>
+<ul class="sectlevel2">
+<li><a href="references.html#sec:usecases">11.1. Use cases</a></li>
+<li><a href="references.html#sec:calculation_algorithm">11.2. Calculation algorithm</a>
+<ul class="sectlevel3">
+<li><a href="references.html#sec:Xtext_default_implementation">11.2.1. Xtext default implementation</a></li>
+<li><a href="references.html#sec:N4_implementation">11.2.2. N4JS implementation</a></li>
+</ul>
+</li>
+<li><a href="references.html#sec:PerformanceOfDependencyCalculation">11.3. Performance Of Dependency Calculation</a></li>
+<li><a href="references.html#sec:kinds_of_references">11.4. Kinds of references</a>
+<ul class="sectlevel3">
+<li><a href="references.html#sec:Cross_References_to_be_ignored">11.4.1. Cross References to be ignored</a></li>
+<li><a href="references.html#sec:Cross_References_to_be_handled">11.4.2. Cross References to be handled</a></li>
+</ul>
+</li>
+<li><a href="references.html#sec:transitive_dependencies">11.5. Transitive dependencies</a></li>
+<li><a href="references.html#sec:find-references">11.6. Find references</a>
+<ul class="sectlevel3">
+<li><a href="references.html#_background">11.6.1. Background</a></li>
+<li><a href="references.html#_how-find-references-work">11.6.2. How Find References Work</a>
+<ul class="sectlevel4">
+<li><a href="references.html#_step-1-convert-cursor-position-to-declared-element">11.6.2.1. Step 1: Convert Cursor Position to Declared Element</a></li>
+<li><a href="references.html#_step-2-convert-declared-element-to-target-uris">11.6.2.2. Step 2: Convert Declared Element to Target URIs</a></li>
+<li><a href="references.html#_step-3-filter-potential-resources">11.6.2.3. Step 3: Filter Potential Resources</a></li>
+<li><a href="references.html#_step-4-search-references-in-resource">11.6.2.4. Step 4: Search References in Resource</a></li>
+<li><a href="references.html#_limitations-and-possible-enhancements">11.6.2.5. Limitations and Possible Enhancements</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="compilation.html#_compilation">12. Compilation</a>
+<ul class="sectlevel2">
+<li><a href="compilation.html#chap:compilation">12.1. Introduction</a>
+<ul class="sectlevel3">
+<li><a href="compilation.html#sec:general_design_rationals">12.1.1. General design rationals</a>
+<ul class="sectlevel4">
+<li><a href="compilation.html#sec:logging_and_error_reporting">12.1.1.1. Logging and error reporting</a></li>
+<li><a href="compilation.html#sec:progress_monitor">12.1.1.2. Progress monitor</a></li>
+</ul>
+</li>
+<li><a href="compilation.html#sec:Xtext_Integration">12.1.2. Xtext Integration</a>
+<ul class="sectlevel4">
+<li><a href="compilation.html#sec:xtext_default_behaviour">12.1.2.1. Xtext default behaviour</a></li>
+<li><a href="compilation.html#sec:n4js_requirements">12.1.2.2. N4JS requirements</a></li>
+<li><a href="compilation.html#sec:compiler_discovery_in_ui">12.1.2.3. Compiler discovery in UI</a></li>
+<li><a href="compilation.html#sec:compiler_discovery_in_headless">12.1.2.4. Compiler discovery in headless</a></li>
+<li><a href="compilation.html#sec:general_generator_implementation">12.1.2.5. General generator implementation</a></li>
+<li><a href="compilation.html#sec:general_generator_activation">12.1.2.6. General generator activation</a></li>
+</ul>
+</li>
+<li><a href="compilation.html#sec:Overview_of_Input_Models">12.1.3. Overview of the Input Models</a></li>
+</ul>
+</li>
+<li><a href="compilation.html#sec:Core_Generator">12.2. Generators</a>
+<ul class="sectlevel3">
+<li><a href="compilation.html#sec:Compiler_Components">12.2.1. Generator Components</a></li>
+<li><a href="compilation.html#sec:Generator_architecture">12.2.2. Generator architecture</a></li>
+<li><a href="compilation.html#sec:Unified_Compiler_Configuration">12.2.3. Unified Compiler Configuration</a></li>
+</ul>
+</li>
+<li><a href="compilation.html#sec:Transpilers">12.3. Transpilers</a>
+<ul class="sectlevel3">
+<li><a href="compilation.html#sec:Phases">12.3.1. Overview</a></li>
+<li><a href="compilation.html#relation-between-ast-and-im">12.3.2. Relation between AST and IM</a></li>
+<li><a href="compilation.html#implementation-overview">12.3.3. Implementation Overview</a></li>
+<li><a href="compilation.html#sec:Guidelines_for_Implementing_Transformations">12.3.4. Guidelines for Implementing Transformations</a></li>
+<li><a href="compilation.html#symbol-table-in-the-im">12.3.5. Symbol Table in the IM</a></li>
+</ul>
+</li>
+<li><a href="compilation.html#sec:N4JS_to_EcmaScript_Transpiler">12.4. N4JS-to-EcmaScript Transpiler</a>
+<ul class="sectlevel3">
+<li><a href="compilation.html#sec:Overview_of_Transformations">12.4.1. Overview of Transformations</a></li>
+<li><a href="compilation.html#sec:Transpiling_members">12.4.2. Transpiling members</a>
+<ul class="sectlevel4">
+<li><a href="compilation.html#sec:Transpiling_members__Delegating_members">12.4.2.1. Techniques for special member handling</a></li>
+<li><a href="compilation.html#sec:Transpiling_members__Partial_shadowing_of_getter_setter_pairs">12.4.2.2. Partial shadowing</a></li>
+<li><a href="compilation.html#sec:Transpiling_members__Consuming_or_inheriting_members_of_an_interface">12.4.2.3. Consuming or inheriting members of an interface</a></li>
+<li><a href="compilation.html#sec:Transpiling_members__Static_polyfill">12.4.2.4. Static polyfill</a></li>
+<li><a href="compilation.html#sec:Transpiling_members__API_implementation_stubs">12.4.2.5. API / implementation stubs</a></li>
+</ul>
+</li>
+<li><a href="compilation.html#sec:Support_for_incomplete_API_implementation_testing_in_the_N4JS_to_EcmaScript_5_Transpiler">12.4.3. Support for incomplete API implementation testing</a>
+<ul class="sectlevel4">
+<li><a href="compilation.html#sec:Modifications_in_Impl_projects">12.4.3.1. Modifications in Impl projects</a></li>
+<li><a href="compilation.html#sec:Implementation_of_stub_generation">12.4.3.2. Implementation of stub-generation</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="compilation.html#sec:n4jsc_Headless_Compiler_Interface">12.5. n4jsc Headless Compiler Interface</a>
+<ul class="sectlevel3">
+<li><a href="compilation.html#sec:building_the_headless_compiler">12.5.1. building the headless compiler</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="execution.html#_execution">13. Execution</a>
+<ul class="sectlevel2">
+<li><a href="execution.html#sec:N4JS_Project_Execution_And_Linking_Model">13.1. N4JS Project Execution And Linking Model</a>
+<ul class="sectlevel3">
+<li><a href="execution.html#subsec:N4JS_Execution_With_NodeJS">13.1.1. N4JS Execution With NodeJS</a></li>
+</ul>
+</li>
+<li><a href="execution.html#sec:N4JS_Execution_And_Linking_File">13.2. N4JS Execution And Linking File</a>
+<ul class="sectlevel3">
+<li><a href="execution.html#subsec:NodeJS_Specific_ELF">13.2.1. NodeJS Specific ELF</a></li>
+</ul>
+</li>
+<li><a href="execution.html#sec:Runners-execution">13.3. Runners</a>
+<ul class="sectlevel3">
+<li><a href="execution.html#subsec:N4_Runtime_Environments_Convention">13.3.1. N4 Runtime Environments Convention</a></li>
+<li><a href="execution.html#subsec:Passing_Information_from_IDE_to_Execution_Code_in_Runtime_Environment">13.3.2. Passing Information from IDE to Execution Code in Runtime Environment</a></li>
+<li><a href="execution.html#subsec:Runners_Design">13.3.3. Runners Design</a></li>
+</ul>
+</li>
+<li><a href="execution.html#sec:Legacy_Execution_Engine">13.4. Legacy Execution Engine</a></li>
+<li><a href="execution.html#sec:Design">13.5. Design</a>
+<ul class="sectlevel3">
+<li><a href="execution.html#sec:Usage_Outside_N4JSIDE">13.5.1. Usage Outside N4JSIDE</a>
+<ul class="sectlevel4">
+<li><a href="execution.html#sec:Use_Node_with_Maven">13.5.1.1. Use Node with Maven</a></li>
+</ul>
+</li>
+<li><a href="execution.html#sec:Usage_Inside_N4JSIDE">13.5.2. Usage Inside N4JSIDE</a></li>
+</ul>
+</li>
+<li><a href="execution.html#sec:Runtime_Injection">13.6. Runtime Injection</a>
+<ul class="sectlevel3">
+<li><a href="execution.html#sec:Running_String_Code">13.6.1. Running String Code</a></li>
+<li><a href="execution.html#sec:Running_File_Code">13.6.2. Running File Code</a></li>
+<li><a href="execution.html#sec:Injection_Code_Example">13.6.3. Injection Code Example</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#_tests">14. Tests</a>
+<ul class="sectlevel2">
+<li><a href="#sec:Performance_Tests">14.1. Performance Tests</a>
+<ul class="sectlevel3">
+<li><a href="#sec:Synthetic_Performance_Tests">14.1.1. Synthetic Performance Tests</a>
+<ul class="sectlevel4">
+<li><a href="#sec:Design_of_Generator">14.1.1.1. Design of Generator</a></li>
+<li><a href="#sec:Design_of_Performance_Test_Execution">14.1.1.2. Design of Performance Test Configuration and Execution</a></li>
+<li><a href="#sec:JUnit_Configuration">14.1.1.3. JUnit Configuration</a></li>
+<li><a href="#sec:JUnitBenchmark_Test_Configuration">14.1.1.4. JUnitBenchmark Test Configuration</a></li>
+<li><a href="#sec:JUnitBenchmark_Report_Configuration">14.1.1.5. JUnitBenchmark Report Configuration</a></li>
+<li><a href="#sec:JUnitBenchmark_Run_Configuration">14.1.1.6. JUnitBenchmark Run Configuration</a></li>
+<li><a href="#sec:JUnitBenchmark_Example">14.1.1.7. JUnitBenchmark Example</a></li>
+<li><a href="#sec:Note_on_Jenkins_Job">14.1.1.8. Note on Jenkins Job</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#sec:ECMA_Tests">14.2. ECMA Tests</a>
+<ul class="sectlevel3">
+<li><a href="#sec:Grammar_Tests">14.2.1. Grammar Tests</a>
+<ul class="sectlevel4">
+<li><a href="#sec:Negative_Tests">14.2.1.1. Negative Tests</a></li>
+<li><a href="#sec:Test_Exclusion">14.2.1.2. Test Exclusion</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#sec:Integration_Tests">14.3. Integration Tests</a></li>
+<li><a href="#sec:Test_Helpers">14.4. Test Helpers</a>
+<ul class="sectlevel3">
+<li><a href="#sec:Parameterized_N4JS_Tests">14.4.1. Parameterized N4JS tests</a>
+<ul class="sectlevel4">
+<li><a href="#sec:ParameterizedXtextRunner">14.4.1.1. ParameterizedXtextRunner</a></li>
+<li><a href="#sec:TestCodeProvider">14.4.1.2. TestCodeProvider</a></li>
+<li><a href="#sec:Example_Of_Parameterized_Parser_Test">14.4.1.3. Example of parameterized parser test</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#sec:Issue_Suppression">14.5. Issue Suppression</a></li>
+<li><a href="#sec:Xpect_Tests">14.6. Xpect Tests</a>
+<ul class="sectlevel3">
+<li><a href="#sec:Xpect_Test_Setup">14.6.1. Xpect Test Setup</a></li>
+<li><a href="#sec:Xpect_Issue_Suppression">14.6.2. Xpect Issue Suppression</a></li>
+<li><a href="#sec:Xpect_Provided_Test_Methods">14.6.3. Xpect Provided Test Methods</a>
+<ul class="sectlevel4">
+<li><a href="#errors">14.6.3.1. errors</a></li>
+<li><a href="#warnings">14.6.3.2. warnings</a></li>
+</ul>
+</li>
+<li><a href="#sec:N4JS_Specific_Xpect_Test_Methods">14.6.4. N4JS Specific Xpect Test Methods</a>
+<ul class="sectlevel4">
+<li><a href="#sec:XPECT_noerrors">14.6.4.1. noerrors and nowarnings</a></li>
+<li><a href="#sec:XPECT_scope">14.6.4.2. scope</a></li>
+<li><a href="#sec:XPECT_scopeWithPosition">14.6.4.3. scopeWithPosition</a></li>
+<li><a href="#sec:XPECT_scopeWithResource">14.6.4.4. scopeWithResource</a></li>
+<li><a href="#sec:XPECT_binding">14.6.4.5. binding</a></li>
+<li><a href="#sec:XPECT_linkedPathname">14.6.4.6. linkedPathname</a></li>
+<li><a href="#sec:XPECT_type_of">14.6.4.7. type of</a></li>
+<li><a href="#sec:XPECT_expectedType">14.6.4.8. expectedType</a></li>
+<li><a href="#sec:XPECT_elementKeyword">14.6.4.9. elementKeyword</a></li>
+<li><a href="#sec:XPECT_accessModifier">14.6.4.10. accessModifier</a></li>
+<li><a href="#sec:XPECT_compileResult">14.6.4.11. compileResult</a></li>
+<li><a href="#sec:XPECT_output">14.6.4.12. output</a></li>
+<li><a href="#sec:XPECT_outputRegEx">14.6.4.13. outputRegEx</a></li>
+<li><a href="#sec:XPECT_calculatedAccessModifier">14.6.4.14. calculatedAccessModifier</a></li>
+<li><a href="#sec:XPECT_spec">14.6.4.15. spec</a></li>
+<li><a href="#sec:XPECT_deadCode">14.6.4.16. deadCode</a></li>
+<li><a href="#sec:XPECT_returnOrThrows">14.6.4.17. returnOrThrows</a></li>
+<li><a href="#sec:XPECT_lint">14.6.4.18. lint</a></li>
+<li><a href="#sec:XPECT_lintFails">14.6.4.19. lintFails</a></li>
+</ul>
+</li>
+<li><a href="#sec:FIXME_Xpect_modifier">14.6.5. FIXME Xpect modifier</a></li>
+<li><a href="#sec:Expectmatrix_Xpect_Test_Methods">14.6.6. Expectmatrix Xpect tests</a></li>
+<li><a href="#xpect-lint-tests">14.6.7. Xpect Lint Tests</a></li>
+</ul>
+</li>
+<li><a href="#xpect-proposal-tests">14.7. Xpect Proposal Tests</a>
+<ul class="sectlevel3">
+<li><a href="#sec:Validation_vs__Non_Validation">14.7.1. Validation vs. Non-Validation</a></li>
+<li><a href="#sec:General_Proposal_Test_Features">14.7.2. General Proposal Test Features</a>
+<ul class="sectlevel4">
+<li><a href="#sec:Test_Variables">14.7.2.1. Test Variables</a></li>
+<li><a href="#sec:Location_and_Selection">14.7.2.2. at – Location and Selection</a></li>
+<li><a href="#sec:Multi_Line_Expectations_in_Proposal_Tests">14.7.2.3. Multi Line Expectations in Proposal Tests</a></li>
+<li><a href="#sec:Timeout">14.7.2.4. Timeout and Performance</a></li>
+</ul>
+</li>
+<li><a href="#proposals-verify-existence-of-proposals">14.7.3. proposals – Verify Existence of Proposals</a></li>
+<li><a href="#sec:Verify_displayed_string">14.7.4. display – Verify displayed string</a></li>
+<li><a href="#sec:Apply_Proposal">14.7.5. apply – Apply Proposal</a>
+<ul class="sectlevel4">
+<li><a href="#resource-application-in-other-files">14.7.5.1. resource – application in other files</a></li>
+</ul>
+</li>
+<li><a href="#sec:Content_Assist_Cycling">14.7.6. kind – Content Assist Cycling</a></li>
+<li><a href="#fileValidVerify-validation-status">14.7.7. fileValid – Verify validation status</a></li>
+</ul>
+</li>
+<li><a href="#sec:Apply_Proposal_And_Execute_Tests">14.8. Apply Proposal And Execute Tests</a></li>
+<li><a href="#sec:Organize_Imports_Test">14.9. Organize Imports Test</a>
+<ul class="sectlevel3">
+<li><a href="#organizeimports">14.9.1. organizeImports</a></li>
+</ul>
+</li>
+<li><a href="#sec:Access_Control_Test">14.10. Access Control Test</a>
+<ul class="sectlevel3">
+<li><a href="#test-scenarios">14.10.1. Test Scenarios</a></li>
+<li><a href="#n4js-code-generator">14.10.2. N4JS Code Generator</a></li>
+<li><a href="#xtext-issue-matcher">14.10.3. Xtext Issue Matcher</a></li>
+</ul>
+</li>
+<li><a href="#sec:Smoke_Tests">14.11. Smoke Tests</a>
+<ul class="sectlevel3">
+<li><a href="#how-to-handle-smoke-test-errors">14.11.1. How to handle smoke test errors?</a></li>
+<li><a href="#smoketester-and-exceptionanalyzer">14.11.2. SmokeTester and ExceptionAnalyzer</a></li>
+</ul>
+</li>
+<li><a href="#sec:UI_Tests_with_SWTBot">14.12. UI Tests with SWTBot</a>
+<ul class="sectlevel3">
+<li><a href="#writing-swtbot-tests">14.12.1. Writing SWTBot Tests</a></li>
+<li><a href="#running-swtbot-tests">14.12.2. Running SWTBot Tests</a></li>
+</ul>
+</li>
+<li><a href="#sec:Debugging_UI_Tests">14.13. Debugging UI Tests</a>
+<ul class="sectlevel3">
+<li><a href="#sec:Connecting_to_the_X_server_on_the_build_node">14.13.1. Connecting to the X-server on the build-node</a></li>
+<li><a href="#sec:Tools_to_investigate_the_java_stack">14.13.2. Tools to investigate the java-stack</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="ui_concepts.html#_ui-concepts">15. UI Concepts</a>
+<ul class="sectlevel2">
+<li><a href="ui_concepts.html#sec:User_Interface_Concepts">15.1. User Interface Concepts</a>
+<ul class="sectlevel3">
+<li><a href="ui_concepts.html#sec:Eclipse_UI_Concepts">15.1.1. Eclipse UI Concepts</a>
+<ul class="sectlevel4">
+<li><a href="ui_concepts.html#sec:Label_Provider">15.1.1.1. Label Provider</a></li>
+<li><a href="ui_concepts.html#sec:Markers">15.1.1.2. Markers</a></li>
+<li><a href="ui_concepts.html#sec:Commands__Toolbar_and_Menus">15.1.1.3. Commands, Toolbar and Menus</a></li>
+<li><a href="ui_concepts.html#sec:Content_Assist">15.1.1.4. Content Assist</a></li>
+<li><a href="ui_concepts.html#sec:Quick_Fixes">15.1.1.5. Quick Fixes</a></li>
+<li><a href="ui_concepts.html#sec:Quick_Assist">15.1.1.6. Quick Assist</a></li>
+<li><a href="ui_concepts.html#sec:Clean_Up_Actions">15.1.1.7. Clean Up Actions</a></li>
+<li><a href="ui_concepts.html#sec:Save_Actions">15.1.1.8. Save Actions</a></li>
+<li><a href="ui_concepts.html#sec:Auto_Edit">15.1.1.9. Auto Edit</a></li>
+<li><a href="ui_concepts.html#sec:Template_Proposals">15.1.1.10. Template Proposals</a></li>
+<li><a href="ui_concepts.html#sec:Outline_View___Quick_Outline">15.1.1.11. Outline View / Quick Outline</a></li>
+<li><a href="ui_concepts.html#sec:Navigator__Package_Explorer__Project_Explorer">15.1.1.12. Navigator, Package Explorer, Project Explorer</a></li>
+<li><a href="ui_concepts.html#sec:Hyperlinking_and_Navigation">15.1.1.13. Hyperlinking and Navigation</a></li>
+<li><a href="ui_concepts.html#sec:Syntax_and_Semantic_Coloring">15.1.1.14. Syntax and Semantic Coloring</a></li>
+<li><a href="ui_concepts.html#sec:Code_Formatter">15.1.1.15. Code Formatter</a></li>
+<li><a href="ui_concepts.html#sec:Wizards">15.1.1.16. Wizards</a></li>
+<li><a href="ui_concepts.html#sec:Cheat_Sheets">15.1.1.17. Cheat Sheets</a></li>
+<li><a href="ui_concepts.html#sec:Context_sensitive_Help">15.1.1.18. Context-sensitive Help</a></li>
+<li><a href="ui_concepts.html#sec:Hovers">15.1.1.19. Hovers</a></li>
+<li><a href="ui_concepts.html#sec:Folding">15.1.1.20. Folding</a></li>
+<li><a href="ui_concepts.html#sec:Customizable_validation___severity">15.1.1.21. Customizable validation / severity</a></li>
+<li><a href="ui_concepts.html#sec:Proposals">15.1.1.22. Proposals</a></li>
+</ul>
+</li>
+<li><a href="ui_concepts.html#sec:Non_Eclipse_UI_Concepts">15.1.2. Non-Eclipse UI Concepts</a>
+<ul class="sectlevel4">
+<li><a href="ui_concepts.html#sec:Overlays">15.1.2.1. Overlays</a></li>
+<li><a href="ui_concepts.html#sec:Goto__Inferred__Type">15.1.2.2. Goto (Inferred) Type</a></li>
+<li><a href="ui_concepts.html#sec:Postfix_Completion">15.1.2.3. Postfix Completion</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="ui_concepts.html#_user-interface-resources">15.2. User Interface Resources</a>
+<ul class="sectlevel3">
+<li><a href="ui_concepts.html#_icons">15.2.1. Icons</a>
+<ul class="sectlevel4">
+<li><a href="ui_concepts.html#_eclipse-platform-icons">15.2.1.1. Eclipse Platform Icons</a></li>
+<li><a href="ui_concepts.html#_n4js-specific-icons">15.2.1.2. N4JS Specific Icons</a></li>
+<li><a href="ui_concepts.html#_high-resolution-icons">15.2.1.3. High Resolution Icons</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="formatting.html#_formatting">16. Formatting</a>
+<ul class="sectlevel2">
+<li><a href="formatting.html#sec:FmtObjective">16.1. Objective</a>
+<ul class="sectlevel3">
+<li><a href="formatting.html#sec:FmtFormatting_Comments">16.1.1. Formatting Comments</a></li>
+</ul>
+</li>
+<li><a href="formatting.html#sec:FmtArchitecture">16.2. Architecture</a>
+<ul class="sectlevel3">
+<li><a href="formatting.html#sec:Implementation_example">16.2.1. Implementation example</a></li>
+</ul>
+</li>
+<li><a href="formatting.html#sec:FmtFormatter_Implementation_Guidelines">16.3. Formatter Implementation Guidelines</a></li>
+<li><a href="formatting.html#sec:FmtConfiguration">16.4. Configuration</a></li>
+<li><a href="formatting.html#sec:FmtUI_Integration">16.5. UI Integration</a></li>
+<li><a href="formatting.html#sec:FmtUnit_Testing_with_Xpect">16.6. Unit Testing with Xpect</a></li>
+</ul>
+</li>
+<li><a href="external_libraries.html#_external-libraries">17. External Libraries</a>
+<ul class="sectlevel2">
+<li><a href="external_libraries.html#sec:Major_Components">17.1. Major Components</a>
+<ul class="sectlevel3">
+<li><a href="external_libraries.html#subsec:External_Resources">17.1.1. External Resources</a></li>
+<li><a href="external_libraries.html#subsec:External_Library_Workspace">17.1.2. External Library Workspace</a></li>
+<li><a href="external_libraries.html#subsec:External_Library_Preference_Store">17.1.3. External Library Preference Store</a></li>
+<li><a href="external_libraries.html#subsec:npm_Manager">17.1.4. Library Manager</a></li>
+<li><a href="external_libraries.html#subsec:External_Library_Builder_Helper">17.1.5. External Library Builder</a></li>
+<li><a href="external_libraries.html#subsec:External_Library_Xtext_Index_Persister">17.1.6. External Library Xtext Index Persister</a></li>
+<li><a href="external_libraries.html#subsec:External_Library_Preference_Page">17.1.7. External Library Preference Page</a></li>
+</ul>
+</li>
+<li><a href="external_libraries.html#sec:Headless_External_Library_Support">17.2. Headless External Library Support</a>
+<ul class="sectlevel3">
+<li><a href="external_libraries.html#_custom-npm-settings">17.2.1. Custom npm settings</a></li>
+</ul>
+</li>
+<li><a href="external_libraries.html#sec:lmFutureWork">17.3. Future Work</a>
+<ul class="sectlevel3">
+<li><a href="external_libraries.html#subsec:lmMultipleDependencyScope">17.3.1. Multiple Dependency Scope</a></li>
+<li><a href="external_libraries.html#subsec:lmRunTestsFromLibrary">17.3.2. Run Tests from TestLibrary</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="json_support.html#sec:JSON_Support">18. JSON Support</a>
+<ul class="sectlevel2">
+<li><a href="json_support.html#sec:JSON_Parser">18.1. JSON Parser</a>
+<ul class="sectlevel3">
+<li><a href="json_support.html#sec:JSON_Parser_Unicode_Escaping">18.1.1. Escaping Unicode Control Characters in String Literals</a></li>
+<li><a href="json_support.html#sec:JSON_Parser_Empty_Text">18.1.2. Empty Text</a></li>
+<li><a href="json_support.html#sec:JSON_Parser_Nested_Structures">18.1.3. Nested Structures</a></li>
+<li><a href="json_support.html#sec:JSON_Parser_Whitespace">18.1.4. Whitespace</a></li>
+<li><a href="json_support.html#sec:JSON_Parser_Comments">18.1.5. Comments</a></li>
+</ul>
+</li>
+<li><a href="json_support.html#sec:JSON_Language_Extensions">18.2. JSON Language Extensions</a>
+<ul class="sectlevel3">
+<li><a href="json_support.html#sec:JSON_Validator_Extensions">18.2.1. JSON Validator Extensions</a>
+<ul class="sectlevel4">
+<li><a href="json_support.html#sec:File_Specitic_Validator_Extensions">18.2.1.1. File-Specific Validator Extensions</a></li>
+<li><a href="json_support.html#sec:JSON_Declarative_JSON_Validator_Extensions">18.2.1.2. Declarative JSON Validator Extensions</a></li>
+</ul>
+</li>
+<li><a href="json_support.html#_json-resource-description-strategy">18.2.2. JSON Resource Description Strategy</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="jsdoc.html#_jsdoc">19. JSDoc</a>
+<ul class="sectlevel2">
+<li><a href="jsdoc.html#sec:Design_Rationale">19.1. Design Rationale</a>
+<ul class="sectlevel3">
+<li><a href="jsdoc.html#_general-design">19.1.1. General Design</a></li>
+<li><a href="jsdoc.html#sec:Type_Expressions">19.1.2. Type Expressions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="docexporter.html#_docexporter">20. DocExporter</a>
+<ul class="sectlevel2">
+<li><a href="docexporter.html#sec:Specification_Exporter">20.1. Specification Exporter</a></li>
+</ul>
+</li>
+<li><a href="rename_refactoring.html#_rename-refactoring">21. Rename Refactoring</a>
+<ul class="sectlevel2">
+<li><a href="rename_refactoring.html#_rename-refactoring-ui-interaction">21.1. Rename Refactoring UI interaction</a></li>
+<li><a href="rename_refactoring.html#_renameelementprocessor-interaction">21.2. RenameElementProcessor interaction</a></li>
+</ul>
+</li>
+<li><a href="flow_graphs.html#chap:flowgraphs">22. Flow Graphs</a>
+<ul class="sectlevel2">
+<li><a href="flow_graphs.html#sec:flowgraphs_overview">22.1. Flow graphs overview</a>
+<ul class="sectlevel3">
+<li><a href="flow_graphs.html#_internal-graph">22.1.1. Internal graph</a></li>
+<li><a href="flow_graphs.html#_optimizations">22.1.2. Optimizations</a></li>
+<li><a href="flow_graphs.html#_api-for-client-analyses">22.1.3. API for client analyses</a>
+<ul class="sectlevel4">
+<li><a href="flow_graphs.html#_mapping-from-internal-to-ast-elements">22.1.3.1. Mapping from internal to AST elements</a></li>
+<li><a href="flow_graphs.html#_graph-visitor">22.1.3.2. Graph visitor</a></li>
+<li><a href="flow_graphs.html#_graph-explorer">22.1.3.3. Graph explorer</a></li>
+<li><a href="flow_graphs.html#_branch-walker">22.1.3.4. Branch walker</a></li>
+<li><a href="flow_graphs.html#_example-1-compute-string-for-each-path">22.1.3.5. Example 1: Compute string for each path</a></li>
+<li><a href="flow_graphs.html#_path-quantor">22.1.3.6. Path quantor</a></li>
+</ul>
+</li>
+<li><a href="flow_graphs.html#_control-flow-analyses">22.1.4. Control flow analyses</a>
+<ul class="sectlevel4">
+<li><a href="flow_graphs.html#_dead-code-analysis">22.1.4.1. Dead code analysis</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="flow_graphs.html#sec:dataflow">22.2. Dataflow</a>
+<ul class="sectlevel3">
+<li><a href="flow_graphs.html#_dataflow-graph">22.2.1. Dataflow graph</a></li>
+<li><a href="flow_graphs.html#_dataflow-analyses">22.2.2. Dataflow analyses</a>
+<ul class="sectlevel4">
+<li><a href="flow_graphs.html#_def-def-def-nothing-analysis">22.2.2.1. Def&#8594;Def / Def&#8594;Nothing analysis</a></li>
+<li><a href="flow_graphs.html#_def-use-decl-analysis">22.2.2.2. Def|Use&#8592;Decl analysis</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="publish_npms.html#sec:publish-npms-to-public">23. Publish npms</a>
+<ul class="sectlevel2">
+<li><a href="publish_npms.html#sec:publish-npms-n4js-maven">23.1. Publish n4js-libs to during  maven build</a></li>
+</ul>
+</li>
+<li><a href="appendix_a_hints.html#sec:Hints">Appendix A: Hints</a>
+<ul class="sectlevel2">
+<li><a href="appendix_a_hints.html#sec:XtextInjection">A.1. Xtext Injection</a>
+<ul class="sectlevel3">
+<li><a href="appendix_a_hints.html#sec:DI_MultipleInjectors_Singletons">A.1.1. Multiple Injectors and Singletons</a>
+<ul class="sectlevel4">
+<li><a href="appendix_a_hints.html#sec:DI_avoid_duplicate_singletons">A.1.1.1. Avoiding duplicate singletons</a>
+<ul class="sectlevel5">
+<li><a href="appendix_a_hints.html#sec:DI_binding_in_shared">A.1.1.1.1. Defining binding in the shared injector</a></li>
+<li><a href="appendix_a_hints.html#sec:DI_binding_in_custom">A.1.1.1.2. Defining binding in the custom injector</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="appendix_a_hints.html#sec:DI_Hints">A.1.2. Dependency Injection Hints</a>
+<ul class="sectlevel4">
+<li><a href="appendix_a_hints.html#sec:DI_custom_bundle">A.1.2.1. Use DI in custom bundle, use DI with extensions</a>
+<ul class="sectlevel5">
+<li><a href="appendix_a_hints.html#sec:DI_custom_bundle_problem">A.1.2.1.1. Problem</a></li>
+<li><a href="appendix_a_hints.html#sec:DI_custom_bundle_solution">A.1.2.1.2. Solution</a></li>
+</ul>
+</li>
+<li><a href="appendix_a_hints.html#sec:Access_Other_DSL_Injector">A.1.2.2. How do I get the Guice Injector of my language?</a>
+<ul class="sectlevel5">
+<li><a href="appendix_a_hints.html#sec:DSL_Injector_UI_context">A.1.2.2.1. UI context</a></li>
+<li><a href="appendix_a_hints.html#sec:DSL_Injector_Non_UI_context">A.1.2.2.2. Non UI context but with injection context</a></li>
+<li><a href="appendix_a_hints.html#sec:DSL_Injector_Non_UI_non_injection_context">A.1.2.2.3. Non UI context without injection context</a></li>
+</ul>
+</li>
+<li><a href="appendix_a_hints.html#sec:Cancel_Indicator">A.1.2.3. How do I get cancel indicators in different contexts?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="appendix_a_hints.html#sec:Eclipse">A.2. Eclipse</a>
+<ul class="sectlevel3">
+<li><a href="appendix_a_hints.html#sec:Show_Xtext_Index">A.2.1. Show the current Xtext index</a></li>
+<li><a href="appendix_a_hints.html#sec:Plugin_spy">A.2.2. Plug-in spy</a></li>
+</ul>
+</li>
+<li><a href="appendix_a_hints.html#sec:Maven-hints">A.3. Maven</a>
+<ul class="sectlevel3">
+<li><a href="appendix_a_hints.html#how-to-check-for-maven-mojo-updates">A.3.1. How to check for Maven MOJO updates</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="appendix_b_module_loading.html#_module-loading">Appendix B: Module Loading</a>
+<ul class="sectlevel2">
+<li><a href="appendix_b_module_loading.html#sec:Dependency_Management">B.1. Dependency Management</a></li>
+<li><a href="appendix_b_module_loading.html#ecmascript-modules">B.2. ECMAScript Modules</a>
+<ul class="sectlevel3">
+<li><a href="appendix_b_module_loading.html#sec:ES5_Modules_Systems">B.2.1. ES5 Modules Systems</a></li>
+<li><a href="appendix_b_module_loading.html#sec:ES6_Modules">B.2.2. ES6 Modules</a></li>
+</ul>
+</li>
+<li><a href="appendix_b_module_loading.html#sec:ECMAScript_Module_Loaders">B.3. ECMAScript Module Loaders</a>
+<ul class="sectlevel3">
+<li><a href="appendix_b_module_loading.html#sec:ES6_Module_Loaders">B.3.1. ES6 Module Loaders</a></li>
+<li><a href="appendix_b_module_loading.html#sec:Polyfills_for_ES6_Module_Loaders">B.3.2. Polyfills for ES6 Module Loaders</a>
+<ul class="sectlevel4">
+<li><a href="appendix_b_module_loading.html#sec:es6_module_loader">B.3.2.1. es6-module-loader</a></li>
+<li><a href="appendix_b_module_loading.html#sec:SystemJS">B.3.2.2. SystemJS</a></li>
+<li><a href="appendix_b_module_loading.html#sec:Demo">B.3.2.3. Demo</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="appendix_b_module_loading.html#case-study-typescript">B.4. Case Study : TypeScript</a>
+<ul class="sectlevel3">
+<li><a href="appendix_b_module_loading.html#sec:ES6_Modules_Support">B.4.1. ES6 Modules Support</a></li>
+<li><a href="appendix_b_module_loading.html#sec:TypeScript_and_Module_Loading">B.4.2. TypeScript and Module Loading</a></li>
+</ul>
+</li>
+<li><a href="appendix_b_module_loading.html#sec:Cyclic_Dependencies">B.5. Cyclic Dependencies</a>
+<ul class="sectlevel3">
+<li><a href="appendix_b_module_loading.html#sec:Setup">B.5.1. Setup</a></li>
+<li><a href="appendix_b_module_loading.html#sec:Transpile_and_Execute">B.5.2. Transpile and Execute</a>
+<ul class="sectlevel4">
+<li><a href="appendix_b_module_loading.html#sec:Module_Format___AMD">B.5.2.1. Module Format = AMD</a></li>
+<li><a href="appendix_b_module_loading.html#sec:Module_Format___CommonJS">B.5.2.2. Module Format = CommonJS</a></li>
+<li><a href="appendix_b_module_loading.html#sec:Module_Format___SystemJS">B.5.2.3. Module Format = SystemJS</a></li>
+</ul>
+</li>
+<li><a href="appendix_b_module_loading.html#sec:Conclusion">B.5.3. Conclusion</a></li>
+</ul>
+</li>
+<li><a href="appendix_b_module_loading.html#system.register-as-transpilation-target">B.6. System.register as transpilation target</a>
+<ul class="sectlevel3">
+<li><a href="appendix_b_module_loading.html#sec:Introduction">B.6.1. Introduction</a>
+<ul class="sectlevel4">
+<li><a href="appendix_b_module_loading.html#sec:External_Transpilers">B.6.1.1. External Transpilers</a></li>
+<li><a href="appendix_b_module_loading.html#sec:Example_of_a_System_register_module">B.6.1.2. Example of a System.register module</a></li>
+</ul>
+</li>
+<li><a href="appendix_b_module_loading.html#sec:Structure_of_a_System_register_module">B.6.2. Structure of a System.register module</a></li>
+<li><a href="appendix_b_module_loading.html#_transpilation-hints">B.6.3. Transpilation Hints</a>
+<ul class="sectlevel4">
+<li><a href="appendix_b_module_loading.html#sec:Handling_Imports">B.6.3.1. Handling Imports</a></li>
+<li><a href="appendix_b_module_loading.html#sec:__exportFn__">B.6.3.2. &lt;&lt;exportFn&gt;&gt;</a></li>
+<li><a href="appendix_b_module_loading.html#sec:Handling_Exports">B.6.3.3. Handling Exports</a></li>
+</ul>
+</li>
+<li><a href="appendix_b_module_loading.html#sec:Examples_w__Circular_Dependencies">B.6.4. Examples w/ Circular Dependencies</a></li>
+<li><a href="appendix_b_module_loading.html#sec:N4JS_Examples_w__Circular_Dependencies">B.6.5. N4JS Examples w/ Circular Dependencies</a>
+<ul class="sectlevel4">
+<li><a href="appendix_b_module_loading.html#sec:Unresolved_Cyclic_Dependencies">B.6.5.1. Unresolved Cyclic Dependencies</a></li>
+<li><a href="appendix_b_module_loading.html#sec:Variables___Functions">B.6.5.2. Examples with Variables &amp; Functions</a></li>
+<li><a href="appendix_b_module_loading.html#sec:Classes">B.6.5.3. Examples with Classes</a></li>
+<li><a href="appendix_b_module_loading.html#sec:Examples_with_SubClassing">B.6.5.4. Examples with SubClassing</a></li>
+<li><a href="appendix_b_module_loading.html#sec:Miscellaneous">B.6.5.5. Miscellaneous</a></li>
+</ul>
+</li>
+<li><a href="appendix_b_module_loading.html#_resources">B.6.6. Resources</a></li>
+</ul>
+</li>
+<li><a href="appendix_b_module_loading.html#sec:CommonJS_as_transpilation_target">B.7. CommonJS as transpilation target</a>
+<ul class="sectlevel3">
+<li><a href="appendix_b_module_loading.html#_introduction-2">B.7.1. Introduction</a></li>
+<li><a href="appendix_b_module_loading.html#sec:Transpilation_Hints">B.7.2. Transpilation Hints</a>
+<ul class="sectlevel4">
+<li><a href="appendix_b_module_loading.html#sec:Import_Statements">B.7.2.1. Import Statements</a></li>
+<li><a href="appendix_b_module_loading.html#sec:Export_Statements">B.7.2.2. Export Statements</a></li>
+<li><a href="appendix_b_module_loading.html#sec:Tracking_Live_Bindings">B.7.2.3. Tracking Live Bindings</a></li>
+<li><a href="appendix_b_module_loading.html#sec:A_complete_example">B.7.2.4. A complete example</a></li>
+</ul>
+</li>
+<li><a href="appendix_b_module_loading.html#_resources-2">B.7.3. Resources</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="appendix_c_license.html#sec:License">Appendix C: License</a></li>
+<li><a href="appendix_d_acronyms.html#sec:Acronyms">Appendix D: Acronyms</a></li>
+<li><a href="appendix_e_bibliography_and_footnotes.html#_bibliography-and-footnotes">Appendix E: Bibliography and Footnotes</a></li>
+</ul>
+</div>
+</div>
+<div id="content"><div class="sect1">
+<h2 id="_tests"><a class="anchor" href="#_tests"></a><a class="link" href="#_tests">14. Tests</a></h2>
+<div class="sectionbody">
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title=""></i>
+</td>
+<td class="content">
+This chapter may be outdated.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>In order to run all tests from command line, use maven:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>mvn clean verify</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You may have to increase the memory for maven via <code>export MAVEN_OPTS="-Xmx2048m"</code> (Unix) or <code>set MAVEN_OPTS="-Xmx2048m"</code> (Windows).</p>
+</div>
+<div class="paragraph">
+<p>Do not run the tests via <code>mvn clean test</code> as this may lead to some failures.</p>
+</div>
+<div class="sect2 language-n4js">
+<h3 id="sec:Performance_Tests"><a class="anchor" href="#sec:Performance_Tests"></a><a class="link" href="#sec:Performance_Tests">14.1. Performance Tests</a></h3>
+<div class="paragraph">
+<p>There are two kind of performance tests:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Synthetic Tests: an arbitrary number of test classes is generated, and then some modifications are performed on these classes.</p>
+</li>
+<li>
+<p>Real World Tests: tests are based on a snapshot version of our platform libraries</p>
+</li>
+</ol>
+</div>
+<div class="sect3">
+<h4 id="sec:Synthetic_Performance_Tests"><a class="anchor" href="#sec:Synthetic_Performance_Tests"></a><a class="link" href="#sec:Synthetic_Performance_Tests">14.1.1. Synthetic Performance Tests</a></h4>
+<div class="paragraph">
+<p>The idea of the synthetic performance tests is to test the performance of specific functionality with a defined number classes, specially designed for the functionality under test.</p>
+</div>
+<div class="paragraph">
+<p>The overall structure of the synthetic performance test is</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>generate test classes</p>
+</li>
+<li>
+<p>compile these classes</p>
+</li>
+<li>
+<p>modify the test classes</p>
+</li>
+<li>
+<p>measure incremental build time</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Step 3) and 4) can be done in a loop. Also, step 2) can be looped (with clean build).</p>
+</div>
+<div class="paragraph">
+<p>The test classes are spread over clusters and projects. The following categories are used:</p>
+</div>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+Cluster
+</td>
+<td class="hdlist2">
+<p>A cluster is a set of projects, each project of a cluster may depend on another project of the cluster. There are no dependencies between projects of different clusters</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Project
+</td>
+<td class="hdlist2">
+<p>A project simply is a N4JS project, containing packages. A project may depend on other projects.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Package
+</td>
+<td class="hdlist2">
+<p>A package is a folder in a source folder of a project. A package contains classes.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Class
+</td>
+<td class="hdlist2">
+<p>A class is defined in a file, usually one class per file. The file, and with it the class, is contained in a package. The class contains members.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Member
+</td>
+<td class="hdlist2">
+<p>A member is either a field or method of a class. A method may has a body, which may contain variables with references to other classes.</p>
+</td>
+</tr>
+</table>
+</div>
+<div class="sect4 language-n4js">
+<h5 id="sec:Design_of_Generator"><a class="anchor" href="#sec:Design_of_Generator"></a><a class="link" href="#sec:Design_of_Generator">14.1.1.1. Design of Generator</a></h5>
+<div class="paragraph">
+<p><a href="#fig:cd_performancetest_generator">Performance Generator</a> shows the classes of the performance test generator.</p>
+</div>
+<div id="fig:cd_performancetest_generator" class="imageblock">
+<div class="content">
+<img src="chapters/15_tests/images/cd_performancetest_generator.svg" alt="cd performancetest generator">
+</div>
+</div>
+<div class="paragraph">
+<p>The package is designed as follows:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><code>N4ProjectGenerator</code> main control class for generation</p>
+</li>
+<li>
+<p><code>TestDescriptor</code> and subclasses: In order to <em>keep memory consumption of the test class generator low</em>, there is no graph structure created for the test elements. Instead, each element is uniquely named by a number, this number (actually a tuple of numbers) is stored in <code>TestDescriptors</code> and sub classes. There is a descriptor for each element of the tests.</p>
+</li>
+<li>
+<p><code>AbstractModifier</code> and subclasses generarate the tests. The idea is as follows:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>Modifier</code> generates all files, with complete references and no issues (complete)</p>
+</li>
+<li>
+<p>sub classes of <code>Modifier</code> skip certain generations or add modifications, leading to issues or solving them</p>
+</li>
+</ul>
+</div>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>In order to compute the name of a class from its descriptor, as well as retrieving a class based on an absolute number, the modifiers use utility methods provided by <code>PerformanceTestConfiguration</code>. Note that computing the names and numbers depends on a configuration!</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="sec:Design_of_Performance_Test_Execution"><a class="anchor" href="#sec:Design_of_Performance_Test_Execution"></a><a class="link" href="#sec:Design_of_Performance_Test_Execution">14.1.1.2. Design of Performance Test Configuration and Execution</a></h5>
+<div class="paragraph">
+<p><a href="#fig:cd_performancetest_configAnRun">Class Diagram of Performance Test Configuration and Execution</a> shows the classes of the performance test configuration and execution.</p>
+</div>
+<div id="fig:cd_performancetest_configAnRun" class="imageblock">
+<div class="content">
+<img src="chapters/15_tests/images/cd_performancetest_configAnRun.svg" alt="cd performancetest configAnRun">
+</div>
+<div class="title">Figure 45. Class Diagram of Performance Test Configuration and Execution</div>
+</div>
+<div class="paragraph">
+<p>The package is designed as follows:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><code>PerformanceTestConfiguration</code> stores the test configuration. The configuration stores how many clusters, packages etc. are to be generated. It also provides methods for generating names from the descriptors mentioned above.</p>
+</li>
+<li>
+<p><code>PerformanceMeter</code> executes the test, listening to the (build) job to be finished etc.</p>
+</li>
+<li>
+<p><code>AbstractGeneratingPerformanceTest</code> Base test class contains setup, teardown and utility methods.</p>
+</li>
+<li>
+<p><code>PerformanceTest</code> Test class containing tests.</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect4">
+<h5 id="sec:JUnit_Configuration"><a class="anchor" href="#sec:JUnit_Configuration"></a><a class="link" href="#sec:JUnit_Configuration">14.1.1.3. JUnit Configuration</a></h5>
+<div class="paragraph">
+<p>We are using JUnitBenchamrks (<a href="http://labs.carrotsearch.com/junit-benchmarks.html/" class="bare">http://labs.carrotsearch.com/junit-benchmarks.html/</a>) to extend adjust plain JUnit behavior specifically to the performance tests needs.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="sec:JUnitBenchmark_Test_Configuration"><a class="anchor" href="#sec:JUnitBenchmark_Test_Configuration"></a><a class="link" href="#sec:JUnitBenchmark_Test_Configuration">14.1.1.4. JUnitBenchmark Test Configuration</a></h5>
+<div class="paragraph">
+<p>JUnitBenchmark test configuration performed by annotating test method with <code>@BenchmarkOptions</code>. Parameters for that annotation include:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><code>warmupRounds</code> how many times test will be executed without taking measurement</p>
+</li>
+<li>
+<p><code>benchmarkRounds</code> how many times test will be executed, measurements taken will be used in results report</p>
+</li>
+<li>
+<p><code>callgc</code> Call <code>System.gc()</code> before each test. This may slow down the tests in a significant way.</p>
+</li>
+<li>
+<p><code>concurrency</code> specifies how many threads to use for tests.</p>
+</li>
+<li>
+<p><code>clock</code> specifies which clock to use.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Typical configuration for our performance tests might look like:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>    @BenchmarkOptions(benchmarkRounds = 5, warmupRounds = 2)
+    @Test
+    public void test() throws Exception {
+        //test...
+    }</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="sec:JUnitBenchmark_Report_Configuration"><a class="anchor" href="#sec:JUnitBenchmark_Report_Configuration"></a><a class="link" href="#sec:JUnitBenchmark_Report_Configuration">14.1.1.5. JUnitBenchmark Report Configuration</a></h5>
+<div class="paragraph">
+<p>By annotating TestClass in proper way, JUnitBenchamrks will generate html reports with performance results. There are two reports that can be generated:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><code>@BenchmarkMethodChart</code> report will contain results for every method from one test run (but all <code>benchmarkRounds</code> defined)</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>filePrefix</code> defines report file name</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><code>@BenchmarkHistoryChart</code> report will contain trend of results from multiple test runs (it is aggregation of multiple instances of <code>@BenchmarkMethodChart</code> report)</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>filePrefix</code> defines report file name</p>
+</li>
+<li>
+<p><code>labelWith</code> defines label that will mark separate runs</p>
+</li>
+</ul>
+</div>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><em>labelWith</em> property can have value propagated from run configuration/command line. example configuration might be <code>@BenchmarkHistoryChart(filePrefix = benchmark-history, labelWith = LabelType.CUSTOM_KEY)</code></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="sec:JUnitBenchmark_Run_Configuration"><a class="anchor" href="#sec:JUnitBenchmark_Run_Configuration"></a><a class="link" href="#sec:JUnitBenchmark_Run_Configuration">14.1.1.6. JUnitBenchmark Run Configuration</a></h5>
+<div class="paragraph">
+<p>It is possible to specify additional options for performance test run</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><code>-Djub.consumers=CONSOLE,H2</code> specifies where results will be written, <em>H2</em> indicates H2 database to be used</p>
+</li>
+<li>
+<p><code>-Djub.db.file=.benchmarks</code> specifies name of the H2 database file</p>
+</li>
+<li>
+<p><code>-Djub.customkey=</code> value of that property scan be used as label in <code>@BenchmarkHistoryChart</code></p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect4">
+<h5 id="sec:JUnitBenchmark_Example"><a class="anchor" href="#sec:JUnitBenchmark_Example"></a><a class="link" href="#sec:JUnitBenchmark_Example">14.1.1.7. JUnitBenchmark Example</a></h5>
+<div class="paragraph">
+<p>configuration example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>@BenchmarkMethodChart(filePrefix = "benchmark-method")
+@BenchmarkHistoryChart(filePrefix = "benchmark-history", labelWith = LabelType.CUSTOM_KEY)
+public class PerformanceTest extends AbstractGeneratingPerformanceTest {
+
+    public PerformanceTest() {
+        super("PerfTest");
+    }
+
+    @Rule
+    public TestRule benchmarkRun = new BenchmarkRule();
+
+    @Test
+    @BenchmarkOptions(benchmarkRounds = 5, warmupRounds = 2)
+    public void Test1() throws Exception {
+
+        //Test...
+    }
+
+    @Test
+    @BenchmarkOptions(benchmarkRounds = 5, warmupRounds = 2)
+    public void Test2() throws Exception {
+
+        //Test...
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>executing this code in Eclipse with configuration:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">-Xms512m -Xmx1024m -XX:MaxPermSize=512m $-$Djub.consumers=CONSOLE,H2 $-$Djub.db.file=.benchmarks $-$Djub.customkey=${current_date}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>will cause :</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>both tests to be executed 2 times for the warmup</p>
+</li>
+<li>
+<p>both of tests being executed 5 times with measurement taken</p>
+</li>
+<li>
+<p>results written to console</p>
+</li>
+<li>
+<p>results stored in local H2 db file (created if doesn’t exist)</p>
+</li>
+<li>
+<p>generated <em>benchmark-method.html</em> with performance results of every test in that execution</p>
+</li>
+<li>
+<p>generated <em>benchmark-history.html</em> with performance results of every execution</p>
+</li>
+<li>
+<p>separate test executions will be labeled in <em>benchmark-history.html</em> with their start time</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect4">
+<h5 id="sec:Note_on_Jenkins_Job"><a class="anchor" href="#sec:Note_on_Jenkins_Job"></a><a class="link" href="#sec:Note_on_Jenkins_Job">14.1.1.8. Note on Jenkins Job</a></h5>
+<div class="paragraph">
+<p>For performance tests it is important not to get pass/fail result in terms of being below given threshold, but also to examine trend of those results. We achieve this by tooling described above. In order to keep this data independent of the build machine or build system storage, we are using separate repository to store performance artifacts. Jenkins in copying previous test results into workspace, runs performance tests, then commits and pushes combined results (adds current results to previous results) to repository.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2 language-n4js">
+<h3 id="sec:ECMA_Tests"><a class="anchor" href="#sec:ECMA_Tests"></a><a class="link" href="#sec:ECMA_Tests">14.2. ECMA Tests</a></h3>
+<div class="paragraph">
+<p>ECMAScript Language test262 is a test suite intended to check agreement between JavaScript implementations and ECMA-262, the ECMAScript Language Specification (currently 5.1 Edition).The test suite contains thousands of individual tests, each of which tests some specific requirements of the ECMAScript Language Specification. For more info refer to <a href="http://test262.ecmascript.org/" class="bare">http://test262.ecmascript.org/</a></p>
+</div>
+<div class="paragraph">
+<p>Uses of this suite may include:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>grammar tests</p>
+</li>
+<li>
+<p>validation tests</p>
+</li>
+<li>
+<p>run-time tests</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>ECMA test262 suite source code can be found here: <a href="http://hg.ecmascript.org/tests/test262" class="bare">http://hg.ecmascript.org/tests/test262</a></p>
+</div>
+<div class="sect3">
+<h4 id="sec:Grammar_Tests"><a class="anchor" href="#sec:Grammar_Tests"></a><a class="link" href="#sec:Grammar_Tests">14.2.1. Grammar Tests</a></h4>
+<div class="paragraph">
+<p>Based on the JS files included in test262 suite we are generating tests that feed provided JS code into the parser. This operation will result in</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>parser throwing exceptions</p>
+</li>
+<li>
+<p>parsed output will contain standard output</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>First case indicates that parsing provided JS code was not possible. This is considered to be Test Error.</p>
+</div>
+<div class="paragraph">
+<p>Second case case indicates that parsing of the provided code was successful, and will result either</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>output with no errors - code adhered parser grammar</p>
+</li>
+<li>
+<p>output with errors - code violated parser grammar</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Given test must interpret those results to provide proper test output.</p>
+</div>
+<div class="sect4">
+<h5 id="sec:Negative_Tests"><a class="anchor" href="#sec:Negative_Tests"></a><a class="link" href="#sec:Negative_Tests">14.2.1.1. Negative Tests</a></h5>
+<div class="paragraph">
+<p>It is important to note that some of the tests are positive and some are negative. Negative test cases are marked by the authors with <em>@negative</em> JSDoc like marker therefore parser tests must be aware of that to avoid both false positives and false negatives results.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="sec:Test_Exclusion"><a class="anchor" href="#sec:Test_Exclusion"></a><a class="link" href="#sec:Test_Exclusion">14.2.1.2. Test Exclusion</a></h5>
+<div class="paragraph">
+<p>To exclude validation tests or run-time related test, implementation is blacklist approach to exclude some of the ECMA test262 tests from execution.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2 language-n4js">
+<h3 id="sec:Integration_Tests"><a class="anchor" href="#sec:Integration_Tests"></a><a class="link" href="#sec:Integration_Tests">14.3. Integration Tests</a></h3>
+<div class="paragraph">
+<p>Integration tests based on the stdlib and online-presence code bases can be found in bundle <code>org.eclipse.n4js.hlc.tests</code>
+in package <code>org.eclipse.n4js.hlc.tests.integration</code> (headless case) and in bundle <code>org.eclipse.n4js.ui.tests</code> in
+package <code>org.eclipse.n4js.ui.tests.integration</code> (plugin-UI tests running inside Eclipse). The headless
+tests also execute mangelhaft tests, the UI tests only perform compilation of the test code.</p>
+</div>
+<div class="paragraph">
+<p>More information can be found in the API documentation of classes <code>AbstractIntegrationTest</code> and <code>AbstractIntegrationPluginUITest</code>.</p>
+</div>
+</div>
+<div class="sect2 language-n4js">
+<h3 id="sec:Test_Helpers"><a class="anchor" href="#sec:Test_Helpers"></a><a class="link" href="#sec:Test_Helpers">14.4. Test Helpers</a></h3>
+<div class="paragraph">
+<p>Test helpers contain utility classes that are reused between different test plug-ins.</p>
+</div>
+<div class="sect3">
+<h4 id="sec:Parameterized_N4JS_Tests"><a class="anchor" href="#sec:Parameterized_N4JS_Tests"></a><a class="link" href="#sec:Parameterized_N4JS_Tests">14.4.1. Parameterized N4JS tests</a></h4>
+<div class="paragraph">
+<p>Xtext JUnit test runer injects test a ParserHelper that allows to run N4JS parser on given input and obtain information abut parsing results. In some cases we want to run this kind of tests on large input data. To address this we provide two utilities ParameterizedXtextRunner and TestCodeProvider. They allow write data driven parser tests.</p>
+</div>
+<div class="sect4">
+<h5 id="sec:ParameterizedXtextRunner"><a class="anchor" href="#sec:ParameterizedXtextRunner"></a><a class="link" href="#sec:ParameterizedXtextRunner">14.4.1.1. ParameterizedXtextRunner</a></h5>
+<div class="paragraph">
+<p>This This junit runner serves two purposes:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>injecting ParserHelper</p>
+</li>
+<li>
+<p>creating multiple test instances for each input data provided</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>This class is based on @link org.eclipse.xtext.testing.XtextRunner and @link org.junit.runners.Parameterized</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="sec:TestCodeProvider"><a class="anchor" href="#sec:TestCodeProvider"></a><a class="link" href="#sec:TestCodeProvider">14.4.1.2. TestCodeProvider</a></h5>
+<div class="paragraph">
+<p>This class is repsonsible for extracting ZipEntry from provided ZipFile. Additinally it can filter out entries that match strings in provided black list file. Filtering out ZipEntries assumes that blacklist file contians Path of ZipEntry in ZipFile as string in one line. Lines starting with <em>#</em> in black list file are ignored by TestCodeProvider.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="sec:Example_Of_Parameterized_Parser_Test"><a class="anchor" href="#sec:Example_Of_Parameterized_Parser_Test"></a><a class="link" href="#sec:Example_Of_Parameterized_Parser_Test">14.4.1.3. Example of parameterized parser test</a></h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-n4js" data-lang="n4js">@RunWith(XtextParameterizedRunner.class)
+@InjectWith(N4JSInjectorProvider.class)
+public class DataDrivenParserTestSuite {
+
+    /**
+     * Zip archives containing test files.
+     */
+    public static final Collection&lt;String&gt; TEST_DATA_RESOURCES = Arrays.asList("foo.zip", "bar.zip");
+
+    /**
+     * Blacklist of files requiring an execution engine.
+     */
+    public static final String BLACKLIST_FILENAME = "blacklist.txt";
+
+    /**
+     * Every generated test will use different ZipEntry as test data
+     */
+    final ZipEntry entry;
+
+    /**
+     * Name of resource containing corresponding ZipEntry
+     */
+    final String resourceName;
+
+    @Inject
+    protected ParseHelper&lt;Script&gt; parserN4JS;
+
+    Collection&lt;String&gt; blackList;
+
+    static final Logger logger = Logger.getLogger("someLogger");
+
+    public CopyOfLibraryParsingTestSuite(ZipEntry entry, String resourceName, Collection&lt;String&gt; blackList) {
+        this.entry = entry;
+        this.resourceName = resourceName;
+        this.blackList = blackList;
+    }
+
+    @Rule
+    public TestRule blackListHandler = new TestRule() {
+        @Override
+        public Statement apply(final Statement base, Description description) {
+            final String entryName = entry.getName();
+            if (blackList.contains(entryName)) {
+                return new Statement() {
+                    @Override
+                    public void evaluate() throws Throwable {
+                        try {
+                            base.evaluate();
+                        } catch (AssertionError e) {
+                            // expected
+                            return;
+                        }
+                    }
+                };
+            } else {
+                return base;
+            }
+        }
+    };
+
+    /**
+     * Generates collection of ZipEntry instances that will be used as data
+     * provided parameter is mapped to name of the test (takes advantage of fact
+     * that ZipEntry.toString() is the same as entry.getName())
+     *
+     * @return
+     * @throws URISyntaxException
+     * @throws ZipException
+     * @throws IOException
+     */
+    @Parameters(name = "{0}")
+    public static Collection&lt;Object[]&gt; data() throws URISyntaxException, ZipException, IOException {
+        return TestCodeProvider.getDataFromZippedRoots(TEST_DATA_RESOURCES, BLACKLIST_FILENAME);
+    }
+
+    /**
+     * generated instances of the tests will use this base implementation
+     *
+     * @throws Exception
+     */
+    @Test
+    public void test() throws Exception {
+        assertNotNull(this.entry);
+        assertNotNull(this.resourceName);
+        assertNotNull(this.parserN4JS);
+
+        //actual test code
+
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2 language-n4js">
+<h3 id="sec:Issue_Suppression"><a class="anchor" href="#sec:Issue_Suppression"></a><a class="link" href="#sec:Issue_Suppression">14.5. Issue Suppression</a></h3>
+<div class="paragraph">
+<p>It can be useful to suppress certain issues before tests are ran, so that test expectations don’t have to consider inessential warnings. This means that the validator still returns a full list of issues, but before passing them to the testing logic, the issues are filtered.</p>
+</div>
+<div class="paragraph">
+<p>When working with JUnit tests, the custom InjectorProvider <code>N4JSInjectorProviderWithIssueSuppression</code> can be used to configure them to suppress issues.</p>
+</div>
+<div class="paragraph">
+<p>The codes that are suppressed are globally specified by the<br>
+<code>DEFAULT_SUPPRESSED_ISSUE_CODES_FOR_TESTS</code> constant in <code>N4JSLanguageConstants</code>.</p>
+</div>
+<div class="paragraph">
+<p>When working with Xpect tests, the XpectSetupFactory <code>SuppressIssuesSetup</code> can be used. See <a href="#sec:Xpect_Issue_Suppression">Xpext Issue Suppression</a> for more details on Xpect issue suppression.</p>
+</div>
+</div>
+<div class="sect2 language-n4js">
+<h3 id="sec:Xpect_Tests"><a class="anchor" href="#sec:Xpect_Tests"></a><a class="link" href="#sec:Xpect_Tests">14.6. Xpect Tests</a></h3>
+<div class="paragraph">
+<p>For many tests, Xpect [<a href="appendix_e_bibliography_and_footnotes.html#Xpect">Xpect</a>] is used. Xpect allows for defining tests inside the language which is the language under test. That is, it is possible to refer to a JUnit test method in a special annotated comment, along with arguments passed to that method (typically expectations and the concrete location). Xpect comes with a couple of predefined methods which could be used there, e.g., tests for checking whether some expected error messages actually are produced. We have defined (and will probably define more) N4JS specific test methods.</p>
+</div>
+<div class="paragraph">
+<p>In the following, we describe the most common Xpect test methods we use. Note that we do not use all types of tests shipped with Xpect. For example, AST tests (comparing the actual AST with an expected AST, using string dumps) is too hard to maintain.</p>
+</div>
+<div class="paragraph">
+<p>Xpect test can be ignored by inserting a <code>!</code> between <code>XPECT</code> and the test name, e.g.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>// XPECT ! errors --&gt; '~$message$~' at "~$location$~"</code></pre>
+</div>
+</div>
+<div class="sect3">
+<h4 id="sec:Xpect_Test_Setup"><a class="anchor" href="#sec:Xpect_Test_Setup"></a><a class="link" href="#sec:Xpect_Test_Setup">14.6.1. Xpect Test Setup</a></h4>
+<div class="paragraph">
+<p>The setup is either defined in the file itself, e.g.,</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>or bundle-wide for a specific language in the plugin.xml (or fragment.xml), e.g.,</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>&lt;extension point="org.xpect.testSuite"&gt;
+    &lt;testSuite class="org.eclipse.n4js.spec.tests.N4JSSpecTest" fileExtension="n4js" /&gt;
+&lt;/extension&gt;</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="sec:Xpect_Issue_Suppression"><a class="anchor" href="#sec:Xpect_Issue_Suppression"></a><a class="link" href="#sec:Xpect_Issue_Suppression">14.6.2. Xpect Issue Suppression</a></h4>
+<div class="paragraph">
+<p>To configure an Xpect test class to suppress issues, you have to use the <code>@XpectImport</code> annotation to import the XpectSetupFactory <code>org.eclipse.n4js.xpect.validation.suppression.SuppressIssuesSetup</code>. Any Xpect test that is executed by this runner will work on the filtered list of issues.</p>
+</div>
+<div class="paragraph">
+<p>Similar to issue suppressing JUnit tests, the suppressed issue codes are specified by<br>
+<code>DEFAULT_SUPPRESSED_ISSUE_CODES_FOR_TESTS</code> constant in <code>N4JSLanguageConstants</code>.</p>
+</div>
+<div class="paragraph">
+<p>For further per-file configuration a custom <code>XPECT_SETUP</code> parameter can be used. This overrides the suppression configuration of an Xpect runner class for the current file.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>/* XPECT_SETUP org.eclipse.n4js.tests.N4JSXpectTest
+
+IssueConfiguration {
+    IssueCode "AST_LOCAL_VAR_UNUSED" {enabled=true}
+}
+
+END_SETUP
+*/</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In this example the issue code <code>AST_LOCAL_VAR_UNUSED</code> is explicitly enabled which means that no issue with this issue code will be suppressed.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="sec:Xpect_Provided_Test_Methods"><a class="anchor" href="#sec:Xpect_Provided_Test_Methods"></a><a class="link" href="#sec:Xpect_Provided_Test_Methods">14.6.3. Xpect Provided Test Methods</a></h4>
+<div class="sect4">
+<h5 id="errors"><a class="anchor" href="#errors"></a><a class="link" href="#errors">14.6.3.1. errors</a></h5>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+Definition
+</td>
+<td class="hdlist2">
+<p>Single line:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>// XPECT errors --&gt; '~$message$~' at "~$location$~"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Multi line:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>/* XPECT errors ---
+'~$message_1$~' at "~$location_1$~"
+~$\dots$~
+'~$message_n$~' at "~$location_n$~"
+--- */</code></pre>
+</div>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+Description
+</td>
+<td class="hdlist2">
+<p>Checks that one or more errors are issued at given location and compares the actual messages at a given location with the expected messages specified in the test.</p>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Also see <code>no errors</code> below.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="warnings"><a class="anchor" href="#warnings"></a><a class="link" href="#warnings">14.6.3.2. warnings</a></h5>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+Definition
+</td>
+<td class="hdlist2">
+<p>Single line:<br></p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>// XPECT warnings --&gt; '~$Message$~' at "~$Location$~"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Multi line:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>/* XPECT warnings ---
+'~$message_1$~' at "~$location_1$~"
+~$\dots$~
+'~$message_n$~' at "~$location_n$~"
+--- */</code></pre>
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Description
+</td>
+<td class="hdlist2">
+<p>Checks that one or more warnings are issued at given location and compares the actual messages at a given location with the expected messages specified in the test.</p>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="sec:N4JS_Specific_Xpect_Test_Methods"><a class="anchor" href="#sec:N4JS_Specific_Xpect_Test_Methods"></a><a class="link" href="#sec:N4JS_Specific_Xpect_Test_Methods">14.6.4. N4JS Specific Xpect Test Methods</a></h4>
+<div class="paragraph">
+<p>There are a lot of N4 specific Xpect tests methods available. To get all of these methods, search for references to annotation <code>org.xpect.runner.Xpect</code> in the N4 test plugins.</p>
+</div>
+<div class="sect4">
+<h5 id="sec:XPECT_noerrors"><a class="anchor" href="#sec:XPECT_noerrors"></a><a class="link" href="#sec:XPECT_noerrors">14.6.4.1. noerrors and nowarnings</a></h5>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+Definition
+</td>
+<td class="hdlist2">
+<p>Single line:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>// XPECT noerrors --&gt; '~$messageOrComment$~' at "~$location$~"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Multi line:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>/* XPECT noerrors ---
+'~$messageOrComment_1$~' at "~$location_1$~"
+~$\dots$~
+'~$messageOrComment_n$~' at "~$location_n$~"
+--- */</code></pre>
+</div>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+Provided by
+</td>
+<td class="hdlist2">
+<p><code>NoerrorsValidationTest</code></p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Description
+</td>
+<td class="hdlist2">
+<p>Checks that at the given location <em>no</em> error (or warning) is issued. This tests is roughly speaker the opposite of <code>errors</code>. The idea behind this test is to replace comments in the code, stating that an expression is assumed to be valid, with an explicit test. This is in particular useful when you start working on a task, in which there are (wrong) errors at a given position, or for bug report.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Example
+</td>
+<td class="hdlist2">
+<div class="exampleblock">
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>function foo(any o): number {
+    if (o instanceof string) {
+        // XPECT noerrors --&gt; "effect systems knows that o is a string" at "o"
+        return o.length;
+    }
+    return 0;
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>is clearer and more explicit than</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>function foo(any o): number {
+    if (o instanceof string) {
+        // here should be no error:
+        return o.length;
+    }
+    return 0;
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Also, the <code>noerrors</code> version will fail with a correct description, while the second one would fail with a general error and no location. Once the feature is implemented, regressions are detected much easier with the explicit version.</p>
+</div>
+</div>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect4">
+<h5 id="sec:XPECT_scope"><a class="anchor" href="#sec:XPECT_scope"></a><a class="link" href="#sec:XPECT_scope">14.6.4.2. scope</a></h5>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+Definition
+</td>
+<td class="hdlist2">
+<p>Single line:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>// XPECT scope at $location$ --&gt; ~$[$~!~$]$~~$name_1$~, ~$\dots$~, ~$[$~!~$]$~~$name_n$~ ~$[$ ~, ...~$]$~</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Multi line:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>/* XPECT scope $location$ ---
+~$[$~!~$]$~~$name_1$~, ~$\dots$~,
+~$[$~!~$]$~~$name_n$~~$[$ ~, ...~$]$~
+--- */</code></pre>
+</div>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+Provided by
+</td>
+<td class="hdlist2">
+<p><code>PositionAwareScopingXpectTest</code></p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Description
+</td>
+<td class="hdlist2">
+<p>Checks that the expected elements are actually found in the scope (or explicitly not found, when <code>!</code>   is used). This is a modified version of the Xpect built-in scope test, ensuring that also elements only put into the scope when they are explicitly requested are found.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Example
+</td>
+<td class="hdlist2">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>// XPECT scope at 'this.|$data_property_b' --&gt; a, b, $data_property_b, !newB, ...
+return this.$data_property_b + "_getter";</code></pre>
+</div>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect4">
+<h5 id="sec:XPECT_scopeWithPosition"><a class="anchor" href="#sec:XPECT_scopeWithPosition"></a><a class="link" href="#sec:XPECT_scopeWithPosition">14.6.4.3. scopeWithPosition</a></h5>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+Definition
+</td>
+<td class="hdlist2">
+<p>Single line:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-n4js" data-lang="n4js">// XPECT scopeWithPosition at $location$ --&gt; ~$[$~!~$]$~~$name_1$~ - ~$pos_1$~, ~$\dots$~, ~$[$~!~$]$~~$name_n$~ - ~$pos_n$~ ~$[$ ~, ...~$]$~</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Multi line:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-n4js" data-lang="n4js">/* XPECT scopeWithPosition $location$ ---
+~$[$~!~$]$~~$name_1$~ - ~$pos_1$~, ~$\dots$~,
+~$[$~!~$]$~~$name_n$~ - ~$pos_n$~ ~$[$ ~, ...~$]$~
+--- */</code></pre>
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Provided by
+</td>
+<td class="hdlist2">
+<p><code>PositionAwareScopingXpectTest</code></p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Description
+</td>
+<td class="hdlist2">
+<p>Checks that the expected elements are actually found in the scope (or explicitly not found, when <code>!</code>   is used). The concrete syntax of the position, which is usually the line number, or the line number prefix with <code>T</code>   if a type element is referenced, is described in <code>EObjectDescriptionToNameWithPositionMapper</code>.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Example
+</td>
+<td class="hdlist2">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>/* XPECT scopeWithPosition at foo2 ---
+    b - 9,
+    c - 25,
+    foo - T3,
+    foo2 - T9,
+    ...
+---*/
+foo2()</code></pre>
+</div>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect4">
+<h5 id="sec:XPECT_scopeWithResource"><a class="anchor" href="#sec:XPECT_scopeWithResource"></a><a class="link" href="#sec:XPECT_scopeWithResource">14.6.4.4. scopeWithResource</a></h5>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+Definition
+</td>
+<td class="hdlist2">
+<p>Single line:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>//</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Multi line:</p>
+</div>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Provided by
+</td>
+<td class="hdlist2">
+<p><code>N4JSXpectTest</code></p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Description
+</td>
+<td class="hdlist2">
+<p>Compares scope including resource name but not line number.</p>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect4">
+<h5 id="sec:XPECT_binding"><a class="anchor" href="#sec:XPECT_binding"></a><a class="link" href="#sec:XPECT_binding">14.6.4.5. binding</a></h5>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+Definition
+</td>
+<td class="hdlist2">
+<p>Single line:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>//</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Multi line:</p>
+</div>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Provided by
+</td>
+<td class="hdlist2">
+<p><code>N4JSXpectTest</code></p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Description
+</td>
+<td class="hdlist2">
+<p>Checks that a given element is bound to something identified by (simple) qualified name. The check is designed as simple as possible. That is, simply the next following expression is tested, and within that we expect a property access or a direct identifiable element. The compared name is the simple qualified name, that is container (type) followed by elements name, without URIs of modules etc.</p>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect4">
+<h5 id="sec:XPECT_linkedPathname"><a class="anchor" href="#sec:XPECT_linkedPathname"></a><a class="link" href="#sec:XPECT_linkedPathname">14.6.4.6. linkedPathname</a></h5>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+Definition
+</td>
+<td class="hdlist2">
+<p>Single line:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>// XPECT linkedPathname at '$location$' --&gt; ~$pathname$~</code></pre>
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Provided by
+</td>
+<td class="hdlist2">
+<p><code>LinkingXpectMethod</code></p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Description
+</td>
+<td class="hdlist2">
+<p>Checks that an identifier is linked to a given element identified by its path name. The path name is the qualified name in which the segments are separated by ’/’. This test does not use the qualified name provider, as the provider may return null for non-globally available elements. It rather computes the name again by using reflection, joining all <code>name</code>   properties of the target and its containers.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Example
+</td>
+<td class="hdlist2">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>// XPECT linkedPathname at 'foo()' --&gt; C/foo
+new C().foo();</code></pre>
+</div>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect4">
+<h5 id="sec:XPECT_type_of"><a class="anchor" href="#sec:XPECT_type_of"></a><a class="link" href="#sec:XPECT_type_of">14.6.4.7. type of</a></h5>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+Definition
+</td>
+<td class="hdlist2">
+<p>Single line:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>// XPECT type of '$location$' --&gt; ~$type$~</code></pre>
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Provided by
+</td>
+<td class="hdlist2">
+<p><code>N4JSXpectTest</code></p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Description
+</td>
+<td class="hdlist2">
+<p>Checks that the type inferred at location is similar to expected type.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Example
+</td>
+<td class="hdlist2">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>// XPECT type of 'x' --&gt; string
+var x = 'hello';
+// XPECT type of 'foo()' --&gt; union{A,number}
+var any y = foo();</code></pre>
+</div>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect4">
+<h5 id="sec:XPECT_expectedType"><a class="anchor" href="#sec:XPECT_expectedType"></a><a class="link" href="#sec:XPECT_expectedType">14.6.4.8. expectedType</a></h5>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+Definition
+</td>
+<td class="hdlist2">
+<p>-</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Single line
+</td>
+<td class="hdlist2">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>// XPECT expectedType at 'location' --&amp;gt; Type</code></pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>The location (at) is optional.</pre>
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Provided by
+</td>
+<td class="hdlist2">
+<p><code>N4JSXpectTest</code></p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Description
+</td>
+<td class="hdlist2">
+<p>Checks that an element/expression has a certain expected type (i.e. Xsemantics judgment expectedTypeIn).</p>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect4">
+<h5 id="sec:XPECT_elementKeyword"><a class="anchor" href="#sec:XPECT_elementKeyword"></a><a class="link" href="#sec:XPECT_elementKeyword">14.6.4.9. elementKeyword</a></h5>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+Definition
+</td>
+<td class="hdlist2">
+<p>Single line:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>// XPECT elementKeyword at 'myFunction' -&gt; function</code></pre>
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Example
+</td>
+<td class="hdlist2">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>interface I {
+  fld: int;
+  get g(): string;
+  set s(p:string);
+}
+
+//XPECT elementKeyword at 'string' --&gt; primitive
+var v1: string;
+
+//XPECT elementKeyword at 'I' --&gt; interface
+var i: I;
+
+//XPECT elementKeyword at 'fld' --&gt; field
+i.fld;</code></pre>
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Provided by
+</td>
+<td class="hdlist2">
+<p><code>ElementKeywordXpectMethod</code></p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Description
+</td>
+<td class="hdlist2">
+<p>Checks that an element/expression has a certain element keyword. The expected element keyword is identical
+to the element keyword shown when hovering the mouse over that element/expression in the N4JS IDE. This method is particuarly useful for testing merged elements of union/intersection.</p>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect4">
+<h5 id="sec:XPECT_accessModifier"><a class="anchor" href="#sec:XPECT_accessModifier"></a><a class="link" href="#sec:XPECT_accessModifier">14.6.4.10. accessModifier</a></h5>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+Definition
+</td>
+<td class="hdlist2">
+<p>Single line:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>// XPECT accessModifier at 'myFunction' -&gt; function</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>or</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>// XPECT accessModifier -&gt; function</code></pre>
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Example
+</td>
+<td class="hdlist2">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>// XPECT accessModifier --&gt; publicInternal
+export @Internal public abstract class MyClass2 {
+
+// XPECT accessModifier --&gt; project
+abstract m1(): string;
+
+// XPECT accessModifier at 'm2' --&gt; project
+m2(): string {
+    return "";
+  }
+}</code></pre>
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Provided by
+</td>
+<td class="hdlist2">
+<p><code>AccessModifierXpectMethod</code></p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Description
+</td>
+<td class="hdlist2">
+<p>Checks that an element/expression has a certain accessibility.</p>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect4">
+<h5 id="sec:XPECT_compileResult"><a class="anchor" href="#sec:XPECT_compileResult"></a><a class="link" href="#sec:XPECT_compileResult">14.6.4.11. compileResult</a></h5>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+Definition
+</td>
+<td class="hdlist2">
+<p>Single line:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>//</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Multi line:</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+Provided by
+</td>
+<td class="hdlist2">
+<p>-</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Description
+</td>
+<td class="hdlist2">
+<p><em>This test should only be used during development of compiler and not used in the long run, because this kind of test is extremely difficult to maintain.</em></p>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect4">
+<h5 id="sec:XPECT_output"><a class="anchor" href="#sec:XPECT_output"></a><a class="link" href="#sec:XPECT_output">14.6.4.12. output</a></h5>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+Definition
+</td>
+<td class="hdlist2">
+<p>Single line:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>//</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Multi line:</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+Provided by
+</td>
+<td class="hdlist2">
+<p>-</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Description
+</td>
+<td class="hdlist2">
+<p>The most important test for compiler/transpiler, but also for ensuring that N4JS internal validations and assumptions are true at runtime.</p>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect4">
+<h5 id="sec:XPECT_outputRegEx"><a class="anchor" href="#sec:XPECT_outputRegEx"></a><a class="link" href="#sec:XPECT_outputRegEx">14.6.4.13. outputRegEx</a></h5>
+
+</div>
+<div class="sect4">
+<h5 id="sec:XPECT_calculatedAccessModifier"><a class="anchor" href="#sec:XPECT_calculatedAccessModifier"></a><a class="link" href="#sec:XPECT_calculatedAccessModifier">14.6.4.14. calculatedAccessModifier</a></h5>
+
+</div>
+<div class="sect4">
+<h5 id="sec:XPECT_spec"><a class="anchor" href="#sec:XPECT_spec"></a><a class="link" href="#sec:XPECT_spec">14.6.4.15. spec</a></h5>
+
+</div>
+<div class="sect4">
+<h5 id="sec:XPECT_deadCode"><a class="anchor" href="#sec:XPECT_deadCode"></a><a class="link" href="#sec:XPECT_deadCode">14.6.4.16. deadCode</a></h5>
+
+</div>
+<div class="sect4">
+<h5 id="sec:XPECT_returnOrThrows"><a class="anchor" href="#sec:XPECT_returnOrThrows"></a><a class="link" href="#sec:XPECT_returnOrThrows">14.6.4.17. returnOrThrows</a></h5>
+
+</div>
+<div class="sect4">
+<h5 id="sec:XPECT_lint"><a class="anchor" href="#sec:XPECT_lint"></a><a class="link" href="#sec:XPECT_lint">14.6.4.18. lint</a></h5>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+Definition
+</td>
+<td class="hdlist2">
+<p>Single line:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>/* XPECT lint */</code></pre>
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Provided by
+</td>
+<td class="hdlist2">
+<p><code>CompileAndLintTest</code></p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Description
+</td>
+<td class="hdlist2">
+<p>Passes the generated code through the JSHint JavaScript linter. This test includes for instance checking for missing semicolons and undefined variables. The whole test exclusively refers to the generated javascript code.</p>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect4">
+<h5 id="sec:XPECT_lintFails"><a class="anchor" href="#sec:XPECT_lintFails"></a><a class="link" href="#sec:XPECT_lintFails">14.6.4.19. lintFails</a></h5>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+Definition
+</td>
+<td class="hdlist2">
+<p>Single line:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>/* XPECT lintFails */</code></pre>
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Provided By
+</td>
+<td class="hdlist2">
+<p><code>CompileAndLintTest</code></p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Description
+</td>
+<td class="hdlist2">
+<p>Negation of lint. Fails on linting success. Expects linting errors.</p>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="sec:FIXME_Xpect_modifier"><a class="anchor" href="#sec:FIXME_Xpect_modifier"></a><a class="link" href="#sec:FIXME_Xpect_modifier">14.6.5. FIXME Xpect modifier</a></h4>
+<div class="paragraph">
+<p>A modification of the official Xpect framework allows us to use the FIXME modifier on each test. <sup class="footnote">[<a id="_footnoteref_15" class="footnote" href="appendix_e_bibliography_and_footnotes.html#_footnote_15" title="View footnote.">15</a>]</sup></p>
+</div>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+Syntax
+</td>
+<td class="hdlist2">
+<p>FIXME can be applied on any test just after the XPECT keyword:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>// XPECT FIXME  xpectmethod ... --&gt; ...</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Tests will still be ignored if an exclamation mark (!) is put between XPECT and FIXME.</p>
+</div>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Description
+</td>
+<td class="hdlist2">
+<p>Using FIXME on a test negates the result of the underlying JUnit test framework. Thus a failure will be reported as a <code>true assertion</code>   and an assertion that holds will be reported as <code>failure</code>  . This enables to author valuable tests of behaviour, which is still not functional.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Example
+</td>
+<td class="hdlist2">
+<p>For instance, if we encounter an error-message at a certain code position, but the code is perfectly right, then we have an issue. We can annotate the situation with a ’fix me’ ’noerrors’ expectation:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>// Perfectly right behaviour XPECT FIXME noerrors --&gt;
+console.log("fine example code with wrong error marker here.");</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This turns the script into an Xpect test. We can integrate the test right away into our test framework and it will not break our build (even though the bug is not fixed).</p>
+</div>
+<div class="paragraph">
+<p>When the issue will be worked on, the developer starts with removing ’FIXME’ turning this into useful unit-test.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>It is crucial to understand that FIXME negates the whole assertion. Example: If one expects an error marker at a certain position using the ’errors’ directive, one must give the exact wording of the expected error-message to actually get the FIXME behaviour working. To avoid strange behaviour it is useful to describe the expected error a comment in front of the expectation and leave the message-section empty.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="sec:Expectmatrix_Xpect_Test_Methods"><a class="anchor" href="#sec:Expectmatrix_Xpect_Test_Methods"></a><a class="link" href="#sec:Expectmatrix_Xpect_Test_Methods">14.6.6. Expectmatrix Xpect tests</a></h4>
+<div class="paragraph">
+<p>Applying test-driven development begins with authoring acceptance and functional tests for the work in the current sprint. By this the overall code quality is ensured for the current tasks to solve. Rerunning all collected tests with each build ensures the quality of tasks solved in the past. Currently there is no real support for tasks, which are not in progress but are known to be processed in the near or far future. Capturing non-trivial bug reports and turning them into reproducable failing test-cases is one example.</p>
+</div>
+<div class="paragraph">
+<p>Usually people deactivate those future-task-tests in the test code by hand. This approach doesn’t allow to calculate any metrics about the code. One such metric would be: Is there any reported bug solved just by working on an (seemingly unrelated) scheduled task?</p>
+</div>
+<div class="paragraph">
+<p>To achieve measurements about known problems, a special build-scenario is set up. As a naming convention all classes with names matching <code>*  Pending</code> are assumed to be Junit tests. In bundle <code>org.eclipse.n4js.expectmatrix.tests</code> two different Xpect-Runners are provided, each working on its own subfolder. Usual Xpect-tests are organised in folder xpect-test while in folder xpect-pending all future-tests are placed. A normal maven-build processes only the standard junit and xpect tests. Starting a build with profile <code>execute-expectmatrix-pending-tests</code> will additionally execute Xpect tests from folder xpect-pending and for all bundles inheriting from <code>/tests/pom.xml</code> all unit tests ending in <code>*  Pending</code>. This profile is deactivated by default.</p>
+</div>
+<div class="paragraph">
+<p>A special jenkins-job - N4JS-IDE_nightly_bugreports_pending - is configured to run the pending tests and render an overview und history to compare issues over time. Due to internal Jenkins structures this build always marked failed, even though the maven-build succeeds successfully.</p>
+</div>
+<div class="paragraph">
+<p>Relevant additional information can be found in</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Jenkins job for pending cases: <a href="http://build-master:8080/view/N4JS/job/N4JS-IDE_nightly_bugreports_pending/" class="bare">http://build-master:8080/view/N4JS/job/N4JS-IDE_nightly_bugreports_pending/</a></p>
+</li>
+<li>
+<p>Testmatrix <a href="https://docs.google.com/a/numberfour.eu/spreadsheets/d/1Blo58cRwIWemaiBNSnOtsQ8U7b3FoodX3yEs7oJKIg0/" class="bare">https://docs.google.com/a/numberfour.eu/spreadsheets/d/1Blo58cRwIWemaiBNSnOtsQ8U7b3FoodX3yEs7oJKIg0/</a></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="xpect-lint-tests"><a class="anchor" href="#xpect-lint-tests"></a><a class="link" href="#xpect-lint-tests">14.6.7. Xpect Lint Tests</a></h4>
+<div id="sec:XPECT_Lint_Tests" class="imageblock">
+<div class="content">
+<img src="chapters/15_tests/images/diag_XpectLint.svg" alt="diag XpectLint">
+</div>
+<div class="title">Figure 46. Xpect Lint</div>
+</div>
+<div class="paragraph">
+<p>The test transpiles the provided n4js resource and checks the generated code. This is achieved using the Javascript linter JSHint.</p>
+</div>
+<div class="paragraph">
+<p>After transpiling the provided n4js resource the LintXpectMethod combines the generated code with the jshint code into a script. It calls the JSHint validation function and returns the linting result as a json object. The error results are displayed in the console. The script is executed using the <code>Engine</code> class. (<a href="execution.html#sec:Design">Design</a>)</p>
+</div>
+<div class="paragraph">
+<p>For the linting process an adapted configuration for JSHint is used. For the needs of N4JS the linter is configured to recognise N4JS specific globals. Details about the error codes can be found at the <a href="https://github.com/jshint/jshint/blob/2444a0463e1a99d46e4afa50ed934c317265529d/src/messages.js">jshint repository</a>.</p>
+</div>
+<div class="paragraph">
+<p>The following warnings are explicitly enabled/disabled:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>W069</strong>: [’a’] is better written in dot notation <strong>DISABLED</strong></p>
+</li>
+<li>
+<p><strong>W033</strong>: Missing semicolon <strong>ENABLED</strong></p>
+</li>
+<li>
+<p><strong>W014</strong>: Bad line breaking before ’a’. <strong>DISABLED</strong></p>
+</li>
+<li>
+<p><strong>W032</strong>: Uneccesarry semicolon <strong>ENABLED</strong></p>
+</li>
+<li>
+<p><strong>W080</strong>: It’s not necessary to initialize ’a’ to ’undefined’. <strong>ENABLED</strong></p>
+</li>
+<li>
+<p><strong>W078</strong>: Setter is defined without getter. <strong>DISABLED</strong></p>
+</li>
+<li>
+<p>ES6 related warnings are <strong>disabled</strong> using the ’esnext’ option: <strong>W117</strong>: Symbol is not defined. <strong>DISABLED</strong> <strong>W104</strong>: ’yield’ is only available in ES6 <strong>DISABLED</strong> <strong>W117</strong>: Promise is not defined <strong>DISABLED</strong> <strong>W119</strong>: function* is only available in ES6 <strong>DISABLED</strong></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The xpect lint test only applies if the provided resource passes the n4js compiler.</p>
+</div>
+<div class="paragraph">
+<p>The xpect method lintFails can be used to create negative tests. All linting issues discovered during the development of the xpect plugin have there own negative test to keep track of their existence.</p>
+</div>
+<div class="paragraph">
+<p>Additional information:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>JSHint: <a href="http://jshint.com/docs/" class="bare">http://jshint.com/docs/</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect2 language-n4js">
+<h3 id="xpect-proposal-tests"><a class="anchor" href="#xpect-proposal-tests"></a><a class="link" href="#xpect-proposal-tests">14.7. Xpect Proposal Tests</a></h3>
+<div class="paragraph">
+<p>Proposal tests are all tests which verify the existence and application of completion proposals, created by content assist, quick fixes etc.</p>
+</div>
+<div class="paragraph">
+<p>The key attributes of a proposal (cf <code>ConfigurableCompletionProposal</code>) are:</p>
+</div>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+displayString
+</td>
+<td class="hdlist2">
+<p>the string displayed in the proposal list</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+replacementString
+</td>
+<td class="hdlist2">
+<p>simple variant of which is to be added to document, not necessarily the whole replacement (as this may affect several locations and even user interaction)</p>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>In the tests, a <em>proposal is identified by a string contained in the displayString</em>. If several proposal match, test will fail (have to rewrite test setup or proposal identifier to be longer). Proposal identifier should be as short as possible (to make test robust), but not too short (to make test readable).</p>
+</div>
+<div class="paragraph">
+<p>The following proposal tests are defined:</p>
+</div>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+contentAssist <math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo>[</mo></mrow></math> List <math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo>]</mo></mrow></math>
+</td>
+<td class="hdlist2">
+<p>verifies proposals created by content assist</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+quickFix <math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo>[</mo></mrow></math> List <math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo>]</mo></mrow></math>
+</td>
+<td class="hdlist2">
+<p>verifies proposals created by quick fixes. Cursor position is relevant, that’s handled by the framework. We only create tests with cursor position – fixes applied via the problem view should work similarly, but without final cursor position.</p>
+<div class="paragraph">
+<p>If no error is found at given position, test will fail (with appropriate error message!). In call cases of apply, the issue must be resolved. Usually, fixing an issue may leave the file invalid as other issues still exists, or because by fixing one issue others may be introduced (which may happen often as we try to avoid consequential errors in validation). For some special cases, quickFix tests support special features, see below.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Not tested in this context: Verify proposal description, as these tests would be rather hard to maintain and the descriptions are often computed asynchronously.</p>
+</div>
+<div class="sect3">
+<h4 id="sec:Validation_vs__Non_Validation"><a class="anchor" href="#sec:Validation_vs__Non_Validation"></a><a class="link" href="#sec:Validation_vs__Non_Validation">14.7.1. Validation vs. Non-Validation</a></h4>
+<div class="paragraph">
+<p>We expect proposal tests to be applied on non-valid test files, and usually file is also broken after a proposal has been applied. Thus, the test-suite must not fail if the file is not valid.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="sec:General_Proposal_Test_Features"><a class="anchor" href="#sec:General_Proposal_Test_Features"></a><a class="link" href="#sec:General_Proposal_Test_Features">14.7.2. General Proposal Test Features</a></h4>
+<div class="sect4">
+<h5 id="sec:Test_Variables"><a class="anchor" href="#sec:Test_Variables"></a><a class="link" href="#sec:Test_Variables">14.7.2.1. Test Variables</a></h5>
+<div class="paragraph">
+<p>Often, list of proposals are similar for different tests (which define different scenarios in which the proposals should be generated). For that reason, variables can be defined in the test set up:</p>
+</div>
+<div class="paragraph">
+<p>In the Xpect-Setup there is now a special <code>Config</code> component where specific switches are accessible. For instance the timeout switch for content assist can be modified:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>/* XPECT_SETUP org.eclipse.n4js.tests.N4JSNotValidatingXpectPluginUITest
+    ...
+    Config {
+        content_assist_timeout = 1000
+        ...
+    }
+    ...
+*/</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Note: There should only be one <code>Config</code> component per Xpect-Setup.</p>
+</div>
+<div class="paragraph">
+<p>Variables are introduced via the <code>VarDef</code> component. It takes a string argument as the variable name on construction. Inside the body one add <code>MemberLists</code> and <code>StringLists</code> arguments. Variable definitions may appear in <code>Config</code> bodies or in the Xpect-Setup.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>VarDef "objectProposals" {
+    ...
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Define variables with expression: A simple selector is given with the <code>MemberList</code> component. These components take three <code>String</code> arguments in the constructor. The first one is a typename. The second one is the feature selector, e.g. <code>methods</code>  , <code>fields</code>  , …and the third one defines the visibility.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>/* XPECT_SETUP
+VarDef "stringProposals" { MemberList  "String" "methods" "public" {}}
+END_SETUP */</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We have to define a filter later in Xtend/Java, e.g., <code>getClassWithName( <em>className</em> ).filterType(<em>methods</em>).filterVisibility(<em>accessodifier</em>)&#8230;&#8203;</code></p>
+</div>
+<div class="paragraph">
+<p>A variable is later referenced as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>&lt;$variable&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Usage example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>// XPECT contentAssistList at 'a.&lt;|&gt;methodA' proposals --&gt; &lt;$stringProposals&gt;, methodA2
+a.methodA</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="sec:Location_and_Selection"><a class="anchor" href="#sec:Location_and_Selection"></a><a class="link" href="#sec:Location_and_Selection">14.7.2.2. at – Location and Selection</a></h5>
+<div class="paragraph">
+<p>Tokens in expectation/setup:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>&lt;|&gt;</code> cursor position</p>
+</li>
+<li>
+<p><code>&lt;[&gt;</code> selection start → also defines cursor position</p>
+</li>
+<li>
+<p><code>&lt;]&gt;</code> selection end</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>All proposal tests have to specify a location via <code>at</code>, the location must contain the cursor position and may contain a selection. E.g.:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>// XPECT contentAssistList at 'a.&lt;|&gt;methodA' apply 'methodA2' --&gt; a.methodA2()&lt;|&gt;methodA
+// XPECT contentAssistList at 'a.&lt;|&gt;&lt;[&gt;methodA&lt;]&gt;' apply 'methodA2' override --&gt; a.methodA2()&lt;|&gt;
+a.methodA</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="sec:Multi_Line_Expectations_in_Proposal_Tests"><a class="anchor" href="#sec:Multi_Line_Expectations_in_Proposal_Tests"></a><a class="link" href="#sec:Multi_Line_Expectations_in_Proposal_Tests">14.7.2.3. Multi Line Expectations in Proposal Tests</a></h5>
+<div class="paragraph">
+<p>In multiline expectations, ignored lines can be marked with <code>&lt;&#8230;&#8203;&gt;</code>. This means that 0 to n lines may occur but are ignored for comparison.</p>
+</div>
+<div class="paragraph">
+<p>All multiline expectations are compared line-wise, with exact match except line delimiters (which are ignored as well)</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="sec:Timeout"><a class="anchor" href="#sec:Timeout"></a><a class="link" href="#sec:Timeout">14.7.2.4. Timeout and Performance</a></h5>
+<div class="paragraph">
+<p>We define a default timeout for content assist tests. In set up, this timeout may be changed:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-n4js" data-lang="n4js">/* XPECT SETUP
+...
+content_assist_timeout = 2000ms
+...
+END_SETUP */</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Performance is measured by measuring the runtime of tests, we should later setup performance measurements similar to the performance tests.</p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="proposals-verify-existence-of-proposals"><a class="anchor" href="#proposals-verify-existence-of-proposals"></a><a class="link" href="#proposals-verify-existence-of-proposals">14.7.3. proposals – Verify Existence of Proposals</a></h4>
+<div class="paragraph">
+<p>In general, one could verify if certain proposals are present or not present, and in which order they are present. This is verified by the <code>proposals</code> argument.</p>
+</div>
+<div class="paragraph">
+<p>E.g.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>// XPECT contentAssistList at 'a.&lt;|&gt;methodA' proposals --&gt; &lt;$stringProposals&gt;, methodA2
+a.methodA</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Additional flags:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Order modifier:</p>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+unordered
+</td>
+<td class="hdlist2">
+<p>by default</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+ordered
+</td>
+<td class="hdlist2">
+<p>the given expectations have to have that order, between these expectations other proposals may be present (in case of contains)</p>
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>Subset modifier:</p>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+exactly
+</td>
+<td class="hdlist2">
+<p>(default, maybe changed later) no other expectations as the given ones (usually <code>contains</code>   is recommended).</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+contains
+</td>
+<td class="hdlist2">
+<p>at least the given expectations must be present, but others may be there as well.</p>
+<div class="paragraph">
+<p>Using <em>contains</em> must be used with care since we match items by searching for a proposal which contains one of the expected strings as a substring. So if the only available proposal were ’methodA2’ and we would test if proposals contain ’methodA’, ’methodA2’ we would obtain a passing test.</p>
+</div>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+not
+</td>
+<td class="hdlist2">
+<p>any of the given proposals must be NOT be proposed</p>
+</td>
+</tr>
+</table>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="sec:Verify_displayed_string"><a class="anchor" href="#sec:Verify_displayed_string"></a><a class="link" href="#sec:Verify_displayed_string">14.7.4. display – Verify displayed string</a></h4>
+<div class="paragraph">
+<p>We do not verify the text style. We only verify text:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>// XPECT contentAssistList at 'a.&lt;|&gt;methodA' display 'methodA2' --&gt; 'methodA2(): any - A'
+a.methodA</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This kind of test should be only applied for few scenarios, because the long display tests are rather hard to maintain.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="sec:Apply_Proposal"><a class="anchor" href="#sec:Apply_Proposal"></a><a class="link" href="#sec:Apply_Proposal">14.7.5. apply – Apply Proposal</a></h4>
+<div class="paragraph">
+<p>Execution of proposal, the expectation describes the expected text result. The tests follow the naming convention of Ending in …Application.</p>
+</div>
+<div class="paragraph">
+<p>Additional flags:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>insertion mode</p>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+insert
+</td>
+<td class="hdlist2">
+<p>(default) Ctrl not pressed, proposal is inserted at given location</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+override
+</td>
+<td class="hdlist2">
+<p>Ctrl is pressed, proposal overrides selection.</p>
+</td>
+</tr>
+</table>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Single line assumes change at line of initial cursor position:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>// XPECT contentAssist at 'a.&lt;|&gt;methodA' apply 'methodA2' --&gt; a.methodA2()methodA
+// XPECT contentAssist at 'a.&lt;|&gt;methodA' apply 'methodA2' insert --&gt; a.methodA2()methodA
+// XPECT contentAssist at 'a.&lt;|&gt;methodA' apply 'methodA2' override --&gt; a.methodA2()
+a.methodA</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>or</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>// XPECT quickFix at 'a.&lt;|&gt;method' apply 'methodA2' --&gt; a.methodA2();
+a.methodTypo();</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Multiline expectations describe changes to the whole. In order to match the expectation context information around the relevant places must be given. The format is similar to a unified diff with a special rule for inline-changes. The comparison works in a line-based mode. Each line in the expectation is prefixed with one character of ’+’, ’|’, ’-’ or ’ ’. Inserted lines are marked with + and removed lines with -. Lines marked with | denote changes in the line. Difference is placed inline inside of a pair of square brackets with a | separating the removal on the left and the addition on the right.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>/* XPECT contentAssistList at 'a.me&lt;|&gt;thodA' apply 'methodA2' ---
+&lt;...&gt;
+import A from "a/b/c"
+&lt;...&gt;
+a.methodA2()&lt;|&gt;methodA
+&lt;...&gt;
+--- */
+a.methodA</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>/* XPECT contentAssistList at 'a.me&lt;|&gt;thodA' apply 'methodA2' ---
+ import B from "p/b"
++import A from "a/b/c"
+
+ ...
+ foo() {
+|a.[me|thodA2()]
+ }
+ ...
+--- */
+a.methodA</code></pre>
+</div>
+</div>
+<div class="sect4">
+<h5 id="resource-application-in-other-files"><a class="anchor" href="#resource-application-in-other-files"></a><a class="link" href="#resource-application-in-other-files">14.7.5.1. resource – application in other files</a></h5>
+<div class="paragraph">
+<p>The resource parameter is available for the quickfix xpect method. It specifies the target resource of the quickfix. (e.g. change declaration of type in another file to quickfix an issue).</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>/* XPECT quickFix at 'sameVendor.protected&lt;|&gt;Method()' apply 'Declare member as public, @Internal' resource='../../otherProject/src/other_file.n4js' ---
+diff here
+---
+*/</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The syntax is similar to a normal multiline quickfix xpect test besides the addition of the resource parameter. The relative path points to a file in the same workspace as the test file. Note that the path refers to the folder structure specified in the XPECT SETUP header. It is relative to the folder the test file is contained in.<br>
+<br>
+The diff is between the specified resource before and after the application of the quickfix<br>
+<br>
+Note that the fileValid (<a href="#fileValidVerify-validation-status">Verify Validation Status</a>) parameter is not applicable to an extern resource.</p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="sec:Content_Assist_Cycling"><a class="anchor" href="#sec:Content_Assist_Cycling"></a><a class="link" href="#sec:Content_Assist_Cycling">14.7.6. kind – Content Assist Cycling</a></h4>
+<div class="paragraph">
+<p>We assume the default kind to be ’n4js’. It is possible to select a proposal kind in the test set up or via the argument <code>kind</code> in the test.</p>
+</div>
+<div class="paragraph">
+<p>Select kind in test setup:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>/* XPECT_SETUP
+content_assist_kind = 'recommenders'
+END_SETUP */</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Select kind in test:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>// XPECT contentAssistList kind 'smart' at 'a.&lt;|&gt;methodA' display 'methodA2' --&gt; 'methodA2(): any - A'
+a.methodA</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="fileValidVerify-validation-status"><a class="anchor" href="#fileValidVerify-validation-status"></a><a class="link" href="#fileValidVerify-validation-status">14.7.7. fileValid – Verify validation status</a></h4>
+<div class="paragraph">
+<p>In some cases, in particular in case of quick fix tests, the file should be valid after the proposal has been applied. This is added by an additional argument <code>fileValid</code>.</p>
+</div>
+<div class="paragraph">
+<p>E.g.,</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>// XPECT quickFix at 'a.&lt;|&gt;method' apply 'methodA2' fileValid --&gt; a.&lt;|&gt;methodA2();
+a.methodTypo();</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2 language-n4js">
+<h3 id="sec:Apply_Proposal_And_Execute_Tests"><a class="anchor" href="#sec:Apply_Proposal_And_Execute_Tests"></a><a class="link" href="#sec:Apply_Proposal_And_Execute_Tests">14.8. Apply Proposal And Execute Tests</a></h3>
+<div class="paragraph">
+<p>If a proposal fixes all issues in a test file, the file could be executed. This is an important type of test, as this is what the user expects in the end. Besides, this type of test is very robust, as it does not depend on the concrete way how an issue is fixed. For quick fixes, these kind of tests are to be implemented!</p>
+</div>
+<div class="paragraph">
+<p>The following combined proposal and execute tests are provided:</p>
+</div>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+quickFixAndRun
+</td>
+<td class="hdlist2">
+<p>applies a quick fix, verifies that all issues are solved, and executes the file.</p>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>These tests are basically execution tests, that is the expectation describes the expected output of the script.</p>
+</div>
+<div class="paragraph">
+<p>E.g.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>// XPECT quickFixAndRun at 'a.&lt;|&gt;method' apply 'methodHelloWorld' --&gt; Hello World
+a.methodTypo();</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>with <code>methodHelloWorld</code> printing <code>’Hello World’</code> to the console. The expected output can be multiline:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>/* XPECT quickFixAndRun at 'a.&lt;|&gt;method' apply 'methodHelloWorld' ---
+Hello World
+--- */
+a.methodTypo();</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2 language-n4js">
+<h3 id="sec:Organize_Imports_Test"><a class="anchor" href="#sec:Organize_Imports_Test"></a><a class="link" href="#sec:Organize_Imports_Test">14.9. Organize Imports Test</a></h3>
+<div class="paragraph">
+<p>For testing organise imports a Plugin-UI test method is available. It operates in two modes. Either a successful application of organise imports is tested or the expected abortion is checked.</p>
+</div>
+<div class="sect3">
+<h4 id="organizeimports"><a class="anchor" href="#organizeimports"></a><a class="link" href="#organizeimports">14.9.1. organizeImports</a></h4>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+Definition
+</td>
+<td class="hdlist2">
+<p>Multi line:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>/* XPECT organizeImports ---
+~Failure given by line-syntax starting with two characters:~
++ additional line
+| line with inplace[removed part|added part]
++ removed line
+  unchanged line
+--- */
+// XPECT warnings --&gt; "The import of A is unused." at "A"
+import A from "a/a1/A"
+...
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Single line:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>// XPECT organizeImports ambiguous '~Failure String of Exception~'--&gt;
+}</code></pre>
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Provided by
+</td>
+<td class="hdlist2">
+<p><code>OrganizeImportXpectMethod</code></p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Description
+</td>
+<td class="hdlist2">
+<p>Checks that the resulting source-file differs in the described way. The Multiline variant checks the result of a successful application of organise import to the file. All errors and warnings prior to organising imports must be marked as the appropriate XPECT-error or warning.</p>
+<div class="paragraph">
+<p>The single-line notation checks the failure of an fully automatic reorganisation of the imports due to some reason. The reason is verified to be the given string after the <code>ambiguous</code> keyword. The expectation side (right of <code>-&#8594;</code>) is empty.</p>
+</div>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Example
+</td>
+<td class="hdlist2">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>/* XPECT_SETUP org.eclipse.n4js.tests.N4JSXpectPluginUITest
+   Workspace {
+     Project "P1" {
+        Folder "src" {
+            Folder "a" {  Folder "a1" { File "A.n4js" { from="../../a/a1/A.n4js" } }
+                            Folder "c"  { ThisFile {} }  }  }
+        File "package.json" { from="package_p1.json" }  }  }
+   END_SETUP
+*/
+
+/* XPECT organizeImports ---
+
+ | import [A from "a/a1/A"|]
+ | [import|] AR from "a/a1/A"
+   export public role BRole with AR {
+   }
+--- */
+// XPECT warnings --&gt; "The import of A is unused." at "A"
+import A from "a/a1/A"
+import AR from "a/a1/A"
+
+// XPECT noerrors --&gt; "Couldn't resolve reference to Type 'AR'."
+export public role BRole with AR {
+}</code></pre>
+</div>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect2 language-n4js">
+<h3 id="sec:Access_Control_Test"><a class="anchor" href="#sec:Access_Control_Test"></a><a class="link" href="#sec:Access_Control_Test">14.10. Access Control Test</a></h3>
+<div class="paragraph">
+<p>Access control refers to the decision whether or not a member or a top level element is accessible for a client. In this context, access refers to reading, writing, and calling a member or a top level function, and to overriding inherited members in classes and interfaces. In N4JS, access is controlled via modifiers at the type and at the member level. Due to the large number of such modifiers and the large number of different scenarios for access control, manually written tests can only cover a small number of actual scenarios. An automatic test generator helps to increase the test coverage for access control.</p>
+</div>
+<div class="paragraph">
+<p>The test generator loads test scenarios from a CSV table that also contains the expected results of each test case and then generates N4JS projects and code for each test case, compiles them using the headless compiler, and compares the compilation results to the expectations from the CSV table. Note that the test generator does not generate test cases that check access control for top level functions and variables.</p>
+</div>
+<div class="sect3">
+<h4 id="test-scenarios"><a class="anchor" href="#test-scenarios"></a><a class="link" href="#test-scenarios">14.10.1. Test Scenarios</a></h4>
+<div class="paragraph">
+<p>Each test scenario consists of a scenario specifier (one of <code>Extends</code>  , <code>Implements</code>  , <code>References</code>  ), a supplier and a client (each of which can be a class, and abstract class, an interface, or an interface with default implementations of its getters, setters, and methods). Thereby, the client attempts to access a member of the supplier either by reading, writing, or calling it or by overriding it in the case of an <code>Extends</code>   or <code>Implements</code>   scenario. Furthermore, each test cases specifies the location of the client in relation to the location of the supplier, e.g., whether the client is in the same module, or whether it is in the same project (but not the same module), and so forth. Finally, a test case must specify the access control modifiers of the supplier type and the member that is being accessed by the client, whether that member is static or not, and, lastly, the type of access that is being attempted.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="n4js-code-generator"><a class="anchor" href="#n4js-code-generator"></a><a class="link" href="#n4js-code-generator">14.10.2. N4JS Code Generator</a></h4>
+<div class="paragraph">
+<p>The test generator needs to generate N4JS projects and modules that implement a particular test case. For this purpose, it uses a simple code generator, available in the package <code>org.eclipse.n4js.tests.codegen</code>. The classes in that package allow specifying N4JS projects, modules, classes, and members in Java code and to generate the required artifacts as files at a given location.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="xtext-issue-matcher"><a class="anchor" href="#xtext-issue-matcher"></a><a class="link" href="#xtext-issue-matcher">14.10.3. Xtext Issue Matcher</a></h4>
+<div class="paragraph">
+<p>To match the test expectations from the CSV file against the issues generated by the compiler, the test generator uses a small library of issue matchers, available in the package <code>org.eclipse.n4js.tests.issues</code>. The classes in that package make it easy to specify expectations against Xtext issues programmatically and to evaluate these expectations against a specific set of Xtext issues. Mismatches, that is, unexpected issues as well as unmatched expectations, are explained textually. These explanations are then shown in the failure notifications of the test case generator.</p>
+</div>
+<div class="paragraph">
+<p>The test expectations allow for FIXME annotations in the CSV table to express cases where an access control error has been found, but hasn’t been fixed yet. Such expectations lead to inverted expectations against the generated issues: For example, if a test expects an attempted access to fail with an error, but the validation rules allow the access regardless, then a FIXME annotation at the test will invert the actual expectation: Where previously an error was expected, there must now be no error at all. Then, once the validation rules have been adjusted and the error occurs as expected, the FIXME test case will fail until the FIXME annotation has been removed. Therefore, the issue expectation matchers can be inverted and adjust their behavior accordingly.</p>
+</div>
+</div>
+</div>
+<div class="sect2 language-n4js">
+<h3 id="sec:Smoke_Tests"><a class="anchor" href="#sec:Smoke_Tests"></a><a class="link" href="#sec:Smoke_Tests">14.11. Smoke Tests</a></h3>
+<div class="paragraph">
+<p>Smoke tests are useful to ensure the robustness of the IDE. They aim at revealing potential exceptions that may surface to the end user in the IDE or in a headless compile run. Therefore, different permutations of a given input document are fed into processing components such as the validator or the type system. No exceptions may be thrown from these components.</p>
+</div>
+<div class="paragraph">
+<p>Since smoke tests are longrunning, it is not desired to execute them with each Maven run. That’s why the naming convention <code>*  Smoketest</code> was choosen. It will not be matched by the naming pattern for normal JUnit tests during a maven run.</p>
+</div>
+<div class="paragraph">
+<p>The smoke tests are generally created by using the (valid or invalid) input of existing test cases. Therefore, the a command line argument <code>-DSmokeTestWriter=true</code> may be passed to the VM that executes a test. All input documents that are processed by a <code>ParseHelper&lt;Script&gt;</code> will be written to a new test method on the console. The result can be merged manually into the <code>GeneraredSmoketest</code>.</p>
+</div>
+<div class="sect3">
+<h4 id="how-to-handle-smoke-test-errors"><a class="anchor" href="#how-to-handle-smoke-test-errors"></a><a class="link" href="#how-to-handle-smoke-test-errors">14.11.1. How to handle smoke test errors?</a></h4>
+<div class="paragraph">
+<p>If a smoke test fails, the concrete input should be extracted into a dedicated error test case. The existing classes like <code>scoping.ErrorTest</code> should be used to add the broken input document and create fast running cases for them. For that purpose, the <code>ExceptionAnalyzer</code> can be used. Such a test case will usually look like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>@Test
+def void testNoNPE_03() {
+    val script = ``  '
+        var target = {
+            s: "hello",
+            set x
+    ``  '.parse
+    analyser.analyse(script, "script", "script")
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="smoketester-and-exceptionanalyzer"><a class="anchor" href="#smoketester-and-exceptionanalyzer"></a><a class="link" href="#smoketester-and-exceptionanalyzer">14.11.2. SmokeTester and ExceptionAnalyzer</a></h4>
+<div class="paragraph">
+<p>The components that are used to implemement the smoke tests are the <code>SmokeTester</code> and the <code>ExceptionAnalyzer</code>. The smoke tester performs the permutation of the characters from the input model whereas the analyzer does the heavy lifting of passing the parsed model to various components such as the type system or the validation. Both utilities can be used to add either new smoke test documents or to check for the robustness of an implementation. It’s espeically useful to use the ExceptionAnalyzer in conjunction with existing test suites like the <code>LibraryParsingTestSuite</code> since it can be used instead of the other utilities like the <code>PositiveAnalyzer</code> or the <code>NegativeAnalyzer</code>.</p>
+</div>
+</div>
+</div>
+<div class="sect2 language-n4js">
+<h3 id="sec:UI_Tests_with_SWTBot"><a class="anchor" href="#sec:UI_Tests_with_SWTBot"></a><a class="link" href="#sec:UI_Tests_with_SWTBot">14.12. UI Tests with SWTBot</a></h3>
+<div class="paragraph">
+<p>For testing functionality from the end-user perspective we use UI tests based on SWTBot <a href="http://eclipse.org/swtbot/" class="bare">http://eclipse.org/swtbot/</a>.</p>
+</div>
+<div class="paragraph">
+<p>Since UI tests are usually rather fragile, it was decided to keep the number of these tests as low as possible. The main purpose of these tests is to ensure that the most fundamental IDE functionality is working properly, e.g. creating an N4JS project, creating a new N4JS file, running N4JS code in node.js.</p>
+</div>
+<div class="paragraph">
+<p>The tests have a number of SWTBot dependencies. For details, please refer to the latest target platform definition file.</p>
+</div>
+<div class="sect3">
+<h4 id="writing-swtbot-tests"><a class="anchor" href="#writing-swtbot-tests"></a><a class="link" href="#writing-swtbot-tests">14.12.1. Writing SWTBot Tests</a></h4>
+<div class="paragraph">
+<p>The implementation is contained in bundle <code>org.eclipse.swtbot.tests</code>. Writing SWTBot tests is straightforward; see source code of <code>AbstractSwtBotTest</code> for usage and examples.</p>
+</div>
+<div class="paragraph">
+<p>Some hints:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Many methods of the SWTBot framework already include assertions. For example, the method <code>#  menu(String)</code> to find a particular menu or menu item will assert that the item was found and otherwise throw an exception. Therefore, it is safe to write code like:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>bot.menu("File").menu("New").menu("Project...").click();</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>It is usually considered bad practice to use sleep delays in UI tests. Instead, wait for the element to appear using methods such as <a href="http://download.eclipse.org/technology/swtbot/helios/dev-build/apidocs/org/eclipse/swtbot/swt/finder/SWTBot.html#waitUntil" class="bare">http://download.eclipse.org/technology/swtbot/helios/dev-build/apidocs/org/eclipse/swtbot/swt/finder/SWTBot.html#waitUntil</a> or <a href="http://download.eclipse.org/technology/swtbot/helios/dev-build/apidocs/org/eclipse/swtbot/swt/finder/SWTBot.html#waitWhile" class="bare">http://download.eclipse.org/technology/swtbot/helios/dev-build/apidocs/org/eclipse/swtbot/swt/finder/SWTBot.html#waitWhile</a>.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="running-swtbot-tests"><a class="anchor" href="#running-swtbot-tests"></a><a class="link" href="#running-swtbot-tests">14.12.2. Running SWTBot Tests</a></h4>
+<div class="paragraph">
+<p>To run the tests locally in Eclipse just right-click the bundle and select <code>Run As &gt; SWTBot Test</code>  . To run them locally via maven simply start a normal maven build, no additional command line arguments, etc. required.</p>
+</div>
+<div class="paragraph">
+<p>To run remotely in a Jenkins build: on Windows the build must be executed with a logged-in user; on Linux Xvfb and a window manager are required. The recommended window manager is metacity. More information can be found here: <a href="http://wiki.eclipse.org/SWTBot/Automate_test_execution" class="bare">http://wiki.eclipse.org/SWTBot/Automate_test_execution</a>.</p>
+</div>
+<div class="paragraph">
+<p>To use metacity, add the following pre-build shell command to the Jenkins build configuration:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">sleep 5; metacity --replace --sm-disable &amp;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The sleep is required because metacity depends on Xvfb to be fully initialized, which might take a moment on slower build nodes. The following Jenkins console log shows the expected output when starting Xvfb and metacitiy:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">Xvfb starting$ Xvfb :1 -screen 0 1024x768x24 -fbdir /var/lib/build/2014-09-05_10-36-343337290231975947044xvfb
+[N4JS-IDE_Oliver] $ /bin/sh -xe /tmp/hudson4475531813520593700.sh
++ sleep 5
++ metacity --replace --sm-disable
+Xlib:  extension "RANDR" missing on display ":1.0".
+Window manager warning: 0 stored in GConf key /desktop/gnome/peripherals/mouse/cursor_size is out of range 1 to 128
+Process leaked file descriptors. See http://wiki.jenkins-ci.org/display/JENKINS/Spawning+processes+from+build for more information
+Parsing POMs
+...</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The warnings and error messages in the above log are expected and are considered unharmful (cf. discussion with Jörg Baldzer).</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="sec:Debugging_UI_Tests"><a class="anchor" href="#sec:Debugging_UI_Tests"></a><a class="link" href="#sec:Debugging_UI_Tests">14.13. Debugging UI Tests</a></h3>
+<div class="paragraph">
+<p>In rare cases UI Tests behave differently depending on the underlying OS und the power of the test machine. Missing user interaction on the build-server often results in waiting processes which in turn get a timeout request from the driving unit-testing-framework. To investigate the UI state on the build node a X11 connection needs to established.</p>
+</div>
+<div class="sect3">
+<h4 id="sec:Connecting_to_the_X_server_on_the_build_node"><a class="anchor" href="#sec:Connecting_to_the_X_server_on_the_build_node"></a><a class="link" href="#sec:Connecting_to_the_X_server_on_the_build_node">14.13.1. Connecting to the X-server on the build-node</a></h4>
+<div class="paragraph">
+<p>First a vnc server needs to be started on the build-node. This is done via <code>x11vnc -display :1 -shared &gt;  /x11vnc.log 2&gt;&amp;1 &amp;</code> as a pre-build shellscript-step in Jenkins.</p>
+</div>
+<div class="paragraph">
+<p>You can narrow down the build to run on a specific node in Jenkins if a repeatable environment is required otherwise the current build-node is listed in the overview page. For security reasons the connection needs to be tunneld through an ssh login:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">ssh -l viewer -L 5900:localhost:5900 build-linux-25 ’x11vnc -localhost -display :1</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Here we are using the mating <code>build-linux-25</code> with the generic user/password ’viewer’ to start the program <code>x11vnc</code>. For the actual display number – <code>:1</code> in this case – you can refer to the console output. The command above tunnels the default vnc port 5900. You can now connect on <code>localhost</code> with a vnc client. If the user is not available, the <code>x11vnc</code> program not installed or in case of other issues, ask the build-and-release team.</p>
+</div>
+<div class="paragraph">
+<p>To display the screen you can use any arbitrary vnc-client (on mac there is screen sharing, in theory just opened from the command line by hitting <code>open vnc://viewer:viewer@localhost:5900</code>). One working client is ’chicken of the vnc’ <a href="http://sourceforge.net/projects/cotvnc/" class="bare">http://sourceforge.net/projects/cotvnc/</a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="sec:Tools_to_investigate_the_java_stack"><a class="anchor" href="#sec:Tools_to_investigate_the_java_stack"></a><a class="link" href="#sec:Tools_to_investigate_the_java_stack">14.13.2. Tools to investigate the java-stack</a></h4>
+<div class="paragraph">
+<p>Unix and Java come with some useful programs for investigations. The following tools may need some advanced rights to see processes from other users.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>htop</code> enhanced top to see all currently running processes</p>
+</li>
+<li>
+<p><code>jps</code> list running java processes</p>
+</li>
+<li>
+<p><code>jstack</code> investigate running java process</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Version 0.9<br>
+Last updated 2019-08-07 15:02:40 CEST
+</div>
+</div>
+<!-- ************* docinfo-footer *************************************************************** -->
+<div class="Grid social" style="color:#d5dfea">
+  <div class="Cell Cell--2-12 m-Cell--withMargin">
+    <h2>Quick Links</h2>
+    <ul>
+      <li><a href="../downloads.html">Download</a></li>
+      <li><a href="../userguides/index.html">Documentation</a></li>
+      <li><a href="https://github.com/eclipse/n4js/">Source</a></li>
+      <li><a href="https://github.com/eclipse/n4js/issues">Issues</a></li>
+    </ul>
+  </div>
+  <div class="Cell Cell--2-12 m-Cell--withMargin">
+    <br/><br/>
+    <ul>
+      <li><a href="https://www.eclipse.org/forums/index.php/f/365/">Forum</a></li>
+      <li><a href="http://n4js.blogspot.de/">Blog</a></li>
+      <li><a href="https://dev.eclipse.org/mailman/listinfo/n4js-dev">Mailing List</a></li>
+      <li><a href="https://projects.eclipse.org/projects/technology.n4js">Eclipse Project Page</a></li>
+      <li><a href="https://twitter.com/n4jsdev">Tweets by n4jsdev</a></li>
+    </ul>
+  </div>
+  <div class="Cell Cell--2-12 m-Cell--withMargin">
+    <br/><br/>
+    <ul>
+      <li><a href="http://www.eclipse.org/">Eclipse Home</a></li>
+      <li><a href="http://www.eclipse.org/legal/privacy.php">Privacy Policy</a></li>
+      <li><a href="http://www.eclipse.org/legal/termsofuse.php">Terms of Use</a></li>
+      <li><a href="http://www.eclipse.org/legal/copyright.php">Copyright Agent</a></li>
+      <li><a href="http://www.eclipse.org/legal/">Legal</a></li>
+    </ul>
+  </div>
+  <div style="clear: both; height: 0; overflow: hidden;"></div>
+</div>
+
+<!-- ************* UI Scripts ************* -->
+<script type="text/javascript" src="scripts/back-to-top.js"></script>
+
+<script type="text/javascript" src="scripts/treeview.js"></script>
+<script type="text/javascript" src="scripts/toc.js"></script>
+
+<!-- ************* Prism.js Syntax Highlighting ************* -->
+<script src="scripts/prism.js"></script>
+
+<script type="text/javascript">
+	// Add the 'toclist' id for search function
+	$(".toc2 > ul").attr('id', 'toclist');
+	// Generate a Search input form
+	$("#toclist > li:first-of-type").before('<input type="text" id="pagesearch" onkeyup="search()" placeholder="Search for section...">');
+	$("#toclist > li:first-of-type").before('<i id="clear" class="fa fa-times-circle-o"></i>');
+	$("#clear").click(function(){
+	    $("#pagesearch").val('');
+	    search();
+	    $('.toc2 > ul').treeView('collapseAll');
+	});
+	// intialize Treeview.js
+	$(".toc2 > ul").treeView();
+	// Initialize Scrollspy
+</script>
+<!-- ************* docinfo-footer *************************************************************** -->
+</body>
+</html>

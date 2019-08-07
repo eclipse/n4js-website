@@ -1,0 +1,2120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 1.5.5">
+<meta name="author" content="2019-08-07 15:02:40 CEST">
+<title>N4JS Language Specification</title>
+<link rel="stylesheet" href="styles/spec.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
+<!-- ************* docinfo ******************************************************************* -->
+
+
+<!-- ************* Favicon ************-->
+<link rel="icon" href="images/favicon.ico" />
+
+<!-- ************* Back-to-top JQuery ************* -->
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
+
+
+<link href="styles/prism.min.css" rel="stylesheet" />
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+<!-- ************* Styles ************* -->
+<link rel="stylesheet" type="text/css" href="styles/n4jsspec-adoc.css">
+
+
+<!-- ****************** NavBar ****************** -->
+<div id="menubar">
+	<div class="banner">
+        <a href="https://www.eclipse.org/n4js/#"><img id="logo" src="images/n4js-logo.png" alt="Eclipse N4JS"></a>
+    </div>
+<ul>
+  <li><a href="index.html">Index</a></li>
+</ul>
+</div>
+<!-- ************* docinfo ******************************************************************* -->
+<style>
+      .admonitionblock td.icon .icon-todo:before{content:"\f249";color:#f4ee42}
+    </style>
+</head>
+<body class="book toc2 toc-left">
+<div id="header">
+<h1>N4JS Language Specification</h1>
+<div class="details">
+<span id="author" class="author">2019-08-07 15:02:40 CEST</span><br>
+<span id="revnumber">version 0.9</span>
+</div>
+<div id="toc" class="toc2">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="introduction.html#_introduction">1. Introduction</a>
+<ul class="sectlevel2">
+<li><a href="introduction.html#_notation">1.1. Notation</a>
+<ul class="sectlevel3">
+<li><a href="introduction.html#_grammar-notation">1.1.1. Grammar Notation</a></li>
+<li><a href="introduction.html#_type-judgments-and-rules-and-constraints-notation">1.1.2. Type Judgments and Rules and Constraints Notation</a>
+<ul class="sectlevel4">
+<li><a href="introduction.html#_typing-rules-and-judgments">1.1.2.1. Typing Rules and Judgments</a></li>
+<li><a href="introduction.html#_types-of-an-element">1.1.2.2. Types of an Element</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="introduction.html#_auxiliary-functions">1.2. Auxiliary Functions</a>
+<ul class="sectlevel3">
+<li><a href="introduction.html#_binding">1.2.1. Binding</a></li>
+<li><a href="introduction.html#_merging-types">1.2.2. Merging Types</a>
+<ul class="sectlevel4">
+<li><a href="introduction.html#_logic-formulas">1.2.2.1. Logic Formulas</a></li>
+</ul>
+</li>
+<li><a href="introduction.html#_symbols-and-font-convention">1.2.3. Symbols and Font Convention</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="grammar.html#_grammar">2. Grammar</a>
+<ul class="sectlevel2">
+<li><a href="grammar.html#_lexical-conventions">2.1. Lexical Conventions</a>
+<ul class="sectlevel3">
+<li><a href="grammar.html#_identifier-names-and-identifiers">2.1.1. Identifier Names and Identifiers</a></li>
+<li><a href="grammar.html#_this-keyword">2.1.2. This Keyword</a></li>
+<li><a href="grammar.html#_regular-expression-literals">2.1.3. Regular Expression Literals</a></li>
+<li><a href="grammar.html#_automatic-semicolon-insertion">2.1.4. Automatic Semicolon Insertion</a></li>
+<li><a href="grammar.html#_jsdoc">2.1.5. JSDoc</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="names.html#_names">3. Names</a>
+<ul class="sectlevel2">
+<li><a href="names.html#_access-control">3.1. Access Control</a></li>
+<li><a href="names.html#_accessibility-of-types-top-level-variables-and-function-declarations">3.2. Accessibility of Types, Top-Level Variables and Function Declarations</a>
+<ul class="sectlevel3">
+<li><a href="names.html#_accessibility-of-members">3.2.1. Accessibility of Members</a></li>
+<li><a href="names.html#_valid-names">3.2.2. Valid Names</a></li>
+<li><a href="names.html#_qualified-names">3.2.3. Qualified Names</a></li>
+<li><a href="names.html#_name-duplicates">3.2.4. Name Duplicates</a>
+<ul class="sectlevel4">
+<li><a href="names.html#_lexical-environment">3.2.4.1. Lexical Environment</a></li>
+<li><a href="names.html#_duplicates-and-shadowing">3.2.4.2. Duplicates and Shadowing</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="types.html#_types">4. Types</a>
+<ul class="sectlevel2">
+<li><a href="types.html#_overview">4.1. Overview</a></li>
+<li><a href="types.html#_type-expressions">4.2. Type Expressions</a>
+<ul class="sectlevel3">
+<li><a href="types.html#_syntax">4.2.1. Syntax</a></li>
+<li><a href="types.html#_properties">4.2.2. Properties</a></li>
+<li><a href="types.html#_semantics">4.2.3. Semantics</a></li>
+</ul>
+</li>
+<li><a href="types.html#_type-inference">4.3. Type Inference</a></li>
+<li><a href="types.html#_generic-and-parameterized-types">4.4. Generic and Parameterized Types</a>
+<ul class="sectlevel3">
+<li><a href="types.html#_generic-types">4.4.1. Generic Types</a></li>
+<li><a href="types.html#_type-variables">4.4.2. Type Variables</a></li>
+<li><a href="types.html#_parameterized-types">4.4.3. Parameterized Types</a></li>
+</ul>
+</li>
+<li><a href="types.html#_primitive-ecmascript-types">4.5. Primitive ECMAScript Types</a>
+<ul class="sectlevel3">
+<li><a href="types.html#_undefined-type">4.5.1. Undefined Type</a></li>
+<li><a href="types.html#_null-type">4.5.2. Null Type</a></li>
+<li><a href="types.html#_primitive-boolean-type">4.5.3. Primitive Boolean Type</a></li>
+<li><a href="types.html#_primitive-string-type">4.5.4. Primitive String Type</a></li>
+<li><a href="types.html#_primitive-number-type">4.5.5. Primitive Number Type</a></li>
+<li><a href="types.html#_primitive-type-int">4.5.6. Primitive Type int</a></li>
+<li><a href="types.html#_primitive-symbol-type">4.5.7. Primitive Symbol Type</a></li>
+</ul>
+</li>
+<li><a href="types.html#_primitive-n4js-types">4.6. Primitive N4JS Types</a>
+<ul class="sectlevel3">
+<li><a href="types.html#_any-type">4.6.1. Any Type</a>
+<ul class="sectlevel4">
+<li><a href="types.html#any-type-semantics">4.6.1.1. Semantics</a></li>
+<li><a href="types.html#any-type-type-inference">4.6.1.2. Type Inference</a>
+<ul class="sectlevel5">
+<li><a href="types.html#_default-type-of-variables">4.6.1.2.1. Default Type of Variables</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="types.html#_void-type">4.6.2. Void Type</a>
+<ul class="sectlevel4">
+<li><a href="types.html#void-type-semantics">4.6.2.1. Semantics</a></li>
+</ul>
+</li>
+<li><a href="types.html#_unknown-type">4.6.3. Unknown Type</a></li>
+<li><a href="types.html#_primitive-pathselector-and-i18nkey">4.6.4. Primitive Pathselector and I18nKey</a>
+<ul class="sectlevel4">
+<li><a href="types.html#pathselector-semantics">4.6.4.1. Semantics</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="types.html#_built-in-ecmascript-object-types">4.7. Built-in ECMAScript Object Types</a>
+<ul class="sectlevel3">
+<li><a href="types.html#ECMAScript-objects-semantics">4.7.1. Semantics</a></li>
+<li><a href="types.html#_object-type">4.7.2. Object Type</a></li>
+<li><a href="types.html#_function-object-type">4.7.3. Function-Object-Type</a></li>
+<li><a href="types.html#_array-object-type">4.7.4. Array Object Type</a></li>
+<li><a href="types.html#_string-object-type">4.7.5. String Object Type</a></li>
+<li><a href="types.html#_boolean-object-type">4.7.6. Boolean Object Type</a></li>
+<li><a href="types.html#_number-object-type">4.7.7. Number Object Type</a></li>
+<li><a href="types.html#_global-object-type">4.7.8. Global Object Type</a></li>
+<li><a href="types.html#_symbol">4.7.9. Symbol</a></li>
+<li><a href="types.html#_promise">4.7.10. Promise</a></li>
+<li><a href="types.html#_iterator-interface">4.7.11. Iterator Interface</a></li>
+<li><a href="types.html#_iterable-interface">4.7.12. Iterable Interface</a></li>
+</ul>
+</li>
+<li><a href="types.html#_built-in-n4js-types">4.8. Built-In N4JS Types</a>
+<ul class="sectlevel3">
+<li><a href="types.html#_n4object">4.8.1. N4Object</a>
+<ul class="sectlevel4">
+<li><a href="types.html#N4Object-semantics">4.8.1.1. Semantics</a></li>
+</ul>
+</li>
+<li><a href="types.html#_n4class">4.8.2. N4Class</a></li>
+<li><a href="types.html#IterableN">4.8.3. IterableN</a></li>
+</ul>
+</li>
+<li><a href="types.html#_type-modifiers">4.9. Type Modifiers</a>
+<ul class="sectlevel3">
+<li><a href="types.html#Type_Modifiers_Dynamic">4.9.1. Dynamic</a></li>
+<li><a href="types.html#_optional-return-types">4.9.2. Optional Return Types</a></li>
+</ul>
+</li>
+<li><a href="types.html#_union-and-intersection-type-composed-types">4.10. Union and Intersection Type (Composed Types)</a>
+<ul class="sectlevel3">
+<li><a href="types.html#_union-type">4.10.1. Union Type</a>
+<ul class="sectlevel4">
+<li><a href="types.html#union-type-syntax">4.10.1.1. Syntax</a></li>
+<li><a href="types.html#union-type-semantics">4.10.1.2. Semantics</a></li>
+<li><a href="types.html#_warnings">4.10.1.3. Warnings</a></li>
+</ul>
+</li>
+<li><a href="types.html#_intersection-type">4.10.2. Intersection Type</a>
+<ul class="sectlevel4">
+<li><a href="types.html#intersection-type-syntax">4.10.2.1. Syntax</a></li>
+<li><a href="types.html#intersection-type-semantics">4.10.2.2. Semantics</a></li>
+<li><a href="types.html#_warnings-2">4.10.2.3. Warnings</a></li>
+</ul>
+</li>
+<li><a href="types.html#_composed-types-in-wildcards">4.10.3. Composed Types in Wildcards</a></li>
+<li><a href="types.html#_property-access-for-composed-types">4.10.4. Property Access for Composed Types</a>
+<ul class="sectlevel4">
+<li><a href="types.html#_properties-of-union-type">4.10.4.1. Properties of Union Type</a>
+<ul class="sectlevel5">
+<li><a href="types.html#_remarks-on-union-type-s-members">4.10.4.1.1. Remarks on union type’s members:</a></li>
+</ul>
+</li>
+<li><a href="types.html#_properties-of-intersection-type">4.10.4.2. Properties of Intersection Type</a>
+<ul class="sectlevel5">
+<li><a href="types.html#_remarks-on-intersection-type-s-methods">4.10.4.2.1. Remarks on intersection type’s methods:</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="types.html#_constructor-and-classifier-type">4.11. Constructor and Classifier Type</a>
+<ul class="sectlevel3">
+<li><a href="types.html#_syntax-3">4.11.1. Syntax</a></li>
+<li><a href="types.html#_semantics-2">4.11.2. Semantics</a></li>
+<li><a href="types.html#_constructors-and-prototypes-in-ecmascript-2015">4.11.3. Constructors and Prototypes in ECMAScript 2015</a></li>
+</ul>
+</li>
+<li><a href="types.html#_this-type">4.12. This Type</a>
+<ul class="sectlevel3">
+<li><a href="types.html#this-type-syntax">4.12.1. Syntax</a></li>
+<li><a href="types.html#this-keyword-semantics">4.12.2. Semantics</a></li>
+</ul>
+</li>
+<li><a href="types.html#_enums">4.13. Enums</a>
+<ul class="sectlevel3">
+<li><a href="types.html#_enums-n4js">4.13.1. Enums (N4JS)</a>
+<ul class="sectlevel4">
+<li><a href="types.html#enums-syntax">4.13.1.1. Syntax</a></li>
+<li><a href="types.html#enums-semantics">4.13.1.2. Semantics</a></li>
+</ul>
+</li>
+<li><a href="types.html#_string-based-enums">4.13.2. String-Based Enums</a></li>
+</ul>
+</li>
+<li><a href="types.html#_short-hand-syntax">4.14. Short-Hand Syntax</a>
+<ul class="sectlevel3">
+<li><a href="types.html#_array-short-hand-syntax">4.14.1. Array Short-Hand Syntax</a></li>
+<li><a href="types.html#_iterablen-short-hand-syntax">4.14.2. IterableN Short-Hand Syntax</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="classifiers.html#_classifiers">5. Classifiers</a>
+<ul class="sectlevel2">
+<li><a href="classifiers.html#_n4js-specific-classifiers">5.1. N4JS Specific Classifiers</a>
+<ul class="sectlevel3">
+<li><a href="classifiers.html#_properties-2">5.1.1. Properties</a></li>
+<li><a href="classifiers.html#_common-semantics-of-classifiers">5.1.2. Common Semantics of Classifiers</a></li>
+<li><a href="classifiers.html#_classes">5.1.3. Classes</a>
+<ul class="sectlevel4">
+<li><a href="classifiers.html#_definition-of-classes">5.1.3.1. Definition of Classes</a>
+<ul class="sectlevel5">
+<li><a href="classifiers.html#class-syntax">5.1.3.1.1. Syntax</a></li>
+<li><a href="classifiers.html#class-properties">5.1.3.1.2. Properties</a></li>
+<li><a href="classifiers.html#class-type-inference">5.1.3.1.3. Type Inference</a></li>
+</ul>
+</li>
+<li><a href="classifiers.html#class-semantics">5.1.3.2. Semantics</a></li>
+<li><a href="classifiers.html#_final-modifier">5.1.3.3. Final Modifier</a></li>
+<li><a href="classifiers.html#_abstract-classes">5.1.3.4. Abstract Classes</a></li>
+<li><a href="classifiers.html#_non-instantiable-classes">5.1.3.5. Non-Instantiable Classes</a></li>
+<li><a href="classifiers.html#_superclass">5.1.3.6. Superclass</a></li>
+</ul>
+</li>
+<li><a href="classifiers.html#_interfaces">5.1.4. Interfaces</a>
+<ul class="sectlevel4">
+<li><a href="classifiers.html#_definition-of-interfaces">5.1.4.1. Definition of Interfaces</a>
+<ul class="sectlevel5">
+<li><a href="classifiers.html#interfaces-syntax">5.1.4.1.1. Syntax</a></li>
+<li><a href="classifiers.html#interfaces-properties">5.1.4.1.2. Properties</a></li>
+<li><a href="classifiers.html#interfaces-type-inference">5.1.4.1.3. Type Inference</a></li>
+<li><a href="classifiers.html#interfaces-semantics">5.1.4.1.4. Semantics</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="classifiers.html#_generic-classifiers">5.1.5. Generic Classifiers</a></li>
+<li><a href="classifiers.html#sec:definition-site-variance">5.1.6. Definition-Site Variance</a></li>
+</ul>
+</li>
+<li><a href="classifiers.html#_members">5.2. Members</a>
+<ul class="sectlevel3">
+<li><a href="classifiers.html#_syntax-4">5.2.1. Syntax</a>
+<ul class="sectlevel4">
+<li><a href="classifiers.html#_properties-3">5.2.1.1. Properties</a></li>
+</ul>
+</li>
+<li><a href="classifiers.html#_semantics-3">5.2.2. Semantics</a></li>
+<li><a href="classifiers.html#_methods">5.2.3. Methods</a>
+<ul class="sectlevel4">
+<li><a href="classifiers.html#_syntax-5">5.2.3.1. Syntax</a></li>
+<li><a href="classifiers.html#_properties-4">5.2.3.2. Properties</a></li>
+<li><a href="classifiers.html#_semantics-4">5.2.3.3. Semantics</a></li>
+<li><a href="classifiers.html#_final-methods">5.2.3.4. Final Methods</a></li>
+<li><a href="classifiers.html#_abstract-methods">5.2.3.5. Abstract Methods</a></li>
+<li><a href="classifiers.html#_generic-methods">5.2.3.6. Generic Methods</a></li>
+</ul>
+</li>
+<li><a href="classifiers.html#_default-methods-in-interfaces">5.2.4. Default Methods in Interfaces</a>
+<ul class="sectlevel4">
+<li><a href="classifiers.html#_asynchronous-methods">5.2.4.1. Asynchronous Methods</a></li>
+</ul>
+</li>
+<li><a href="classifiers.html#_constructors">5.2.5. Constructors</a>
+<ul class="sectlevel4">
+<li><a href="classifiers.html#_structural-this-type-in-constructor">5.2.5.1. Structural This Type in Constructor</a></li>
+<li><a href="classifiers.html#spec-constructor">5.2.5.2. @Spec Constructor</a></li>
+<li><a href="classifiers.html#_callable-constructors">5.2.5.3. Callable Constructors</a></li>
+<li><a href="classifiers.html#_covariant-constructors">5.2.5.4. Covariant Constructors</a></li>
+</ul>
+</li>
+<li><a href="classifiers.html#_data-fields">5.2.6. Data Fields</a>
+<ul class="sectlevel4">
+<li><a href="classifiers.html#data-fields-syntax">5.2.6.1. Syntax</a></li>
+<li><a href="classifiers.html#data-fields-properties">5.2.6.2. Properties</a>
+<ul class="sectlevel5">
+<li><a href="classifiers.html#data-fields-semantics">5.2.6.2.1. Semantics</a></li>
+<li><a href="classifiers.html#data-fields-type-inference">5.2.6.2.2. Type Inference</a></li>
+</ul>
+</li>
+<li><a href="classifiers.html#_assignment-modifiers">5.2.6.3. Assignment Modifiers</a></li>
+<li><a href="classifiers.html#_field-accessors-getter-setter">5.2.6.4. Field Accessors (Getter/Setter)</a>
+<ul class="sectlevel5">
+<li><a href="classifiers.html#field-acessors-syntax">5.2.6.4.1. Syntax</a></li>
+<li><a href="classifiers.html#field-acessors-properties">5.2.6.4.2. Properties</a></li>
+<li><a href="classifiers.html#field-accessors-semantics">5.2.6.4.3. Semantics</a></li>
+</ul>
+</li>
+<li><a href="classifiers.html#optional-fields">5.2.6.5. Optional Fields</a>
+<ul class="sectlevel5">
+<li><a href="classifiers.html#_syntax-6">5.2.6.5.1. Syntax</a></li>
+<li><a href="classifiers.html#_semantics-5">5.2.6.5.2. Semantics</a></li>
+<li><a href="classifiers.html#_background">5.2.6.5.3. Background</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="classifiers.html#_static-members">5.2.7. Static Members</a>
+<ul class="sectlevel4">
+<li><a href="classifiers.html#_access-from-and-to-static-members">5.2.7.1. Access From and To Static Members</a></li>
+<li><a href="classifiers.html#_generic-static-methods">5.2.7.2. Generic static methods</a></li>
+<li><a href="classifiers.html#_static-members-of-interfaces">5.2.7.3. Static Members of Interfaces</a></li>
+</ul>
+</li>
+<li><a href="classifiers.html#_redefinition-of-members">5.2.8. Redefinition of Members</a>
+<ul class="sectlevel4">
+<li><a href="classifiers.html#_overriding-of-members">5.2.8.1. Overriding of Members</a></li>
+<li><a href="classifiers.html#_implementation-of-members">5.2.8.2. Implementation of Members</a>
+<ul class="sectlevel5">
+<li><a href="classifiers.html#_member-consumption">5.2.8.2.1. Member Consumption</a></li>
+<li><a href="classifiers.html#_member-implementation">5.2.8.2.2. Member Implementation</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="classifiers.html#_structural-typing">5.3. Structural Typing</a>
+<ul class="sectlevel3">
+<li><a href="classifiers.html#_syntax-7">5.3.1. Syntax</a></li>
+<li><a href="classifiers.html#_definition-site-structural-typing">5.3.2. Definition Site Structural Typing</a></li>
+<li><a href="classifiers.html#_use-site-structural-typing">5.3.3. Use-Site Structural Typing</a></li>
+<li><a href="classifiers.html#structural-readWriteInit-field-typing">5.3.4. Structural Read-only, Write-only and Initializer Field Typing</a></li>
+<li><a href="classifiers.html#_public-setter-annotated-with-code-providesinitializer-code">5.3.5. Public Setter Annotated With <code>ProvidesInitializer</code></a></li>
+<li><a href="classifiers.html#_structural-types-with-optional-fields">5.3.6. Structural Types With Optional Fields</a></li>
+<li><a href="classifiers.html#_structural-types-with-access-modifier">5.3.7. Structural Types With Access Modifier</a></li>
+<li><a href="classifiers.html#_structural-types-with-additional-members">5.3.8. Structural Types With Additional Members</a>
+<ul class="sectlevel4">
+<li><a href="classifiers.html#_syntax-8">5.3.8.1. Syntax</a>
+<ul class="sectlevel5">
+<li><a href="classifiers.html#_semantics-6">5.3.8.1.1. Semantics</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="functions.html#_functions">6. Functions</a>
+<ul class="sectlevel2">
+<li><a href="functions.html#_function-type">6.1. Function Type</a>
+<ul class="sectlevel3">
+<li><a href="functions.html#_properties-5">6.1.1. Properties</a></li>
+<li><a href="functions.html#function-type-inference">6.1.2. Type Inference</a></li>
+<li><a href="functions.html#_autoboxing-of-function-type">6.1.3. Autoboxing of Function Type</a></li>
+<li><a href="functions.html#_arguments-object">6.1.4. Arguments Object</a></li>
+</ul>
+</li>
+<li><a href="functions.html#_ecmascript-5-function-definition">6.2. ECMAScript 5 Function Definition</a>
+<ul class="sectlevel3">
+<li><a href="functions.html#_function-declaration">6.2.1. Function Declaration</a>
+<ul class="sectlevel4">
+<li><a href="functions.html#_syntax-9">6.2.1.1. Syntax</a></li>
+<li><a href="functions.html#_semantics-8">6.2.1.2. Semantics</a></li>
+</ul>
+</li>
+<li><a href="functions.html#_function-expression">6.2.2. Function Expression</a>
+<ul class="sectlevel4">
+<li><a href="functions.html#function-expression-syntax">6.2.2.1. Syntax</a></li>
+<li><a href="functions.html#_semantics-and-type-inference">6.2.2.2. Semantics and Type Inference</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="functions.html#_ecmascript-2015-function-definition">6.3. ECMAScript 2015 Function Definition</a>
+<ul class="sectlevel3">
+<li><a href="functions.html#_formal-parameters">6.3.1. Formal Parameters</a>
+<ul class="sectlevel4">
+<li><a href="functions.html#Type_Modifiers_Optional">6.3.1.1. Optional Parameters</a></li>
+<li><a href="functions.html#Type_Modifiers_Default">6.3.1.2. Default Parameters</a></li>
+<li><a href="functions.html#Type_Modifiers_Variadic">6.3.1.3. Variadic</a></li>
+</ul>
+</li>
+<li><a href="functions.html#_generator-functions">6.3.2. Generator Functions</a>
+<ul class="sectlevel4">
+<li><a href="functions.html#generator-functions-syntax">6.3.2.1. Syntax</a></li>
+<li><a href="functions.html#generator-functions-semantics">6.3.2.2. Semantics</a></li>
+<li><a href="functions.html#_generator-arrow-functions">6.3.2.3. Generator Arrow Functions</a></li>
+</ul>
+</li>
+<li><a href="functions.html#_arrow-function-expression">6.3.3. Arrow Function Expression</a>
+<ul class="sectlevel4">
+<li><a href="functions.html#arrow-function-expression-syntax">6.3.3.1. Syntax</a></li>
+<li><a href="functions.html#arrow-function-expression-semantics-and-type-inference">6.3.3.2. Semantics and Type Inference</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="functions.html#_ecmascript-proposals-function-definition">6.4. ECMAScript Proposals Function Definition</a>
+<ul class="sectlevel3">
+<li><a href="functions.html#_asynchronous-functions">6.4.1. Asynchronous Functions</a>
+<ul class="sectlevel4">
+<li><a href="functions.html#asynchronous-functions-syntax">6.4.1.1. Syntax</a></li>
+<li><a href="functions.html#asynchronous-functions-semantics">6.4.1.2. Semantics</a></li>
+<li><a href="functions.html#_asynchronous-arrow-functions">6.4.1.3. Asynchronous Arrow Functions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="functions.html#_n4js-extended-function-definition">6.5. N4JS Extended Function Definition</a>
+<ul class="sectlevel3">
+<li><a href="functions.html#_generic-functions">6.5.1. Generic Functions</a></li>
+<li><a href="functions.html#_promisifiable-functions">6.5.2. Promisifiable Functions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="conversions_and_reflection.html#_conversions-and-reflection">7. Conversions and Reflection</a>
+<ul class="sectlevel2">
+<li><a href="conversions_and_reflection.html#_autoboxing-and-coercing">7.1. Autoboxing and Coercing</a>
+<ul class="sectlevel3">
+<li><a href="conversions_and_reflection.html#_coercing">7.1.1. Coercing</a></li>
+<li><a href="conversions_and_reflection.html#_autoboxing-of-primitives">7.1.2. Autoboxing of Primitives</a></li>
+<li><a href="conversions_and_reflection.html#_autoboxing-of-function-expressions-and-declarations">7.1.3. Autoboxing of Function Expressions and Declarations</a></li>
+</ul>
+</li>
+<li><a href="conversions_and_reflection.html#_auto-conversion-of-objects">7.2. Auto-Conversion of Objects</a>
+<ul class="sectlevel3">
+<li><a href="conversions_and_reflection.html#_auto-conversion-of-class-instances">7.2.1. Auto-Conversion of Class Instances</a>
+<ul class="sectlevel4">
+<li><a href="conversions_and_reflection.html#_auto-conversion-of-interface-instances">7.2.1.1. Auto-Conversion of Interface Instances</a></li>
+</ul>
+</li>
+<li><a href="conversions_and_reflection.html#_auto-conversion-of-enum-literals">7.2.2. Auto-Conversion of Enum Literals</a></li>
+</ul>
+</li>
+<li><a href="conversions_and_reflection.html#_type-cast-and-type-check">7.3. Type Cast and Type Check</a>
+<ul class="sectlevel3">
+<li><a href="conversions_and_reflection.html#_type-cast">7.3.1. Type Cast</a></li>
+<li><a href="conversions_and_reflection.html#_type-check">7.3.2. Type Check</a></li>
+</ul>
+</li>
+<li><a href="conversions_and_reflection.html#_reflection-meta-information">7.4. Reflection meta-information</a>
+<ul class="sectlevel3">
+<li><a href="conversions_and_reflection.html#_reflection-for-classes">7.4.1. Reflection for Classes</a></li>
+<li><a href="conversions_and_reflection.html#_reflection-for-interfaces">7.4.2. Reflection for Interfaces</a></li>
+<li><a href="conversions_and_reflection.html#_reflection-for-enumerations">7.4.3. Reflection for Enumerations</a></li>
+</ul>
+</li>
+<li><a href="conversions_and_reflection.html#_conversion-of-primitive-types">7.5. Conversion of primitive types</a></li>
+</ul>
+</li>
+<li><a href="expressions.html#_expressions">8. Expressions</a>
+<ul class="sectlevel2">
+<li><a href="expressions.html#_ecmascript-5-expressions">8.1. ECMAScript 5 Expressions</a>
+<ul class="sectlevel3">
+<li><a href="expressions.html#_the-this-literal">8.1.1. The this Literal</a></li>
+<li><a href="expressions.html#_identifier">8.1.2. Identifier</a></li>
+<li><a href="expressions.html#_literals">8.1.3. Literals</a>
+<ul class="sectlevel4">
+<li><a href="expressions.html#_integer-literals">8.1.3.1. Integer Literals</a></li>
+</ul>
+</li>
+<li><a href="expressions.html#_array-literal">8.1.4. Array Literal</a></li>
+<li><a href="expressions.html#_object-literal">8.1.5. Object Literal</a>
+<ul class="sectlevel4">
+<li><a href="expressions.html#_properties-6">8.1.5.1. Properties</a></li>
+<li><a href="expressions.html#_scoping-and-linking">8.1.5.2. Scoping and linking</a></li>
+</ul>
+</li>
+<li><a href="expressions.html#_parenthesized-expression-and-grouping-operator">8.1.6. Parenthesized Expression and Grouping Operator</a></li>
+<li><a href="expressions.html#_property-accessors">8.1.7. Property Accessors</a>
+<ul class="sectlevel4">
+<li><a href="expressions.html#properties-1">8.1.7.1. Properties</a></li>
+</ul>
+</li>
+<li><a href="expressions.html#_new-expression">8.1.8. New Expression</a></li>
+<li><a href="expressions.html#_function-expression-2">8.1.9. Function Expression</a></li>
+<li><a href="expressions.html#_function-calls">8.1.10. Function Calls</a></li>
+<li><a href="expressions.html#_postfix-expression">8.1.11. Postfix Expression</a></li>
+<li><a href="expressions.html#_unary-expression">8.1.12. Unary Expression</a></li>
+<li><a href="expressions.html#_multiplicative-expression">8.1.13. Multiplicative Expression</a></li>
+<li><a href="expressions.html#_additive-expression">8.1.14. Additive Expression</a>
+<ul class="sectlevel4">
+<li><a href="expressions.html#type-inference-10">8.1.14.1. Type Inference</a></li>
+</ul>
+</li>
+<li><a href="expressions.html#_bitwise-shift-expression">8.1.15. Bitwise Shift Expression</a></li>
+<li><a href="expressions.html#_relational-expression">8.1.16. Relational Expression</a></li>
+<li><a href="expressions.html#_equality-expression">8.1.17. Equality Expression</a></li>
+<li><a href="expressions.html#_binary-bitwise-expression">8.1.18. Binary Bitwise Expression</a></li>
+<li><a href="expressions.html#_binary-logical-expression">8.1.19. Binary Logical Expression</a></li>
+<li><a href="expressions.html#_conditional-expression">8.1.20. Conditional Expression</a></li>
+<li><a href="expressions.html#_assignment-expression">8.1.21. Assignment Expression</a></li>
+<li><a href="expressions.html#_comma-expression">8.1.22. Comma Expression</a></li>
+</ul>
+</li>
+<li><a href="expressions.html#_ecmascript-6-expressions">8.2. ECMAScript 6 Expressions</a>
+<ul class="sectlevel3">
+<li><a href="expressions.html#_the-super-keyword">8.2.1. The super Keyword</a></li>
+</ul>
+</li>
+<li><a href="expressions.html#_ecmascript-7-expressions">8.3. ECMAScript 7 Expressions</a>
+<ul class="sectlevel3">
+<li><a href="expressions.html#_await-expression">8.3.1. Await Expression</a></li>
+</ul>
+</li>
+<li><a href="expressions.html#_n4js-specific-expressions">8.4. N4JS Specific Expressions</a>
+<ul class="sectlevel3">
+<li><a href="expressions.html#_class-expression">8.4.1. Class Expression</a></li>
+<li><a href="expressions.html#_cast-as-expression">8.4.2. Cast (As) Expression</a>
+<ul class="sectlevel4">
+<li><a href="expressions.html#cast-as-expression-semantics-type-inference">8.4.2.1. Semantics and Type Inference</a></li>
+</ul>
+</li>
+<li><a href="expressions.html#Import_Calls">8.4.3. Import Calls</a></li>
+</ul>
+</li>
+<li><a href="expressions.html#compile-time-expressions">8.5. Compile-Time Expressions</a></li>
+</ul>
+</li>
+<li><a href="statements.html#_statements">9. Statements</a>
+<ul class="sectlevel2">
+<li><a href="statements.html#_ecmascript-5-statements">9.1. ECMAScript 5 Statements</a>
+<ul class="sectlevel3">
+<li><a href="statements.html#_function-or-field-accessor-bodies">9.1.1. Function or Field Accessor Bodies</a></li>
+<li><a href="statements.html#_variable-statement">9.1.2. Variable Statement</a></li>
+<li><a href="statements.html#_if-statement">9.1.3. If Statement</a></li>
+<li><a href="statements.html#_iteration-statements">9.1.4. Iteration Statements</a></li>
+<li><a href="statements.html#_return-statement">9.1.5. Return Statement</a></li>
+<li><a href="statements.html#_with-statement">9.1.6. With Statement</a></li>
+<li><a href="statements.html#_switch-statement">9.1.7. Switch Statement</a></li>
+<li><a href="statements.html#_throw-try-and-catch-statements">9.1.8. Throw, Try, and Catch Statements</a></li>
+<li><a href="statements.html#_debugger-statement">9.1.9. Debugger Statement</a></li>
+</ul>
+</li>
+<li><a href="statements.html#_ecmascript-6-statements">9.2. ECMAScript 6 Statements</a>
+<ul class="sectlevel3">
+<li><a href="statements.html#_let">9.2.1. Let</a></li>
+<li><a href="statements.html#_const">9.2.2. Const</a></li>
+<li><a href="statements.html#_for-of-statement">9.2.3. <code>for &#8230;&#8203; of</code> statement</a></li>
+<li><a href="statements.html#_import-statement">9.2.4. Import Statement</a>
+<ul class="sectlevel4">
+<li><a href="statements.html#Dynamic_Imports">9.2.4.1. Dynamic Imports</a></li>
+<li><a href="statements.html#_immutabilaty-of-imports">9.2.4.2. Immutabilaty of Imports</a></li>
+</ul>
+</li>
+<li><a href="statements.html#_export-statement">9.2.5. Export Statement</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="annotations.html#_annotations">10. Annotations</a>
+<ul class="sectlevel2">
+<li><a href="annotations.html#_introduction-2">10.1. Introduction</a>
+<ul class="sectlevel3">
+<li><a href="annotations.html#_syntax-13">10.1.1. Syntax</a></li>
+<li><a href="annotations.html#_properties-7">10.1.2. Properties</a></li>
+<li><a href="annotations.html#_element-specific-annotations">10.1.3. Element-Specific Annotations</a></li>
+<li><a href="annotations.html#_general-annotations">10.1.4. General Annotations</a>
+<ul class="sectlevel4">
+<li><a href="annotations.html#_idebug">10.1.4.1. IDEBUG</a></li>
+</ul>
+</li>
+<li><a href="annotations.html#idebug-syntax">10.1.5. Syntax</a>
+<ul class="sectlevel4">
+<li><a href="annotations.html#_semantics-11">10.1.5.1. Semantics</a></li>
+<li><a href="annotations.html#_suppress-warnings">10.1.5.2. Suppress Warnings</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="annotations.html#_declaration-of-annotations">10.2. Declaration of Annotations</a></li>
+</ul>
+</li>
+<li><a href="extended_fetaures.html#_extended-fetaures">11. Extended Fetaures</a>
+<ul class="sectlevel2">
+<li><a href="extended_fetaures.html#_array-and-object-destructuring">11.1. Array and Object Destructuring</a>
+<ul class="sectlevel3">
+<li><a href="extended_fetaures.html#_syntax-14">11.1.1. Syntax</a></li>
+<li><a href="extended_fetaures.html#_semantics-12">11.1.2. Semantics</a></li>
+</ul>
+</li>
+<li><a href="extended_fetaures.html#_dependency-injection">11.2. Dependency Injection</a>
+<ul class="sectlevel3">
+<li><a href="extended_fetaures.html#_di-components-and-injectors">11.2.1. DI Components and Injectors</a>
+<ul class="sectlevel4">
+<li><a href="extended_fetaures.html#_dicomponent-relations">11.2.1.1. DIComponent Relations</a></li>
+</ul>
+</li>
+<li><a href="extended_fetaures.html#_binders-and-bindings">11.2.2. Binders and Bindings</a></li>
+<li><a href="extended_fetaures.html#_injection-points">11.2.3. Injection Points</a>
+<ul class="sectlevel4">
+<li><a href="extended_fetaures.html#_field-injection">11.2.3.1. Field Injection</a></li>
+<li><a href="extended_fetaures.html#_constructor-injection">11.2.3.2. Constructor Injection</a></li>
+<li><a href="extended_fetaures.html#_method-injection">11.2.3.3. Method Injection</a>
+<ul class="sectlevel5">
+<li><a href="extended_fetaures.html#_provider">11.2.3.3.1. Provider</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="extended_fetaures.html#_n4js-di-life-cycle-and-scopes">11.2.4. N4JS DI Life Cycle and Scopes</a>
+<ul class="sectlevel4">
+<li><a href="extended_fetaures.html#_injection-cylces">11.2.4.1. Injection Cylces</a></li>
+<li><a href="extended_fetaures.html#_default-scope">11.2.4.2. Default Scope</a></li>
+<li><a href="extended_fetaures.html#_singleton-scope">11.2.4.3. Singleton Scope</a></li>
+<li><a href="extended_fetaures.html#_per-injection-chain-singleton">11.2.4.4. Per Injection Chain Singleton</a></li>
+</ul>
+</li>
+<li><a href="extended_fetaures.html#_validation-of-callsites-targeting-n4injector-methods">11.2.5. Validation of callsites targeting N4Injector methods</a></li>
+<li><a href="extended_fetaures.html#_n4js-di-annotations">11.2.6. N4JS DI Annotations</a>
+<ul class="sectlevel4">
+<li><a href="extended_fetaures.html#_n4js-di-generateinjector">11.2.6.1. N4JS DI @GenerateInjector</a></li>
+<li><a href="extended_fetaures.html#_n4js-di-withparentinjector">11.2.6.2. N4JS DI @WithParentInjector</a></li>
+<li><a href="extended_fetaures.html#_n4js-di-usebinder">11.2.6.3. N4JS DI @UseBinder</a></li>
+<li><a href="extended_fetaures.html#_n4js-di-binder">11.2.6.4. N4JS DI @Binder</a></li>
+<li><a href="extended_fetaures.html#_n4js-di-bind">11.2.6.5. N4JS DI @Bind</a></li>
+<li><a href="extended_fetaures.html#_n4js-di-provides">11.2.6.6. N4JS DI @Provides</a></li>
+<li><a href="extended_fetaures.html#_n4js-di-inject">11.2.6.7. N4JS DI @Inject</a></li>
+<li><a href="extended_fetaures.html#_n4js-di-singleton">11.2.6.8. N4JS DI @Singleton</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="extended_fetaures.html#_test-support">11.3. Test Support</a></li>
+<li><a href="extended_fetaures.html#_polyfill-definitions">11.4. Polyfill Definitions</a>
+<ul class="sectlevel3">
+<li><a href="extended_fetaures.html#_runtime-polyfill-definitions">11.4.1. Runtime Polyfill Definitions</a></li>
+<li><a href="extended_fetaures.html#_static-polyfill-definitions">11.4.2. Static Polyfill Definitions</a></li>
+<li><a href="extended_fetaures.html#_transpiling-static-polyfilled-classes">11.4.3. Transpiling static polyfilled classes</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#_components">12. Components</a>
+<ul class="sectlevel2">
+<li><a href="#_overview-2">12.1. Overview</a></li>
+<li><a href="#Component_Types">12.2. Component Types</a>
+<ul class="sectlevel3">
+<li><a href="#_libraries">12.2.1. Libraries</a></li>
+<li><a href="#_runtime-environment-and-runtime-libraries">12.2.2. Runtime Environment and Runtime Libraries</a></li>
+<li><a href="#_tests">12.2.3. Tests</a></li>
+<li><a href="#_type-definitions">12.2.4. Type Definitions</a></li>
+</ul>
+</li>
+<li><a href="#package-json">12.3. Package.json File</a>
+<ul class="sectlevel3">
+<li><a href="#_basic-properties">12.3.1. Basic Properties</a></li>
+<li><a href="#_n4js-properties">12.3.2. N4JS Properties</a></li>
+<li><a href="#_constraints">12.3.3. Constraints</a></li>
+</ul>
+</li>
+<li><a href="#_support-for-npm-scopes">12.4. Support for NPM Scopes</a></li>
+<li><a href="#sec:N4JS-Type-Definitions">12.5. N4JS Type Definitions</a>
+<ul class="sectlevel3">
+<li><a href="#_specify-type-definition">12.5.1. Specify Type Definition</a></li>
+<li><a href="#_name-conventions">12.5.2. Name Conventions</a></li>
+<li><a href="#_version-conventions">12.5.3. Version Conventions</a>
+<ul class="sectlevel4">
+<li><a href="#_define-a-new-type-definition-package">12.5.3.1. Define a New Type Definition Package</a></li>
+<li><a href="#_using-a-type-definition-package">12.5.3.2. Using a Type Definition Package</a></li>
+<li><a href="#_rational">12.5.3.3. Rational</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#_modules">12.6. Modules</a></li>
+<li><a href="#_api-and-implementation-component">12.7. API and Implementation Component</a>
+<ul class="sectlevel3">
+<li><a href="#_execution-of-api-and-implementation-components">12.7.1. Execution of API and Implementation Components</a></li>
+<li><a href="#_api-and-implementation-with-di">12.7.2. API and Implementation With DI</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="plainjs.html#_plainjs">13. PlainJS</a>
+<ul class="sectlevel2">
+<li><a href="plainjs.html#_type-inference-and-validation-for-plain-js">13.1. Type Inference and Validation for Plain JS</a></li>
+<li><a href="plainjs.html#_external-declarations">13.2. External Declarations</a>
+<ul class="sectlevel3">
+<li><a href="plainjs.html#_declaring-externals">13.2.1. Declaring externals</a></li>
+<li><a href="plainjs.html#_instantiating-external-classes">13.2.2. Instantiating external classes</a></li>
+<li><a href="plainjs.html#_implementation-of-external-declarations">13.2.3. Implementation of External Declarations</a></li>
+<li><a href="plainjs.html#_example">13.2.4. Example</a></li>
+</ul>
+</li>
+<li><a href="plainjs.html#_global-definitions">13.3. Global Definitions</a></li>
+<li><a href="plainjs.html#_runtime-definitions">13.4. Runtime Definitions</a></li>
+<li><a href="plainjs.html#_applying-polyfills">13.5. Applying Polyfills</a></li>
+</ul>
+</li>
+<li><a href="jsdoc.html#_jsdoc-2">14. JSDoc</a>
+<ul class="sectlevel2">
+<li><a href="jsdoc.html#_general-n4jsdoc-features">14.1. General N4JSDoc Features</a>
+<ul class="sectlevel3">
+<li><a href="jsdoc.html#_provided-inline-tags">14.1.1. Provided Inline Tags</a>
+<ul class="sectlevel4">
+<li><a href="jsdoc.html#jsdoc_tag__code">14.1.1.1. @code</a></li>
+<li><a href="jsdoc.html#jsdoc_tag__link">14.1.1.2. @link</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="jsdoc.html#_n4jsdoc-for-user-projects">14.2. N4JSdoc for User Projects</a>
+<ul class="sectlevel3">
+<li><a href="jsdoc.html#_standard-tags">14.2.1. Standard Tags</a>
+<ul class="sectlevel4">
+<li><a href="jsdoc.html#_-author">14.2.1.1. @author</a></li>
+<li><a href="jsdoc.html#jsdoc_tag_param">14.2.1.2. @param</a></li>
+<li><a href="jsdoc.html#jsdoc_tag_return">14.2.1.3. @return</a></li>
+</ul>
+</li>
+<li><a href="jsdoc.html#_test-related-tags">14.2.2. Test Related Tags</a>
+<ul class="sectlevel4">
+<li><a href="jsdoc.html#jsdoc_tag__testee">14.2.2.1. @testee</a></li>
+<li><a href="jsdoc.html#jsdoc_tag__testeeFromType">14.2.2.2. @testeeFromType</a></li>
+<li><a href="jsdoc.html#_testeeType_and__testeeMember">14.2.2.3. @testeeType and @testeeMember</a></li>
+<li><a href="jsdoc.html#jsdoc_tag_reqid_in_Tests">14.2.2.4. @reqid in Tests</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="jsdoc.html#_n4jsdoc-for-api-and-implementation-projects">14.3. N4JSDoc for API and Implementation Projects</a>
+<ul class="sectlevel3">
+<li><a href="jsdoc.html#jsdoc_tag__apiNote">14.3.1. @apiNote</a></li>
+<li><a href="jsdoc.html#API_Project_Tags">14.3.2. API Project Tags</a>
+<ul class="sectlevel4">
+<li><a href="jsdoc.html#jsdoc_tag_apiState">14.3.2.1. @apiState</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="jsx.html#_jsx">15. JSX</a>
+<ul class="sectlevel2">
+<li><a href="jsx.html#_jsx-support">15.1. JSX Support</a></li>
+<li><a href="jsx.html#_jsx-backend">15.2. JSX Backend</a></li>
+</ul>
+</li>
+<li><a href="grammars.html#_grammars">16. Grammars</a>
+<ul class="sectlevel2">
+<li><a href="grammars.html#_type-expressions-grammar">16.1. Type Expressions Grammar</a></li>
+<li><a href="grammars.html#_n4js-language-grammar">16.2. N4JS Language Grammar</a></li>
+</ul>
+</li>
+<li><a href="jsobjects.html#_jsobjects">17. JSObjects</a>
+<ul class="sectlevel2">
+<li><a href="jsobjects.html#_object">17.1. Object</a></li>
+<li><a href="jsobjects.html#_string">17.2. String</a></li>
+<li><a href="jsobjects.html#_boolean">17.3. Boolean</a></li>
+<li><a href="jsobjects.html#_number">17.4. Number</a>
+<ul class="sectlevel3">
+<li><a href="jsobjects.html#_static-attributes">17.4.1. Static Attributes</a></li>
+</ul>
+</li>
+<li><a href="jsobjects.html#function">17.5. Function</a></li>
+<li><a href="jsobjects.html#_error">17.6. Error</a></li>
+<li><a href="jsobjects.html#_array">17.7. Array</a></li>
+<li><a href="jsobjects.html#_date">17.8. Date</a></li>
+<li><a href="jsobjects.html#_math">17.9. Math</a>
+<ul class="sectlevel3">
+<li><a href="jsobjects.html#static-attributes-1">17.9.1. Static Attributes</a></li>
+</ul>
+</li>
+<li><a href="jsobjects.html#_regexp">17.10. RegExp</a></li>
+<li><a href="jsobjects.html#_json">17.11. JSON</a></li>
+</ul>
+</li>
+<li><a href="n4js_objects.html#_n4js-objects">18. N4JS Objects</a>
+<ul class="sectlevel2">
+<li><a href="n4js_objects.html#_reflection-model">18.1. Reflection Model</a></li>
+<li><a href="n4js_objects.html#_error-types">18.2. Error Types</a>
+<ul class="sectlevel3">
+<li><a href="n4js_objects.html#_n4apinotimplemented">18.2.1. N4ApiNotImplemented</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="appendix_a_acronyms.html#_acronyms">Appendix A: Acronyms</a></li>
+<li><a href="appendix_b_license.html#sec:License">Appendix B: License</a></li>
+<li><a href="appendix_c_bibliography.html#_bibliography">Appendix C: Bibliography</a></li>
+</ul>
+</div>
+</div>
+<div id="content"><div class="sect1">
+<h2 id="_components"><a class="anchor" href="#_components"></a><a class="link" href="#_components">12. Components</a></h2>
+<div class="sectionbody">
+<div class="sect2 language-n4js">
+<h3 id="_overview-2"><a class="anchor" href="#_overview-2"></a><a class="link" href="#_overview-2">12.1. Overview</a></h3>
+<div class="paragraph">
+<p>For modularization purposes, N4JS code is managed in so-called <em>components</em>. These components correspond to what
+node and npm call <em>packages</em>, what OSGi calls <em>bundle</em>, and what Eclipse calls <em>project</em>.</p>
+</div>
+<div class="paragraph">
+<p>N4JS distinguishes several types of such components. <a href="#fig-cmpd_components_in_n4js">Overview of N4JS Components (OLD)</a> shows the N4JS component types
+described in detail in this chapter. <a href="#fig-cmp_components">Overview of N4JS Components and Dependencies (NEW)</a> shows a recently updated diagram, which is not yet fully
+reflected in the implementation.</p>
+</div>
+<div id="fig-cmpd_components_in_n4js" class="imageblock" style="text-align: center">
+<div class="content">
+<img src="chapters/12_components/fig/cmpd_components_in_n4js.svg" alt="cmpd components in n4js">
+</div>
+<div class="title">Figure 10. Overview of N4JS Components (OLD)</div>
+</div>
+<div id="fig-cmp_components" class="imageblock" style="text-align: center">
+<div class="content">
+<img src="chapters/12_components/fig/cmp_components.svg" alt="cmp components">
+</div>
+<div class="title">Figure 11. Overview of N4JS Components and Dependencies (NEW)</div>
+</div>
+<div class="paragraph">
+<p>The following types of components can only be created by internal developers:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Runtime Environment</dt>
+<dd>
+<p>Definition of a runtime environment such as ECMAScript 5, node.js, or Chrome.
+A Runtime Environment provides a number of base types which are usually globally available.
+Other components do not directly rely on runtime environments, but on runtime libraries.
+NOTE: runtime environments are not fully implemented at this time (see GH-1291).</p>
+</dd>
+<dt class="hdlist1">Runtime Library</dt>
+<dd>
+<p>Contains type definitions for the base types provided by one or more runtime environments.
+These types may be extensions to certain language specifications.
+E.g., the ECMAScript 6 collection classes are already provided by some environments otherwise only supporting ECMAScript 5.
+The collections are defined in terms of a runtime library which can then be provided by these environments.
+Runtime libraries may also contain polyfills to alter types predefined in the environment.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>The following components can be created by external developers:</p>
+</div>
+<div id="App" class="dlist">
+<dl>
+<dt class="hdlist1">App</dt>
+<dd>
+<p>User-written N4JS applications.</p>
+</dd>
+<dt class="hdlist1">Processor</dt>
+<dd>
+<p>User-written N4JS code running server-side on the N4 platform. Not implemented yet.</p>
+</dd>
+<dt class="hdlist1">Library</dt>
+<dd>
+<p>User-written libraries used by apps, processors, or other libraries.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>The available component types are described in more detail in <a href="#Component_Types">Component Types</a>.</p>
+</div>
+<div class="paragraph">
+<p>A component corresponds to a single project in the N4JS IDE. Generally, it contains the following:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Package.json File</dt>
+<dd>
+<p>The <code>package.json</code> file describing the contents, dependencies and metadata.</p>
+</dd>
+<dt class="hdlist1">Resources</dt>
+<dd>
+<p>Resources such as images, data files etc.</p>
+</dd>
+<dt class="hdlist1">Sources</dt>
+<dd>
+<p>Source files containing either N4JS code or plain Javascript. The actual code used in a project.</p>
+</dd>
+<dt class="hdlist1">Output Code</dt>
+<dd>
+<p>Compiled and possibly adjusted (e.g. minified, concatenated) versions of the N4JS source files and
+plain Javascript files.</p>
+</dd>
+<dt class="hdlist1">Tests</dt>
+<dd>
+<p>Optional test sources and compiled output code.</p>
+</dd>
+<dt class="hdlist1">Source Maps</dt>
+<dd>
+<p>Optional source maps.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>Components contain modules. <a href="#fig-component_content">Content of a Component</a> describes what can be contained in a component.</p>
+</div>
+<div id="fig-component_content" class="imageblock" style="text-align: center">
+<div class="content">
+<img src="chapters/12_components/fig/cmpd_component_content.svg" alt="cmpd component content">
+</div>
+<div class="title">Figure 12. Content of a Component</div>
+</div>
+<div class="paragraph">
+<p>At both compile time and runtime, all components defined as dependency have to be available. Since dependencies
+are defined in <code>package.json</code> files in a form compliant to node/npm, this can be fully managed by npm (or yarn).</p>
+</div>
+</div>
+<div class="sect2 language-n4js">
+<h3 id="Component_Types"><a class="anchor" href="#Component_Types"></a><a class="link" href="#Component_Types">12.2. Component Types</a></h3>
+<div class="paragraph">
+<p>Different N4JS component types are described in this section.</p>
+</div>
+<div class="sect3">
+<h4 id="_libraries"><a class="anchor" href="#_libraries"></a><a class="link" href="#_libraries">12.2.1. Libraries</a></h4>
+<div class="paragraph">
+<p>A library is a user project providing modules with declaration.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_runtime-environment-and-runtime-libraries"><a class="anchor" href="#_runtime-environment-and-runtime-libraries"></a><a class="link" href="#_runtime-environment-and-runtime-libraries">12.2.2. Runtime Environment and Runtime Libraries</a></h4>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title=""></i>
+</td>
+<td class="content">
+runtime environments are not fully implemented at this time (see GH-1291).
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Runtime environments and libraries define globally available elements (types, variables, functions) provided by the JavaScript engine.
+Both must contain <em>only</em> definition files (n4jsd) of which all elements are marked as <code>@ProvidedByRuntime</code> (<a href="plainjs.html#_runtime-definitions">Runtime Definitions</a>) and <code>@Global</code> (<a href="plainjs.html#_global-definitions">Global Definitions</a>).</p>
+</div>
+<div class="paragraph">
+<p>Other projects may refer to <em>multiple</em> runtime libraries in their <code>package.json</code> file via the property <a href="#package-json-requiredRuntimeLibraries">requiredRuntimeLibraries</a>.</p>
+</div>
+<div class="paragraph">
+<p>The concrete runtime environment and library are selected by the JavaScript engine.
+Deployment and execution scripts must ensure that a component can run on the given engine; the required environments and libraries must all be compatible with the provided environment.
+If no runtime environment is specified, a default an ECMAScript 5 runtime is assumed to be present.</p>
+</div>
+<div class="paragraph">
+<p>Typical runtime environments are ES5 or ES6, typical runtime libraries are DOM or HTML.</p>
+</div>
+<div class="paragraph">
+<p>In JavaScript, browsers and other execution environments provide built-in objects.
+In browsers, for example, the whole DOM is made available via built-in object types.
+In this case, even the global object also becomes a different type (in N4JS terms).
+Besides execution environments such as browsers or Node.js, libraries also provide functionality by exposing globally available functions.
+This is often used to bridge execution environment inconsistencies.
+When browser API differences are adapted by a library, this is called a <em>polyfil</em>.
+Other adaptations, such as enabling ECMSScript 6 object types in ECMAScript 5 environments, are known as <em>shim</em>.
+Instead of directly supporting these kind of 'hacks', other components specify which runtime environment and libraries they depend on by specifying unique runtime ids.
+Possible shims (in case of environments) or polyfils (in case of libraries) are transparently provided by the execution environment and the bootstrap code.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_tests"><a class="anchor" href="#_tests"></a><a class="link" href="#_tests">12.2.3. Tests</a></h4>
+<div class="paragraph">
+<p>Tests are special projects which contain tests for other projects.</p>
+</div>
+<div class="openblock requirement">
+<div class="content">
+<div class="paragraph">
+<p><a id="Req-IDE-157"></a><strong>Req. IDE-157:</strong> <a href="#Req-IDE-157">Test Project</a> (ver. 1)</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Tests have full access to the tested project including elements with <code>project</code> visibility.</p>
+</li>
+<li>
+<p>Only other test projects can depend on tests project.
+In other words, other components must not depend on test components.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>In a test project, the tested projects can be specified via <code>testee</code>.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_type-definitions"><a class="anchor" href="#_type-definitions"></a><a class="link" href="#_type-definitions">12.2.4. Type Definitions</a></h4>
+<div class="paragraph">
+<p>Projects of type "definition" are special projects which only provide type information for another so-called <em>implementation project</em>,  which only provides executable JS files.</p>
+</div>
+<div class="paragraph">
+<p>Generally, client projects that depend on a given <em>implementation project</em> may additionally declare a dependency on a corresponding type definitions project, in order to integrate type information on the implementation project.
+This is implemented by means of module-level shadowing.
+More specifically, given a client imports a module with module specifier <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>M</mi></math> from the implementation project.
+When resolving the module specifier, <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>M</mi></math> will first be resolved against the implementation project&#8217;s type definitions and only secondarily against the implementation project.
+As a consequence, type definition projects may only provide partial type information, while the remaining modules of the implementation project remain accessible through dynamic namespace imports.</p>
+</div>
+<div class="openblock requirement">
+<div class="content">
+<div class="paragraph">
+<p><a id="Req-GH-821002"></a><strong>Req. GH-821002:</strong> <a href="#Req-GH-821002">Type Definition Project Configuration</a> (ver. 1)</p>
+</div>
+<div class="paragraph">
+<p>For type definition projects, the following constraints must hold true with regard to their project configuration:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>They must declare their <em>implementation project</em> via the <a href="#package-json-definesPackage">definesPackage</a> property in their <code>package.json</code> file.</p>
+</li>
+<li>
+<p>They must not declare an output folder.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2 language-n4js">
+<h3 id="package-json"><a class="anchor" href="#package-json"></a><a class="link" href="#package-json">12.3. Package.json File</a></h3>
+<div class="paragraph">
+<p>A folder is a "component" if and only if it contains a <code>package.json</code> file. Being a component means
+that this folder is recognized by all N4JS-related tools but does not necessarily mean the component
+contains N4JS code (it could just contain plain Javascript). The main benefit of being a component
+in this sense is that this unit of code can be used by other N4JS components as a dependency.</p>
+</div>
+<div class="paragraph">
+<p>For example, a plain npm project containing only plain Javascript can be a component and
+can therefore be used as a project dependency of a full-blown N4JS component.</p>
+</div>
+<div class="sect3">
+<h4 id="_basic-properties"><a class="anchor" href="#_basic-properties"></a><a class="link" href="#_basic-properties">12.3.1. Basic Properties</a></h4>
+<div class="paragraph">
+<p>The following standard <code>package.json</code> properties are used by N4JS tooling. Unless otherwise
+noted, all these properties have the exact same format and meaning as usual in <code>package.json</code>
+files.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">name </dt>
+<dd>
+<p>Used as the globally unique identifier of the component.</p>
+</dd>
+<dt class="hdlist1">version </dt>
+<dd>
+<p>The component&#8217;s version.</p>
+</dd>
+</dl>
+</div>
+<div id="package-json-dependencies" class="dlist">
+<dl>
+<dt class="hdlist1">dependencies </dt>
+<dd>
+<p>List of components required at runtime and compile time.</p>
+</dd>
+</dl>
+</div>
+<div id="package-json-devDependencies" class="dlist">
+<dl>
+<dt class="hdlist1">devDependencies </dt>
+<dd>
+<p>List of components required at compile time only.</p>
+</dd>
+<dt class="hdlist1">main </dt>
+<dd>
+<p>Path relative to the component&#8217;s root folder, pointing to a <code>.js</code> file
+located in a source container (the <code>.js</code> file extension is optional,
+i.e. may be omitted). This file then serves as the component&#8217;s
+default entry point, i.e. project imports pointing to this component from
+other components will import from the file denoted by this property. In
+addition, this property may denote a folder and is then assumed to point
+to a file <code>index.js</code> located in that folder. If this property denotes a file
+other than a <code>.js</code> file, it will be ignored. In particular, it cannot be
+used for <code>.n4js</code> files; in that case, property "mainModule" has to be used
+(see below).</p>
+</dd>
+<dt class="hdlist1">workspaces </dt>
+<dd>
+<p>(array of strings) Property used by package management tool <code>yarn</code> to denote
+that a project serves as a "yarn workspace" and to denote the other projects
+that form the members of this yarn workspace. For details, see
+<a href="https://yarnpkg.com/lang/en/docs/workspaces">here</a>.
+In N4JS, a project is called a "yarn workspace root" if and only if its
+<code>package.json</code> file contains top-level property "workspaces", no matter the property&#8217;s
+value (i.e. it will be called "yarn workspace root" even if the value of property
+"workspaces" is the empty array or an invalid value such as a number). The nested
+projects referred to via the strings in this property&#8217;s array value are called
+"member projects" of the yarn workspace.</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_n4js-properties"><a class="anchor" href="#_n4js-properties"></a><a class="link" href="#_n4js-properties">12.3.2. N4JS Properties</a></h4>
+<div class="paragraph">
+<p>In addition to the standard properties above, there is a single N4JS-specific
+top-level property called "n4js". The value of this property must always be
+an object that may have any combination of the following properties:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">projectType</dt>
+<dd>
+<p>(string) Must be one of the following strings:</p>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">application</dt>
+<dd>
+<p>An application. See <a href="#App">[App]</a>.</p>
+</dd>
+<dt class="hdlist1">library</dt>
+<dd>
+<p>A library. See <a href="#_libraries">Libraries</a>.</p>
+</dd>
+<dt class="hdlist1">processor</dt>
+<dd>
+<p>For processors running server-side on the N4 platform. Not implemented yet.</p>
+</dd>
+<dt class="hdlist1">test</dt>
+<dd>
+<p>An N4JS project containing tests for one or more other N4JS projects specified
+via property "testedProjects".</p>
+</dd>
+<dt class="hdlist1">api</dt>
+<dd>
+<p>For N4JS projects that contain only API (in <code>.n4jsd</code> files) to be implemented by other,
+so-called implementation projects. See properties "implementationId", "implementedProjects".
+NOTE: the API/Implementation concept is not fully implemented at this time (see GH-1291).</p>
+</dd>
+<dt class="hdlist1">runtimeEnvironment</dt>
+<dd>
+<p>Runtime environments. See <a href="#Runtime Environment Resolution">[Runtime Environment Resolution]</a>.
+NOTE: runtime environments are not fully implemented at this time (see GH-1291).</p>
+</dd>
+<dt class="hdlist1">runtimeLibrary</dt>
+<dd>
+<p>Runtime libraries. See <a href="#_runtime-environment-and-runtime-libraries">Runtime Environment and Runtime Libraries</a>.</p>
+</dd>
+<dt class="hdlist1">validation</dt>
+<dd>
+<p>A project in which <code>.n4js</code> files are only being validated, not transpiled. This is used for projects
+that are implemented in terms of <code>.js</code> files but that also provide type information in terms of <code>.n4jsd</code> files.</p>
+</dd>
+<dt class="hdlist1">plainjs</dt>
+<dd>
+<p>A project which only contains <code>.js</code> files and no N4JS resources. The contained JS files are only indexed to allow
+for dynamic imports of specific JavaScript modules. Projects of this type are not being transpiled.</p>
+</dd>
+</dl>
+</div>
+</dd>
+<dt class="hdlist1">vendorId</dt>
+<dd>
+<p>(string) Globally unique identifier for the component&#8217;s vendor.
+Used for the <code>@Internal</code> accessibility modifier.</p>
+</dd>
+<dt class="hdlist1">vendorName</dt>
+<dd>
+<p>(string) Human-readable name of the component&#8217;s vendor. Used only for informational
+purposes.</p>
+</dd>
+<dt class="hdlist1">output</dt>
+<dd>
+<p>(string) Path relative to the component&#8217;s root folder, pointing to a folder where
+all output files will be placed. In particular, this is where the N4JS transpiler
+will put the <code>.js</code> files created for each <code>.n4js</code> file.</p>
+</dd>
+<dt class="hdlist1">sources</dt>
+<dd>
+<p>(object) Defines various sub-folders where sources, etc. are located. All properties
+of the given object must have the following format: the name must be "source", "external",
+or "test"; the value must be an array of strings, with each string defining a
+path relative to the component&#8217;s root folder, pointing to a folder where
+source files of the corresponding type are located. For example, paths given via name
+"source" tell the N4JS transpiler where to look for <code>.n4js</code> source files to be compiled.</p>
+</dd>
+<dt class="hdlist1">moduleFilters</dt>
+<dd>
+<p>(object) Filters for fine-tuning the validator and compiler. A filter is applied to modules
+matching the given module specifier which may contain wildcards, optionally restricted to
+modules defined in a specific source path.</p>
+<div class="paragraph">
+<p>All properties of the given object must have the following format: the name must be a valid
+module filter type (see below); the value must be an array of strings, with each string
+defining a pattern of files inside one of the source containers for which validation or
+module wrapping is to be turned off. Instead of a plain string, the inner array may
+contain an object with properties "module" and "sourceContainer" to make this filter apply
+to only one of the source containers (instead of all source containers, which is the default).</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">noValidate</dt>
+<dd>
+<p>Modules matching this filter are not semantically validated.
+That is, they are still syntactically validated.
+If they are contained in source or test source fragments, it must be possible to bind references
+to declarations inside these modules.
+Note that switching off validation for n4js files is disallowed.</p>
+</dd>
+</dl>
+</div>
+</dd>
+</dl>
+</div>
+<div class="exampleblock">
+<div class="title">Example 102. Module Filters</div>
+<div class="content">
+<div class="paragraph">
+<p>A simple and a source-container-specific module filter in the <code>n4js</code> section of a package.json file.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-json" data-lang="json">"moduleFilters": {
+	"noValidate": [
+		"abc*",
+		{
+			"module": "xyz*",
+			"sourceContainer": "src/n4js"
+		}
+	]
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div id="package-json-mainModule" class="dlist">
+<dl>
+<dt class="hdlist1">mainModule</dt>
+<dd>
+<p>(string) A plain module specifier defining the project’s 'main module'.
+If this property is defined, other projects can import from this project using imports where the string following
+keyword <code>from</code> states only the project name and not the complete module specifier (see <a href="statements.html#import-statement-semantics">Import Statement Semantics</a>).
+If this property is defined, top-level property <code>main</code> will be ignored.</p>
+</dd>
+<dt class="hdlist1">testedProjects</dt>
+<dd>
+<p>  (array) List of N4JS components being tested by this project.
+ <br>
+Only components of project type "test" may declare this property. Furthermore, the referenced
+projects must all be of the same project type and must not be of type "test" themselves.</p>
+</dd>
+</dl>
+</div>
+<div id="package-json-implementationId" class="dlist">
+<dl>
+<dt class="hdlist1">implementationId</dt>
+<dd>
+<p>(string) If this property is defined, this component is called an "implementation project" and the string value
+  provides a unique identifier for the implementation provided in this component. If this is defined, property
+  "implementedProjects" must be defined as well. For details, see <a href="#API and Implementation Components">[API and Implementation Components]</a>.</p>
+<div class="paragraph">
+<p>Only projects of type "application", "processor", "library", "api" or "validation" may declare this property.</p>
+</div>
+</dd>
+</dl>
+</div>
+<div id="package-json-implementedProjects" class="dlist">
+<dl>
+<dt class="hdlist1">implementedProjects</dt>
+<dd>
+<p>(array) A list of API components (components of type "api") that are implemented by this component. If this
+is defined, property "implementationId" must be defined as well. For details, see
+<a href="#API and Implementation Components">[API and Implementation Components]</a>. Only components of type  "application", "processor", "library", "api"
+or "validation" may declare this property.</p>
+</dd>
+</dl>
+</div>
+<div id="package-json-requiredRuntimeLibraries" class="dlist">
+<dl>
+<dt class="hdlist1">requiredRuntimeLibraries</dt>
+<dd>
+<p>(array) The list of required runtime library components that are required for the execution of this
+ component. All components but components of type "runtime environment" may declare this property. Each
+ required runtime library must also be specified as a dependency using one of the top-level
+ properties <code>dependencies</code> or <code>devDependencies</code>.</p>
+</dd>
+<dt class="hdlist1">extendedRuntimeEnvironment</dt>
+<dd>
+<p>(string) The name of the runtime environment project that is extended by this component. Only components of
+type "runtime environment" may declare this property.</p>
+</dd>
+<dt class="hdlist1">providedRuntimeLibraries</dt>
+<dd>
+<p>(array) The list of runtime library components that are provided by this component. Only components of
+type "runtime environment" may declare this property.</p>
+</dd>
+</dl>
+</div>
+<div id="package-json-definesPackage" class="dlist">
+<dl>
+<dt class="hdlist1">definesPackage</dt>
+<dd>
+<p>(string) The name of the package this component provides type definitions for. Only components of project type "definition" may declare this property.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>All properties described above are optional. The following default values apply:</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Property</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Default Value</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">name</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">name of the folder containing the <code>package.json</code> file</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">version</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">"0.0.1"</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">projectType</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">"plainjs"</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">vendorId</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">"vendor.default"</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">mainModule</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">"index"</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">output</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">"."</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">sources</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">a single source-container of type "source" with path "." (except for yarn workspace roots, see below)</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>All other properties are undefined if not given in the <code>package.json</code> file. The default source folder of "." does not
+apply to projects that represent the root folder of a yarn workspace; those projects do not have any source folder,
+by default.</p>
+</div>
+<div class="exampleblock">
+<div class="title">Example 103. A package.json file with N4JS-specific properties.</div>
+<div class="content">
+<div class="paragraph">
+<p>The following example illustrates how to use the N4JS-related package.json properties.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>{
+	"name": "SampleProject",
+	"version": "0.0.1",
+	"author": "Enfore AG",
+	"main": "./src/js/main.js",
+	"dependencies": {
+		"OtherProject": "&gt;=1.2.3 &lt;2.0.0",
+		"n4js-runtime-es2015": "latest"
+	},
+	"devDependencies": {
+		"org.eclipse.n4js.mangelhaft": "latest"
+	},
+	"n4js": {
+		"projectType": "library",
+		"vendorId": "org.eclipse.n4js",
+		"vendorName": "Eclipse N4JS Project",
+		"output": "src-gen",
+		"mainModule": "a/b/Main",
+		"sources": {
+			"source": [
+				"src/n4js",
+				"src/n4js-gen"
+			],
+			"external": [
+				"src-ext"
+			],
+			"test": [
+				"src-test"
+			]
+		},
+		"moduleFilters": {
+			"noValidate": [
+				"abc*",
+				{
+					"module": "xyz*",
+					"sourceContainer": "src/n4js"
+				}
+			]
+		},
+		"requiredRuntimeLibraries": [
+			"n4js-runtime-es2015"
+		]
+	}
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_constraints"><a class="anchor" href="#_constraints"></a><a class="link" href="#_constraints">12.3.3. Constraints</a></h4>
+<div class="paragraph">
+<p>The following constraints apply.</p>
+</div>
+<div class="openblock requirement">
+<div class="content">
+<div class="paragraph">
+<p><a id="Req-IDE-158"></a><strong>Req. IDE-158:</strong> <a href="#Req-IDE-158">GeneralConstraints</a> (ver. 1)</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>There must be an output directory specified so the compiler(s) can run.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="openblock requirement">
+<div class="content">
+<div class="paragraph">
+<p><a id="Req-IDE-159"></a><strong>Req. IDE-159:</strong> <a href="#Req-IDE-159">Paths</a> (ver. 1)</p>
+</div>
+<div class="paragraph">
+<p>Paths Paths are constrained in the following way:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>A path cannot appear more than one time within a source fragment type (same applies to paths in the resources section).</p>
+</li>
+<li>
+<p>A path cannot be used in different source fragment types at same times.</p>
+</li>
+<li>
+<p>A path can only be declared exclusively in one of the sections Output, Libraries, Resources or Sources.</p>
+</li>
+<li>
+<p>A path must not contain wild cards.</p>
+</li>
+<li>
+<p>A path has to be relative to the project path.</p>
+</li>
+<li>
+<p>A path has to point to folder.</p>
+</li>
+<li>
+<p>The folder a defined path points to must exist in the project (but in case of non-existent folders of source fragments, only a warning is shown).</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="openblock requirement">
+<div class="content">
+<div class="paragraph">
+<p><a id="Req-IDE-160"></a><strong>Req. IDE-160:</strong> <a href="#Req-IDE-160">Module Specifiers</a> (ver. 1)</p>
+</div>
+<div class="paragraph">
+<p>Module Specifiers are constrained in the following
+way:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Within a module filter type no duplicate specifiers are allowed.</p>
+</li>
+<li>
+<p>A module specifier is by default applied relatively to all defined source containers, i.e. if there src and src2 defined as source containers in both folders files are looked up that matches the given module specifier</p>
+</li>
+<li>
+<p>A module specifier can be constrained to be applied only to a certain source container.</p>
+</li>
+<li>
+<p>A module specifier is allowed to contain wildcards but it must resolve to some existing files in the project</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="openblock requirement">
+<div class="content">
+<div class="paragraph">
+<p><a id="Req-IDE-161"></a><strong>Req. IDE-161:</strong> <a href="#Req-IDE-161">Module Specifier Wildcard Constraints</a> (ver. 1)</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>All path patterns are case sensitive.</p>
+</li>
+<li>
+<p><code>**</code> all module specifiers will be matched.</p>
+</li>
+<li>
+<p><code>**/*</code> all module specifiers will be matched.</p>
+</li>
+<li>
+<p><code>test/A??</code> matches all module specifiers whose qualified name consists of two segments where the first part matches test and the second part starts with an <code>A</code> and then two more characters.</p>
+</li>
+<li>
+<p><code>**/test/**/XYZ</code> - matches all module specifiers whose qualified name contains a segment that matches test and the last segment ends with an ’XYZ’.</p>
+</li>
+<li>
+<p>A module specifier wild card isn’t allowed to contain <code>***</code>.</p>
+</li>
+<li>
+<p>A module specifier wild card isn’t allowed to contain relative navigation.</p>
+</li>
+<li>
+<p>A module specifier wild card shouldn’t contain the file extension (only state the file name (pattern) without extension, valid file extensions will then be used to match the file).</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>Examples of using external source fragments and filters are given in <a href="plainjs.html#_implementation-of-external-declarations">Implementation of External Declarations</a>, see <a href="plainjs.html#external-definitions-and-implementations">External Definitions and Their Implementations</a>.</p>
+</div>
+<div class="openblock requirement">
+<div class="content">
+<div class="paragraph">
+<p><a id="Req-GH-821001"></a><strong>Req. GH-821001:</strong> <a href="#Req-GH-821001">Dependencies to Definition Projects</a> (ver. 1)</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>For each listed project dependency of type "definition", a corresponding dependency (in the (dev)dependencies section) must be declared, whose "name" matches the "definesPackage" property value of the definition project.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2 language-n4js">
+<h3 id="_support-for-npm-scopes"><a class="anchor" href="#_support-for-npm-scopes"></a><a class="link" href="#_support-for-npm-scopes">12.4. Support for NPM Scopes</a></h3>
+<div class="paragraph">
+<p>NPM supports a namespace concept for npm packages. Such namespaces are called "scopes". For details see
+<a href="https://docs.npmjs.com/misc/scope" class="bare">https://docs.npmjs.com/misc/scope</a> and <a href="https://docs.npmjs.com/getting-started/scoped-packages" class="bare">https://docs.npmjs.com/getting-started/scoped-packages</a>.
+In N4JS, this is supported too.</p>
+</div>
+<div class="paragraph">
+<p>Terminology:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>A project&#8217;s <em>plain project name</em> is its name without mentioning the project&#8217;s scope (if any),
+e.g. <code>myProject</code>.</p>
+</li>
+<li>
+<p>A project&#8217;s <em>scope name</em> is the name of the npm scope a project resides in, including a leading <code>@</code>.
+E.g. <code>@myScope</code>.</p>
+</li>
+<li>
+<p>A project&#8217;s <em>N4JS project name</em> is its plain project name, prefixed by its scope name (if any),
+separated by a <code>/</code>. For unscoped projects, this is identical to the plain project name.
+E.g., <code>myProject</code> (if unscoped), <code>@myScope/myProject</code> (if scoped).</p>
+</li>
+<li>
+<p>A project&#8217;s <em>Eclipse project name</em> is an ancillary name used only within the Eclipse UI for
+the project in the workspace. It is equal to the N4JS project name, except that <code>:</code> instead of <code>/</code> is
+used as separator between the scope and plain project name.
+E.g., <code>myProject</code> (if unscoped), <code>@myScope:myProject</code> (if scoped).</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>In case the intended meaning is apparent from the context, the "N4JS project name" can simply be referred to
+as "project name" (as is common practice in the context of npm).</p>
+</div>
+<div class="paragraph">
+<p>In N4JS, when importing from a module <code>M</code> contained in a scoped project <code>@myScope/myProject</code>, the import statement&#8217;s
+module specifier should have one of the following forms:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>import * as N from "a/b/c/M";</code></p>
+</li>
+<li>
+<p><code>import * as N from "@myScope/myProject/a/b/c/M";</code></p>
+</li>
+<li>
+<p><code>import * as N from "@myScope/myProject";</code> (if <code>M</code> is specified as main module in `myProject&#8217;s package.json)</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Thus, the N4JS project name, which includes the scope name, is simply used in place of an ordinary, non-scoped
+project&#8217;s name. This is in line with conventions in Javascript.</p>
+</div>
+<div class="openblock requirement">
+<div class="content">
+<div class="paragraph">
+<p><a id="Req-GH-1026"></a><strong>Req. GH-1026:</strong> <a href="#Req-GH-1026">General Constraints</a> (ver. 1)</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>The name given in the package.json file (i.e. value of top-level property "name") must be equal to
+the project&#8217;s "N4JS project name", as defined above.</p>
+</li>
+<li>
+<p>The name of the project folder on disk (i.e. folder containing the package.json file) must be equal to
+the project&#8217;s "plain project name", as defined above.</p>
+</li>
+<li>
+<p>Iff the project is scoped, this project folder must have a parent folder with a name equal to
+the project&#8217;s "scope name", including the leading <code>@</code>.</p>
+</li>
+<li>
+<p>Within Eclipse, the name of of an N4JS project in the workspace UI must be equal to the project&#8217;s
+"Eclipse project name", as defined above.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="sec:N4JS-Type-Definitions"><a class="anchor" href="#sec:N4JS-Type-Definitions"></a><a class="link" href="#sec:N4JS-Type-Definitions">12.5. N4JS Type Definitions</a></h3>
+<div class="paragraph">
+<p>N4JS projects can depend on ordinary JavaScript projects by including them in the package.json file.
+From there on, modules of those JavaScript projects can be imported when writing N4JS code.
+However, since JavaScript is untyped there will not be any type information for e.g. classes, functions
+of ordinary JavaScript projects unless this type information is provided by a type definition project.
+Type definition projects do only contain n4jsd files that reflect the classes and functions of a specific npm.
+To refer to a JavaScript npm, the term <em>plain-JS project</em> will be used.</p>
+</div>
+<div class="sect3">
+<h4 id="_specify-type-definition"><a class="anchor" href="#_specify-type-definition"></a><a class="link" href="#_specify-type-definition">12.5.1. Specify Type Definition</a></h4>
+<div class="paragraph">
+<p>A type definition project is structured like a normal npm.
+The major difference is that it provides n4jsd files instead of js files.
+These n4jsd files are named like and located at the exact position in the file tree as their js-counterparts.
+This ensures the type definition module and the corresponding plain-JS module to have the same fully-qualified name.
+Besides the usual properties the package.json file usually needs to specify the following properties in the n4js section.</p>
+</div>
+<div class="listingblock">
+<div class="title">Package.json: Important properties for type definition projects</div>
+<div class="content">
+<pre class="highlight"><code>{
+	"n4js": {
+		"projectType": "definition"
+		"definesPackage": "..."
+		"mainModule": "..."
+	}
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The project type declares this project to be a type definition projects.
+Consequently, it has to also declare the name for which plain-JS project its type definitions are provided (using <code>definesPackage</code>).
+Lastly, the main module has to be specified since this information will not be taken from the package.json of the plain-JS project.</p>
+</div>
+<div class="paragraph">
+<p>A type definition project may only define a main module if the corresponding plain-JS project defines a main module. In this case,
+the main module of the type definition project may have a different fully-qualified name / module specifier (but should, of course,
+define the types provided by the plain-JS project&#8217;s main module). This is possible, because in client code the import of a main
+module will always look the same, no matter the main module&#8217;s fully-qualified name / module specifier.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_name-conventions"><a class="anchor" href="#_name-conventions"></a><a class="link" href="#_name-conventions">12.5.2. Name Conventions</a></h4>
+<div class="paragraph">
+<p>A type definition package can have an arbitrary name and define an arbitrary npm package.
+This can be handy for testing purposes or just creating some temporary type definitions for a local package.
+However, we chose to use a convention to simplify finding the right type definition package for a specific plain-JS project.
+First, the scope <code>@n4jsd</code> and second the exact name of the plain-JS project is used.
+For instance, when a user wants to install type definitions for the plain-JS project <code>express</code>,
+our related type definitions are called <code>@n4jsd/express</code>.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_version-conventions"><a class="anchor" href="#_version-conventions"></a><a class="link" href="#_version-conventions">12.5.3. Version Conventions</a></h4>
+<div class="paragraph">
+<p>Since the plain-JS project will evolve over time and publish different versions, the need arises to also
+publish the type definition project in different versions that reflect this evolution.
+In addition to the evolution of the plain-JS project, a new version of the type definition project can
+also become necessary in case a bug in the type definitions was found or in case the language of N4JS changes
+and the type definitions have to be adjusted accordingly.
+Effectively, this will lead to a situation where both the implementation and the type definition project have
+a version that are technically unrelated from an npm point of view, but still are somehow related to each other
+from a semantical point of view.
+To keep the distinct versioning of both of the projects manageable,
+we propose the following conventions to partially align the type definition project&#8217;s version to that of the plain-JS project.</p>
+</div>
+<div class="sect4">
+<h5 id="_define-a-new-type-definition-package"><a class="anchor" href="#_define-a-new-type-definition-package"></a><a class="link" href="#_define-a-new-type-definition-package">12.5.3.1. Define a New Type Definition Package</a></h5>
+<div class="paragraph">
+<p>We use the following convention to compute the version of type definition packages.</p>
+</div>
+<div class="openblock">
+<div class="title">Convention for initial type definition versions</div>
+<div class="content">
+<div class="paragraph">
+<p>&#160;&#160;&#160;&#160; Major<sub>types</sub>.Minor<sub>types</sub>.Patch<sub>types</sub> = Major<sub>impl</sub>.Minor<sub>impl</sub>.0</p>
+</div>
+</div>
+</div>
+<div class="openblock">
+<div class="title">Example for initial type definition of express@3.3.3</div>
+<div class="content">
+<div class="paragraph">
+<p>&#160;&#160;&#160;&#160; Major<sub>types</sub>.Minor<sub>types</sub>.Patch<sub>types</sub> = 3.3.0</p>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s say that a new version of a type definition package called <em>types</em> should be created
+that defines types for an npm called <em>impl</em> of version Major<sub>impl</sub>.Minor<sub>impl</sub>.Patch<sub>impl</sub>.
+According to our convention, the major and minor version numbers of the type definition package
+should just be copied from the version of the <em>impl</em> package.
+However, the version patch number of <em>types</em> should not be taken from <em>impl</em>.
+Instead, the patch number of <em>types</em> starts with <em>0</em> and increases with every update of this type definition version.
+For instance when a bug was found in version Major<sub>types</sub>.Minor<sub>types</sub>.0, the definitions have been extended, or
+adjusted to new language features, only the patch number increases to e.g. Major<sub>types</sub>.Minor<sub>types</sub>.1.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_using-a-type-definition-package"><a class="anchor" href="#_using-a-type-definition-package"></a><a class="link" href="#_using-a-type-definition-package">12.5.3.2. Using a Type Definition Package</a></h5>
+<div class="paragraph">
+<p>On the client side, a type definition package is listed among the dependency section.
+Here we use the following convention to specify the required version of a type definition package.</p>
+</div>
+<div class="openblock">
+<div class="title">Convention for dependencies</div>
+<div class="content">
+<div class="paragraph">
+<p>"dependencies": {<br>
+&#160;&#160;&#160;&#160; "@n4jsd/Types": "&lt;=Major<sub>impl</sub>.Minor<sub>impl</sub>.*"<br>
+}</p>
+</div>
+</div>
+</div>
+<div class="openblock">
+<div class="title">Example of dependencies to express and its type definition project</div>
+<div class="content">
+<div class="paragraph">
+<p>"dependencies": {<br>
+&#160;&#160;&#160;&#160; "express": "^3.3.3",<br>
+&#160;&#160;&#160;&#160; "@n4jsd/express": "&lt;=3.3.*"<br>
+}</p>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>According to this convention, the major and minor version numbers of the implementation package are used,
+prepended with a smaller-equals and appended with an asterisk for the patch number.
+This also applies when the implementation version contains a tilde, a caret, etc., or is omitting a minor or patch number.
+In case a non SemVer version is given (e.g. <code>latest</code>, empty string, url, etc.)
+it is recommended to plain copy the non SemVer version when possible.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_rational"><a class="anchor" href="#_rational"></a><a class="link" href="#_rational">12.5.3.3. Rational</a></h5>
+<div class="paragraph">
+<p>The rational behind this convention reflects the idea of semantic versioning:</p>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>Given a version number MAJOR.MINOR.PATCH, increment the:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>MAJOR version when you make incompatible API changes,</p>
+</li>
+<li>
+<p>MINOR version when you add functionality in a backwards-compatible manner, and</p>
+</li>
+<li>
+<p>PATCH version when you make backwards-compatible bug fixes.</p>
+</li>
+</ul>
+</div>
+</blockquote>
+<div class="attribution">
+&#8212; <a href="https://www.semver.org">semver.org</a>
+</div>
+</div>
+<div class="paragraph">
+<p>Patch version increments are always backwards compatible according to SemVer.
+In addition also no further functionality is added since this would imply at least an increment of the minor version.
+Consequently, patch versions do not affect the interface or type information of an plain-JS project.
+This is why patch version number fully suffices to reflect bug fixes and language changes for a given major.minor version.</p>
+</div>
+<div class="paragraph">
+<p>On client side, we recommend to use a smaller-equals qualifier because most probably there will not be the exact version
+of a requested type definition project.
+Instead, only some major.minor versions will have a type definition counterpart.
+Using a smaller-equals qualifier will make sure that a client will always get the latest version of a requested plain-JS project version.
+In case a newer version of the plain-JS project was already published,
+this convention guarantees that a compatible version of the type definition project is installed.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2 language-n4js">
+<h3 id="_modules"><a class="anchor" href="#_modules"></a><a class="link" href="#_modules">12.6. Modules</a></h3>
+<div class="paragraph">
+<p>Each N4JS source file defines a module in the sense of ECMAScript2015, [<a href="appendix_c_bibliography.html#ECMA15a">ECMA15a(p.S14)</a>].
+This is the overall structure of a module, based on [<a href="appendix_c_bibliography.html#ECMA15a">ECMA15a(p.S14)</a>].</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xtext" data-lang="xtext">Script: {Script}
+    annotations+=ScriptAnnotation*
+    scriptElements+=ScriptElement*;
+
+/*
+ * The top level elements in a script are type declarations, exports, imports or statements
+ */
+ScriptElement:
+      AnnotatedScriptElement
+    | N4ClassDeclaration&lt;Yield=false&gt;
+    | N4InterfaceDeclaration&lt;Yield=false&gt;
+    | N4EnumDeclaration&lt;Yield=false&gt;
+    | ImportDeclaration
+    | ExportDeclaration
+    | RootStatement&lt;Yield=false&gt;
+;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Grammar and semantics of import statement is described in <a href="statements.html#_import-statement">Import Statement</a>; of export statement described in <a href="statements.html#_export-statement">Export Statement</a>.</p>
+</div>
+<div class="paragraph">
+<p>An import statement imports a variable declaration, function declaration, or N4 type declaration defined and exported by another module into the current
+module under the given alias (which is similar to the original name if no alias is defined).
+The name of the module is its project’s source folder’s relative path without any extension, see <a href="names.html#_qualified-names">Qualified Names</a> for details.</p>
+</div>
+</div>
+<div class="sect2 language-n4js">
+<h3 id="_api-and-implementation-component"><a class="anchor" href="#_api-and-implementation-component"></a><a class="link" href="#_api-and-implementation-component">12.7. API and Implementation Component</a></h3>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title=""></i>
+</td>
+<td class="content">
+the API/Implementation concept is not fully implemented at this time (see GH-1291).
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Instead of providing an implementation, N4JS components may only define an API by way of one or more n4jsd files which is then implemented by separate implementation projects.
+For one such API project, several implementation projects may be provided.
+Client code using the API will always be bound to the API project only, i.e. only the API project will appear in the client project’s <code>package.json</code> file under <code>dependencies</code>.
+When launching the client code, the launcher will choose an appropriate implementation for each API project in the client code’s direct or indirect dependencies
+and transparently replace the API project by the implementation project.
+In other words, instead of the API project’s output folder, the implementation project’s output folder will be put on the class path.
+Static compile time validations ensure that the implementation projects comply to their corresponding API project.</p>
+</div>
+<div class="paragraph">
+<p>Note how this concept can be seen as an alternative way of providing the implementation for an n4jsd file: usually n4jsd files are used to define types
+that are implemented in plain JavaScript code or provided by the runtime; this concept allows for providing the implementation of an n4jsd file in form of ordinary N4JS code.</p>
+</div>
+<div class="paragraph">
+<p>At this time, the concept of API and implementation components is in a prototype phase and the tool support is limited.
+The goal is to gain experience from using the early prototype support and then refine the concept over time.</p>
+</div>
+<div class="paragraph">
+<p>Here is a summary of the most important details of this concept (they
+are all subject to discussion and change):</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Support for this concept, esp. validations, should not be built into the core language but rather implemented as a separate validation/analysis tool.</p>
+</li>
+<li>
+<p>Validation is currently provided in the form of a separate view: the API / Implementation compare view.</p>
+</li>
+<li>
+<p>A project that defines one or more other projects in its <code>package.json</code> file under <code>implementedProjects</code> (cf. <a href="#package-json-implementedProjects">implementedProjects</a>) is called <em>implementation project</em>.
+A project that has another project pointing to itself via <code>ImplementedProjects</code> is called <em>API project</em>.
+Note that, at the moment, there is no explicit definition making a project an API project.</p>
+</li>
+<li>
+<p>An implementation project must define an implementation ID in its <code>package.json</code> file using the <code>implementationId</code> property in the <code>n4js</code> section (cf. <a href="#package-json-implementationId">implementationId</a>).</p>
+</li>
+<li>
+<p>For each public or public@Internal classifier or enum in an API project, there must be a corresponding type with the same fully-qualified name of the same or higher visibility in the  implementation project.
+For each member of such a type in the API, there must exist a corresponding, owned <em>or</em> inherited type-compatible member in the implementation type.</p>
+</li>
+<li>
+<p>Beyond type compatibility, formal parameters should have the same name on API and implementation side; however, different names are legal but should be highlighted by API / Implementation tool support as a (legal) change.</p>
+</li>
+<li>
+<p>Comments regarding the state of the API or implementation may be added to the JSDoc in the source code using the special tag @apiNote.
+API / Implementation tool support should extract and present this information to the user in an appropriate form.</p>
+</li>
+<li>
+<p>If an API class <code>C</code> implements an interface <code>I</code>, it has to explicitly (re-) declare all members of <code>I</code> similar to the implementation.
+This is necessary for abstract classes anyway in order to distinguish the implemented methods from the non-implemented ones.
+For concrete classes, we want all members in <code>C</code> in order to be complete and avoid problems when the interface is changed or <code>C</code> is made abstract.</p>
+</li>
+</ul>
+</div>
+<div class="sect3">
+<h4 id="_execution-of-api-and-implementation-components"><a class="anchor" href="#_execution-of-api-and-implementation-components"></a><a class="link" href="#_execution-of-api-and-implementation-components">12.7.1. Execution of API and Implementation Components</a></h4>
+<div class="paragraph">
+<p>When launching an N4JS component <em>C</em> under runtime environment <a href="appendix_a_acronyms.html#AC">RE</a>, the user may(!) provide an implementation ID <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>I</mi><mspace width="-0.167em"/><mi>I</mi><mspace width="-0.167em"/><mi>D</mi></math> to run.
+Then, for each API project <em>A</em> in the direct or indirect dependencies of <em>C</em> an implementation project is chosen as follows:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Collect all implementation projects for <em>A</em> (i.e. projects that specify <em>A</em> in their <code>package.json</code> file under <code>implementedProjects</code>).</p>
+</li>
+<li>
+<p>Remove implementation projects that cannot be run under runtime environment <a href="appendix_a_acronyms.html#AC">RE</a>, using the same logic as for running ordinary N4JS components (this step is not implemented yet!).</p>
+</li>
+<li>
+<p>If there are no implementation projects left, show an error.</p>
+</li>
+<li>
+<p>If <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>I</mi><mspace width="-0.167em"/><mi>I</mi><mspace width="-0.167em"/><mi>D</mi></math> is defined (i.e. user specified an implementation ID to run), then:</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>If there is an implementation project left with implementation ID <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>I</mi><mspace width="-0.167em"/><mi>I</mi><mspace width="-0.167em"/><mi>D</mi></math>, use that.</p>
+</li>
+<li>
+<p>Otherwise, show an error.</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>If <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>I</mi><mspace width="-0.167em"/><mi>I</mi><mspace width="-0.167em"/><mi>D</mi></math> is undefined, then</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>If there is exactly 1 implementation project left, use it.</p>
+</li>
+<li>
+<p>Otherwise, in UI mode prompt the user for a choice, in headless mode  how an error.</p>
+</li>
+</ol>
+</div>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Having found an implementation project <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>I</mi><mi>n</mi></msub></math> for each API project <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>A</mi><mi>n</mi></msub></math>, launch as usual except that whenever <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>A</mi><mi>n</mi></msub></math>’s output folder would be used, use <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>I</mi><mi>n</mi></msub></math>’s
+output folder (esp. when constructing a <code>class path</code>) and when loading or importing a type from <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>A</mi><mi>n</mi></msub></math> return the corresponding type with the same fully-qualified name from <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>I</mi><mi>n</mi></msub></math>.</p>
+</div>
+</div>
+<div class="sect3 language-n4js">
+<h4 id="_api-and-implementation-with-di"><a class="anchor" href="#_api-and-implementation-with-di"></a><a class="link" href="#_api-and-implementation-with-di">12.7.2. API and Implementation With DI</a></h4>
+<div class="paragraph">
+<p>API projects may use N4JS DI (<a href="extended_fetaures.html#_dependency-injection">Dependency Injection</a>) language features which require Implementation projects to provide DI-compatible behaviour
+in order to allow a Client (implemented against an API project) to be executed with a given Implementation project.
+This is essential for normal execution and for test execution.</p>
+</div>
+<div class="paragraph">
+<p><a href="#diag_APITestsDI_Overview">Overview of API tests with DI</a> shows some of those considerations from test client point of view.</p>
+</div>
+<div id="diag_APITestsDI_Overview" class="imageblock">
+<div class="content">
+<img src="chapters/12_components/fig/diag_ApiTestsDI_Overview.svg" alt="diag ApiTestsDI Overview">
+</div>
+<div class="title">Figure 13. Overview of API tests with DI</div>
+</div>
+<div class="paragraph">
+<p>Static DI mechanisms in N4JS allow an API project to enforce Implementation projects to provide all necessary information.
+This allows clients to work seamlessly with various implementations without specific knowledge about them or without relying on extra tools for proper project wiring.</p>
+</div>
+<div class="paragraph">
+<p><a href="#diag_ApiTestsDI_StaticDI">API tests with static DI</a> shows how API project defines project wiring and enforces certain level of testability.</p>
+</div>
+<div id="diag_ApiTestsDI_StaticDI" class="imageblock">
+<div class="content">
+<img src="chapters/12_components/fig/diag_ApiTestsDI_StaticDI.svg" alt="diag ApiTestsDI StaticDI">
+</div>
+<div class="title">Figure 14. API tests with static DI</div>
+</div>
+<div class="paragraph">
+<p>During Client execution, weather it is test execution or not, N4JS mechanisms will replace the API project with a proper Implementation project.
+During runtime DI mechanisms will take care of providing proper instances of implantation types.</p>
+</div>
+<div class="paragraph">
+<p><a href="#diag_ApiTestsDI_Views">Types view and Instances view</a> shows Types View perspective of the client, and Instances View perspective of the client.</p>
+</div>
+<div id="diag_ApiTestsDI_Views" class="imageblock" style="text-align: center">
+<div class="content">
+<img src="chapters/12_components/fig/diag_ApiTestsDI_Views.svg" alt="diag ApiTestsDI Views">
+</div>
+<div class="title">Figure 15. Types view and Instances view</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Version 0.9<br>
+Last updated 2019-08-07 15:02:40 CEST
+</div>
+</div>
+<!-- ************* docinfo-footer *************************************************************** -->
+<div class="Grid social" style="color:#d5dfea">
+  <div class="Cell Cell--2-12 m-Cell--withMargin">
+    <h2>Quick Links</h2>
+    <ul>
+      <li><a href="../downloads.html">Download</a></li>
+      <li><a href="../userguides/index.html">Documentation</a></li>
+      <li><a href="https://github.com/eclipse/n4js/">Source</a></li>
+      <li><a href="https://github.com/eclipse/n4js/issues">Issues</a></li>
+    </ul>
+  </div>
+  <div class="Cell Cell--2-12 m-Cell--withMargin">
+    <br/><br/>
+    <ul>
+      <li><a href="https://www.eclipse.org/forums/index.php/f/365/">Forum</a></li>
+      <li><a href="http://n4js.blogspot.de/">Blog</a></li>
+      <li><a href="https://dev.eclipse.org/mailman/listinfo/n4js-dev">Mailing List</a></li>
+      <li><a href="https://projects.eclipse.org/projects/technology.n4js">Eclipse Project Page</a></li>
+      <li><a href="https://twitter.com/n4jsdev">Tweets by n4jsdev</a></li>
+    </ul>
+  </div>
+  <div class="Cell Cell--2-12 m-Cell--withMargin">
+    <br/><br/>
+    <ul>
+      <li><a href="http://www.eclipse.org/">Eclipse Home</a></li>
+      <li><a href="http://www.eclipse.org/legal/privacy.php">Privacy Policy</a></li>
+      <li><a href="http://www.eclipse.org/legal/termsofuse.php">Terms of Use</a></li>
+      <li><a href="http://www.eclipse.org/legal/copyright.php">Copyright Agent</a></li>
+      <li><a href="http://www.eclipse.org/legal/">Legal</a></li>
+    </ul>
+  </div>
+  <div style="clear: both; height: 0; overflow: hidden;"></div>
+</div>
+
+<!-- ************* UI Scripts ************* -->
+<script type="text/javascript" src="scripts/back-to-top.js"></script>
+
+<script type="text/javascript" src="scripts/treeview.js"></script>
+<script type="text/javascript" src="scripts/toc.js"></script>
+
+<!-- ************* Prism.js Syntax Highlighting ************* -->
+<script src="scripts/prism.js"></script>
+
+<script type="text/javascript">
+	// Add the 'toclist' id for search function
+	$(".toc2 > ul").attr('id', 'toclist');
+	// Generate a Search input form
+	$("#toclist > li:first-of-type").before('<input type="text" id="pagesearch" onkeyup="search()" placeholder="Search for section...">');
+	$("#toclist > li:first-of-type").before('<i id="clear" class="fa fa-times-circle-o"></i>');
+	$("#clear").click(function(){
+	    $("#pagesearch").val('');
+	    search();
+	    $('.toc2 > ul').treeView('collapseAll');
+	});
+	// intialize Treeview.js
+	$(".toc2 > ul").treeView();
+	// Initialize Scrollspy
+</script>
+<!-- ************* docinfo-footer *************************************************************** -->
+</body>
+</html>

@@ -1,0 +1,1919 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 1.5.5">
+<meta name="author" content="2019-08-07 15:02:40 CEST">
+<title>N4JS Design Specification</title>
+<link rel="stylesheet" href="styles/spec.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
+<!-- ************* docinfo ******************************************************************* -->
+
+
+<!-- ************* Favicon ************-->
+<link rel="icon" href="images/favicon.ico" />
+
+<!-- ************* Back-to-top JQuery ************* -->
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
+
+
+<link href="styles/prism.min.css" rel="stylesheet" />
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+<!-- ************* Styles ************* -->
+<link rel="stylesheet" type="text/css" href="styles/n4jsspec-adoc.css">
+
+
+<!-- ****************** NavBar ****************** -->
+<div id="menubar">
+	<div class="banner">
+        <a href="https://www.eclipse.org/n4js/#"><img id="logo" src="images/n4js-logo.png" alt="Eclipse N4JS"></a>
+    </div>
+<ul>
+  <li><a href="index.html">Index</a></li>
+</ul>
+</div>
+<!-- ************* docinfo ******************************************************************* -->
+<style>
+      .admonitionblock td.icon .icon-todo:before{content:"\f249";color:#f4ee42}
+    </style>
+</head>
+<body class="book toc2 toc-left">
+<div id="header">
+<h1>N4JS Design Specification</h1>
+<div class="details">
+<span id="author" class="author">2019-08-07 15:02:40 CEST</span><br>
+<span id="revnumber">version 0.9</span>
+</div>
+<div id="toc" class="toc2">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="introduction.html#_introduction">1. Introduction</a>
+<ul class="sectlevel2">
+<li><a href="introduction.html#notation">1.1. Notation</a></li>
+<li><a href="introduction.html#sec:IDE_Overview">1.2. IDE Components</a>
+<ul class="sectlevel3">
+<li><a href="introduction.html#sec:Naming_Conventions">1.2.1. Naming Conventions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="eclipse_setup.html#_eclipse-setup">2. Eclipse Setup</a>
+<ul class="sectlevel2">
+<li><a href="eclipse_setup.html#_system-requirements">2.1. System Requirements</a></li>
+<li><a href="eclipse_setup.html#_contribute">2.2. Contribute</a>
+<ul class="sectlevel3">
+<li><a href="eclipse_setup.html#_eclipse-installer">2.2.1. Eclipse Installer</a>
+<ul class="sectlevel4">
+<li><a href="eclipse_setup.html#_changing-the-setup-script">2.2.1.1. Changing the Setup Script</a></li>
+</ul>
+</li>
+<li><a href="eclipse_setup.html#_manual-ide-configuration">2.2.2. Manual IDE Configuration</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="release_engineering.html#_release-engineering">3. Release Engineering</a>
+<ul class="sectlevel2">
+<li><a href="release_engineering.html#_nightly-build-on-eclipse-infrastructure">3.1. Nightly build on Eclipse infrastructure</a></li>
+<li><a href="release_engineering.html#_build-the-n4js-ide-from-command-line">3.2. Build the N4JS IDE from command line</a>
+<ul class="sectlevel3">
+<li><a href="release_engineering.html#_publish-maven-tooling-code-org-eclipse-n4js-releng-util-code">3.2.1. Publish maven-tooling <code>org.eclipse.n4js.releng.util</code></a></li>
+<li><a href="release_engineering.html#sec:test-verdaccio">3.2.2. Test Verdaccio containing n4js-libs</a></li>
+<li><a href="release_engineering.html#_generation-of-eclipse-help-for-spec-and-design-document">3.2.3. Generation of Eclipse help for spec and design document</a></li>
+</ul>
+</li>
+<li><a href="release_engineering.html#_updating-frameworks-and-dependencies">3.3. Updating frameworks and dependencies</a>
+<ul class="sectlevel3">
+<li><a href="release_engineering.html#_update-of-eclipse-emf-xtext-etc">3.3.1. Update of Eclipse, EMF, Xtext, etc.</a></li>
+<li><a href="release_engineering.html#_update-of-the-embedded-jre">3.3.2. Update of the embedded JRE</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="tips_and_tricks.html#_tips-and-tricks">4. Tips and Tricks</a>
+<ul class="sectlevel2">
+<li><a href="tips_and_tricks.html#_naming">4.1. Naming</a></li>
+<li><a href="tips_and_tricks.html#_logging">4.2. Logging</a></li>
+<li><a href="tips_and_tricks.html#_cancellation-handling">4.3. Cancellation Handling</a></li>
+<li><a href="tips_and_tricks.html#_caching">4.4. Caching</a></li>
+<li><a href="tips_and_tricks.html#_dependency-injection">4.5. Dependency Injection</a></li>
+<li><a href="tips_and_tricks.html#_miscellaneous">4.6. Miscellaneous</a></li>
+</ul>
+</li>
+<li><a href="parser.html#_parser">5. Parser</a>
+<ul class="sectlevel2">
+<li><a href="parser.html#sec:Parser_Overview">5.1. Overview</a></li>
+<li><a href="parser.html#sec:N4JS_Parser">5.2. N4JS Parser</a></li>
+<li><a href="parser.html#sec:Parser_Generation_Post_Processing">5.3. Parser Generation Post-Processing</a>
+<ul class="sectlevel3">
+<li><a href="parser.html#sec:Automatic_Semicolon_Insertion">5.3.1. Automatic Semicolon Insertion</a>
+<ul class="sectlevel4">
+<li><a href="parser.html#sec:Injected_code_in_the_Antlr_grammar_file">5.3.1.1. Injected code in the Antlr grammar file</a></li>
+<li><a href="parser.html#sec:Customized_error_recovery">5.3.1.2. Customized error recovery</a></li>
+</ul>
+</li>
+<li><a href="parser.html#sec:_No_line_terminator_allowed_here__handling">5.3.2. Async and <code>No line terminator allowed here</code> Handling</a></li>
+<li><a href="parser.html#sec:Regular_Expression">5.3.3. Regular Expression</a></li>
+<li><a href="parser.html#sec:Unicode">5.3.4. Unicode</a></li>
+<li><a href="parser.html#sec:Literals">5.3.5. Literals</a></li>
+</ul>
+</li>
+<li><a href="parser.html#sec:Modifiers">5.4. Modifiers</a></li>
+<li><a href="parser.html#sec:Conflict_Resolutions">5.5. Conflict Resolutions</a>
+<ul class="sectlevel3">
+<li><a href="parser.html#sec:Reserved_Keywords_vs__Identifier_Names">5.5.1. Reserved Keywords vs. Identifier Names</a></li>
+<li><a href="parser.html#sec:Operators_and_Generics">5.5.2. Operators and Generics</a></li>
+</ul>
+</li>
+<li><a href="parser.html#sec:Content_Assist_Parser">5.6. Content-Assist Parser</a></li>
+</ul>
+</li>
+<li><a href="type_system.html#_type-system">6. Type System</a>
+<ul class="sectlevel2">
+<li><a href="type_system.html#sec:Type_Model_and_Grammar">6.1. Type Model and Grammar</a>
+<ul class="sectlevel3">
+<li><a href="type_system.html#sec:Type_Model_Overview">6.1.1. Type Model Overview</a></li>
+<li><a href="type_system.html#sec:Built_in_Types">6.1.2. Built-in and Primitive Types</a></li>
+<li><a href="type_system.html#sec:Type_Model_DSL">6.1.3. Type Model DSL</a></li>
+</ul>
+</li>
+<li><a href="type_system.html#sec:Type_System_Implementation">6.2. Type System Implementation</a></li>
+<li><a href="type_system.html#sec:Type_Inference_combined_with_AST_Traversal">6.3. Type Inference of AST</a>
+<ul class="sectlevel3">
+<li><a href="type_system.html#sec:Type_Inference_combined_with_AST_Traversal__Background">6.3.1. Background</a></li>
+<li><a href="type_system.html#sec:Triggering_Type_Inference_of_AST">6.3.2. Triggering</a></li>
+<li><a href="type_system.html#sec:Traversal_Order_During_Type_Inference_of_AST">6.3.3. Traversal Order</a></li>
+<li><a href="type_system.html#sec:Cross_References_During_Type_Inference_of_AST">6.3.4. Cross-References</a></li>
+<li><a href="type_system.html#sec:Function_Accessor_Bodies_During_Type_Inference_of_AST">6.3.5. Function/Accessor Bodies</a></li>
+<li><a href="type_system.html#sec:Poly_Expressions_During_Type_Inference_of_AST">6.3.6. Poly Expressions</a></li>
+<li><a href="type_system.html#sec:Constraint_Solver_used_During_Type_Inference_of_AST">6.3.7. Constraint Solver</a></li>
+<li><a href="type_system.html#sec:Type_Guards_During_Type_Inference_of_AST">6.3.8. Type Guards</a></li>
+</ul>
+</li>
+<li><a href="type_system.html#sec:Structural_Typing">6.4. Structural Typing</a></li>
+</ul>
+</li>
+<li><a href="type_index.html#_type-index">7. Type Index</a>
+<ul class="sectlevel2">
+<li><a href="type_index.html#sec:Type_Index_Design_Rationale">7.1. Design Rationale</a>
+<ul class="sectlevel3">
+<li><a href="type_index.html#sec:Getting_the_Xtext_Index_Content_IResourceDescriptions">7.1.1. Getting the Xtext Index (<code>IResourceDescriptions</code>) Content</a></li>
+</ul>
+</li>
+<li><a href="type_index.html#sec:Design_Overview">7.2. Design Overview</a></li>
+<li><a href="type_index.html#sec:N4JS_Resource_Load_States">7.3. N4JS Resource Load States</a></li>
+<li><a href="type_index.html#sec:Type_Builder">7.4. Types Builder</a>
+<ul class="sectlevel3">
+<li><a href="type_index.html#sec:Type_Inference_not_allowed_in_Type_Builder">7.4.1. Type Inference not allowed in Types Builder</a></li>
+<li><a href="type_index.html#sec:ComputedTypeReferences">7.4.2. Deferred Type References</a></li>
+<li><a href="type_index.html#sec:Use_cases_of_ComputedTypeRef">7.4.3. Use cases of DeferredTypeRef</a></li>
+</ul>
+</li>
+<li><a href="type_index.html#sec:Incremental_Builder_Overview">7.5. Incremental Builder (Overview)</a>
+<ul class="sectlevel3">
+<li><a href="type_index.html#sec:Incremental_Builder_Overview__XtextBuilder">7.5.1. XtextBuilder</a></li>
+<li><a href="type_index.html#sec:Incremental_Builder_Overview__IBuilderState">7.5.2. IBuilderState</a>
+<ul class="sectlevel4">
+<li><a href="type_index.html#copy-and-update-xtext-index">7.5.2.1. Copy and Update Xtext Index</a></li>
+<li><a href="type_index.html#build-state-setup-phase">7.5.2.2. Build State Setup Phase</a></li>
+<li><a href="type_index.html#process-queued-uris">7.5.2.3. Process Queued URIs</a></li>
+<li><a href="type_index.html#queueing-affected-resources">7.5.2.4. Queueing Affected Resources</a></li>
+</ul>
+</li>
+<li><a href="type_index.html#sec:Incremental_Builder_Overview__Example">7.5.3. Example</a></li>
+</ul>
+</li>
+<li><a href="type_index.html#dirty-state-handling">7.6. Dirty state handling</a>
+<ul class="sectlevel3">
+<li><a href="type_index.html#use-case-restoring-types-from-user-data">7.6.1. Use case: Restoring types from user data</a></li>
+<li><a href="type_index.html#use-case-updating-the-xtext-index">7.6.2. Use case: Updating the Xtext index</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="project_model.html#_project-model">8. Project Model</a>
+<ul class="sectlevel2">
+<li><a href="project_model.html#sec:Package_json">8.1. Package.json File</a></li>
+<li><a href="project_model.html#_accessing-project-information">8.2. Accessing Project Information</a>
+<ul class="sectlevel3">
+<li><a href="project_model.html#sec:IN4JSCore">8.2.1. IN4JSCore</a></li>
+<li><a href="project_model.html#sec:N4JSModel">8.2.2. N4JSModel</a></li>
+<li><a href="project_model.html#sec:N4JSWorkspace">8.2.3. N4JSWorkspace</a></li>
+<li><a href="project_model.html#sec:N4JSProject">8.2.4. N4JSProject</a></li>
+<li><a href="project_model.html#sec:SourceContainer">8.2.5. SourceContainer</a></li>
+<li><a href="project_model.html#sec:N4JSProjectsStateHelper">8.2.6. N4JSProjectsStateHelper</a></li>
+</ul>
+</li>
+<li><a href="project_model.html#sec:Caching">8.3. Caching</a>
+<ul class="sectlevel3">
+<li><a href="project_model.html#_caching-of-externallibraryworkspace">8.3.1. Caching of ExternalLibraryWorkspace</a></li>
+<li><a href="project_model.html#_caching-of-n4jsprojectsstatehelper">8.3.2. Caching of N4JSProjectsStateHelper</a></li>
+</ul>
+</li>
+<li><a href="project_model.html#sec:WildcardPathFilter">8.4. WildcardPathFilter</a></li>
+<li><a href="project_model.html#sec:ProjectUtils">8.5. ProjectUtils</a></li>
+</ul>
+</li>
+<li><a href="binding.html#_binding">9. Binding</a>
+<ul class="sectlevel2">
+<li><a href="binding.html#sec:Binding_Design_Rationale">9.1. Design Rationale</a></li>
+<li><a href="binding.html#sec:Binding_to_Members">9.2. Binding to Members</a></li>
+<li><a href="binding.html#sec:Binding_Getter_Setter">9.3. Getter / Setter Binding</a></li>
+<li><a href="binding.html#chap:Statics">9.4. Static Member Binding</a></li>
+<li><a href="binding.html#sec:Binding_Enumeration">9.5. Enumeration Literals Binding</a></li>
+<li><a href="binding.html#sec:Accessibility_of_types_and_members">9.6. Accessibility of types and members</a></li>
+<li><a href="binding.html#sec:Member_Scope_Example">9.7. Member Scope Example</a></li>
+<li><a href="binding.html#sec:Scoping_for_Members_of_Composed_Type_Explained">9.8. Scoping for Members of Composed Type (Union/Intersection) Example</a></li>
+<li><a href="binding.html#sec:Binding_of_Structurally_References_Types">9.9. Structurally References Types</a></li>
+<li><a href="binding.html#sec:Building">9.10. Building</a>
+<ul class="sectlevel3">
+<li><a href="binding.html#sec:Build_Phases">9.10.1. Build Phases</a></li>
+<li><a href="binding.html#sec:Build_Scenarios">9.10.2. Build Scenarios</a></li>
+<li><a href="binding.html#sec:Lazy_linking_problem">9.10.3. Lazy linking problem</a></li>
+</ul>
+</li>
+<li><a href="binding.html#sec:Proxies_and_Proxy_Resolution">9.11. Proxies and Proxy Resolution (Overview)</a>
+<ul class="sectlevel3">
+<li><a href="binding.html#xtexts-lazy-linking-proxies">9.11.1. Xtext’s Lazy Linking Proxies</a></li>
+<li><a href="binding.html#standard-emf-proxies">9.11.2. Standard EMF Proxies</a></li>
+<li><a href="binding.html#_how-is-proxy-resolution-triggered">9.11.3. How is Proxy Resolution Triggered?</a></li>
+<li><a href="binding.html#_when-is-proxy-resolution-allowed">9.11.4. When is Proxy Resolution Allowed?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="validation.html#_validation">10. Validation</a>
+<ul class="sectlevel2">
+<li><a href="validation.html#sec:validation_overview">10.1. Validation overview</a></li>
+<li><a href="validation.html#sec:validation_control_flow">10.2. Validation control flow</a></li>
+<li><a href="validation.html#sec:validation_issue_ids">10.3. Issue IDs and Messages</a></li>
+<li><a href="validation.html#sec:validation_usage_patterns">10.4. Usage Pattern</a></li>
+<li><a href="validation.html#sec:validation_links">10.5. Links</a></li>
+</ul>
+</li>
+<li><a href="references.html#_references">11. References</a>
+<ul class="sectlevel2">
+<li><a href="references.html#sec:usecases">11.1. Use cases</a></li>
+<li><a href="references.html#sec:calculation_algorithm">11.2. Calculation algorithm</a>
+<ul class="sectlevel3">
+<li><a href="references.html#sec:Xtext_default_implementation">11.2.1. Xtext default implementation</a></li>
+<li><a href="references.html#sec:N4_implementation">11.2.2. N4JS implementation</a></li>
+</ul>
+</li>
+<li><a href="references.html#sec:PerformanceOfDependencyCalculation">11.3. Performance Of Dependency Calculation</a></li>
+<li><a href="references.html#sec:kinds_of_references">11.4. Kinds of references</a>
+<ul class="sectlevel3">
+<li><a href="references.html#sec:Cross_References_to_be_ignored">11.4.1. Cross References to be ignored</a></li>
+<li><a href="references.html#sec:Cross_References_to_be_handled">11.4.2. Cross References to be handled</a></li>
+</ul>
+</li>
+<li><a href="references.html#sec:transitive_dependencies">11.5. Transitive dependencies</a></li>
+<li><a href="references.html#sec:find-references">11.6. Find references</a>
+<ul class="sectlevel3">
+<li><a href="references.html#_background">11.6.1. Background</a></li>
+<li><a href="references.html#_how-find-references-work">11.6.2. How Find References Work</a>
+<ul class="sectlevel4">
+<li><a href="references.html#_step-1-convert-cursor-position-to-declared-element">11.6.2.1. Step 1: Convert Cursor Position to Declared Element</a></li>
+<li><a href="references.html#_step-2-convert-declared-element-to-target-uris">11.6.2.2. Step 2: Convert Declared Element to Target URIs</a></li>
+<li><a href="references.html#_step-3-filter-potential-resources">11.6.2.3. Step 3: Filter Potential Resources</a></li>
+<li><a href="references.html#_step-4-search-references-in-resource">11.6.2.4. Step 4: Search References in Resource</a></li>
+<li><a href="references.html#_limitations-and-possible-enhancements">11.6.2.5. Limitations and Possible Enhancements</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#_compilation">12. Compilation</a>
+<ul class="sectlevel2">
+<li><a href="#chap:compilation">12.1. Introduction</a>
+<ul class="sectlevel3">
+<li><a href="#sec:general_design_rationals">12.1.1. General design rationals</a>
+<ul class="sectlevel4">
+<li><a href="#sec:logging_and_error_reporting">12.1.1.1. Logging and error reporting</a></li>
+<li><a href="#sec:progress_monitor">12.1.1.2. Progress monitor</a></li>
+</ul>
+</li>
+<li><a href="#sec:Xtext_Integration">12.1.2. Xtext Integration</a>
+<ul class="sectlevel4">
+<li><a href="#sec:xtext_default_behaviour">12.1.2.1. Xtext default behaviour</a></li>
+<li><a href="#sec:n4js_requirements">12.1.2.2. N4JS requirements</a></li>
+<li><a href="#sec:compiler_discovery_in_ui">12.1.2.3. Compiler discovery in UI</a></li>
+<li><a href="#sec:compiler_discovery_in_headless">12.1.2.4. Compiler discovery in headless</a></li>
+<li><a href="#sec:general_generator_implementation">12.1.2.5. General generator implementation</a></li>
+<li><a href="#sec:general_generator_activation">12.1.2.6. General generator activation</a></li>
+</ul>
+</li>
+<li><a href="#sec:Overview_of_Input_Models">12.1.3. Overview of the Input Models</a></li>
+</ul>
+</li>
+<li><a href="#sec:Core_Generator">12.2. Generators</a>
+<ul class="sectlevel3">
+<li><a href="#sec:Compiler_Components">12.2.1. Generator Components</a></li>
+<li><a href="#sec:Generator_architecture">12.2.2. Generator architecture</a></li>
+<li><a href="#sec:Unified_Compiler_Configuration">12.2.3. Unified Compiler Configuration</a></li>
+</ul>
+</li>
+<li><a href="#sec:Transpilers">12.3. Transpilers</a>
+<ul class="sectlevel3">
+<li><a href="#sec:Phases">12.3.1. Overview</a></li>
+<li><a href="#relation-between-ast-and-im">12.3.2. Relation between AST and IM</a></li>
+<li><a href="#implementation-overview">12.3.3. Implementation Overview</a></li>
+<li><a href="#sec:Guidelines_for_Implementing_Transformations">12.3.4. Guidelines for Implementing Transformations</a></li>
+<li><a href="#symbol-table-in-the-im">12.3.5. Symbol Table in the IM</a></li>
+</ul>
+</li>
+<li><a href="#sec:N4JS_to_EcmaScript_Transpiler">12.4. N4JS-to-EcmaScript Transpiler</a>
+<ul class="sectlevel3">
+<li><a href="#sec:Overview_of_Transformations">12.4.1. Overview of Transformations</a></li>
+<li><a href="#sec:Transpiling_members">12.4.2. Transpiling members</a>
+<ul class="sectlevel4">
+<li><a href="#sec:Transpiling_members__Delegating_members">12.4.2.1. Techniques for special member handling</a></li>
+<li><a href="#sec:Transpiling_members__Partial_shadowing_of_getter_setter_pairs">12.4.2.2. Partial shadowing</a></li>
+<li><a href="#sec:Transpiling_members__Consuming_or_inheriting_members_of_an_interface">12.4.2.3. Consuming or inheriting members of an interface</a></li>
+<li><a href="#sec:Transpiling_members__Static_polyfill">12.4.2.4. Static polyfill</a></li>
+<li><a href="#sec:Transpiling_members__API_implementation_stubs">12.4.2.5. API / implementation stubs</a></li>
+</ul>
+</li>
+<li><a href="#sec:Support_for_incomplete_API_implementation_testing_in_the_N4JS_to_EcmaScript_5_Transpiler">12.4.3. Support for incomplete API implementation testing</a>
+<ul class="sectlevel4">
+<li><a href="#sec:Modifications_in_Impl_projects">12.4.3.1. Modifications in Impl projects</a></li>
+<li><a href="#sec:Implementation_of_stub_generation">12.4.3.2. Implementation of stub-generation</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#sec:n4jsc_Headless_Compiler_Interface">12.5. n4jsc Headless Compiler Interface</a>
+<ul class="sectlevel3">
+<li><a href="#sec:building_the_headless_compiler">12.5.1. building the headless compiler</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="execution.html#_execution">13. Execution</a>
+<ul class="sectlevel2">
+<li><a href="execution.html#sec:N4JS_Project_Execution_And_Linking_Model">13.1. N4JS Project Execution And Linking Model</a>
+<ul class="sectlevel3">
+<li><a href="execution.html#subsec:N4JS_Execution_With_NodeJS">13.1.1. N4JS Execution With NodeJS</a></li>
+</ul>
+</li>
+<li><a href="execution.html#sec:N4JS_Execution_And_Linking_File">13.2. N4JS Execution And Linking File</a>
+<ul class="sectlevel3">
+<li><a href="execution.html#subsec:NodeJS_Specific_ELF">13.2.1. NodeJS Specific ELF</a></li>
+</ul>
+</li>
+<li><a href="execution.html#sec:Runners-execution">13.3. Runners</a>
+<ul class="sectlevel3">
+<li><a href="execution.html#subsec:N4_Runtime_Environments_Convention">13.3.1. N4 Runtime Environments Convention</a></li>
+<li><a href="execution.html#subsec:Passing_Information_from_IDE_to_Execution_Code_in_Runtime_Environment">13.3.2. Passing Information from IDE to Execution Code in Runtime Environment</a></li>
+<li><a href="execution.html#subsec:Runners_Design">13.3.3. Runners Design</a></li>
+</ul>
+</li>
+<li><a href="execution.html#sec:Legacy_Execution_Engine">13.4. Legacy Execution Engine</a></li>
+<li><a href="execution.html#sec:Design">13.5. Design</a>
+<ul class="sectlevel3">
+<li><a href="execution.html#sec:Usage_Outside_N4JSIDE">13.5.1. Usage Outside N4JSIDE</a>
+<ul class="sectlevel4">
+<li><a href="execution.html#sec:Use_Node_with_Maven">13.5.1.1. Use Node with Maven</a></li>
+</ul>
+</li>
+<li><a href="execution.html#sec:Usage_Inside_N4JSIDE">13.5.2. Usage Inside N4JSIDE</a></li>
+</ul>
+</li>
+<li><a href="execution.html#sec:Runtime_Injection">13.6. Runtime Injection</a>
+<ul class="sectlevel3">
+<li><a href="execution.html#sec:Running_String_Code">13.6.1. Running String Code</a></li>
+<li><a href="execution.html#sec:Running_File_Code">13.6.2. Running File Code</a></li>
+<li><a href="execution.html#sec:Injection_Code_Example">13.6.3. Injection Code Example</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="tests.html#_tests">14. Tests</a>
+<ul class="sectlevel2">
+<li><a href="tests.html#sec:Performance_Tests">14.1. Performance Tests</a>
+<ul class="sectlevel3">
+<li><a href="tests.html#sec:Synthetic_Performance_Tests">14.1.1. Synthetic Performance Tests</a>
+<ul class="sectlevel4">
+<li><a href="tests.html#sec:Design_of_Generator">14.1.1.1. Design of Generator</a></li>
+<li><a href="tests.html#sec:Design_of_Performance_Test_Execution">14.1.1.2. Design of Performance Test Configuration and Execution</a></li>
+<li><a href="tests.html#sec:JUnit_Configuration">14.1.1.3. JUnit Configuration</a></li>
+<li><a href="tests.html#sec:JUnitBenchmark_Test_Configuration">14.1.1.4. JUnitBenchmark Test Configuration</a></li>
+<li><a href="tests.html#sec:JUnitBenchmark_Report_Configuration">14.1.1.5. JUnitBenchmark Report Configuration</a></li>
+<li><a href="tests.html#sec:JUnitBenchmark_Run_Configuration">14.1.1.6. JUnitBenchmark Run Configuration</a></li>
+<li><a href="tests.html#sec:JUnitBenchmark_Example">14.1.1.7. JUnitBenchmark Example</a></li>
+<li><a href="tests.html#sec:Note_on_Jenkins_Job">14.1.1.8. Note on Jenkins Job</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="tests.html#sec:ECMA_Tests">14.2. ECMA Tests</a>
+<ul class="sectlevel3">
+<li><a href="tests.html#sec:Grammar_Tests">14.2.1. Grammar Tests</a>
+<ul class="sectlevel4">
+<li><a href="tests.html#sec:Negative_Tests">14.2.1.1. Negative Tests</a></li>
+<li><a href="tests.html#sec:Test_Exclusion">14.2.1.2. Test Exclusion</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="tests.html#sec:Integration_Tests">14.3. Integration Tests</a></li>
+<li><a href="tests.html#sec:Test_Helpers">14.4. Test Helpers</a>
+<ul class="sectlevel3">
+<li><a href="tests.html#sec:Parameterized_N4JS_Tests">14.4.1. Parameterized N4JS tests</a>
+<ul class="sectlevel4">
+<li><a href="tests.html#sec:ParameterizedXtextRunner">14.4.1.1. ParameterizedXtextRunner</a></li>
+<li><a href="tests.html#sec:TestCodeProvider">14.4.1.2. TestCodeProvider</a></li>
+<li><a href="tests.html#sec:Example_Of_Parameterized_Parser_Test">14.4.1.3. Example of parameterized parser test</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="tests.html#sec:Issue_Suppression">14.5. Issue Suppression</a></li>
+<li><a href="tests.html#sec:Xpect_Tests">14.6. Xpect Tests</a>
+<ul class="sectlevel3">
+<li><a href="tests.html#sec:Xpect_Test_Setup">14.6.1. Xpect Test Setup</a></li>
+<li><a href="tests.html#sec:Xpect_Issue_Suppression">14.6.2. Xpect Issue Suppression</a></li>
+<li><a href="tests.html#sec:Xpect_Provided_Test_Methods">14.6.3. Xpect Provided Test Methods</a>
+<ul class="sectlevel4">
+<li><a href="tests.html#errors">14.6.3.1. errors</a></li>
+<li><a href="tests.html#warnings">14.6.3.2. warnings</a></li>
+</ul>
+</li>
+<li><a href="tests.html#sec:N4JS_Specific_Xpect_Test_Methods">14.6.4. N4JS Specific Xpect Test Methods</a>
+<ul class="sectlevel4">
+<li><a href="tests.html#sec:XPECT_noerrors">14.6.4.1. noerrors and nowarnings</a></li>
+<li><a href="tests.html#sec:XPECT_scope">14.6.4.2. scope</a></li>
+<li><a href="tests.html#sec:XPECT_scopeWithPosition">14.6.4.3. scopeWithPosition</a></li>
+<li><a href="tests.html#sec:XPECT_scopeWithResource">14.6.4.4. scopeWithResource</a></li>
+<li><a href="tests.html#sec:XPECT_binding">14.6.4.5. binding</a></li>
+<li><a href="tests.html#sec:XPECT_linkedPathname">14.6.4.6. linkedPathname</a></li>
+<li><a href="tests.html#sec:XPECT_type_of">14.6.4.7. type of</a></li>
+<li><a href="tests.html#sec:XPECT_expectedType">14.6.4.8. expectedType</a></li>
+<li><a href="tests.html#sec:XPECT_elementKeyword">14.6.4.9. elementKeyword</a></li>
+<li><a href="tests.html#sec:XPECT_accessModifier">14.6.4.10. accessModifier</a></li>
+<li><a href="tests.html#sec:XPECT_compileResult">14.6.4.11. compileResult</a></li>
+<li><a href="tests.html#sec:XPECT_output">14.6.4.12. output</a></li>
+<li><a href="tests.html#sec:XPECT_outputRegEx">14.6.4.13. outputRegEx</a></li>
+<li><a href="tests.html#sec:XPECT_calculatedAccessModifier">14.6.4.14. calculatedAccessModifier</a></li>
+<li><a href="tests.html#sec:XPECT_spec">14.6.4.15. spec</a></li>
+<li><a href="tests.html#sec:XPECT_deadCode">14.6.4.16. deadCode</a></li>
+<li><a href="tests.html#sec:XPECT_returnOrThrows">14.6.4.17. returnOrThrows</a></li>
+<li><a href="tests.html#sec:XPECT_lint">14.6.4.18. lint</a></li>
+<li><a href="tests.html#sec:XPECT_lintFails">14.6.4.19. lintFails</a></li>
+</ul>
+</li>
+<li><a href="tests.html#sec:FIXME_Xpect_modifier">14.6.5. FIXME Xpect modifier</a></li>
+<li><a href="tests.html#sec:Expectmatrix_Xpect_Test_Methods">14.6.6. Expectmatrix Xpect tests</a></li>
+<li><a href="tests.html#xpect-lint-tests">14.6.7. Xpect Lint Tests</a></li>
+</ul>
+</li>
+<li><a href="tests.html#xpect-proposal-tests">14.7. Xpect Proposal Tests</a>
+<ul class="sectlevel3">
+<li><a href="tests.html#sec:Validation_vs__Non_Validation">14.7.1. Validation vs. Non-Validation</a></li>
+<li><a href="tests.html#sec:General_Proposal_Test_Features">14.7.2. General Proposal Test Features</a>
+<ul class="sectlevel4">
+<li><a href="tests.html#sec:Test_Variables">14.7.2.1. Test Variables</a></li>
+<li><a href="tests.html#sec:Location_and_Selection">14.7.2.2. at – Location and Selection</a></li>
+<li><a href="tests.html#sec:Multi_Line_Expectations_in_Proposal_Tests">14.7.2.3. Multi Line Expectations in Proposal Tests</a></li>
+<li><a href="tests.html#sec:Timeout">14.7.2.4. Timeout and Performance</a></li>
+</ul>
+</li>
+<li><a href="tests.html#proposals-verify-existence-of-proposals">14.7.3. proposals – Verify Existence of Proposals</a></li>
+<li><a href="tests.html#sec:Verify_displayed_string">14.7.4. display – Verify displayed string</a></li>
+<li><a href="tests.html#sec:Apply_Proposal">14.7.5. apply – Apply Proposal</a>
+<ul class="sectlevel4">
+<li><a href="tests.html#resource-application-in-other-files">14.7.5.1. resource – application in other files</a></li>
+</ul>
+</li>
+<li><a href="tests.html#sec:Content_Assist_Cycling">14.7.6. kind – Content Assist Cycling</a></li>
+<li><a href="tests.html#fileValidVerify-validation-status">14.7.7. fileValid – Verify validation status</a></li>
+</ul>
+</li>
+<li><a href="tests.html#sec:Apply_Proposal_And_Execute_Tests">14.8. Apply Proposal And Execute Tests</a></li>
+<li><a href="tests.html#sec:Organize_Imports_Test">14.9. Organize Imports Test</a>
+<ul class="sectlevel3">
+<li><a href="tests.html#organizeimports">14.9.1. organizeImports</a></li>
+</ul>
+</li>
+<li><a href="tests.html#sec:Access_Control_Test">14.10. Access Control Test</a>
+<ul class="sectlevel3">
+<li><a href="tests.html#test-scenarios">14.10.1. Test Scenarios</a></li>
+<li><a href="tests.html#n4js-code-generator">14.10.2. N4JS Code Generator</a></li>
+<li><a href="tests.html#xtext-issue-matcher">14.10.3. Xtext Issue Matcher</a></li>
+</ul>
+</li>
+<li><a href="tests.html#sec:Smoke_Tests">14.11. Smoke Tests</a>
+<ul class="sectlevel3">
+<li><a href="tests.html#how-to-handle-smoke-test-errors">14.11.1. How to handle smoke test errors?</a></li>
+<li><a href="tests.html#smoketester-and-exceptionanalyzer">14.11.2. SmokeTester and ExceptionAnalyzer</a></li>
+</ul>
+</li>
+<li><a href="tests.html#sec:UI_Tests_with_SWTBot">14.12. UI Tests with SWTBot</a>
+<ul class="sectlevel3">
+<li><a href="tests.html#writing-swtbot-tests">14.12.1. Writing SWTBot Tests</a></li>
+<li><a href="tests.html#running-swtbot-tests">14.12.2. Running SWTBot Tests</a></li>
+</ul>
+</li>
+<li><a href="tests.html#sec:Debugging_UI_Tests">14.13. Debugging UI Tests</a>
+<ul class="sectlevel3">
+<li><a href="tests.html#sec:Connecting_to_the_X_server_on_the_build_node">14.13.1. Connecting to the X-server on the build-node</a></li>
+<li><a href="tests.html#sec:Tools_to_investigate_the_java_stack">14.13.2. Tools to investigate the java-stack</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="ui_concepts.html#_ui-concepts">15. UI Concepts</a>
+<ul class="sectlevel2">
+<li><a href="ui_concepts.html#sec:User_Interface_Concepts">15.1. User Interface Concepts</a>
+<ul class="sectlevel3">
+<li><a href="ui_concepts.html#sec:Eclipse_UI_Concepts">15.1.1. Eclipse UI Concepts</a>
+<ul class="sectlevel4">
+<li><a href="ui_concepts.html#sec:Label_Provider">15.1.1.1. Label Provider</a></li>
+<li><a href="ui_concepts.html#sec:Markers">15.1.1.2. Markers</a></li>
+<li><a href="ui_concepts.html#sec:Commands__Toolbar_and_Menus">15.1.1.3. Commands, Toolbar and Menus</a></li>
+<li><a href="ui_concepts.html#sec:Content_Assist">15.1.1.4. Content Assist</a></li>
+<li><a href="ui_concepts.html#sec:Quick_Fixes">15.1.1.5. Quick Fixes</a></li>
+<li><a href="ui_concepts.html#sec:Quick_Assist">15.1.1.6. Quick Assist</a></li>
+<li><a href="ui_concepts.html#sec:Clean_Up_Actions">15.1.1.7. Clean Up Actions</a></li>
+<li><a href="ui_concepts.html#sec:Save_Actions">15.1.1.8. Save Actions</a></li>
+<li><a href="ui_concepts.html#sec:Auto_Edit">15.1.1.9. Auto Edit</a></li>
+<li><a href="ui_concepts.html#sec:Template_Proposals">15.1.1.10. Template Proposals</a></li>
+<li><a href="ui_concepts.html#sec:Outline_View___Quick_Outline">15.1.1.11. Outline View / Quick Outline</a></li>
+<li><a href="ui_concepts.html#sec:Navigator__Package_Explorer__Project_Explorer">15.1.1.12. Navigator, Package Explorer, Project Explorer</a></li>
+<li><a href="ui_concepts.html#sec:Hyperlinking_and_Navigation">15.1.1.13. Hyperlinking and Navigation</a></li>
+<li><a href="ui_concepts.html#sec:Syntax_and_Semantic_Coloring">15.1.1.14. Syntax and Semantic Coloring</a></li>
+<li><a href="ui_concepts.html#sec:Code_Formatter">15.1.1.15. Code Formatter</a></li>
+<li><a href="ui_concepts.html#sec:Wizards">15.1.1.16. Wizards</a></li>
+<li><a href="ui_concepts.html#sec:Cheat_Sheets">15.1.1.17. Cheat Sheets</a></li>
+<li><a href="ui_concepts.html#sec:Context_sensitive_Help">15.1.1.18. Context-sensitive Help</a></li>
+<li><a href="ui_concepts.html#sec:Hovers">15.1.1.19. Hovers</a></li>
+<li><a href="ui_concepts.html#sec:Folding">15.1.1.20. Folding</a></li>
+<li><a href="ui_concepts.html#sec:Customizable_validation___severity">15.1.1.21. Customizable validation / severity</a></li>
+<li><a href="ui_concepts.html#sec:Proposals">15.1.1.22. Proposals</a></li>
+</ul>
+</li>
+<li><a href="ui_concepts.html#sec:Non_Eclipse_UI_Concepts">15.1.2. Non-Eclipse UI Concepts</a>
+<ul class="sectlevel4">
+<li><a href="ui_concepts.html#sec:Overlays">15.1.2.1. Overlays</a></li>
+<li><a href="ui_concepts.html#sec:Goto__Inferred__Type">15.1.2.2. Goto (Inferred) Type</a></li>
+<li><a href="ui_concepts.html#sec:Postfix_Completion">15.1.2.3. Postfix Completion</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="ui_concepts.html#_user-interface-resources">15.2. User Interface Resources</a>
+<ul class="sectlevel3">
+<li><a href="ui_concepts.html#_icons">15.2.1. Icons</a>
+<ul class="sectlevel4">
+<li><a href="ui_concepts.html#_eclipse-platform-icons">15.2.1.1. Eclipse Platform Icons</a></li>
+<li><a href="ui_concepts.html#_n4js-specific-icons">15.2.1.2. N4JS Specific Icons</a></li>
+<li><a href="ui_concepts.html#_high-resolution-icons">15.2.1.3. High Resolution Icons</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="formatting.html#_formatting">16. Formatting</a>
+<ul class="sectlevel2">
+<li><a href="formatting.html#sec:FmtObjective">16.1. Objective</a>
+<ul class="sectlevel3">
+<li><a href="formatting.html#sec:FmtFormatting_Comments">16.1.1. Formatting Comments</a></li>
+</ul>
+</li>
+<li><a href="formatting.html#sec:FmtArchitecture">16.2. Architecture</a>
+<ul class="sectlevel3">
+<li><a href="formatting.html#sec:Implementation_example">16.2.1. Implementation example</a></li>
+</ul>
+</li>
+<li><a href="formatting.html#sec:FmtFormatter_Implementation_Guidelines">16.3. Formatter Implementation Guidelines</a></li>
+<li><a href="formatting.html#sec:FmtConfiguration">16.4. Configuration</a></li>
+<li><a href="formatting.html#sec:FmtUI_Integration">16.5. UI Integration</a></li>
+<li><a href="formatting.html#sec:FmtUnit_Testing_with_Xpect">16.6. Unit Testing with Xpect</a></li>
+</ul>
+</li>
+<li><a href="external_libraries.html#_external-libraries">17. External Libraries</a>
+<ul class="sectlevel2">
+<li><a href="external_libraries.html#sec:Major_Components">17.1. Major Components</a>
+<ul class="sectlevel3">
+<li><a href="external_libraries.html#subsec:External_Resources">17.1.1. External Resources</a></li>
+<li><a href="external_libraries.html#subsec:External_Library_Workspace">17.1.2. External Library Workspace</a></li>
+<li><a href="external_libraries.html#subsec:External_Library_Preference_Store">17.1.3. External Library Preference Store</a></li>
+<li><a href="external_libraries.html#subsec:npm_Manager">17.1.4. Library Manager</a></li>
+<li><a href="external_libraries.html#subsec:External_Library_Builder_Helper">17.1.5. External Library Builder</a></li>
+<li><a href="external_libraries.html#subsec:External_Library_Xtext_Index_Persister">17.1.6. External Library Xtext Index Persister</a></li>
+<li><a href="external_libraries.html#subsec:External_Library_Preference_Page">17.1.7. External Library Preference Page</a></li>
+</ul>
+</li>
+<li><a href="external_libraries.html#sec:Headless_External_Library_Support">17.2. Headless External Library Support</a>
+<ul class="sectlevel3">
+<li><a href="external_libraries.html#_custom-npm-settings">17.2.1. Custom npm settings</a></li>
+</ul>
+</li>
+<li><a href="external_libraries.html#sec:lmFutureWork">17.3. Future Work</a>
+<ul class="sectlevel3">
+<li><a href="external_libraries.html#subsec:lmMultipleDependencyScope">17.3.1. Multiple Dependency Scope</a></li>
+<li><a href="external_libraries.html#subsec:lmRunTestsFromLibrary">17.3.2. Run Tests from TestLibrary</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="json_support.html#sec:JSON_Support">18. JSON Support</a>
+<ul class="sectlevel2">
+<li><a href="json_support.html#sec:JSON_Parser">18.1. JSON Parser</a>
+<ul class="sectlevel3">
+<li><a href="json_support.html#sec:JSON_Parser_Unicode_Escaping">18.1.1. Escaping Unicode Control Characters in String Literals</a></li>
+<li><a href="json_support.html#sec:JSON_Parser_Empty_Text">18.1.2. Empty Text</a></li>
+<li><a href="json_support.html#sec:JSON_Parser_Nested_Structures">18.1.3. Nested Structures</a></li>
+<li><a href="json_support.html#sec:JSON_Parser_Whitespace">18.1.4. Whitespace</a></li>
+<li><a href="json_support.html#sec:JSON_Parser_Comments">18.1.5. Comments</a></li>
+</ul>
+</li>
+<li><a href="json_support.html#sec:JSON_Language_Extensions">18.2. JSON Language Extensions</a>
+<ul class="sectlevel3">
+<li><a href="json_support.html#sec:JSON_Validator_Extensions">18.2.1. JSON Validator Extensions</a>
+<ul class="sectlevel4">
+<li><a href="json_support.html#sec:File_Specitic_Validator_Extensions">18.2.1.1. File-Specific Validator Extensions</a></li>
+<li><a href="json_support.html#sec:JSON_Declarative_JSON_Validator_Extensions">18.2.1.2. Declarative JSON Validator Extensions</a></li>
+</ul>
+</li>
+<li><a href="json_support.html#_json-resource-description-strategy">18.2.2. JSON Resource Description Strategy</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="jsdoc.html#_jsdoc">19. JSDoc</a>
+<ul class="sectlevel2">
+<li><a href="jsdoc.html#sec:Design_Rationale">19.1. Design Rationale</a>
+<ul class="sectlevel3">
+<li><a href="jsdoc.html#_general-design">19.1.1. General Design</a></li>
+<li><a href="jsdoc.html#sec:Type_Expressions">19.1.2. Type Expressions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="docexporter.html#_docexporter">20. DocExporter</a>
+<ul class="sectlevel2">
+<li><a href="docexporter.html#sec:Specification_Exporter">20.1. Specification Exporter</a></li>
+</ul>
+</li>
+<li><a href="rename_refactoring.html#_rename-refactoring">21. Rename Refactoring</a>
+<ul class="sectlevel2">
+<li><a href="rename_refactoring.html#_rename-refactoring-ui-interaction">21.1. Rename Refactoring UI interaction</a></li>
+<li><a href="rename_refactoring.html#_renameelementprocessor-interaction">21.2. RenameElementProcessor interaction</a></li>
+</ul>
+</li>
+<li><a href="flow_graphs.html#chap:flowgraphs">22. Flow Graphs</a>
+<ul class="sectlevel2">
+<li><a href="flow_graphs.html#sec:flowgraphs_overview">22.1. Flow graphs overview</a>
+<ul class="sectlevel3">
+<li><a href="flow_graphs.html#_internal-graph">22.1.1. Internal graph</a></li>
+<li><a href="flow_graphs.html#_optimizations">22.1.2. Optimizations</a></li>
+<li><a href="flow_graphs.html#_api-for-client-analyses">22.1.3. API for client analyses</a>
+<ul class="sectlevel4">
+<li><a href="flow_graphs.html#_mapping-from-internal-to-ast-elements">22.1.3.1. Mapping from internal to AST elements</a></li>
+<li><a href="flow_graphs.html#_graph-visitor">22.1.3.2. Graph visitor</a></li>
+<li><a href="flow_graphs.html#_graph-explorer">22.1.3.3. Graph explorer</a></li>
+<li><a href="flow_graphs.html#_branch-walker">22.1.3.4. Branch walker</a></li>
+<li><a href="flow_graphs.html#_example-1-compute-string-for-each-path">22.1.3.5. Example 1: Compute string for each path</a></li>
+<li><a href="flow_graphs.html#_path-quantor">22.1.3.6. Path quantor</a></li>
+</ul>
+</li>
+<li><a href="flow_graphs.html#_control-flow-analyses">22.1.4. Control flow analyses</a>
+<ul class="sectlevel4">
+<li><a href="flow_graphs.html#_dead-code-analysis">22.1.4.1. Dead code analysis</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="flow_graphs.html#sec:dataflow">22.2. Dataflow</a>
+<ul class="sectlevel3">
+<li><a href="flow_graphs.html#_dataflow-graph">22.2.1. Dataflow graph</a></li>
+<li><a href="flow_graphs.html#_dataflow-analyses">22.2.2. Dataflow analyses</a>
+<ul class="sectlevel4">
+<li><a href="flow_graphs.html#_def-def-def-nothing-analysis">22.2.2.1. Def&#8594;Def / Def&#8594;Nothing analysis</a></li>
+<li><a href="flow_graphs.html#_def-use-decl-analysis">22.2.2.2. Def|Use&#8592;Decl analysis</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="publish_npms.html#sec:publish-npms-to-public">23. Publish npms</a>
+<ul class="sectlevel2">
+<li><a href="publish_npms.html#sec:publish-npms-n4js-maven">23.1. Publish n4js-libs to during  maven build</a></li>
+</ul>
+</li>
+<li><a href="appendix_a_hints.html#sec:Hints">Appendix A: Hints</a>
+<ul class="sectlevel2">
+<li><a href="appendix_a_hints.html#sec:XtextInjection">A.1. Xtext Injection</a>
+<ul class="sectlevel3">
+<li><a href="appendix_a_hints.html#sec:DI_MultipleInjectors_Singletons">A.1.1. Multiple Injectors and Singletons</a>
+<ul class="sectlevel4">
+<li><a href="appendix_a_hints.html#sec:DI_avoid_duplicate_singletons">A.1.1.1. Avoiding duplicate singletons</a>
+<ul class="sectlevel5">
+<li><a href="appendix_a_hints.html#sec:DI_binding_in_shared">A.1.1.1.1. Defining binding in the shared injector</a></li>
+<li><a href="appendix_a_hints.html#sec:DI_binding_in_custom">A.1.1.1.2. Defining binding in the custom injector</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="appendix_a_hints.html#sec:DI_Hints">A.1.2. Dependency Injection Hints</a>
+<ul class="sectlevel4">
+<li><a href="appendix_a_hints.html#sec:DI_custom_bundle">A.1.2.1. Use DI in custom bundle, use DI with extensions</a>
+<ul class="sectlevel5">
+<li><a href="appendix_a_hints.html#sec:DI_custom_bundle_problem">A.1.2.1.1. Problem</a></li>
+<li><a href="appendix_a_hints.html#sec:DI_custom_bundle_solution">A.1.2.1.2. Solution</a></li>
+</ul>
+</li>
+<li><a href="appendix_a_hints.html#sec:Access_Other_DSL_Injector">A.1.2.2. How do I get the Guice Injector of my language?</a>
+<ul class="sectlevel5">
+<li><a href="appendix_a_hints.html#sec:DSL_Injector_UI_context">A.1.2.2.1. UI context</a></li>
+<li><a href="appendix_a_hints.html#sec:DSL_Injector_Non_UI_context">A.1.2.2.2. Non UI context but with injection context</a></li>
+<li><a href="appendix_a_hints.html#sec:DSL_Injector_Non_UI_non_injection_context">A.1.2.2.3. Non UI context without injection context</a></li>
+</ul>
+</li>
+<li><a href="appendix_a_hints.html#sec:Cancel_Indicator">A.1.2.3. How do I get cancel indicators in different contexts?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="appendix_a_hints.html#sec:Eclipse">A.2. Eclipse</a>
+<ul class="sectlevel3">
+<li><a href="appendix_a_hints.html#sec:Show_Xtext_Index">A.2.1. Show the current Xtext index</a></li>
+<li><a href="appendix_a_hints.html#sec:Plugin_spy">A.2.2. Plug-in spy</a></li>
+</ul>
+</li>
+<li><a href="appendix_a_hints.html#sec:Maven-hints">A.3. Maven</a>
+<ul class="sectlevel3">
+<li><a href="appendix_a_hints.html#how-to-check-for-maven-mojo-updates">A.3.1. How to check for Maven MOJO updates</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="appendix_b_module_loading.html#_module-loading">Appendix B: Module Loading</a>
+<ul class="sectlevel2">
+<li><a href="appendix_b_module_loading.html#sec:Dependency_Management">B.1. Dependency Management</a></li>
+<li><a href="appendix_b_module_loading.html#ecmascript-modules">B.2. ECMAScript Modules</a>
+<ul class="sectlevel3">
+<li><a href="appendix_b_module_loading.html#sec:ES5_Modules_Systems">B.2.1. ES5 Modules Systems</a></li>
+<li><a href="appendix_b_module_loading.html#sec:ES6_Modules">B.2.2. ES6 Modules</a></li>
+</ul>
+</li>
+<li><a href="appendix_b_module_loading.html#sec:ECMAScript_Module_Loaders">B.3. ECMAScript Module Loaders</a>
+<ul class="sectlevel3">
+<li><a href="appendix_b_module_loading.html#sec:ES6_Module_Loaders">B.3.1. ES6 Module Loaders</a></li>
+<li><a href="appendix_b_module_loading.html#sec:Polyfills_for_ES6_Module_Loaders">B.3.2. Polyfills for ES6 Module Loaders</a>
+<ul class="sectlevel4">
+<li><a href="appendix_b_module_loading.html#sec:es6_module_loader">B.3.2.1. es6-module-loader</a></li>
+<li><a href="appendix_b_module_loading.html#sec:SystemJS">B.3.2.2. SystemJS</a></li>
+<li><a href="appendix_b_module_loading.html#sec:Demo">B.3.2.3. Demo</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="appendix_b_module_loading.html#case-study-typescript">B.4. Case Study : TypeScript</a>
+<ul class="sectlevel3">
+<li><a href="appendix_b_module_loading.html#sec:ES6_Modules_Support">B.4.1. ES6 Modules Support</a></li>
+<li><a href="appendix_b_module_loading.html#sec:TypeScript_and_Module_Loading">B.4.2. TypeScript and Module Loading</a></li>
+</ul>
+</li>
+<li><a href="appendix_b_module_loading.html#sec:Cyclic_Dependencies">B.5. Cyclic Dependencies</a>
+<ul class="sectlevel3">
+<li><a href="appendix_b_module_loading.html#sec:Setup">B.5.1. Setup</a></li>
+<li><a href="appendix_b_module_loading.html#sec:Transpile_and_Execute">B.5.2. Transpile and Execute</a>
+<ul class="sectlevel4">
+<li><a href="appendix_b_module_loading.html#sec:Module_Format___AMD">B.5.2.1. Module Format = AMD</a></li>
+<li><a href="appendix_b_module_loading.html#sec:Module_Format___CommonJS">B.5.2.2. Module Format = CommonJS</a></li>
+<li><a href="appendix_b_module_loading.html#sec:Module_Format___SystemJS">B.5.2.3. Module Format = SystemJS</a></li>
+</ul>
+</li>
+<li><a href="appendix_b_module_loading.html#sec:Conclusion">B.5.3. Conclusion</a></li>
+</ul>
+</li>
+<li><a href="appendix_b_module_loading.html#system.register-as-transpilation-target">B.6. System.register as transpilation target</a>
+<ul class="sectlevel3">
+<li><a href="appendix_b_module_loading.html#sec:Introduction">B.6.1. Introduction</a>
+<ul class="sectlevel4">
+<li><a href="appendix_b_module_loading.html#sec:External_Transpilers">B.6.1.1. External Transpilers</a></li>
+<li><a href="appendix_b_module_loading.html#sec:Example_of_a_System_register_module">B.6.1.2. Example of a System.register module</a></li>
+</ul>
+</li>
+<li><a href="appendix_b_module_loading.html#sec:Structure_of_a_System_register_module">B.6.2. Structure of a System.register module</a></li>
+<li><a href="appendix_b_module_loading.html#_transpilation-hints">B.6.3. Transpilation Hints</a>
+<ul class="sectlevel4">
+<li><a href="appendix_b_module_loading.html#sec:Handling_Imports">B.6.3.1. Handling Imports</a></li>
+<li><a href="appendix_b_module_loading.html#sec:__exportFn__">B.6.3.2. &lt;&lt;exportFn&gt;&gt;</a></li>
+<li><a href="appendix_b_module_loading.html#sec:Handling_Exports">B.6.3.3. Handling Exports</a></li>
+</ul>
+</li>
+<li><a href="appendix_b_module_loading.html#sec:Examples_w__Circular_Dependencies">B.6.4. Examples w/ Circular Dependencies</a></li>
+<li><a href="appendix_b_module_loading.html#sec:N4JS_Examples_w__Circular_Dependencies">B.6.5. N4JS Examples w/ Circular Dependencies</a>
+<ul class="sectlevel4">
+<li><a href="appendix_b_module_loading.html#sec:Unresolved_Cyclic_Dependencies">B.6.5.1. Unresolved Cyclic Dependencies</a></li>
+<li><a href="appendix_b_module_loading.html#sec:Variables___Functions">B.6.5.2. Examples with Variables &amp; Functions</a></li>
+<li><a href="appendix_b_module_loading.html#sec:Classes">B.6.5.3. Examples with Classes</a></li>
+<li><a href="appendix_b_module_loading.html#sec:Examples_with_SubClassing">B.6.5.4. Examples with SubClassing</a></li>
+<li><a href="appendix_b_module_loading.html#sec:Miscellaneous">B.6.5.5. Miscellaneous</a></li>
+</ul>
+</li>
+<li><a href="appendix_b_module_loading.html#_resources">B.6.6. Resources</a></li>
+</ul>
+</li>
+<li><a href="appendix_b_module_loading.html#sec:CommonJS_as_transpilation_target">B.7. CommonJS as transpilation target</a>
+<ul class="sectlevel3">
+<li><a href="appendix_b_module_loading.html#_introduction-2">B.7.1. Introduction</a></li>
+<li><a href="appendix_b_module_loading.html#sec:Transpilation_Hints">B.7.2. Transpilation Hints</a>
+<ul class="sectlevel4">
+<li><a href="appendix_b_module_loading.html#sec:Import_Statements">B.7.2.1. Import Statements</a></li>
+<li><a href="appendix_b_module_loading.html#sec:Export_Statements">B.7.2.2. Export Statements</a></li>
+<li><a href="appendix_b_module_loading.html#sec:Tracking_Live_Bindings">B.7.2.3. Tracking Live Bindings</a></li>
+<li><a href="appendix_b_module_loading.html#sec:A_complete_example">B.7.2.4. A complete example</a></li>
+</ul>
+</li>
+<li><a href="appendix_b_module_loading.html#_resources-2">B.7.3. Resources</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="appendix_c_license.html#sec:License">Appendix C: License</a></li>
+<li><a href="appendix_d_acronyms.html#sec:Acronyms">Appendix D: Acronyms</a></li>
+<li><a href="appendix_e_bibliography_and_footnotes.html#_bibliography-and-footnotes">Appendix E: Bibliography and Footnotes</a></li>
+</ul>
+</div>
+</div>
+<div id="content"><div class="sect1">
+<h2 id="_compilation"><a class="anchor" href="#_compilation"></a><a class="link" href="#_compilation">12. Compilation</a></h2>
+<div class="sectionbody">
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title=""></i>
+</td>
+<td class="content">
+This chapter may be outdated.
+</td>
+</tr>
+</table>
+</div>
+<div class="sect2 language-n4js">
+<h3 id="chap:compilation"><a class="anchor" href="#chap:compilation"></a><a class="link" href="#chap:compilation">12.1. Introduction</a></h3>
+<div class="paragraph">
+<p>Compilation is the process of transforming some source code written by means of a human readable text into a machine readable target file, i.e. bytecode or assembler. However, in the context of N4JS, the target output is not machine code but another high-level programming language. This kind of compiler transforming from one programming language to another is called <em>transpiler</em>, as a combination of <code>transformation</code> and <code>compiler</code>. The design of the transpiler takes this special setup into account.</p>
+</div>
+<div class="sect3">
+<h4 id="sec:general_design_rationals"><a class="anchor" href="#sec:general_design_rationals"></a><a class="link" href="#sec:general_design_rationals">12.1.1. General design rationals</a></h4>
+<div class="sect4">
+<h5 id="sec:logging_and_error_reporting"><a class="anchor" href="#sec:logging_and_error_reporting"></a><a class="link" href="#sec:logging_and_error_reporting">12.1.1.1. Logging and error reporting</a></h5>
+<div class="paragraph">
+<p>The generator always expects to get a valid model as an input. So all syntactic and semantic errors (not warnings) in the N4JS code as well as regarding the project configuration, e.g. in the package.json file, should be already discovered in the validation step. So any error marker on the resource will prevent the compiler to run.</p>
+</div>
+<div class="paragraph">
+<p>In case of other errors arising in the generator, the error handling is done as follows:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>either throw an <code>GeneratorException</code> or better call <code>ExceptionHandler.handleError(message)</code> (that then will throw this exception)</p>
+</li>
+<li>
+<p>beside the message also the file and the current line can be passed to <code>GeneratorException</code></p>
+</li>
+<li>
+<p><code>GeneratorException</code> (as extending RuntimeException) will be handled by the generator caller</p>
+<div class="ulist">
+<ul>
+<li>
+<p>in UI: <code>BuildInstruction</code> will create an error log entry</p>
+</li>
+<li>
+<p>headless: lets the <code>GeneratorException</code> fail</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect4">
+<h5 id="sec:progress_monitor"><a class="anchor" href="#sec:progress_monitor"></a><a class="link" href="#sec:progress_monitor">12.1.1.2. Progress monitor</a></h5>
+<div class="paragraph">
+<p>The compiler works on a single file and we do not expect that to take much time. Processors working on many files, such as linkers (in the JavaScript context, that is minification and concatenation), are different components.</p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="sec:Xtext_Integration"><a class="anchor" href="#sec:Xtext_Integration"></a><a class="link" href="#sec:Xtext_Integration">12.1.2. Xtext Integration</a></h4>
+<div class="sect4">
+<h5 id="sec:xtext_default_behaviour"><a class="anchor" href="#sec:xtext_default_behaviour"></a><a class="link" href="#sec:xtext_default_behaviour">12.1.2.1. Xtext default behaviour</a></h5>
+<div class="paragraph">
+<p>The Xtext builder participant calculates the delta for every change in the project and triggers dirty state handling as well as code generation. By default the builder participant expects exactly one implementation bound to the IGenerator interface and thus only one output configuration provider belonging to this generator.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="sec:n4js_requirements"><a class="anchor" href="#sec:n4js_requirements"></a><a class="link" href="#sec:n4js_requirements">12.1.2.2. N4JS requirements</a></h5>
+<div class="paragraph">
+<p>In constrast to the default Xtext behaviour in the N4JS IDE allows</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>the registration / discovery of multiple generators (including compilers and transpilers) but even no compiler at all, so that it is possible to ship the IDE also without any generators</p>
+</li>
+<li>
+<p>to configure these generators separately (output paths and so on) workspace globally but also project specific (currently it is only required to enable / disable a compiler)</p>
+</li>
+<li>
+<p>to enable / disable generators, but it is allowed to enable more than one compiler at one</p>
+</li>
+<li>
+<p>to start compilers headless, i.e. e.g in automated build / JUnit tests but with the possibility to configure them there as well</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect4">
+<h5 id="sec:compiler_discovery_in_ui"><a class="anchor" href="#sec:compiler_discovery_in_ui"></a><a class="link" href="#sec:compiler_discovery_in_ui">12.1.2.3. Compiler discovery in UI</a></h5>
+<div class="ulist">
+<ul>
+<li>
+<p>There is a singleton <code>ICompositeGenerator</code>. The <code>ICompositeGenerator</code> instance itself doesn’t contain generator logic but knows subgenerators (that implement <code>ISubGenerator</code>) to which it delegates the input file (so instead of registering a new builder participant (that then would have to recalculate the delta) only the generator call is extracted)</p>
+</li>
+<li>
+<p>In the UI case, the actual execution of the registered generator is done in <code>BuildInstruction</code> where every N4JS resource contained in the delta calculated by the builder participant is an <code>ICompositeGenerator</code> implementation.</p>
+</li>
+<li>
+<p><a href="#fig:cd_GeneratorAndBuilderParticipant">Builder (UI) and Generator (Core)</a> summarizes the implementation of this compiler infrastructure in the UI case.</p>
+</li>
+</ul>
+</div>
+<div id="fig:cd_GeneratorAndBuilderParticipant" class="imageblock center">
+<div class="content">
+<img src="chapters/13_compilation/images/cd_GeneratorAndBuilderParticipant.svg" alt="cd GeneratorAndBuilderParticipant">
+</div>
+<div class="title">Figure 25. Builder (UI) and Generator (Core)</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="sec:compiler_discovery_in_headless"><a class="anchor" href="#sec:compiler_discovery_in_headless"></a><a class="link" href="#sec:compiler_discovery_in_headless">12.1.2.4. Compiler discovery in headless</a></h5>
+<div class="ulist">
+<ul>
+<li>
+<p><code>N4JSHeadlessStandaloneSetup</code> is used to combine <code>N4JSRuntimeModule</code> and <code>N4JSHeadlessGeneratorModule</code> so there is <code>PropertiesFileBasedValuesProvider</code> is bind as implementation for <code>IPreferenceValuesProvider</code></p>
+</li>
+<li>
+<p>via <code>N4JSHeadlessStandaloneSetup</code> the injector is created which is used to create an instance of <code>ICompositeGenerator</code></p>
+</li>
+<li>
+<p>in the headless mode the subgenerators of are manually registered via an extension point in the class <code>HeadlessExtensionRegistrationHelper</code>.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect4">
+<h5 id="sec:general_generator_implementation"><a class="anchor" href="#sec:general_generator_implementation"></a><a class="link" href="#sec:general_generator_implementation">12.1.2.5. General generator implementation</a></h5>
+<div class="exampleblock">
+<div class="title">Example 1. Simple IGenerator</div>
+<div class="content">
+<div class="paragraph">
+<p>The following snippet shows a minimal generator example.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-n4js" data-lang="n4js">public class Generator implements IGenerator {
+    @Override public void doGenerate(Resource resource, IFileSystemAccess fsa) {
+        final String filename = computeTargetFileName(resource.getURI());
+
+        Script script = IterableExtensions.&lt;Script&gt; head(
+            Iterables.&lt;Script&gt; filter(resource.getContents(), Script.class));
+
+        fsa.generateFile(filename, doCompileToString(script));
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Generation is triggered for each Xtext resource. <code>IFileSystemAccess</code> is an abstraction of where to write the generated artefacts. This enables using the generator in the IDE (with a workspace) and headless (directly operating on files). In tests you can use <code>InMemoryFileAccess</code>, in standalone mode you should use <code>JavaFileSystemAccess</code> and in Eclipse mode <code>EclipseFileSystemAccess2</code></p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="sec:general_generator_activation"><a class="anchor" href="#sec:general_generator_activation"></a><a class="link" href="#sec:general_generator_activation">12.1.2.6. General generator activation</a></h5>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+Programmatically
+</td>
+<td class="hdlist2">
+<p>Invoke the <code>IComposedGenerator.doGenerate</code> with a loaded N4JS resource and a configured <code>IFileSystemAccess</code> implementation.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Xtext Builder
+</td>
+<td class="hdlist2">
+<p>This is available by default when using the bound <code>IGenerator</code>, it runs on every change of your N4JS resource when automatic build is enabled in the workspace.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Context Menu
+</td>
+<td class="hdlist2">
+<p>see <a href="christiandietrich.wordpress.com/2011/10/15/xtext-calling-the-generator-from-a-context-menu/">Christian Dietrich’s Blog 2011/10/15</a></p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+MWE2 Workflow
+</td>
+<td class="hdlist2">
+<p>via <code>org.eclipse.xtext.generator.GeneratorComponent</code> that is configured with the standalone setup of the N4JS language. Such an MWE2 workflow also requires the <code>org.eclipse.xtext.mwe.Reader</code> component to first load the N4JS resources to transform in a model slot that is then consumed by the GeneratorComponent</p>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="sec:Overview_of_Input_Models"><a class="anchor" href="#sec:Overview_of_Input_Models"></a><a class="link" href="#sec:Overview_of_Input_Models">12.1.3. Overview of the Input Models</a></h4>
+<div class="paragraph">
+<p>The input is a simple instance of <code>Script</code>, which is the root model element for all N4JS files. Actually, it is the root of the AST. For the AST elements, other elements stemming from other models are accessible as well. The following models may be important for the compiler:</p>
+</div>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+N4JS AST
+</td>
+<td class="hdlist2">
+<p>The abstract syntax tree is an EMF model, it is defined in a single Xcore file <code>N4JS.xcore</code></p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Parser or Node Model
+</td>
+<td class="hdlist2">
+<p>The parser tree, also called node model, is defined by Xtext. It contains offset information, holding whitespaces, line breaks, comments as well as other hidden tokens. It can be accessed via <code>NodelModelUtils</code>, that is a node can be retrieved for a given AST element and vice versa. There are three different kind of nodes: root, composite and leaf node.<br>
+<strong>As of Dec 2015, the transpiler does no longer make use of the parse tree!</strong></p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Type Model
+</td>
+<td class="hdlist2">
+<p>The type model is an abstract view on the N4JS AST. It is defined in a single Xcore file <code>Types.xcore</code>. Not all AST elements are related to type model information. This is only true for subtypes of <code>TypeDefiningElement</code>, with references to <code>Type</code> or containing a <code>TypeRef</code>.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+N4 Project
+</td>
+<td class="hdlist2">
+<p>via <code>OutputPathHelper</code> located in <code>org.eclipse.n4js.generator</code> wraps the calculation of compiled file path.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Grammar Model
+</td>
+<td class="hdlist2">
+<p>Grammar Model created from <code>N4JS.xtext</code>, the rules can be access in the Java code via <code>N4JSGrammarAccess</code>. The grammar elements can be retrieved from the parser model vial <code>node.getGrammarElement()</code>. <code>org.eclipse.xtext.GrammarUtil</code> also contains some useful helper methods.<br>
+<strong>As of Dec 2015, the transpiler does no longer make use of the grammar model!</strong></p>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect2 language-n4js">
+<h3 id="sec:Core_Generator"><a class="anchor" href="#sec:Core_Generator"></a><a class="link" href="#sec:Core_Generator">12.2. Generators</a></h3>
+<div class="paragraph">
+<p>Generators are an abstraction above that of transpilers. N4JS transpilers are implemented as specific generators, but there might be other generators that are not transpilers (e.g. generator that produces HTML documentation from the jsdoc in the N4JS source files).</p>
+</div>
+<div class="sect3">
+<h4 id="sec:Compiler_Components"><a class="anchor" href="#sec:Compiler_Components"></a><a class="link" href="#sec:Compiler_Components">12.2.1. Generator Components</a></h4>
+<div class="paragraph">
+<p><a href="#fig:comp_compilers">Compiler Components</a> gives an overview over the compiler related components. Some of these components are described in detail in the following sections.
+As of Dec 2017, the generator architecture has been refactored and simplified.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>There is only a single <code>ICompositeGenerator</code> instance. Since the single instance should simply delegate to subgenerators, composite generators can no longer be registered via extension point.</p>
+</li>
+<li>
+<p>Most of generator related code is moved into <code>org.eclipse.n4js</code> bundle. This is needed because we need to bind <code>ICompositeGenerator</code> to a concrete implementation in the <code>org.eclipse.n4js</code> bundle and the extension point for <code>ICompositeGenerator</code> has been removed.</p>
+</li>
+<li>
+<p>An extension point <code>org.eclipse.n4js.generator.subgenerator</code> is introduced in the <code>org.eclipse.n4js</code> bundle. This makes it possible to register a new subgenerator via extension point.</p>
+</li>
+</ul>
+</div>
+<div id="fig:comp_compilers" class="imageblock center">
+<div class="content">
+<img src="chapters/13_compilation/images/comp_compilers.svg" alt="comp compilers">
+</div>
+<div class="title">Figure 26. Compiler Components</div>
+</div>
+<div class="paragraph">
+<p><a href="#fig:od_generatorInjection">Discovering generators and provide them with Guice bindings.</a> shows how composite generator and subgenerators interact with other components both in the UI and in the headless case.</p>
+</div>
+<div id="fig:od_generatorInjection" class="imageblock center">
+<div class="content">
+<img src="chapters/13_compilation/images/od_generatorInjection.svg" alt="od generatorInjection">
+</div>
+<div class="title">Figure 27. Discovering generators and provide them with Guice bindings.</div>
+</div>
+<div class="paragraph">
+<p>As we can see in the diagram above. In the UI case, <code>N4JSBuilderParticipant</code> creates <code>BuildInstruction</code> which in turn delegates the generation logics to an instance of <code>ICompositeGenerator</code>. The <code>ICompositeGenerator</code> simply delegates the generation logics to subgenerators .</p>
+</div>
+<div class="paragraph">
+<p>In the headless mode, <code>n4jscBase.doMain</code> creates an instance of <code>N4JSStandaloneSetup</code> and obtains the injector from there. This injector is then used to create an instance of <code>ICompositeGenerator</code> in <code>N4HeadlessCompiler</code>.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="sec:Generator_architecture"><a class="anchor" href="#sec:Generator_architecture"></a><a class="link" href="#sec:Generator_architecture">12.2.2. Generator architecture</a></h4>
+<div class="paragraph">
+<p>The compiler has to create different compilation targets, e.g., for web applications running in a browser (Chrome), or for applications running on iOS using the JavaScriptCore framework <sup class="footnote">[<a id="_footnoteref_13" class="footnote" href="appendix_e_bibliography_and_footnotes.html#_footnote_13" title="View footnote.">13</a>]</sup>. Other scenarios may include code created for debugging purposes vs. optimized code, although this may be implementable via configuration switches as well.</p>
+</div>
+<div class="paragraph">
+<p><a href="#fig:cd_SubGenerators">Generator and sub-generators</a> shows the main generator classes, including two sub generators for EcmaScript code and EcmaScript on iOS.</p>
+</div>
+<div id="fig:cd_SubGenerators" class="imageblock center">
+<div class="content">
+<img src="chapters/13_compilation/images/cd_SubGenerators.svg" alt="cd SubGenerators">
+</div>
+<div class="title">Figure 28. Generator and sub-generators</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="sec:Unified_Compiler_Configuration"><a class="anchor" href="#sec:Unified_Compiler_Configuration"></a><a class="link" href="#sec:Unified_Compiler_Configuration">12.2.3. Unified Compiler Configuration</a></h4>
+<div class="paragraph">
+<p>Since the compiler is to be used in both UI and headless (or CLI) mode, the configuration has to abstract from Eclipse <code>IPreferenceStore</code> concept or CLI utility classes. This is done with the combination of <code>CompilerDescriptor</code> and <code>CompilerProperties</code>, used by all <code>ISubGenerator</code> implementations (see <a href="#fig:cd_SubGenerators">Fig. Sub Generators</a>).</p>
+</div>
+<div class="paragraph">
+<p>Each compiler provides</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>a unique name (that have to match with the name of the output configuration)</p>
+</li>
+<li>
+<p>a default compiler descriptor that contains the preference values to be applied when nothing else been configured in the provided preference values</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>A <code>CompilerDescriptor</code> has</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>an identifier (this is the unique name of the compiler as mentioned before)</p>
+</li>
+<li>
+<p>a name (a readable name to used in Eclipse preference page)</p>
+</li>
+<li>
+<p>a description (not used yet, but maybe later also shown in the preference page)</p>
+</li>
+<li>
+<p>a flag, that indicates, if this generator should run by default</p>
+</li>
+<li>
+<p>the file extension to be used for the compiled file</p>
+</li>
+<li>
+<p>the <code>OutputConfiguration</code> object from Xtext that contains output related preferences like the output folder</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The <code>CompilerProperties</code> is an enumeration that makes it easier to iterate over the preferences and getting / setting the preference values in a generic way. So this enumeration contains all configurable properties as literals.</p>
+</div>
+<div class="paragraph">
+<p>The keys for preferences have to follow a fixed pattern as it also used internally by the builder participant when applying the configurations from the <code>OutputConfiguration</code>. So the key consists of</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>’outlet’</p>
+</li>
+<li>
+<p>unique name of the compiler = unique name of the output configuration</p>
+</li>
+<li>
+<p>the name of the property</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Example: outlet.es5.compiledFileExtension</p>
+</div>
+<div class="paragraph">
+<p><code>N4JSPreferenceAccess</code> encapsulates the access to the injected <code>IPreferenceValuesProvider</code>. This values provider is bound in UI to <code>EclipsePreferencesProvider</code> that creates an overlay over the default configuration and makes it so possible to have workspace global as well as project specific preferences and always as fall back the default values.</p>
+</div>
+<div class="paragraph">
+<p>In headless mode the <code>PropertiesFileBasedValuesProvider</code> is bound as implementation of <code>IPreferenceValuesProvider</code>. With this implementation it is possible to load the preferences from a provided properties file.</p>
+</div>
+<div class="paragraph">
+<p><code>N4JSPreferenceAccess</code> is used in <code>AbstractSubGenerator</code> which provided the most common used preferences as extra methods.</p>
+</div>
+</div>
+</div>
+<div class="sect2 language-n4js">
+<h3 id="sec:Transpilers"><a class="anchor" href="#sec:Transpilers"></a><a class="link" href="#sec:Transpilers">12.3. Transpilers</a></h3>
+<div class="paragraph">
+<p>Transpilers are a special case of generators, used for transforming N4JS source code into some target code in some other, high-level programming language. In this section we describe the general transpiler infrastructure without considering any particular transpiler. Currently, there is only a single such concrete transpiler for ECMAScript target code, explained later in <a href="#sec:N4JS_to_EcmaScript_Transpiler">N4JS-to-EcmaScript Transpiler</a>.</p>
+</div>
+<div class="paragraph">
+<p>All code of the general transpiler infrastructure is found in bundle <code>org.eclipse.n4js.transpiler</code>.</p>
+</div>
+<div class="sect3">
+<h4 id="sec:Phases"><a class="anchor" href="#sec:Phases"></a><a class="link" href="#sec:Phases">12.3.1. Overview</a></h4>
+<div class="paragraph">
+<p><a href="#fig:ad_PipelineOverview">Overview of the compilation pipeline</a> shows an overview of the steps during transpilation of a single resource:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>an initial conversion from the original AST to an <strong>intermediate model (IM)</strong>, called <strong>preparation step</strong>.</p>
+</li>
+<li>
+<p>one or more <strong>transformation</strong> phases, each taking as input the IM and performing a number of in-place modification on it.</p>
+</li>
+<li>
+<p>a final <strong>pretty printing step</strong> that transform the final version of the IM into the textual output, i.e. the target code.</p>
+</li>
+</ol>
+</div>
+<div id="fig:ad_PipelineOverview" class="imageblock center">
+<div class="content">
+<img src="chapters/13_compilation/images/ad_PipelineOverview.svg" alt="ad PipelineOverview">
+</div>
+<div class="title">Figure 29. Overview of the compilation pipeline</div>
+</div>
+<div class="paragraph">
+<p>The IM is the most important data structure in the transpiler. It starts out as a 1-to-1 copy of the original AST and is then gradually transformed by the AST transformation steps into, ultimately, a representation of the output code. Only the IM undergoes updates, while the original AST remains unchanged. Nodes in the IM that are identical on N4JS source code and target code side can simply be left unchanged. Traceability links allow navigating back to an original AST node from a given IM node, but due to the gradual modification of the IM this might not be possible for all IM nodes (the tracer will return <code>null</code> in those cases.</p>
+</div>
+<div class="paragraph">
+<p>Ideally, each transformation executed during the transformation step should be self-contained and coupling should be reduced to a minimum. Of course, this is not possible in all cases, in practice. Therefore, a simple mechanism is provided for statically specifying dependencies between transformations by way of Java annotations (see Java class <code>TransformationDependency</code> for more details). The ECMAScript transpiler, for example, has 18 individual transformations (at time of writing).</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="relation-between-ast-and-im"><a class="anchor" href="#relation-between-ast-and-im"></a><a class="link" href="#relation-between-ast-and-im">12.3.2. Relation between AST and IM</a></h4>
+<div class="paragraph">
+<p>The relation between the original AST and the IM is maintained by the tracer, see class <code>Tracer</code>, which is available via the transpiler state. The tracer allows to obtain a  IM elements for a given original AST node and, conversely,  original AST nodes for a given IM element (i.e. a 1:N association between original AST node and IM element).</p>
+</div>
+<div class="paragraph">
+<p>The main purpose of this tracing information is to compute source maps for the target code.</p>
+</div>
+<div class="paragraph">
+<p>At the beginning of the transformation step, there is a 1-to-1 correspondence between AST and IM, but over the course of the transformations this correspondence will become more and more blurred. Therefore, whenever using the tracer to get to the original AST from a given IM element , we have to consider the case that there is not original AST node defined for  (because  was created programmatically by an earlier transformation) OR that the original AST node is of a different kind than  (because, maybe, an original N4JS class declaration was replaced by a function declaration by an earlier transformation).</p>
+</div>
+<div class="paragraph">
+<p>Whenever a transformation changes the IM, it is responsible to update the tracer, accordingly.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="implementation-overview"><a class="anchor" href="#implementation-overview"></a><a class="link" href="#implementation-overview">12.3.3. Implementation Overview</a></h4>
+<div class="paragraph">
+<p><a href="#fig:transpilerClassDgr">Transpiler Class Diagram</a> shows a class diagram of the main constituents of the transpiler infrastructure.</p>
+</div>
+<div id="fig:transpilerClassDgr" class="imageblock center">
+<div class="content">
+<img src="chapters/13_compilation/images/TranspilerClassDgr.svg" alt="TranspilerClassDgr">
+</div>
+<div class="title">Figure 30. Class diagram for the transpiler infrastructure.</div>
+</div>
+<div class="paragraph">
+<p>The <code>AbstractTranspiler</code> controls the overall workflow shown earlier in . Concrete subclasses of <code>Transformation</code> perform the actual transformations (the preparation and pretty-printing steps are not shown in the above class diagram). Concrete transformations are created via injection within concrete sub classes of <code>AbstractTranspiler</code> (see class <code>EcmaScriptTranspiler</code> for an example). All information required during transpilation is kept in a simple data class called <code>TranspilerState</code>; a single instance of this class is created during the preparation step and is passed along until transpilation of the resource to transpile is completed.</p>
+</div>
+<div class="paragraph">
+<p>Class <code>Transformation</code> has a super class <code>TranspilerComponent</code> that has two important responsibilities:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>it contains many utility methods that are easily accessible from within concrete transformations through inheritance.</p>
+</li>
+<li>
+<p>it obtains the transpiler state via injection (using the scoping feature of Google Guice, for more details see <code>org.eclipse.n4js.utils.di.scopes.ScopeManager</code> and <code>TransformationScoped</code>). This injection is done in super class <code>TranspilerComponent</code>, so when implementing a new transformation, the programmer does not have to deal with these details and can simply obtain the transpiler state via the inherited method <code>TranspilerComponent#getState()</code>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Code shared across concrete transformations should be placed in sub classes of <code>TransformationAssistant</code>. Those assistants are similar to the helpers used elsewhere, but by sharing the <code>TranspilerComponent</code> super class they get all the utility methods provided by that class and they automatically get the transpiler state.</p>
+</div>
+<div class="paragraph">
+<p>For more implementation details see the code and javadoc; a good starting point for investigating the overall workflow are classes <code>AbstractTranspiler</code> and <code>Transformation</code>.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="sec:Guidelines_for_Implementing_Transformations"><a class="anchor" href="#sec:Guidelines_for_Implementing_Transformations"></a><a class="link" href="#sec:Guidelines_for_Implementing_Transformations">12.3.4. Guidelines for Implementing Transformations</a></h4>
+<div class="paragraph">
+<p>Some hints:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>if you need to create an entirely new transformation:</p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>create new sub class of <code>Transformation</code> (use Xtend).</p>
+</li>
+<li>
+<p>in the main class of the transpiler you are working with (probably <code>EcmaScriptTranspiler</code>), change method
+<code>#computeTransformationsToBeExecuted()</code> to return an instance of your new transformation. The instance should be created using a Guice provider (see <code>EcmaScriptTranspiler</code> for an example). Note that this method also defines the order of transformations!</p>
+</li>
+<li>
+<p>implement the <code>#transform()</code> method of your newly created transformation.</p>
+</li>
+<li>
+<p>consider adding pre and post conditions via methods <code>#assertPreConditions()</code> and <code>#assertPostConditions()</code> (throw an AssertionError if failed).</p>
+</li>
+<li>
+<p>consider declaring dependencies to other transformations using the annotations defined in class <code>TransformationDependency</code>.</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>code shared across transformations should be placed in a new or existing sub class of <code>TransformationAssistant</code> and then this assistant should be injected into the transformations that require this code’s functionality.</p>
+</li>
+<li>
+<p>inside a transformation or transformation assistant:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>to modify the IM, use the utility methods inherited from <code>TranspilerComponent</code> (e.g. <code>#replace()</code>, <code>#insertBefore()</code>); try to avoid direct manipulation of the IM as far as possible (but sometimes it’s necessary).</p>
+</li>
+<li>
+<p>to create new IM elements, use the convenience methods in <code>TranspilerBuilderBlocks</code>; use static import.</p>
+</li>
+<li>
+<p>to create a new symbol table entry or to obtain an existing symbol table entry for a given original target or element in the IM, use the inherited utility methods <code>TranspilerComponent#getSymbolTableEntry*()</code>.<br>
+<strong>Never search or modify the symbol table directly!</strong></p>
+</li>
+<li>
+<p>to access the transpiler state <sup class="footnote">[<a id="_footnoteref_14" class="footnote" href="appendix_e_bibliography_and_footnotes.html#_footnote_14" title="View footnote.">14</a>]</sup>, use inherited method <code>TranspilerComponent#getState()</code> (by convention, in Xtend you should just write <code>state</code> as if it were a field).</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>for local testing, activate additional consistency checks between transformations and assertion of pre/post conditions via these boolean flags:<br>
+<code>AbstractTranspiler#DEBUG_PERFORM_VALIDATIONS</code>,<br>
+<code>AbstractTranspiler#DEBUG_PERFORM_ASSERTIONS</code>.</p>
+</li>
+<li>
+<p>never add one of the following replaced EMF entities to the IM:<br>
+<code>Script</code>,<br>
+<code>IdentifierRef</code>,<br>
+<code>ParameterizedTypeRef</code>,<br>
+<code>ParameterizedTypeRefStructural</code>,<br>
+<code>ParameterizedPropertyAccessExpression</code>.<br>
+Instead, use the replacement entities from <code>IM.xcore</code> that have the <code>_IM</code> suffix (e.g. <code>IdentifierRef_IM</code>). If you always use <code>TranspilerBuilderBlocks</code> as described above, you won’t run into this issue.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="symbol-table-in-the-im"><a class="anchor" href="#symbol-table-in-the-im"></a><a class="link" href="#symbol-table-in-the-im">12.3.5. Symbol Table in the IM</a></h4>
+<div class="paragraph">
+<p>During the preparation step, the IM is created as an exact copy of the original AST in most cases. However, to make sure the IM is self-contained and does not have any cross-references to the original AST or the original TModule and to simplify certain computations within the transformations, some AST entities are modified. For this purpose, there is a small EMF model called <code>IM.xcore</code>. It extends the AST model <code>n4js.xcore</code> and adds some elements.</p>
+</div>
+<div class="paragraph">
+<p>Most importantly, a symbol table is created and all references of the original AST pointing to an IdentifiableElement (either in the original AST or in the TModule) are rewired to a reference to an entry in the symbol table. Those entries are of type <code>SymbolTableEntry</code> and occur in three special forms (there is a dedicated sub class for each case). Detailed information is provided in the javadoc of <code>SymbolTableEntry</code> and its sub classes and is not repeated here to avoid duplication.</p>
+</div>
+<div class="paragraph">
+<p>The following entity replacements are done while creating the IM from the original AST and the entities without <code>_IM</code> must <strong>never</strong> appear in the IM:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>Script</code>  <code>Script_IM</code></p>
+</li>
+<li>
+<p><code>IdentifierRef</code>  <code>IdentifierRef_IM</code></p>
+</li>
+<li>
+<p><code>ParameterizedTypeRef</code>  <code>ParameterizedTypeRef_IM</code></p>
+</li>
+<li>
+<p><code>ParameterizedTypeRefStructural</code>  <code>ParameterizedTypeRefStructural_IM</code></p>
+</li>
+<li>
+<p><code>ParameterizedPropertyAccessExpression</code>  <code>ParameterizedPropertyAccessExpression_IM</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>For example, when having in the original AST an <code>IdentifierRef</code> pointing to identifiable element , then the IM will contain an <code>IdentifierRef_IM</code> pointing to a <code>SymbolTableEntryOriginal</code> with a property <code>originalTarget</code> pointing to .</p>
+</div>
+<div class="paragraph">
+<p>Figures <a href="#fig:rewire_var">Rewire Var</a>, <a href="#fig:rewire_class">Rewire Class</a>, and <a href="#fig:rewire_import">Rewire Import</a> show a comparison between an original AST with its original TModule and the self-contained intermediate model for a number of concrete examples.</p>
+</div>
+<div class="exampleblock">
+<div class="title">Example 2. Intermediate Models for References to Variables</div>
+<div class="content">
+<div class="paragraph">
+<p>Original AST + TModule</p>
+</div>
+<div id="fig:rewire_var" class="imageblock center">
+<div class="content">
+<img src="chapters/13_compilation/images/Rewire_var_pre.png" alt="Rewire var pre">
+</div>
+<div class="title">Figure 31. Intermediate Model for References to Variables</div>
+</div>
+<div class="paragraph">
+<p>Intermediate model (IM)</p>
+</div>
+<div id="fig:rewire_var-post" class="imageblock center">
+<div class="content">
+<img src="chapters/13_compilation/images/Rewire_var_post.png" alt="Rewire var post">
+</div>
+<div class="title">Figure 32. Intermediate Model for References to Variables (post)</div>
+</div>
+</div>
+</div>
+<div class="exampleblock">
+<div class="title">Example 3. Intermediate Model for References to Classes</div>
+<div class="content">
+<div class="paragraph">
+<p>original AST + TModule</p>
+</div>
+<div id="fig:rewire_class" class="imageblock center">
+<div class="content">
+<img src="chapters/13_compilation/images/Rewire_class_pre.png" alt="Rewire class pre">
+</div>
+<div class="title">Figure 33. Intermediate Model for References to Classes</div>
+</div>
+<div class="paragraph">
+<p>Intermediate model (IM)</p>
+</div>
+<div id="fig:rewire_class-post" class="imageblock center">
+<div class="content">
+<img src="chapters/13_compilation/images/Rewire_class_post.png" alt="Rewire class post">
+</div>
+<div class="title">Figure 34. Intermediate Model for References to Classes (post)</div>
+</div>
+</div>
+</div>
+<div class="exampleblock">
+<div class="title">Example 4. Intermediate Model for References to Imported Classes</div>
+<div class="content">
+<div class="paragraph">
+<p>Original AST + TModule</p>
+</div>
+<div id="fig:rewire_import" class="imageblock center">
+<div class="content">
+<img src="chapters/13_compilation/images/Rewire_import_pre.png" alt="Rewire import pre">
+</div>
+<div class="title">Figure 35. Intermediate Model for References to Imported Classes</div>
+</div>
+<div class="paragraph">
+<p>Intermediate model (IM)</p>
+</div>
+<div id="fig:rewire_import-post" class="imageblock center">
+<div class="content">
+<img src="chapters/13_compilation/images/Rewire_import_post.png" alt="Rewire import post">
+</div>
+<div class="title">Figure 36. Intermediate Model for References to Imported Classes (post)</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2 language-n4js">
+<h3 id="sec:N4JS_to_EcmaScript_Transpiler"><a class="anchor" href="#sec:N4JS_to_EcmaScript_Transpiler"></a><a class="link" href="#sec:N4JS_to_EcmaScript_Transpiler">12.4. N4JS-to-EcmaScript Transpiler</a></h3>
+<div class="sect3">
+<h4 id="sec:Overview_of_Transformations"><a class="anchor" href="#sec:Overview_of_Transformations"></a><a class="link" href="#sec:Overview_of_Transformations">12.4.1. Overview of Transformations</a></h4>
+<div class="paragraph">
+<p>The following overview will soon be outdated. Therefore:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>to find out which transformations are actually being executed and in what precise order, it is best to directly look into method:<br>
+<code>EcmaScriptTranspiler#computeTransformationsToBeExecuted()</code>.</p>
+</li>
+<li>
+<p>to learn about dependencies between transformations, check the annotations of the transformation class to see if one of the dependency annotations defined in <code>TransformationDependency</code> are given there (though probably not all dependencies will be specified in that form).</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The following table lists all transformation by class name in the order they are executed by the <code>EcmaScriptTranspiler</code>.</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">StaticPolyfillTransformation</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">MemberPatchingTransformation</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">see <a href="#sec:Transpiling_members">Transpiling Members</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ApiImplStubGenerationTransformation</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">DestructuringTransformation</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">turn destructuring patterns into ES5 code</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SuperLiteralTransformation</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">super call + super access</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ExpressionTransformation</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">casts, <code>instanceof</code>, <code>@Promisify</code>, &#8230;&#8203;</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">DependencyInjectionTransformation</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ClassDeclarationTransformation</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">InterfaceDeclarationTransformation</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">EnumDeclarationTransformation</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">FunctionDeclarationTransformation</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">turn declared function into variable declaration + function expression</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ArrowFunction_Part1_Transformation</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">BlockTransformation</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">local arguments variable, <code>await</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">FormalParameterTransformation</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">variadic arguments</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ArrowFunction_Part2_Transformation</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">TrimTransformation</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">remove TypeRefs and TypeVariables</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SanitizeImportsTransformation</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">remove unused imports + add missing imports</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ModuleWrappingTransformation</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>The main complexity lies in the three transformations for N4JS type declarations (classes, interfaces, enums) and the related three transformations for member handling at the beginning (static polyfills, member patching, API/Impl stub generation) and the module wrapping. Up to the double horizontal line, the IM is still rather close to N4JS (e.g. still contains <code>N4ClassDeclaration</code>s with <code>N4MemberDeclaration</code>s), but after that it rapidly departs from the structure of the original AST (e.g. class declarations are broken up into a function declaration and a $<code>makeClass</code> call, field accessors and methods become function expressions in the properties of an object literal, fields are handled differently).</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="sec:Transpiling_members"><a class="anchor" href="#sec:Transpiling_members"></a><a class="link" href="#sec:Transpiling_members">12.4.2. Transpiling members</a></h4>
+<div class="paragraph">
+<p>When processing the members of a container type, in the standard case, the transpiler simply has to generate target code for each owned member. For inherited members no output code has to be generated, because the ordinary semantics of the Javascript prototype chain is used in the generated code.</p>
+</div>
+<div class="paragraph">
+<p>There are, however, special cases when output code has to be generated for a non-owned or non-existant member of a container type:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>partial shadowing caused by lone field accessors, [sec:Transpiling_members__Partial_shadowing_of_getter_setter_pairs]<br>
+( <strong>delegation</strong>)</p>
+</li>
+<li>
+<p>consumption of members of an interface within an implementing class, [sec:Transpiling_members__Consuming_or_inheriting_members_of_an_interface]<br>
+( <strong>delegation</strong>, for data fields: <strong>copying</strong>)</p>
+</li>
+<li>
+<p>inheritance of members of an interface within an extending interface, [sec:Transpiling_members__Consuming_or_inheriting_members_of_an_interface]<br>
+( <strong>delegation</strong>, for data fields: <strong>copying</strong>)</p>
+</li>
+<li>
+<p>mixing in members into a container type via static polyfill, [sec:Transpiling_members__Static_polyfill]<br>
+( <strong>copying</strong>)</p>
+</li>
+<li>
+<p>adding an API / implementation stub, [sec:Transpiling_members__API_implementation_stubs]<br>
+( <strong>creation</strong>)</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The above overview also states what technique is used in each special case of member handling: <strong>delegation</strong>, <strong>copying</strong> or <strong>creation</strong>. Delegation is the most tricky one and means that not a new function is generated in the output code for the special member, but the existing member function of an existing member is obtained from somewhere in the prototype chain and used directly as the member function of the special member. <strong>Copying</strong> means that an existing member is copied to another location where the special handling is required as if it were defined in that place. Lastly, <strong>creation</strong> means that an entirely new member is created for which no existing member serves as a template and this member gets a body with some <code>default</code> behavior. These three techniques of special member handling are explained in more detail in <a href="#sec:Transpiling_members__Delegating_members">Techniques for special member handling</a>.</p>
+</div>
+<div class="sect4">
+<h5 id="sec:Transpiling_members__Delegating_members"><a class="anchor" href="#sec:Transpiling_members__Delegating_members"></a><a class="link" href="#sec:Transpiling_members__Delegating_members">12.4.2.1. Techniques for special member handling</a></h5>
+<div class="paragraph">
+<p>If output code has to be generated for a non-owned member  of a classifier  we distinguish the following two cases:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>either some other member  owned by classifier  serves as a template for ,</p>
+</li>
+<li>
+<p>or no such template exists.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>In the first case, we can either <strong>copy</strong>  in the sense that we will generate output code for  within the output code for  as if  had been defined in . Or we can use <strong>delegation</strong>, i.e. generate output code for  that reuses the existing member function of  in . In case no template exists, we always have to <strong>create</strong>  from scratch, i.e. generate output code as if  had been defined with some behavior pre-defined by the N4JS language (this applies only to API / implementation stubs where this pre-defined behaviour is to throw an <code>unimplemented member</code> error).</p>
+</div>
+<div class="paragraph">
+<p>Creation and copying is straightforward; for more details on member delegation see class <code>DelegationAssistant</code> and entity <code>DelegatingMember</code> in <code>IM.xcore</code>. The basic approach is to allow one transformation to create a <code>DelegatingMember</code> and insert it into the IM and let the transformations for class and interface declarations turn this member into low-level Javascript constructs that perform the actual delegation.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="sec:Transpiling_members__Partial_shadowing_of_getter_setter_pairs"><a class="anchor" href="#sec:Transpiling_members__Partial_shadowing_of_getter_setter_pairs"></a><a class="link" href="#sec:Transpiling_members__Partial_shadowing_of_getter_setter_pairs">12.4.2.2. Partial shadowing</a></h5>
+<div class="paragraph">
+<p>In Javascript, if an object  has a setter of name , then a read access <code>obj.prop</code> will return undefined, even if the prototype of  has a getter or field of name . Conversely, if  has a getter , then a write access <code>obj.prop = 42</code> will produce a runtime error, even if the prototype of  has a setter or field .</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>var proto = {
+  get prop1() { return "this won't show up" },
+  set prop2(value) { console.log("this won't be reached") }
+}
+var obj = {
+  set prop1(value) {},
+  get prop2() {}
+}
+obj.__proto__ = proto;
+
+console.log(typeof obj.prop1);  // will print "undefined"
+obj.prop2 = 42;  // error: "setting a property that has only a getter"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Note, in plain N4JS a validation enforces a redefinition of accessors or overriding of a field always by getter/setter pairs. However, in special situations of incomplete API implementations stubs for missing accessors are created in order to provide meaningful test-reporting. This leads to situations where on the implementation side a single getter or or a single setter is defined in a subclass - unaware of possibly injected stubs in superclasses. The aforementioned validation can not enforce the user to author an accessor pair. To keep a meaningful test-response the transpiler treats this situation as follows:</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="sec:Transpiling_members__Consuming_or_inheriting_members_of_an_interface"><a class="anchor" href="#sec:Transpiling_members__Consuming_or_inheriting_members_of_an_interface"></a><a class="link" href="#sec:Transpiling_members__Consuming_or_inheriting_members_of_an_interface">12.4.2.3. Consuming or inheriting members of an interface</a></h5>
+<div class="paragraph">
+<p>When an N4JS class  consumes the member of an interface implemented by , then this cannot be handled by the native prototype chain mechanism of Javascript. Instead, the transpiler has to generate a member of corresponding type that delegates to the consumed member. In case of data fields, such a delegation is not possible and thus the transpiler generates output code for the consumed data field as if the field had been defined in .</p>
+</div>
+<div class="paragraph">
+<p>Of particular importance in this context is the diamond problem when consuming members from an interface. For example, if interface  defined method  with a default implementation, interface  extends  and overrides  with a different implementation, class  implements  and class  extending  implements , then  will not consume  because it has already inherited  from its super class  (which in turn has consumed it from ). So, in  the default implementation of  given in  will be active, not that given in .</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="sec:Transpiling_members__Static_polyfill"><a class="anchor" href="#sec:Transpiling_members__Static_polyfill"></a><a class="link" href="#sec:Transpiling_members__Static_polyfill">12.4.2.4. Static polyfill</a></h5>
+<div class="paragraph">
+<p>See class <code>StaticPolyfillTransformation</code> for details.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="sec:Transpiling_members__API_implementation_stubs"><a class="anchor" href="#sec:Transpiling_members__API_implementation_stubs"></a><a class="link" href="#sec:Transpiling_members__API_implementation_stubs">12.4.2.5. API / implementation stubs</a></h5>
+<div class="paragraph">
+<p>See <a href="#sec:Support_for_incomplete_API_implementation_testing_in_the_N4JS_to_EcmaScript_5_Transpiler">Support for incomplete API implementation testing</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="sec:Support_for_incomplete_API_implementation_testing_in_the_N4JS_to_EcmaScript_5_Transpiler"><a class="anchor" href="#sec:Support_for_incomplete_API_implementation_testing_in_the_N4JS_to_EcmaScript_5_Transpiler"></a><a class="link" href="#sec:Support_for_incomplete_API_implementation_testing_in_the_N4JS_to_EcmaScript_5_Transpiler">12.4.3. Support for incomplete API implementation testing</a></h4>
+<div class="paragraph">
+<p>As part of the introduction of API projects with executable test cases the need to verify the state of implementations came into focus. No formal dependency is allowed between an API project and its dedicated implementation projects, hence an inconsistency can not directly be detected. However at runtime (c.f. <a href="execution.html#_execution">Execution</a>) the API is always replaced by an appropriate implementation.</p>
+</div>
+<div class="paragraph">
+<p>In cases where such an implementation is incomplete this would result in failures due to missing concepts, e.g. calls to methods that are not in place or usage of fields which are not defined. In order to support the author of an implementation the IDE provides a mean to compare the current state of implementation to the developer in a tabular way (c.f. [<a href="appendix_e_bibliography_and_footnotes.html#N4JSSpec">N4JSSpec</a>]).</p>
+</div>
+<div class="paragraph">
+<p>The key idea for automated test-support is to incorporate those comparison-results into the transpiled output in way, that a test-framework can easily distinguish wrong implementations from incomplete implementations. Of course this is not always possible, but the majority of cases can be handled.</p>
+</div>
+<div class="paragraph">
+<p>As there is only one transpilation mode the resulting modifications are always part of the generated code.</p>
+</div>
+<div class="paragraph">
+<p>In order to distinguish the different project-types we distinguish between different project types:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>an API-project (API)</p>
+</li>
+<li>
+<p>an API-implementation project (Impl)</p>
+</li>
+<li>
+<p>a client project (Client)</p>
+</li>
+<li>
+<p>a test project (Test)</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The API-project defines the requirements to it’s implementors in form of definition-files (n4jsd). The API is defined together with an test-project which validates the implementation. Client code is written with a formal dependency to the API and uses the elements declared therein. In that sense an API-testing project is just a normal client project with a test-nature.</p>
+</div>
+<div class="paragraph">
+<p>Additional code to support API implementation testing is only inserted into the Impl-projects. API, Client and Test are not affected.</p>
+</div>
+<div class="paragraph">
+<p>One major goal in transpiling Impl projects is to provide the ability to load all modules used in Client/Test projects in non-disruptive way. Even if the implementation is missing elements the runtime should still be able to successfully load the module. Errors should only be signalled when the client code actually uses the missing concepts.</p>
+</div>
+<div class="sect4">
+<h5 id="sec:Modifications_in_Impl_projects"><a class="anchor" href="#sec:Modifications_in_Impl_projects"></a><a class="link" href="#sec:Modifications_in_Impl_projects">12.4.3.1. Modifications in Impl projects</a></h5>
+<div class="paragraph">
+<p>The generator is module driven. In case of missing modules nothing will be done but the runtime will detect this and act accordingly.</p>
+</div>
+<div class="paragraph">
+<p>In general only missing elements will be inserted:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Missing class - a stub will be generated</p>
+</li>
+<li>
+<p>Missing function - a stub will be generated</p>
+</li>
+<li>
+<p>Missing enumeration - a stub will be generated</p>
+</li>
+<li>
+<p>Missing interface - a stub will be generated</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Missing members of classes are inserted as stubs. Missing fields will be replaced by getter/setter-pairs throwing an error upon read and write access.</p>
+</div>
+<div class="paragraph">
+<p>A more sophisticated approach needs to be taken for interfaces with default implementations (marked with @ProvidesDefaultImplementation or @ProvidesInitializer).</p>
+</div>
+<div class="paragraph">
+<p>Currently missing field initialisers in interfaces are not detected for two reasons: Field-initialising is carried out on loading. Throwing an error in the initialiser will prevent the module from being loaded. Installing a getter/setter pair on the Impl-interface is not an option since the inheritance chain used in client project has no knowledge about this and therefore these accessors cannot be reached from client code.</p>
+</div>
+<div class="paragraph">
+<p>Missing default implementations will be inserted as stubs. For normal class compilation the inheritance chain needs to be scanned. In case of an missing default implementation in an implemented interface a forwarding call to the stub needs to be inserted on the class.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="sec:Implementation_of_stub_generation"><a class="anchor" href="#sec:Implementation_of_stub_generation"></a><a class="link" href="#sec:Implementation_of_stub_generation">12.4.3.2. Implementation of stub-generation</a></h5>
+<div class="paragraph">
+<p>The implementation is mainly organised in <code>ApiImplStubGenerationTransformation</code>, which makes use of <code>MissingApiMembersForTranspiler</code> and <code>ScriptApiTracker</code>.</p>
+</div>
+<div class="paragraph">
+<p>When a Module is transpiled the type of the project is checked. Only if the project is an implementation project the comparison between the current module and it’s API module is computed and attached as an Adapter to the <code>Script</code> during the life-cycle of the <code>ScriptTranspilerPolicy</code>. The <code>ProjectComparisonAdapter</code> serves as a shared information pool among the different transpiler-policies and caches different compare-results. After transpilation of the script the adapter will be removed.</p>
+</div>
+<div class="paragraph">
+<p>In order to reuse all existing code as far as possible, missing elements are modelled as subclasses of the requested element but with no AST-information. These subclasses are member-classes of the <code>ScriptApiTracker</code> class. All class-names are prefixed with <code>VirtualApi</code> and hold a reference to the type-information computed by the module-comparison.</p>
+</div>
+<div class="paragraph">
+<p>It is important to not access the AST-elements of type-information obtained from the project-comparison, since this would trigger the AST-loading and invalidate (proxifying) existing <code>EObjects</code>.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2 language-n4js">
+<h3 id="sec:n4jsc_Headless_Compiler_Interface"><a class="anchor" href="#sec:n4jsc_Headless_Compiler_Interface"></a><a class="link" href="#sec:n4jsc_Headless_Compiler_Interface">12.5. n4jsc Headless Compiler Interface</a></h3>
+<div class="paragraph">
+<p>The headless compiler interface consists of a runnable class capable of reading command line options packaged together with all required dependencies into one executable <code>.jar</code> archive.</p>
+</div>
+<div class="paragraph">
+<p>The sources of the command line interface are located in in the <code>tools/</code> subfolder of the main git repository. They comprise of the package <code>org.eclipse.n4js.hlc</code> and corresponding test package <code>org.eclipse.n4js.hlc.tests</code>. (c.f. <a href="#sec:tools">Tools</a>).</p>
+</div>
+<div class="paragraph">
+<p>A description of how to use the headless compiler can be found in the N4IDE document.</p>
+</div>
+<div class="sect3">
+<h4 id="sec:building_the_headless_compiler"><a class="anchor" href="#sec:building_the_headless_compiler"></a><a class="link" href="#sec:building_the_headless_compiler">12.5.1. building the headless compiler</a></h4>
+<div class="paragraph">
+<p>The maven-modules related to the headless compiler build are organised in the <code>tools</code> folder in the project-root. In order to build the headless compiler as part of the common build-chain, the maven-profile <code>buildTools</code> needs to be activated (off by default), e.g. <code>mvn -PbuildTools</code> .</p>
+</div>
+<div class="paragraph">
+<p>To build the headless compiler separately, the project-pom can be set to <code>tools/pom.xml</code>, however then the tycho-generated artefacts must be accessible by this build. This can be achieved in three different ways:</p>
+</div>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>the build takes place on a workspace formerly building the n4js-project without cleaning it (interesting for local experiments),</p>
+</li>
+<li>
+<p>a former n4js-build installed the artefacts into the currently configured local-.m2-repository of maven or</p>
+</li>
+<li>
+<p>a former n4js-build deployed the artefacts to the configured nexus-server.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Note however, on our build-server option a) is not feasible, option b) requires you to setup a build-chain and ensuring the same build-node to be building on
+and c) is difficult up to nearly impossible without a proper versioning-scheme.</p>
+</div>
+<div class="paragraph">
+<p>Parameters for the headless-compiler-build are defined in the parent-pom located at <code>releng/org.eclipse.n4js.parent/pom.xml</code> with properties prefixed by <code>hlc.</code>.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Version 0.9<br>
+Last updated 2019-08-07 15:02:40 CEST
+</div>
+</div>
+<!-- ************* docinfo-footer *************************************************************** -->
+<div class="Grid social" style="color:#d5dfea">
+  <div class="Cell Cell--2-12 m-Cell--withMargin">
+    <h2>Quick Links</h2>
+    <ul>
+      <li><a href="../downloads.html">Download</a></li>
+      <li><a href="../userguides/index.html">Documentation</a></li>
+      <li><a href="https://github.com/eclipse/n4js/">Source</a></li>
+      <li><a href="https://github.com/eclipse/n4js/issues">Issues</a></li>
+    </ul>
+  </div>
+  <div class="Cell Cell--2-12 m-Cell--withMargin">
+    <br/><br/>
+    <ul>
+      <li><a href="https://www.eclipse.org/forums/index.php/f/365/">Forum</a></li>
+      <li><a href="http://n4js.blogspot.de/">Blog</a></li>
+      <li><a href="https://dev.eclipse.org/mailman/listinfo/n4js-dev">Mailing List</a></li>
+      <li><a href="https://projects.eclipse.org/projects/technology.n4js">Eclipse Project Page</a></li>
+      <li><a href="https://twitter.com/n4jsdev">Tweets by n4jsdev</a></li>
+    </ul>
+  </div>
+  <div class="Cell Cell--2-12 m-Cell--withMargin">
+    <br/><br/>
+    <ul>
+      <li><a href="http://www.eclipse.org/">Eclipse Home</a></li>
+      <li><a href="http://www.eclipse.org/legal/privacy.php">Privacy Policy</a></li>
+      <li><a href="http://www.eclipse.org/legal/termsofuse.php">Terms of Use</a></li>
+      <li><a href="http://www.eclipse.org/legal/copyright.php">Copyright Agent</a></li>
+      <li><a href="http://www.eclipse.org/legal/">Legal</a></li>
+    </ul>
+  </div>
+  <div style="clear: both; height: 0; overflow: hidden;"></div>
+</div>
+
+<!-- ************* UI Scripts ************* -->
+<script type="text/javascript" src="scripts/back-to-top.js"></script>
+
+<script type="text/javascript" src="scripts/treeview.js"></script>
+<script type="text/javascript" src="scripts/toc.js"></script>
+
+<!-- ************* Prism.js Syntax Highlighting ************* -->
+<script src="scripts/prism.js"></script>
+
+<script type="text/javascript">
+	// Add the 'toclist' id for search function
+	$(".toc2 > ul").attr('id', 'toclist');
+	// Generate a Search input form
+	$("#toclist > li:first-of-type").before('<input type="text" id="pagesearch" onkeyup="search()" placeholder="Search for section...">');
+	$("#toclist > li:first-of-type").before('<i id="clear" class="fa fa-times-circle-o"></i>');
+	$("#clear").click(function(){
+	    $("#pagesearch").val('');
+	    search();
+	    $('.toc2 > ul').treeView('collapseAll');
+	});
+	// intialize Treeview.js
+	$(".toc2 > ul").treeView();
+	// Initialize Scrollspy
+</script>
+<!-- ************* docinfo-footer *************************************************************** -->
+</body>
+</html>

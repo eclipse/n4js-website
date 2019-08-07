@@ -1,0 +1,1450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 1.5.5">
+<meta name="author" content="2019-08-07 15:02:40 CEST">
+<title>N4JS Design Specification</title>
+<link rel="stylesheet" href="styles/spec.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
+<!-- ************* docinfo ******************************************************************* -->
+
+
+<!-- ************* Favicon ************-->
+<link rel="icon" href="images/favicon.ico" />
+
+<!-- ************* Back-to-top JQuery ************* -->
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
+
+
+<link href="styles/prism.min.css" rel="stylesheet" />
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+<!-- ************* Styles ************* -->
+<link rel="stylesheet" type="text/css" href="styles/n4jsspec-adoc.css">
+
+
+<!-- ****************** NavBar ****************** -->
+<div id="menubar">
+	<div class="banner">
+        <a href="https://www.eclipse.org/n4js/#"><img id="logo" src="images/n4js-logo.png" alt="Eclipse N4JS"></a>
+    </div>
+<ul>
+  <li><a href="index.html">Index</a></li>
+</ul>
+</div>
+<!-- ************* docinfo ******************************************************************* -->
+<style>
+      .admonitionblock td.icon .icon-todo:before{content:"\f249";color:#f4ee42}
+    </style>
+</head>
+<body class="book toc2 toc-left">
+<div id="header">
+<h1>N4JS Design Specification</h1>
+<div class="details">
+<span id="author" class="author">2019-08-07 15:02:40 CEST</span><br>
+<span id="revnumber">version 0.9</span>
+</div>
+<div id="toc" class="toc2">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="introduction.html#_introduction">1. Introduction</a>
+<ul class="sectlevel2">
+<li><a href="introduction.html#notation">1.1. Notation</a></li>
+<li><a href="introduction.html#sec:IDE_Overview">1.2. IDE Components</a>
+<ul class="sectlevel3">
+<li><a href="introduction.html#sec:Naming_Conventions">1.2.1. Naming Conventions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="eclipse_setup.html#_eclipse-setup">2. Eclipse Setup</a>
+<ul class="sectlevel2">
+<li><a href="eclipse_setup.html#_system-requirements">2.1. System Requirements</a></li>
+<li><a href="eclipse_setup.html#_contribute">2.2. Contribute</a>
+<ul class="sectlevel3">
+<li><a href="eclipse_setup.html#_eclipse-installer">2.2.1. Eclipse Installer</a>
+<ul class="sectlevel4">
+<li><a href="eclipse_setup.html#_changing-the-setup-script">2.2.1.1. Changing the Setup Script</a></li>
+</ul>
+</li>
+<li><a href="eclipse_setup.html#_manual-ide-configuration">2.2.2. Manual IDE Configuration</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="release_engineering.html#_release-engineering">3. Release Engineering</a>
+<ul class="sectlevel2">
+<li><a href="release_engineering.html#_nightly-build-on-eclipse-infrastructure">3.1. Nightly build on Eclipse infrastructure</a></li>
+<li><a href="release_engineering.html#_build-the-n4js-ide-from-command-line">3.2. Build the N4JS IDE from command line</a>
+<ul class="sectlevel3">
+<li><a href="release_engineering.html#_publish-maven-tooling-code-org-eclipse-n4js-releng-util-code">3.2.1. Publish maven-tooling <code>org.eclipse.n4js.releng.util</code></a></li>
+<li><a href="release_engineering.html#sec:test-verdaccio">3.2.2. Test Verdaccio containing n4js-libs</a></li>
+<li><a href="release_engineering.html#_generation-of-eclipse-help-for-spec-and-design-document">3.2.3. Generation of Eclipse help for spec and design document</a></li>
+</ul>
+</li>
+<li><a href="release_engineering.html#_updating-frameworks-and-dependencies">3.3. Updating frameworks and dependencies</a>
+<ul class="sectlevel3">
+<li><a href="release_engineering.html#_update-of-eclipse-emf-xtext-etc">3.3.1. Update of Eclipse, EMF, Xtext, etc.</a></li>
+<li><a href="release_engineering.html#_update-of-the-embedded-jre">3.3.2. Update of the embedded JRE</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="tips_and_tricks.html#_tips-and-tricks">4. Tips and Tricks</a>
+<ul class="sectlevel2">
+<li><a href="tips_and_tricks.html#_naming">4.1. Naming</a></li>
+<li><a href="tips_and_tricks.html#_logging">4.2. Logging</a></li>
+<li><a href="tips_and_tricks.html#_cancellation-handling">4.3. Cancellation Handling</a></li>
+<li><a href="tips_and_tricks.html#_caching">4.4. Caching</a></li>
+<li><a href="tips_and_tricks.html#_dependency-injection">4.5. Dependency Injection</a></li>
+<li><a href="tips_and_tricks.html#_miscellaneous">4.6. Miscellaneous</a></li>
+</ul>
+</li>
+<li><a href="parser.html#_parser">5. Parser</a>
+<ul class="sectlevel2">
+<li><a href="parser.html#sec:Parser_Overview">5.1. Overview</a></li>
+<li><a href="parser.html#sec:N4JS_Parser">5.2. N4JS Parser</a></li>
+<li><a href="parser.html#sec:Parser_Generation_Post_Processing">5.3. Parser Generation Post-Processing</a>
+<ul class="sectlevel3">
+<li><a href="parser.html#sec:Automatic_Semicolon_Insertion">5.3.1. Automatic Semicolon Insertion</a>
+<ul class="sectlevel4">
+<li><a href="parser.html#sec:Injected_code_in_the_Antlr_grammar_file">5.3.1.1. Injected code in the Antlr grammar file</a></li>
+<li><a href="parser.html#sec:Customized_error_recovery">5.3.1.2. Customized error recovery</a></li>
+</ul>
+</li>
+<li><a href="parser.html#sec:_No_line_terminator_allowed_here__handling">5.3.2. Async and <code>No line terminator allowed here</code> Handling</a></li>
+<li><a href="parser.html#sec:Regular_Expression">5.3.3. Regular Expression</a></li>
+<li><a href="parser.html#sec:Unicode">5.3.4. Unicode</a></li>
+<li><a href="parser.html#sec:Literals">5.3.5. Literals</a></li>
+</ul>
+</li>
+<li><a href="parser.html#sec:Modifiers">5.4. Modifiers</a></li>
+<li><a href="parser.html#sec:Conflict_Resolutions">5.5. Conflict Resolutions</a>
+<ul class="sectlevel3">
+<li><a href="parser.html#sec:Reserved_Keywords_vs__Identifier_Names">5.5.1. Reserved Keywords vs. Identifier Names</a></li>
+<li><a href="parser.html#sec:Operators_and_Generics">5.5.2. Operators and Generics</a></li>
+</ul>
+</li>
+<li><a href="parser.html#sec:Content_Assist_Parser">5.6. Content-Assist Parser</a></li>
+</ul>
+</li>
+<li><a href="type_system.html#_type-system">6. Type System</a>
+<ul class="sectlevel2">
+<li><a href="type_system.html#sec:Type_Model_and_Grammar">6.1. Type Model and Grammar</a>
+<ul class="sectlevel3">
+<li><a href="type_system.html#sec:Type_Model_Overview">6.1.1. Type Model Overview</a></li>
+<li><a href="type_system.html#sec:Built_in_Types">6.1.2. Built-in and Primitive Types</a></li>
+<li><a href="type_system.html#sec:Type_Model_DSL">6.1.3. Type Model DSL</a></li>
+</ul>
+</li>
+<li><a href="type_system.html#sec:Type_System_Implementation">6.2. Type System Implementation</a></li>
+<li><a href="type_system.html#sec:Type_Inference_combined_with_AST_Traversal">6.3. Type Inference of AST</a>
+<ul class="sectlevel3">
+<li><a href="type_system.html#sec:Type_Inference_combined_with_AST_Traversal__Background">6.3.1. Background</a></li>
+<li><a href="type_system.html#sec:Triggering_Type_Inference_of_AST">6.3.2. Triggering</a></li>
+<li><a href="type_system.html#sec:Traversal_Order_During_Type_Inference_of_AST">6.3.3. Traversal Order</a></li>
+<li><a href="type_system.html#sec:Cross_References_During_Type_Inference_of_AST">6.3.4. Cross-References</a></li>
+<li><a href="type_system.html#sec:Function_Accessor_Bodies_During_Type_Inference_of_AST">6.3.5. Function/Accessor Bodies</a></li>
+<li><a href="type_system.html#sec:Poly_Expressions_During_Type_Inference_of_AST">6.3.6. Poly Expressions</a></li>
+<li><a href="type_system.html#sec:Constraint_Solver_used_During_Type_Inference_of_AST">6.3.7. Constraint Solver</a></li>
+<li><a href="type_system.html#sec:Type_Guards_During_Type_Inference_of_AST">6.3.8. Type Guards</a></li>
+</ul>
+</li>
+<li><a href="type_system.html#sec:Structural_Typing">6.4. Structural Typing</a></li>
+</ul>
+</li>
+<li><a href="type_index.html#_type-index">7. Type Index</a>
+<ul class="sectlevel2">
+<li><a href="type_index.html#sec:Type_Index_Design_Rationale">7.1. Design Rationale</a>
+<ul class="sectlevel3">
+<li><a href="type_index.html#sec:Getting_the_Xtext_Index_Content_IResourceDescriptions">7.1.1. Getting the Xtext Index (<code>IResourceDescriptions</code>) Content</a></li>
+</ul>
+</li>
+<li><a href="type_index.html#sec:Design_Overview">7.2. Design Overview</a></li>
+<li><a href="type_index.html#sec:N4JS_Resource_Load_States">7.3. N4JS Resource Load States</a></li>
+<li><a href="type_index.html#sec:Type_Builder">7.4. Types Builder</a>
+<ul class="sectlevel3">
+<li><a href="type_index.html#sec:Type_Inference_not_allowed_in_Type_Builder">7.4.1. Type Inference not allowed in Types Builder</a></li>
+<li><a href="type_index.html#sec:ComputedTypeReferences">7.4.2. Deferred Type References</a></li>
+<li><a href="type_index.html#sec:Use_cases_of_ComputedTypeRef">7.4.3. Use cases of DeferredTypeRef</a></li>
+</ul>
+</li>
+<li><a href="type_index.html#sec:Incremental_Builder_Overview">7.5. Incremental Builder (Overview)</a>
+<ul class="sectlevel3">
+<li><a href="type_index.html#sec:Incremental_Builder_Overview__XtextBuilder">7.5.1. XtextBuilder</a></li>
+<li><a href="type_index.html#sec:Incremental_Builder_Overview__IBuilderState">7.5.2. IBuilderState</a>
+<ul class="sectlevel4">
+<li><a href="type_index.html#copy-and-update-xtext-index">7.5.2.1. Copy and Update Xtext Index</a></li>
+<li><a href="type_index.html#build-state-setup-phase">7.5.2.2. Build State Setup Phase</a></li>
+<li><a href="type_index.html#process-queued-uris">7.5.2.3. Process Queued URIs</a></li>
+<li><a href="type_index.html#queueing-affected-resources">7.5.2.4. Queueing Affected Resources</a></li>
+</ul>
+</li>
+<li><a href="type_index.html#sec:Incremental_Builder_Overview__Example">7.5.3. Example</a></li>
+</ul>
+</li>
+<li><a href="type_index.html#dirty-state-handling">7.6. Dirty state handling</a>
+<ul class="sectlevel3">
+<li><a href="type_index.html#use-case-restoring-types-from-user-data">7.6.1. Use case: Restoring types from user data</a></li>
+<li><a href="type_index.html#use-case-updating-the-xtext-index">7.6.2. Use case: Updating the Xtext index</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="project_model.html#_project-model">8. Project Model</a>
+<ul class="sectlevel2">
+<li><a href="project_model.html#sec:Package_json">8.1. Package.json File</a></li>
+<li><a href="project_model.html#_accessing-project-information">8.2. Accessing Project Information</a>
+<ul class="sectlevel3">
+<li><a href="project_model.html#sec:IN4JSCore">8.2.1. IN4JSCore</a></li>
+<li><a href="project_model.html#sec:N4JSModel">8.2.2. N4JSModel</a></li>
+<li><a href="project_model.html#sec:N4JSWorkspace">8.2.3. N4JSWorkspace</a></li>
+<li><a href="project_model.html#sec:N4JSProject">8.2.4. N4JSProject</a></li>
+<li><a href="project_model.html#sec:SourceContainer">8.2.5. SourceContainer</a></li>
+<li><a href="project_model.html#sec:N4JSProjectsStateHelper">8.2.6. N4JSProjectsStateHelper</a></li>
+</ul>
+</li>
+<li><a href="project_model.html#sec:Caching">8.3. Caching</a>
+<ul class="sectlevel3">
+<li><a href="project_model.html#_caching-of-externallibraryworkspace">8.3.1. Caching of ExternalLibraryWorkspace</a></li>
+<li><a href="project_model.html#_caching-of-n4jsprojectsstatehelper">8.3.2. Caching of N4JSProjectsStateHelper</a></li>
+</ul>
+</li>
+<li><a href="project_model.html#sec:WildcardPathFilter">8.4. WildcardPathFilter</a></li>
+<li><a href="project_model.html#sec:ProjectUtils">8.5. ProjectUtils</a></li>
+</ul>
+</li>
+<li><a href="binding.html#_binding">9. Binding</a>
+<ul class="sectlevel2">
+<li><a href="binding.html#sec:Binding_Design_Rationale">9.1. Design Rationale</a></li>
+<li><a href="binding.html#sec:Binding_to_Members">9.2. Binding to Members</a></li>
+<li><a href="binding.html#sec:Binding_Getter_Setter">9.3. Getter / Setter Binding</a></li>
+<li><a href="binding.html#chap:Statics">9.4. Static Member Binding</a></li>
+<li><a href="binding.html#sec:Binding_Enumeration">9.5. Enumeration Literals Binding</a></li>
+<li><a href="binding.html#sec:Accessibility_of_types_and_members">9.6. Accessibility of types and members</a></li>
+<li><a href="binding.html#sec:Member_Scope_Example">9.7. Member Scope Example</a></li>
+<li><a href="binding.html#sec:Scoping_for_Members_of_Composed_Type_Explained">9.8. Scoping for Members of Composed Type (Union/Intersection) Example</a></li>
+<li><a href="binding.html#sec:Binding_of_Structurally_References_Types">9.9. Structurally References Types</a></li>
+<li><a href="binding.html#sec:Building">9.10. Building</a>
+<ul class="sectlevel3">
+<li><a href="binding.html#sec:Build_Phases">9.10.1. Build Phases</a></li>
+<li><a href="binding.html#sec:Build_Scenarios">9.10.2. Build Scenarios</a></li>
+<li><a href="binding.html#sec:Lazy_linking_problem">9.10.3. Lazy linking problem</a></li>
+</ul>
+</li>
+<li><a href="binding.html#sec:Proxies_and_Proxy_Resolution">9.11. Proxies and Proxy Resolution (Overview)</a>
+<ul class="sectlevel3">
+<li><a href="binding.html#xtexts-lazy-linking-proxies">9.11.1. Xtext’s Lazy Linking Proxies</a></li>
+<li><a href="binding.html#standard-emf-proxies">9.11.2. Standard EMF Proxies</a></li>
+<li><a href="binding.html#_how-is-proxy-resolution-triggered">9.11.3. How is Proxy Resolution Triggered?</a></li>
+<li><a href="binding.html#_when-is-proxy-resolution-allowed">9.11.4. When is Proxy Resolution Allowed?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="validation.html#_validation">10. Validation</a>
+<ul class="sectlevel2">
+<li><a href="validation.html#sec:validation_overview">10.1. Validation overview</a></li>
+<li><a href="validation.html#sec:validation_control_flow">10.2. Validation control flow</a></li>
+<li><a href="validation.html#sec:validation_issue_ids">10.3. Issue IDs and Messages</a></li>
+<li><a href="validation.html#sec:validation_usage_patterns">10.4. Usage Pattern</a></li>
+<li><a href="validation.html#sec:validation_links">10.5. Links</a></li>
+</ul>
+</li>
+<li><a href="references.html#_references">11. References</a>
+<ul class="sectlevel2">
+<li><a href="references.html#sec:usecases">11.1. Use cases</a></li>
+<li><a href="references.html#sec:calculation_algorithm">11.2. Calculation algorithm</a>
+<ul class="sectlevel3">
+<li><a href="references.html#sec:Xtext_default_implementation">11.2.1. Xtext default implementation</a></li>
+<li><a href="references.html#sec:N4_implementation">11.2.2. N4JS implementation</a></li>
+</ul>
+</li>
+<li><a href="references.html#sec:PerformanceOfDependencyCalculation">11.3. Performance Of Dependency Calculation</a></li>
+<li><a href="references.html#sec:kinds_of_references">11.4. Kinds of references</a>
+<ul class="sectlevel3">
+<li><a href="references.html#sec:Cross_References_to_be_ignored">11.4.1. Cross References to be ignored</a></li>
+<li><a href="references.html#sec:Cross_References_to_be_handled">11.4.2. Cross References to be handled</a></li>
+</ul>
+</li>
+<li><a href="references.html#sec:transitive_dependencies">11.5. Transitive dependencies</a></li>
+<li><a href="references.html#sec:find-references">11.6. Find references</a>
+<ul class="sectlevel3">
+<li><a href="references.html#_background">11.6.1. Background</a></li>
+<li><a href="references.html#_how-find-references-work">11.6.2. How Find References Work</a>
+<ul class="sectlevel4">
+<li><a href="references.html#_step-1-convert-cursor-position-to-declared-element">11.6.2.1. Step 1: Convert Cursor Position to Declared Element</a></li>
+<li><a href="references.html#_step-2-convert-declared-element-to-target-uris">11.6.2.2. Step 2: Convert Declared Element to Target URIs</a></li>
+<li><a href="references.html#_step-3-filter-potential-resources">11.6.2.3. Step 3: Filter Potential Resources</a></li>
+<li><a href="references.html#_step-4-search-references-in-resource">11.6.2.4. Step 4: Search References in Resource</a></li>
+<li><a href="references.html#_limitations-and-possible-enhancements">11.6.2.5. Limitations and Possible Enhancements</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="compilation.html#_compilation">12. Compilation</a>
+<ul class="sectlevel2">
+<li><a href="compilation.html#chap:compilation">12.1. Introduction</a>
+<ul class="sectlevel3">
+<li><a href="compilation.html#sec:general_design_rationals">12.1.1. General design rationals</a>
+<ul class="sectlevel4">
+<li><a href="compilation.html#sec:logging_and_error_reporting">12.1.1.1. Logging and error reporting</a></li>
+<li><a href="compilation.html#sec:progress_monitor">12.1.1.2. Progress monitor</a></li>
+</ul>
+</li>
+<li><a href="compilation.html#sec:Xtext_Integration">12.1.2. Xtext Integration</a>
+<ul class="sectlevel4">
+<li><a href="compilation.html#sec:xtext_default_behaviour">12.1.2.1. Xtext default behaviour</a></li>
+<li><a href="compilation.html#sec:n4js_requirements">12.1.2.2. N4JS requirements</a></li>
+<li><a href="compilation.html#sec:compiler_discovery_in_ui">12.1.2.3. Compiler discovery in UI</a></li>
+<li><a href="compilation.html#sec:compiler_discovery_in_headless">12.1.2.4. Compiler discovery in headless</a></li>
+<li><a href="compilation.html#sec:general_generator_implementation">12.1.2.5. General generator implementation</a></li>
+<li><a href="compilation.html#sec:general_generator_activation">12.1.2.6. General generator activation</a></li>
+</ul>
+</li>
+<li><a href="compilation.html#sec:Overview_of_Input_Models">12.1.3. Overview of the Input Models</a></li>
+</ul>
+</li>
+<li><a href="compilation.html#sec:Core_Generator">12.2. Generators</a>
+<ul class="sectlevel3">
+<li><a href="compilation.html#sec:Compiler_Components">12.2.1. Generator Components</a></li>
+<li><a href="compilation.html#sec:Generator_architecture">12.2.2. Generator architecture</a></li>
+<li><a href="compilation.html#sec:Unified_Compiler_Configuration">12.2.3. Unified Compiler Configuration</a></li>
+</ul>
+</li>
+<li><a href="compilation.html#sec:Transpilers">12.3. Transpilers</a>
+<ul class="sectlevel3">
+<li><a href="compilation.html#sec:Phases">12.3.1. Overview</a></li>
+<li><a href="compilation.html#relation-between-ast-and-im">12.3.2. Relation between AST and IM</a></li>
+<li><a href="compilation.html#implementation-overview">12.3.3. Implementation Overview</a></li>
+<li><a href="compilation.html#sec:Guidelines_for_Implementing_Transformations">12.3.4. Guidelines for Implementing Transformations</a></li>
+<li><a href="compilation.html#symbol-table-in-the-im">12.3.5. Symbol Table in the IM</a></li>
+</ul>
+</li>
+<li><a href="compilation.html#sec:N4JS_to_EcmaScript_Transpiler">12.4. N4JS-to-EcmaScript Transpiler</a>
+<ul class="sectlevel3">
+<li><a href="compilation.html#sec:Overview_of_Transformations">12.4.1. Overview of Transformations</a></li>
+<li><a href="compilation.html#sec:Transpiling_members">12.4.2. Transpiling members</a>
+<ul class="sectlevel4">
+<li><a href="compilation.html#sec:Transpiling_members__Delegating_members">12.4.2.1. Techniques for special member handling</a></li>
+<li><a href="compilation.html#sec:Transpiling_members__Partial_shadowing_of_getter_setter_pairs">12.4.2.2. Partial shadowing</a></li>
+<li><a href="compilation.html#sec:Transpiling_members__Consuming_or_inheriting_members_of_an_interface">12.4.2.3. Consuming or inheriting members of an interface</a></li>
+<li><a href="compilation.html#sec:Transpiling_members__Static_polyfill">12.4.2.4. Static polyfill</a></li>
+<li><a href="compilation.html#sec:Transpiling_members__API_implementation_stubs">12.4.2.5. API / implementation stubs</a></li>
+</ul>
+</li>
+<li><a href="compilation.html#sec:Support_for_incomplete_API_implementation_testing_in_the_N4JS_to_EcmaScript_5_Transpiler">12.4.3. Support for incomplete API implementation testing</a>
+<ul class="sectlevel4">
+<li><a href="compilation.html#sec:Modifications_in_Impl_projects">12.4.3.1. Modifications in Impl projects</a></li>
+<li><a href="compilation.html#sec:Implementation_of_stub_generation">12.4.3.2. Implementation of stub-generation</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="compilation.html#sec:n4jsc_Headless_Compiler_Interface">12.5. n4jsc Headless Compiler Interface</a>
+<ul class="sectlevel3">
+<li><a href="compilation.html#sec:building_the_headless_compiler">12.5.1. building the headless compiler</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="execution.html#_execution">13. Execution</a>
+<ul class="sectlevel2">
+<li><a href="execution.html#sec:N4JS_Project_Execution_And_Linking_Model">13.1. N4JS Project Execution And Linking Model</a>
+<ul class="sectlevel3">
+<li><a href="execution.html#subsec:N4JS_Execution_With_NodeJS">13.1.1. N4JS Execution With NodeJS</a></li>
+</ul>
+</li>
+<li><a href="execution.html#sec:N4JS_Execution_And_Linking_File">13.2. N4JS Execution And Linking File</a>
+<ul class="sectlevel3">
+<li><a href="execution.html#subsec:NodeJS_Specific_ELF">13.2.1. NodeJS Specific ELF</a></li>
+</ul>
+</li>
+<li><a href="execution.html#sec:Runners-execution">13.3. Runners</a>
+<ul class="sectlevel3">
+<li><a href="execution.html#subsec:N4_Runtime_Environments_Convention">13.3.1. N4 Runtime Environments Convention</a></li>
+<li><a href="execution.html#subsec:Passing_Information_from_IDE_to_Execution_Code_in_Runtime_Environment">13.3.2. Passing Information from IDE to Execution Code in Runtime Environment</a></li>
+<li><a href="execution.html#subsec:Runners_Design">13.3.3. Runners Design</a></li>
+</ul>
+</li>
+<li><a href="execution.html#sec:Legacy_Execution_Engine">13.4. Legacy Execution Engine</a></li>
+<li><a href="execution.html#sec:Design">13.5. Design</a>
+<ul class="sectlevel3">
+<li><a href="execution.html#sec:Usage_Outside_N4JSIDE">13.5.1. Usage Outside N4JSIDE</a>
+<ul class="sectlevel4">
+<li><a href="execution.html#sec:Use_Node_with_Maven">13.5.1.1. Use Node with Maven</a></li>
+</ul>
+</li>
+<li><a href="execution.html#sec:Usage_Inside_N4JSIDE">13.5.2. Usage Inside N4JSIDE</a></li>
+</ul>
+</li>
+<li><a href="execution.html#sec:Runtime_Injection">13.6. Runtime Injection</a>
+<ul class="sectlevel3">
+<li><a href="execution.html#sec:Running_String_Code">13.6.1. Running String Code</a></li>
+<li><a href="execution.html#sec:Running_File_Code">13.6.2. Running File Code</a></li>
+<li><a href="execution.html#sec:Injection_Code_Example">13.6.3. Injection Code Example</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="tests.html#_tests">14. Tests</a>
+<ul class="sectlevel2">
+<li><a href="tests.html#sec:Performance_Tests">14.1. Performance Tests</a>
+<ul class="sectlevel3">
+<li><a href="tests.html#sec:Synthetic_Performance_Tests">14.1.1. Synthetic Performance Tests</a>
+<ul class="sectlevel4">
+<li><a href="tests.html#sec:Design_of_Generator">14.1.1.1. Design of Generator</a></li>
+<li><a href="tests.html#sec:Design_of_Performance_Test_Execution">14.1.1.2. Design of Performance Test Configuration and Execution</a></li>
+<li><a href="tests.html#sec:JUnit_Configuration">14.1.1.3. JUnit Configuration</a></li>
+<li><a href="tests.html#sec:JUnitBenchmark_Test_Configuration">14.1.1.4. JUnitBenchmark Test Configuration</a></li>
+<li><a href="tests.html#sec:JUnitBenchmark_Report_Configuration">14.1.1.5. JUnitBenchmark Report Configuration</a></li>
+<li><a href="tests.html#sec:JUnitBenchmark_Run_Configuration">14.1.1.6. JUnitBenchmark Run Configuration</a></li>
+<li><a href="tests.html#sec:JUnitBenchmark_Example">14.1.1.7. JUnitBenchmark Example</a></li>
+<li><a href="tests.html#sec:Note_on_Jenkins_Job">14.1.1.8. Note on Jenkins Job</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="tests.html#sec:ECMA_Tests">14.2. ECMA Tests</a>
+<ul class="sectlevel3">
+<li><a href="tests.html#sec:Grammar_Tests">14.2.1. Grammar Tests</a>
+<ul class="sectlevel4">
+<li><a href="tests.html#sec:Negative_Tests">14.2.1.1. Negative Tests</a></li>
+<li><a href="tests.html#sec:Test_Exclusion">14.2.1.2. Test Exclusion</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="tests.html#sec:Integration_Tests">14.3. Integration Tests</a></li>
+<li><a href="tests.html#sec:Test_Helpers">14.4. Test Helpers</a>
+<ul class="sectlevel3">
+<li><a href="tests.html#sec:Parameterized_N4JS_Tests">14.4.1. Parameterized N4JS tests</a>
+<ul class="sectlevel4">
+<li><a href="tests.html#sec:ParameterizedXtextRunner">14.4.1.1. ParameterizedXtextRunner</a></li>
+<li><a href="tests.html#sec:TestCodeProvider">14.4.1.2. TestCodeProvider</a></li>
+<li><a href="tests.html#sec:Example_Of_Parameterized_Parser_Test">14.4.1.3. Example of parameterized parser test</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="tests.html#sec:Issue_Suppression">14.5. Issue Suppression</a></li>
+<li><a href="tests.html#sec:Xpect_Tests">14.6. Xpect Tests</a>
+<ul class="sectlevel3">
+<li><a href="tests.html#sec:Xpect_Test_Setup">14.6.1. Xpect Test Setup</a></li>
+<li><a href="tests.html#sec:Xpect_Issue_Suppression">14.6.2. Xpect Issue Suppression</a></li>
+<li><a href="tests.html#sec:Xpect_Provided_Test_Methods">14.6.3. Xpect Provided Test Methods</a>
+<ul class="sectlevel4">
+<li><a href="tests.html#errors">14.6.3.1. errors</a></li>
+<li><a href="tests.html#warnings">14.6.3.2. warnings</a></li>
+</ul>
+</li>
+<li><a href="tests.html#sec:N4JS_Specific_Xpect_Test_Methods">14.6.4. N4JS Specific Xpect Test Methods</a>
+<ul class="sectlevel4">
+<li><a href="tests.html#sec:XPECT_noerrors">14.6.4.1. noerrors and nowarnings</a></li>
+<li><a href="tests.html#sec:XPECT_scope">14.6.4.2. scope</a></li>
+<li><a href="tests.html#sec:XPECT_scopeWithPosition">14.6.4.3. scopeWithPosition</a></li>
+<li><a href="tests.html#sec:XPECT_scopeWithResource">14.6.4.4. scopeWithResource</a></li>
+<li><a href="tests.html#sec:XPECT_binding">14.6.4.5. binding</a></li>
+<li><a href="tests.html#sec:XPECT_linkedPathname">14.6.4.6. linkedPathname</a></li>
+<li><a href="tests.html#sec:XPECT_type_of">14.6.4.7. type of</a></li>
+<li><a href="tests.html#sec:XPECT_expectedType">14.6.4.8. expectedType</a></li>
+<li><a href="tests.html#sec:XPECT_elementKeyword">14.6.4.9. elementKeyword</a></li>
+<li><a href="tests.html#sec:XPECT_accessModifier">14.6.4.10. accessModifier</a></li>
+<li><a href="tests.html#sec:XPECT_compileResult">14.6.4.11. compileResult</a></li>
+<li><a href="tests.html#sec:XPECT_output">14.6.4.12. output</a></li>
+<li><a href="tests.html#sec:XPECT_outputRegEx">14.6.4.13. outputRegEx</a></li>
+<li><a href="tests.html#sec:XPECT_calculatedAccessModifier">14.6.4.14. calculatedAccessModifier</a></li>
+<li><a href="tests.html#sec:XPECT_spec">14.6.4.15. spec</a></li>
+<li><a href="tests.html#sec:XPECT_deadCode">14.6.4.16. deadCode</a></li>
+<li><a href="tests.html#sec:XPECT_returnOrThrows">14.6.4.17. returnOrThrows</a></li>
+<li><a href="tests.html#sec:XPECT_lint">14.6.4.18. lint</a></li>
+<li><a href="tests.html#sec:XPECT_lintFails">14.6.4.19. lintFails</a></li>
+</ul>
+</li>
+<li><a href="tests.html#sec:FIXME_Xpect_modifier">14.6.5. FIXME Xpect modifier</a></li>
+<li><a href="tests.html#sec:Expectmatrix_Xpect_Test_Methods">14.6.6. Expectmatrix Xpect tests</a></li>
+<li><a href="tests.html#xpect-lint-tests">14.6.7. Xpect Lint Tests</a></li>
+</ul>
+</li>
+<li><a href="tests.html#xpect-proposal-tests">14.7. Xpect Proposal Tests</a>
+<ul class="sectlevel3">
+<li><a href="tests.html#sec:Validation_vs__Non_Validation">14.7.1. Validation vs. Non-Validation</a></li>
+<li><a href="tests.html#sec:General_Proposal_Test_Features">14.7.2. General Proposal Test Features</a>
+<ul class="sectlevel4">
+<li><a href="tests.html#sec:Test_Variables">14.7.2.1. Test Variables</a></li>
+<li><a href="tests.html#sec:Location_and_Selection">14.7.2.2. at – Location and Selection</a></li>
+<li><a href="tests.html#sec:Multi_Line_Expectations_in_Proposal_Tests">14.7.2.3. Multi Line Expectations in Proposal Tests</a></li>
+<li><a href="tests.html#sec:Timeout">14.7.2.4. Timeout and Performance</a></li>
+</ul>
+</li>
+<li><a href="tests.html#proposals-verify-existence-of-proposals">14.7.3. proposals – Verify Existence of Proposals</a></li>
+<li><a href="tests.html#sec:Verify_displayed_string">14.7.4. display – Verify displayed string</a></li>
+<li><a href="tests.html#sec:Apply_Proposal">14.7.5. apply – Apply Proposal</a>
+<ul class="sectlevel4">
+<li><a href="tests.html#resource-application-in-other-files">14.7.5.1. resource – application in other files</a></li>
+</ul>
+</li>
+<li><a href="tests.html#sec:Content_Assist_Cycling">14.7.6. kind – Content Assist Cycling</a></li>
+<li><a href="tests.html#fileValidVerify-validation-status">14.7.7. fileValid – Verify validation status</a></li>
+</ul>
+</li>
+<li><a href="tests.html#sec:Apply_Proposal_And_Execute_Tests">14.8. Apply Proposal And Execute Tests</a></li>
+<li><a href="tests.html#sec:Organize_Imports_Test">14.9. Organize Imports Test</a>
+<ul class="sectlevel3">
+<li><a href="tests.html#organizeimports">14.9.1. organizeImports</a></li>
+</ul>
+</li>
+<li><a href="tests.html#sec:Access_Control_Test">14.10. Access Control Test</a>
+<ul class="sectlevel3">
+<li><a href="tests.html#test-scenarios">14.10.1. Test Scenarios</a></li>
+<li><a href="tests.html#n4js-code-generator">14.10.2. N4JS Code Generator</a></li>
+<li><a href="tests.html#xtext-issue-matcher">14.10.3. Xtext Issue Matcher</a></li>
+</ul>
+</li>
+<li><a href="tests.html#sec:Smoke_Tests">14.11. Smoke Tests</a>
+<ul class="sectlevel3">
+<li><a href="tests.html#how-to-handle-smoke-test-errors">14.11.1. How to handle smoke test errors?</a></li>
+<li><a href="tests.html#smoketester-and-exceptionanalyzer">14.11.2. SmokeTester and ExceptionAnalyzer</a></li>
+</ul>
+</li>
+<li><a href="tests.html#sec:UI_Tests_with_SWTBot">14.12. UI Tests with SWTBot</a>
+<ul class="sectlevel3">
+<li><a href="tests.html#writing-swtbot-tests">14.12.1. Writing SWTBot Tests</a></li>
+<li><a href="tests.html#running-swtbot-tests">14.12.2. Running SWTBot Tests</a></li>
+</ul>
+</li>
+<li><a href="tests.html#sec:Debugging_UI_Tests">14.13. Debugging UI Tests</a>
+<ul class="sectlevel3">
+<li><a href="tests.html#sec:Connecting_to_the_X_server_on_the_build_node">14.13.1. Connecting to the X-server on the build-node</a></li>
+<li><a href="tests.html#sec:Tools_to_investigate_the_java_stack">14.13.2. Tools to investigate the java-stack</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="ui_concepts.html#_ui-concepts">15. UI Concepts</a>
+<ul class="sectlevel2">
+<li><a href="ui_concepts.html#sec:User_Interface_Concepts">15.1. User Interface Concepts</a>
+<ul class="sectlevel3">
+<li><a href="ui_concepts.html#sec:Eclipse_UI_Concepts">15.1.1. Eclipse UI Concepts</a>
+<ul class="sectlevel4">
+<li><a href="ui_concepts.html#sec:Label_Provider">15.1.1.1. Label Provider</a></li>
+<li><a href="ui_concepts.html#sec:Markers">15.1.1.2. Markers</a></li>
+<li><a href="ui_concepts.html#sec:Commands__Toolbar_and_Menus">15.1.1.3. Commands, Toolbar and Menus</a></li>
+<li><a href="ui_concepts.html#sec:Content_Assist">15.1.1.4. Content Assist</a></li>
+<li><a href="ui_concepts.html#sec:Quick_Fixes">15.1.1.5. Quick Fixes</a></li>
+<li><a href="ui_concepts.html#sec:Quick_Assist">15.1.1.6. Quick Assist</a></li>
+<li><a href="ui_concepts.html#sec:Clean_Up_Actions">15.1.1.7. Clean Up Actions</a></li>
+<li><a href="ui_concepts.html#sec:Save_Actions">15.1.1.8. Save Actions</a></li>
+<li><a href="ui_concepts.html#sec:Auto_Edit">15.1.1.9. Auto Edit</a></li>
+<li><a href="ui_concepts.html#sec:Template_Proposals">15.1.1.10. Template Proposals</a></li>
+<li><a href="ui_concepts.html#sec:Outline_View___Quick_Outline">15.1.1.11. Outline View / Quick Outline</a></li>
+<li><a href="ui_concepts.html#sec:Navigator__Package_Explorer__Project_Explorer">15.1.1.12. Navigator, Package Explorer, Project Explorer</a></li>
+<li><a href="ui_concepts.html#sec:Hyperlinking_and_Navigation">15.1.1.13. Hyperlinking and Navigation</a></li>
+<li><a href="ui_concepts.html#sec:Syntax_and_Semantic_Coloring">15.1.1.14. Syntax and Semantic Coloring</a></li>
+<li><a href="ui_concepts.html#sec:Code_Formatter">15.1.1.15. Code Formatter</a></li>
+<li><a href="ui_concepts.html#sec:Wizards">15.1.1.16. Wizards</a></li>
+<li><a href="ui_concepts.html#sec:Cheat_Sheets">15.1.1.17. Cheat Sheets</a></li>
+<li><a href="ui_concepts.html#sec:Context_sensitive_Help">15.1.1.18. Context-sensitive Help</a></li>
+<li><a href="ui_concepts.html#sec:Hovers">15.1.1.19. Hovers</a></li>
+<li><a href="ui_concepts.html#sec:Folding">15.1.1.20. Folding</a></li>
+<li><a href="ui_concepts.html#sec:Customizable_validation___severity">15.1.1.21. Customizable validation / severity</a></li>
+<li><a href="ui_concepts.html#sec:Proposals">15.1.1.22. Proposals</a></li>
+</ul>
+</li>
+<li><a href="ui_concepts.html#sec:Non_Eclipse_UI_Concepts">15.1.2. Non-Eclipse UI Concepts</a>
+<ul class="sectlevel4">
+<li><a href="ui_concepts.html#sec:Overlays">15.1.2.1. Overlays</a></li>
+<li><a href="ui_concepts.html#sec:Goto__Inferred__Type">15.1.2.2. Goto (Inferred) Type</a></li>
+<li><a href="ui_concepts.html#sec:Postfix_Completion">15.1.2.3. Postfix Completion</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="ui_concepts.html#_user-interface-resources">15.2. User Interface Resources</a>
+<ul class="sectlevel3">
+<li><a href="ui_concepts.html#_icons">15.2.1. Icons</a>
+<ul class="sectlevel4">
+<li><a href="ui_concepts.html#_eclipse-platform-icons">15.2.1.1. Eclipse Platform Icons</a></li>
+<li><a href="ui_concepts.html#_n4js-specific-icons">15.2.1.2. N4JS Specific Icons</a></li>
+<li><a href="ui_concepts.html#_high-resolution-icons">15.2.1.3. High Resolution Icons</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="formatting.html#_formatting">16. Formatting</a>
+<ul class="sectlevel2">
+<li><a href="formatting.html#sec:FmtObjective">16.1. Objective</a>
+<ul class="sectlevel3">
+<li><a href="formatting.html#sec:FmtFormatting_Comments">16.1.1. Formatting Comments</a></li>
+</ul>
+</li>
+<li><a href="formatting.html#sec:FmtArchitecture">16.2. Architecture</a>
+<ul class="sectlevel3">
+<li><a href="formatting.html#sec:Implementation_example">16.2.1. Implementation example</a></li>
+</ul>
+</li>
+<li><a href="formatting.html#sec:FmtFormatter_Implementation_Guidelines">16.3. Formatter Implementation Guidelines</a></li>
+<li><a href="formatting.html#sec:FmtConfiguration">16.4. Configuration</a></li>
+<li><a href="formatting.html#sec:FmtUI_Integration">16.5. UI Integration</a></li>
+<li><a href="formatting.html#sec:FmtUnit_Testing_with_Xpect">16.6. Unit Testing with Xpect</a></li>
+</ul>
+</li>
+<li><a href="external_libraries.html#_external-libraries">17. External Libraries</a>
+<ul class="sectlevel2">
+<li><a href="external_libraries.html#sec:Major_Components">17.1. Major Components</a>
+<ul class="sectlevel3">
+<li><a href="external_libraries.html#subsec:External_Resources">17.1.1. External Resources</a></li>
+<li><a href="external_libraries.html#subsec:External_Library_Workspace">17.1.2. External Library Workspace</a></li>
+<li><a href="external_libraries.html#subsec:External_Library_Preference_Store">17.1.3. External Library Preference Store</a></li>
+<li><a href="external_libraries.html#subsec:npm_Manager">17.1.4. Library Manager</a></li>
+<li><a href="external_libraries.html#subsec:External_Library_Builder_Helper">17.1.5. External Library Builder</a></li>
+<li><a href="external_libraries.html#subsec:External_Library_Xtext_Index_Persister">17.1.6. External Library Xtext Index Persister</a></li>
+<li><a href="external_libraries.html#subsec:External_Library_Preference_Page">17.1.7. External Library Preference Page</a></li>
+</ul>
+</li>
+<li><a href="external_libraries.html#sec:Headless_External_Library_Support">17.2. Headless External Library Support</a>
+<ul class="sectlevel3">
+<li><a href="external_libraries.html#_custom-npm-settings">17.2.1. Custom npm settings</a></li>
+</ul>
+</li>
+<li><a href="external_libraries.html#sec:lmFutureWork">17.3. Future Work</a>
+<ul class="sectlevel3">
+<li><a href="external_libraries.html#subsec:lmMultipleDependencyScope">17.3.1. Multiple Dependency Scope</a></li>
+<li><a href="external_libraries.html#subsec:lmRunTestsFromLibrary">17.3.2. Run Tests from TestLibrary</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="json_support.html#sec:JSON_Support">18. JSON Support</a>
+<ul class="sectlevel2">
+<li><a href="json_support.html#sec:JSON_Parser">18.1. JSON Parser</a>
+<ul class="sectlevel3">
+<li><a href="json_support.html#sec:JSON_Parser_Unicode_Escaping">18.1.1. Escaping Unicode Control Characters in String Literals</a></li>
+<li><a href="json_support.html#sec:JSON_Parser_Empty_Text">18.1.2. Empty Text</a></li>
+<li><a href="json_support.html#sec:JSON_Parser_Nested_Structures">18.1.3. Nested Structures</a></li>
+<li><a href="json_support.html#sec:JSON_Parser_Whitespace">18.1.4. Whitespace</a></li>
+<li><a href="json_support.html#sec:JSON_Parser_Comments">18.1.5. Comments</a></li>
+</ul>
+</li>
+<li><a href="json_support.html#sec:JSON_Language_Extensions">18.2. JSON Language Extensions</a>
+<ul class="sectlevel3">
+<li><a href="json_support.html#sec:JSON_Validator_Extensions">18.2.1. JSON Validator Extensions</a>
+<ul class="sectlevel4">
+<li><a href="json_support.html#sec:File_Specitic_Validator_Extensions">18.2.1.1. File-Specific Validator Extensions</a></li>
+<li><a href="json_support.html#sec:JSON_Declarative_JSON_Validator_Extensions">18.2.1.2. Declarative JSON Validator Extensions</a></li>
+</ul>
+</li>
+<li><a href="json_support.html#_json-resource-description-strategy">18.2.2. JSON Resource Description Strategy</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="jsdoc.html#_jsdoc">19. JSDoc</a>
+<ul class="sectlevel2">
+<li><a href="jsdoc.html#sec:Design_Rationale">19.1. Design Rationale</a>
+<ul class="sectlevel3">
+<li><a href="jsdoc.html#_general-design">19.1.1. General Design</a></li>
+<li><a href="jsdoc.html#sec:Type_Expressions">19.1.2. Type Expressions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="docexporter.html#_docexporter">20. DocExporter</a>
+<ul class="sectlevel2">
+<li><a href="docexporter.html#sec:Specification_Exporter">20.1. Specification Exporter</a></li>
+</ul>
+</li>
+<li><a href="rename_refactoring.html#_rename-refactoring">21. Rename Refactoring</a>
+<ul class="sectlevel2">
+<li><a href="rename_refactoring.html#_rename-refactoring-ui-interaction">21.1. Rename Refactoring UI interaction</a></li>
+<li><a href="rename_refactoring.html#_renameelementprocessor-interaction">21.2. RenameElementProcessor interaction</a></li>
+</ul>
+</li>
+<li><a href="#chap:flowgraphs">22. Flow Graphs</a>
+<ul class="sectlevel2">
+<li><a href="#sec:flowgraphs_overview">22.1. Flow graphs overview</a>
+<ul class="sectlevel3">
+<li><a href="#_internal-graph">22.1.1. Internal graph</a></li>
+<li><a href="#_optimizations">22.1.2. Optimizations</a></li>
+<li><a href="#_api-for-client-analyses">22.1.3. API for client analyses</a>
+<ul class="sectlevel4">
+<li><a href="#_mapping-from-internal-to-ast-elements">22.1.3.1. Mapping from internal to AST elements</a></li>
+<li><a href="#_graph-visitor">22.1.3.2. Graph visitor</a></li>
+<li><a href="#_graph-explorer">22.1.3.3. Graph explorer</a></li>
+<li><a href="#_branch-walker">22.1.3.4. Branch walker</a></li>
+<li><a href="#_example-1-compute-string-for-each-path">22.1.3.5. Example 1: Compute string for each path</a></li>
+<li><a href="#_path-quantor">22.1.3.6. Path quantor</a></li>
+</ul>
+</li>
+<li><a href="#_control-flow-analyses">22.1.4. Control flow analyses</a>
+<ul class="sectlevel4">
+<li><a href="#_dead-code-analysis">22.1.4.1. Dead code analysis</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#sec:dataflow">22.2. Dataflow</a>
+<ul class="sectlevel3">
+<li><a href="#_dataflow-graph">22.2.1. Dataflow graph</a></li>
+<li><a href="#_dataflow-analyses">22.2.2. Dataflow analyses</a>
+<ul class="sectlevel4">
+<li><a href="#_def-def-def-nothing-analysis">22.2.2.1. Def&#8594;Def / Def&#8594;Nothing analysis</a></li>
+<li><a href="#_def-use-decl-analysis">22.2.2.2. Def|Use&#8592;Decl analysis</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="publish_npms.html#sec:publish-npms-to-public">23. Publish npms</a>
+<ul class="sectlevel2">
+<li><a href="publish_npms.html#sec:publish-npms-n4js-maven">23.1. Publish n4js-libs to during  maven build</a></li>
+</ul>
+</li>
+<li><a href="appendix_a_hints.html#sec:Hints">Appendix A: Hints</a>
+<ul class="sectlevel2">
+<li><a href="appendix_a_hints.html#sec:XtextInjection">A.1. Xtext Injection</a>
+<ul class="sectlevel3">
+<li><a href="appendix_a_hints.html#sec:DI_MultipleInjectors_Singletons">A.1.1. Multiple Injectors and Singletons</a>
+<ul class="sectlevel4">
+<li><a href="appendix_a_hints.html#sec:DI_avoid_duplicate_singletons">A.1.1.1. Avoiding duplicate singletons</a>
+<ul class="sectlevel5">
+<li><a href="appendix_a_hints.html#sec:DI_binding_in_shared">A.1.1.1.1. Defining binding in the shared injector</a></li>
+<li><a href="appendix_a_hints.html#sec:DI_binding_in_custom">A.1.1.1.2. Defining binding in the custom injector</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="appendix_a_hints.html#sec:DI_Hints">A.1.2. Dependency Injection Hints</a>
+<ul class="sectlevel4">
+<li><a href="appendix_a_hints.html#sec:DI_custom_bundle">A.1.2.1. Use DI in custom bundle, use DI with extensions</a>
+<ul class="sectlevel5">
+<li><a href="appendix_a_hints.html#sec:DI_custom_bundle_problem">A.1.2.1.1. Problem</a></li>
+<li><a href="appendix_a_hints.html#sec:DI_custom_bundle_solution">A.1.2.1.2. Solution</a></li>
+</ul>
+</li>
+<li><a href="appendix_a_hints.html#sec:Access_Other_DSL_Injector">A.1.2.2. How do I get the Guice Injector of my language?</a>
+<ul class="sectlevel5">
+<li><a href="appendix_a_hints.html#sec:DSL_Injector_UI_context">A.1.2.2.1. UI context</a></li>
+<li><a href="appendix_a_hints.html#sec:DSL_Injector_Non_UI_context">A.1.2.2.2. Non UI context but with injection context</a></li>
+<li><a href="appendix_a_hints.html#sec:DSL_Injector_Non_UI_non_injection_context">A.1.2.2.3. Non UI context without injection context</a></li>
+</ul>
+</li>
+<li><a href="appendix_a_hints.html#sec:Cancel_Indicator">A.1.2.3. How do I get cancel indicators in different contexts?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="appendix_a_hints.html#sec:Eclipse">A.2. Eclipse</a>
+<ul class="sectlevel3">
+<li><a href="appendix_a_hints.html#sec:Show_Xtext_Index">A.2.1. Show the current Xtext index</a></li>
+<li><a href="appendix_a_hints.html#sec:Plugin_spy">A.2.2. Plug-in spy</a></li>
+</ul>
+</li>
+<li><a href="appendix_a_hints.html#sec:Maven-hints">A.3. Maven</a>
+<ul class="sectlevel3">
+<li><a href="appendix_a_hints.html#how-to-check-for-maven-mojo-updates">A.3.1. How to check for Maven MOJO updates</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="appendix_b_module_loading.html#_module-loading">Appendix B: Module Loading</a>
+<ul class="sectlevel2">
+<li><a href="appendix_b_module_loading.html#sec:Dependency_Management">B.1. Dependency Management</a></li>
+<li><a href="appendix_b_module_loading.html#ecmascript-modules">B.2. ECMAScript Modules</a>
+<ul class="sectlevel3">
+<li><a href="appendix_b_module_loading.html#sec:ES5_Modules_Systems">B.2.1. ES5 Modules Systems</a></li>
+<li><a href="appendix_b_module_loading.html#sec:ES6_Modules">B.2.2. ES6 Modules</a></li>
+</ul>
+</li>
+<li><a href="appendix_b_module_loading.html#sec:ECMAScript_Module_Loaders">B.3. ECMAScript Module Loaders</a>
+<ul class="sectlevel3">
+<li><a href="appendix_b_module_loading.html#sec:ES6_Module_Loaders">B.3.1. ES6 Module Loaders</a></li>
+<li><a href="appendix_b_module_loading.html#sec:Polyfills_for_ES6_Module_Loaders">B.3.2. Polyfills for ES6 Module Loaders</a>
+<ul class="sectlevel4">
+<li><a href="appendix_b_module_loading.html#sec:es6_module_loader">B.3.2.1. es6-module-loader</a></li>
+<li><a href="appendix_b_module_loading.html#sec:SystemJS">B.3.2.2. SystemJS</a></li>
+<li><a href="appendix_b_module_loading.html#sec:Demo">B.3.2.3. Demo</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="appendix_b_module_loading.html#case-study-typescript">B.4. Case Study : TypeScript</a>
+<ul class="sectlevel3">
+<li><a href="appendix_b_module_loading.html#sec:ES6_Modules_Support">B.4.1. ES6 Modules Support</a></li>
+<li><a href="appendix_b_module_loading.html#sec:TypeScript_and_Module_Loading">B.4.2. TypeScript and Module Loading</a></li>
+</ul>
+</li>
+<li><a href="appendix_b_module_loading.html#sec:Cyclic_Dependencies">B.5. Cyclic Dependencies</a>
+<ul class="sectlevel3">
+<li><a href="appendix_b_module_loading.html#sec:Setup">B.5.1. Setup</a></li>
+<li><a href="appendix_b_module_loading.html#sec:Transpile_and_Execute">B.5.2. Transpile and Execute</a>
+<ul class="sectlevel4">
+<li><a href="appendix_b_module_loading.html#sec:Module_Format___AMD">B.5.2.1. Module Format = AMD</a></li>
+<li><a href="appendix_b_module_loading.html#sec:Module_Format___CommonJS">B.5.2.2. Module Format = CommonJS</a></li>
+<li><a href="appendix_b_module_loading.html#sec:Module_Format___SystemJS">B.5.2.3. Module Format = SystemJS</a></li>
+</ul>
+</li>
+<li><a href="appendix_b_module_loading.html#sec:Conclusion">B.5.3. Conclusion</a></li>
+</ul>
+</li>
+<li><a href="appendix_b_module_loading.html#system.register-as-transpilation-target">B.6. System.register as transpilation target</a>
+<ul class="sectlevel3">
+<li><a href="appendix_b_module_loading.html#sec:Introduction">B.6.1. Introduction</a>
+<ul class="sectlevel4">
+<li><a href="appendix_b_module_loading.html#sec:External_Transpilers">B.6.1.1. External Transpilers</a></li>
+<li><a href="appendix_b_module_loading.html#sec:Example_of_a_System_register_module">B.6.1.2. Example of a System.register module</a></li>
+</ul>
+</li>
+<li><a href="appendix_b_module_loading.html#sec:Structure_of_a_System_register_module">B.6.2. Structure of a System.register module</a></li>
+<li><a href="appendix_b_module_loading.html#_transpilation-hints">B.6.3. Transpilation Hints</a>
+<ul class="sectlevel4">
+<li><a href="appendix_b_module_loading.html#sec:Handling_Imports">B.6.3.1. Handling Imports</a></li>
+<li><a href="appendix_b_module_loading.html#sec:__exportFn__">B.6.3.2. &lt;&lt;exportFn&gt;&gt;</a></li>
+<li><a href="appendix_b_module_loading.html#sec:Handling_Exports">B.6.3.3. Handling Exports</a></li>
+</ul>
+</li>
+<li><a href="appendix_b_module_loading.html#sec:Examples_w__Circular_Dependencies">B.6.4. Examples w/ Circular Dependencies</a></li>
+<li><a href="appendix_b_module_loading.html#sec:N4JS_Examples_w__Circular_Dependencies">B.6.5. N4JS Examples w/ Circular Dependencies</a>
+<ul class="sectlevel4">
+<li><a href="appendix_b_module_loading.html#sec:Unresolved_Cyclic_Dependencies">B.6.5.1. Unresolved Cyclic Dependencies</a></li>
+<li><a href="appendix_b_module_loading.html#sec:Variables___Functions">B.6.5.2. Examples with Variables &amp; Functions</a></li>
+<li><a href="appendix_b_module_loading.html#sec:Classes">B.6.5.3. Examples with Classes</a></li>
+<li><a href="appendix_b_module_loading.html#sec:Examples_with_SubClassing">B.6.5.4. Examples with SubClassing</a></li>
+<li><a href="appendix_b_module_loading.html#sec:Miscellaneous">B.6.5.5. Miscellaneous</a></li>
+</ul>
+</li>
+<li><a href="appendix_b_module_loading.html#_resources">B.6.6. Resources</a></li>
+</ul>
+</li>
+<li><a href="appendix_b_module_loading.html#sec:CommonJS_as_transpilation_target">B.7. CommonJS as transpilation target</a>
+<ul class="sectlevel3">
+<li><a href="appendix_b_module_loading.html#_introduction-2">B.7.1. Introduction</a></li>
+<li><a href="appendix_b_module_loading.html#sec:Transpilation_Hints">B.7.2. Transpilation Hints</a>
+<ul class="sectlevel4">
+<li><a href="appendix_b_module_loading.html#sec:Import_Statements">B.7.2.1. Import Statements</a></li>
+<li><a href="appendix_b_module_loading.html#sec:Export_Statements">B.7.2.2. Export Statements</a></li>
+<li><a href="appendix_b_module_loading.html#sec:Tracking_Live_Bindings">B.7.2.3. Tracking Live Bindings</a></li>
+<li><a href="appendix_b_module_loading.html#sec:A_complete_example">B.7.2.4. A complete example</a></li>
+</ul>
+</li>
+<li><a href="appendix_b_module_loading.html#_resources-2">B.7.3. Resources</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="appendix_c_license.html#sec:License">Appendix C: License</a></li>
+<li><a href="appendix_d_acronyms.html#sec:Acronyms">Appendix D: Acronyms</a></li>
+<li><a href="appendix_e_bibliography_and_footnotes.html#_bibliography-and-footnotes">Appendix E: Bibliography and Footnotes</a></li>
+</ul>
+</div>
+</div>
+<div id="content"><div class="sect1">
+<h2 id="chap:flowgraphs"><a class="anchor" href="#chap:flowgraphs"></a><a class="link" href="#chap:flowgraphs">22. Flow Graphs</a></h2>
+<div class="sectionbody">
+<div class="sect2 language-n4js">
+<h3 id="sec:flowgraphs_overview"><a class="anchor" href="#sec:flowgraphs_overview"></a><a class="link" href="#sec:flowgraphs_overview">22.1. Flow graphs overview</a></h3>
+<div class="paragraph">
+<p>In this chapter, the control and data flow analyses are introduced.
+Since not all AST elements are relevant for the control or data flow analyses, a new marker class is introduced called <code>ControlFlowElement</code>.
+All AST elements which are part of the control flow graph implement this class.
+The term control flow is abbreviated as <em>CF</em> and hence <code>ControlFlowElement</code>s are abbreviated as <em>CF elements</em>.</p>
+</div>
+<div class="paragraph">
+<p></p>
+</div>
+<div class="sidebarblock">
+<div class="content">
+<a href="https://github.com/eclipse/n4js/issues/120" class="gray" title="GitHub Issues"><span class="image"><img src="images/issue.svg" alt=""></span> #120</a>
+</div>
+</div>
+<div class="paragraph">
+<p>The following picture shows the control flow graph of the function <code>f</code>.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="chapters/30_flowgraphs/images/cfg_for_loop.png" alt="cfg for loop">
+</div>
+<div class="title">Figure 56. Control flow graph of a simple function</div>
+</div>
+<div class="sect3">
+<h4 id="_internal-graph"><a class="anchor" href="#_internal-graph"></a><a class="link" href="#_internal-graph">22.1.1. Internal graph</a></h4>
+<div class="paragraph">
+<p>Every <em>internal graph</em> refers to a single <em>control flow container</em>.
+The graph consists of <em>nodes</em> and <em>edges</em>, where the edges are instances of <code>ControlFlowEdge</code>, and nodes are instances of <code>Node</code>.
+Additionally, a so called <em>complex node</em> is used to group nodes that belong to the same CF element.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Internal graph</dt>
+<dd>
+<p>Control flow graphs are created based on the AST elements.
+Nevertheless, a fine-grained abstraction is used that is called <em>internal graph</em>.
+The internal graph reflects all control flows and data effects that happen implicitly and are part of the language&#8217;s semantics.
+For instance, the for-of statement on iterable objects forks the control flow after invoking the <code>next()</code> method.
+This is done implicitly and not part of the written source code.
+Moreover, this invocation could cause side effects.
+These control flows and effects are reflected using the internal graph.
+To implement analyses that refer to AST elements, an API for flow analyses is provided which hides the internal graph and works with AST elements only.
+In the following, the term <em>control flow graph</em> refers to the internal graph.</p>
+</dd>
+<dt class="hdlist1">Control flow container</dt>
+<dd>
+<p>At several places in the AST, an execution of statements or elements can happen.
+Obviously, statements can be executed in bodies of methods or function expressions.
+In addition, execution can also happen in field initializers or the <code>Script</code> itself.
+Since all these AST elements can contain executable control flow elements (CF elements), they thus contain a control flow graph.
+In the following, these AST elements are called <em>control flow containers</em> or CF containers.</p>
+</dd>
+<dt class="hdlist1">Nodes</dt>
+<dd>
+<p>Nodes represent complete CF elements or parts of them.
+For instance, simple CF elements like a <code>break</code> statement are represented using only one node.
+Regarding more complex CF elements that introduce a more complex control flow, due to e.g. nested expressions, several nodes represent one CF element.
+All nodes of a single CF element are grouped within a complex node.</p>
+</dd>
+<dt class="hdlist1">Edges</dt>
+<dd>
+<p>Edges reference a start and an end node which reflects a forward control flow direction, which is in the following called forward traverse direction.
+Traversing from end to start of an edge is thus called backward traverse direction.
+The so called <em>next node</em> is either the end node in context of forward, or the start node in context of backward traverse direction.
+Edges also reflect the reason of the control flow using a control flow type.
+The default control flow type is called <code>Successor</code> and such edges connect two ordinary subsequent nodes.
+Other types like <code>Return</code> or <code>Break</code> indicate control flow that happens due to return or break statements.
+A special control flow type is <code>Repeat</code> that indicates the entry of a loop body.
+This edge is treated specially when traversing the control flow graph to avoid infinitive traversals of loops.</p>
+</dd>
+<dt class="hdlist1">Complex node</dt>
+<dd>
+<p>The complex node always has a single entry and exit node, no matter the control flow it causes.
+For instance, although the for-statement can contain various control flows among its nested CF elements, its complex node still has a single entry and exit node.
+This simplifies concatenating subsequent complex nodes, since only their exit nodes have to be connected to the following entry node.
+Aside from exit and entry node, a complex node usually contains additionally nodes to represent the CF element.
+These nodes are connected by control flow edge so that their control flow lies within complex node.
+However, regarding nested CF elements, the control flow leaves and re-enters a complex node.
+To specify which CF element is nested, a delegating node (<code>DelegatingNode</code>) is created that points to the nested CF element.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>Consider that source code elements can be nested like expressions that have sub-expressions as in <code>1 + 2 * 3</code>.
+Also statements can contain other statements like in <code>if (true) return;</code>.
+The design of the control flow graph deals with this nesting by mapping CF elements to several nodes.
+All nodes of one CF element are aggregated into the <em>complex node</em>.</p>
+</div>
+<div id="img:internalGraph" class="imageblock">
+<div class="content">
+<img src="chapters/30_flowgraphs/images/internalGraph.png" alt="internalGraph">
+</div>
+<div class="title">Figure 57. The source code of <code>1+2</code> creates an internal graph of three complex nodes to deal with nested integer literals</div>
+</div>
+<div class="paragraph">
+<p>The example in the <a href="#img:internalGraph">figure above</a> shows the internal graph produced by the source code <code>1+2</code>.
+Additionally, a simpler version of the internal graph is shown (called <em>User Graph View</em>), with which client analyses deal.
+The user graph view is only a view on the internal graph, but does not exist as an own instance.
+In the figure, the nesting of the integer literals becomes obvious:
+The control flow edges of delegating nodes targets entry nodes of different CF elements.
+Also, there are CF edges from the exit nodes of these nested CF elements to return the control flow.</p>
+</div>
+<div id="img:cn_for_stmt" class="imageblock">
+<div class="content">
+<img src="chapters/30_flowgraphs/images/cn_for_stmt.png" alt="cn for stmt">
+</div>
+<div class="title">Figure 58. Complex Node of for statement</div>
+</div>
+<div class="paragraph">
+<p>In the <a href="#img:cn_for_stmt">above figure</a>, the complex node of the for statement is shown.
+The details of the complex nodes of the nested CF elements (such as the initializer or the body statement) are omitted.
+The figure displays the control flow fork after the condition and also shows the <em>Repeat</em> edge that targets the for body.
+The node called <em>Catch Node</em> is used in situations when there are jumping control flows introduced for instance by a continue statement.
+The catch will will then be the target of an control flow edge that starts at the continue statement.</p>
+</div>
+<div class="paragraph">
+<p>The graph of nodes and edges is constructed in the following order.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>First, for every CF element a complex node and all its nodes are created.
+Also, the nodes within the complex node are connected according to their control flow behavior.</p>
+</li>
+<li>
+<p>Second, all subsequent complex nodes are connected by connecting their exit and entry nodes.
+Moreover, nested complex nodes are connected by interpreting the delegating nodes.</p>
+</li>
+<li>
+<p>Third, jumping control due to <code>return</code>, <code>throw</code>, <code>break</code> or <code>continue</code> statements is computed.
+This is done by first deleting the successor edge of the jumping statement and introducing a new control flow edge that ends at the jump target.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_optimizations"><a class="anchor" href="#_optimizations"></a><a class="link" href="#_optimizations">22.1.2. Optimizations</a></h4>
+<div class="paragraph">
+<p>The internal graph contains many nodes to simplify the graph construction.
+However, these nodes carry no relevant information when traversing the graph.
+Consequently, in an optimization step, they are removed from the graph for performance reasons.</p>
+</div>
+<div class="paragraph">
+<p>A node removal for a node <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>n</mi><mn>2</mn></msub></math> is done by replacing the path <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>n</mi><mn>1</mn></msub><mo>-</mo><mo>&gt;</mo><msub><mi>n</mi><mn>2</mn></msub><mo>-</mo><mo>&gt;</mo><msub><mi>n</mi><mn>3</mn></msub></math> by the new path <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>n</mi><mn>1</mn></msub><mo>-</mo><mo>&gt;</mo><msub><mi>n</mi><mn>3</mn></msub></math>.
+These removals are done for delegating nodes that only have one incoming and one outgoing edge.</p>
+</div>
+<div class="paragraph">
+<p>A second kind but similar optimization reduces the number of helper nodes that are used as entry nodes.
+In case a complex nodes consists only of exactly one entry and one exit node, both of these nodes are collapsed into one node.
+This remaining node then is the representing node of the AST element.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_api-for-client-analyses"><a class="anchor" href="#_api-for-client-analyses"></a><a class="link" href="#_api-for-client-analyses">22.1.3. API for client analyses</a></h4>
+<div class="paragraph">
+<p>To implement client analyses based on the control flow graph, the three classes <code>GraphVisitor</code>, <code>GraphExplorer</code> and <code>BranchWalker</code> are provided.
+They provide the means to visit CF elements in a control flow graph and also to traverse single control flow paths.
+The method <code>N4JSFlowAnalyses#analyze</code> can execute several client analyses in one run to maintain scalability.</p>
+</div>
+<div class="sect4">
+<h5 id="_mapping-from-internal-to-ast-elements"><a class="anchor" href="#_mapping-from-internal-to-ast-elements"></a><a class="link" href="#_mapping-from-internal-to-ast-elements">22.1.3.1. Mapping from internal to AST elements</a></h5>
+<div class="paragraph">
+<p>The API classes work with AST elements such as <code>ControlFlowElement</code> instead of the internally used graph classes <code>ComplexNode</code>, <code>Node</code> or <code>ControlFlowEdge</code>.
+The mapping from internal classes to AST elements is done in the <code>GraphVisitor</code> class.</p>
+</div>
+<div class="paragraph">
+<p>Note that the control flow graph has the following properties:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>ExpressionStatement</code>s are not represented.
+Instead, only their expressions are represented.
+Nevertheless, the API can deal with calls that refer to expression statements, e.g. when requesting their successors.</p>
+</li>
+<li>
+<p>Control statements are also not represented in the graph, but can also be used in calls to the API.
+The reason is, that it is unclear when a control statement (e.g. a for loop) is visited exactly.</p>
+</li>
+<li>
+<p>Since a <code>FlowEdge</code> which connects two <code>ControlFlowElement</code>s can represent multiple internal edges, it can have multiple <code>ControlFlowType</code>s.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_graph-visitor"><a class="anchor" href="#_graph-visitor"></a><a class="link" href="#_graph-visitor">22.1.3.2. Graph visitor</a></h5>
+<div class="paragraph">
+<p>Graph visitors traverse the control flow graphs of every CF container of a script instance in the following two traverse directions:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><em>Forward</em>: from the container&#8217;s start to all reachable CF graph elements.</p>
+</li>
+<li>
+<p><em>Backward</em>: from the container&#8217;s end to all reachable CF graph elements.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>In each traverse direction, the graph visitor visits every reachable CF element and edge.
+Note that neither empty statements nor control statements are part of the control flow graph.
+The order of visited CF elements is related to either a breadth or a depth search on the CF graph.
+However, no specific order assumptions are guaranteed.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="chapters/30_flowgraphs/images/deadcode.png" alt="deadcode">
+</div>
+<div class="title">Figure 59. The CF elements <code>"loop"</code> and <code>"end"</code> are dead code and displayed in grey.</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_graph-explorer"><a class="anchor" href="#_graph-explorer"></a><a class="link" href="#_graph-explorer">22.1.3.3. Graph explorer</a></h5>
+<div class="paragraph">
+<p>Graph visitors can request a <em>graph explorer</em> to be activated under specific conditions related to the client analysis.
+A graph explorer is the start point to analyze control flow branches.
+The first control flow branches is started directly at the graph explorer&#8217;s creation site, but of course this first branches might fork eventually.
+The graph explorer keeps track of all forked branches that originate at its activation site.
+It also provides the means to join previously forked branches again.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_branch-walker"><a class="anchor" href="#_branch-walker"></a><a class="link" href="#_branch-walker">22.1.3.4. Branch walker</a></h5>
+<div class="paragraph">
+<p>With every graph explorer, a branch walker is created that traverses the control flow graph beginning from the activation site of the graph explorer.
+On every such branch, the two visit methods of CF elements and edges respectively, are called in the order of the traverse direction.
+Every time the branch forks, the fork method of the branch walker is invoked and creates another branch walker which will continue the traversal on the forked branch.
+The fork method can be used to copy some path data or state to the newly forked branch walker.
+Note that every edge is always followed by the branch walker except for repeat edges which are followed exactly twice.
+The reason to follow them twice is that first, following them only once would hide those control flows that re-visit the same CF elements due to the loop.
+Second, following them more than twice does not reveal more insights, but only increases the number of branches.
+When control flow branches merge again, for instance at the end of an <code>if</code>-statement, two or more branch walkers are merged into a new succeeding one.
+The graph explorer provides the means to do this.
+In case a CF element has no next elements, the branch walker terminates.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_example-1-compute-string-for-each-path"><a class="anchor" href="#_example-1-compute-string-for-each-path"></a><a class="link" href="#_example-1-compute-string-for-each-path">22.1.3.5. Example 1: Compute string for each path</a></h5>
+<div class="paragraph">
+<p>Let&#8217;s assume that we want to compute all control flow branches of a function and use the client API for that.
+The function <code>f()</code> in the following code snippet has four control flow branches: <code>1 &#8594; 2</code>, <code>&#8594; 3 &#8594;</code>, <code>&#8594; 4 &#8594;</code> and <code>5</code>.</p>
+</div>
+<div class="listingblock">
+<div class="title">Function <code>f()</code> has four control flow branches.</div>
+<div class="content">
+<pre class="highlight"><code>function f() {
+	1;
+	if (2)
+		3;
+	else
+		4;
+	5;
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To compute these control flow branches, the class <code>AllBranchPrintVisitor</code> extends the <code>GraphVisitor</code>.
+Already in the method <code>initializeMode()</code> a graph explorer is activated.
+Note that the method <code>requestActivation()</code> can be understood as a <code>addListener</code> method for a listener that listens to visit events on nodes and edges.
+Immediately after the activation request, the first branch walker is created in the method <code>firstBranchWalker()</code>.</p>
+</div>
+<div class="paragraph">
+<p>The first visited CF element of the branch walker will then be the expression <code>1</code>.
+It is formed into a string and added to the variable <code>curString</code>.
+After expression <code>1</code>, the flow edge from <code>1</code> to <code>2</code> is visited.
+This will concatenate the string <code>&#8594;</code> to the path string.
+Variable <code>curString</code> will eventually hold the branch string like <code>1 &#8594; 2</code>.
+Since the control flow forks after <code>2</code>, the method <code>forkPath()</code> is called and creates two new instances of a branch walker.
+These new instances succeed the the first branch walker instance and each traverses one of the branches of the <code>if</code>-statement.
+When the <code>if</code>-statement is passed, these two branches are merged into a new succeeding branch walker.
+After all branch walkers are terminated, the graph explorer and graph visitor are also terminated.
+The method <code>getBranchStrings()</code> collects all four computed strings from the variable <code>curString</code> of all branch walkers.</p>
+</div>
+<div class="listingblock">
+<div class="title">Implementation of a graph visitor that computes all control flow paths</div>
+<div class="content">
+<pre class="highlight"><code>class AllBranchPrintVisitor extends GraphVisitor {
+	protected void initializeMode(Mode curDirection, ControlFlowElement curContainer) {
+		super.requestActivation(new AllBranchPrintExplorer());
+	}
+
+	class AllBranchPrintExplorer extends GraphExplorer {
+		class AllBranchPrintWalker extends BranchWalker {
+			String curString = "";
+
+			protected void visit(ControlFlowElement cfe) {
+				curString += cfe.toString();
+			}
+
+			protected void visit(FlowEdge edge) {
+				curString += " -&gt; ";
+			}
+
+			protected AllBranchPrintWalker forkPath() {
+				return new AllBranchPrintWalker();
+			}
+		}
+
+		protected BranchWalker joinBranches(List&lt;BranchWalker&gt; branchWalkers) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		protected BranchWalkerInternal firstBranchWalker() {
+			return new AllBranchPrintWalker();
+		}
+	}
+
+	List&lt;String&gt; getBranchStrings() {
+		List&lt;String&gt; branchStrings = new LinkedList&lt;&gt;();
+		for (GraphExplorerInternal app : getActivatedExplorers()) {
+			for (BranchWalkerInternal ap : app.getAllBranches()) {
+				AllBranchPrintWalker printPath = (AllBranchPrintWalker) ap;
+				branchStrings.add(printPath.curString);
+			}
+		}
+		return branchStrings;
+	}
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_path-quantor"><a class="anchor" href="#_path-quantor"></a><a class="link" href="#_path-quantor">22.1.3.6. Path quantor</a></h5>
+<div class="paragraph">
+<p>Graph explorers are typically used to reason on all branch walkers that start at a specific location.
+For instance, such a reasoning might determine whether some source element is reachable or whether a variable is used or not.
+To simplify this, quantors are provided.
+Since branch walkers originating from a single activation point can fork, the reasoning has to include all these forked branch walkers.
+Hence, graph explorers are instantiated using a quantor which can be either <em>For All</em>, <em>At Least One</em> OR <em>None</em> that refers to all branches.
+After all branch walkers of an explorer are terminated, the explorer is regarded as either passed or failed.
+Paths also can be aborted manually using the methods <code>pass()</code> or <code>fail()</code>.
+When <em>pass</em> or <em>fail</em> are used, the graph explorer might be terminated in the following cases:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>If the quantor of the graph explorer is <em>For All</em>, and <code>fail()</code> is called on a branch walker.</p>
+</li>
+<li>
+<p>If the quantor of the graph explorer is <em>At Least One</em>, and <code>pass()</code> is called on a branch walker.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Additionally, a graph explorer can be aborted manually by canceling all its branches.</p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_control-flow-analyses"><a class="anchor" href="#_control-flow-analyses"></a><a class="link" href="#_control-flow-analyses">22.1.4. Control flow analyses</a></h4>
+<div class="sect4">
+<h5 id="_dead-code-analysis"><a class="anchor" href="#_dead-code-analysis"></a><a class="link" href="#_dead-code-analysis">22.1.4.1. Dead code analysis</a></h5>
+<div class="paragraph">
+<p>The dead code analysis uses the graph visitor in all four modes and collects all visited CF elements.
+The collected CF elements are saved separately for every mode.
+After the graph visitor is terminated, the unreachable CF elements are computed like follows:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>CF elements, that are collected during forward and catch block mode are reachable.</p>
+</li>
+<li>
+<p>CF elements, that are collected during islands mode are unreachable.</p>
+</li>
+<li>
+<p>CF elements, that are <em>only</em> collected during backward mode, are also unreachable.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>In a later step, the unreachable elements are merged into unreachable text regions that are used for error markers.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2 language-n4js">
+<h3 id="sec:dataflow"><a class="anchor" href="#sec:dataflow"></a><a class="link" href="#sec:dataflow">22.2. Dataflow</a></h3>
+<div class="paragraph">
+<p></p>
+</div>
+<div class="sidebarblock">
+<div class="content">
+<a href="https://github.com/eclipse/n4js/issues/331" class="gray" title="GitHub Issues"><span class="image"><img src="images/issue.svg" alt=""></span> #331</a>
+<a href="https://github.com/eclipse/n4js/issues/464" class="gray" title="GitHub Issues"><span class="image"><img src="images/issue.svg" alt=""></span> #464</a>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_dataflow-graph"><a class="anchor" href="#_dataflow-graph"></a><a class="link" href="#_dataflow-graph">22.2.1. Dataflow graph</a></h4>
+<div class="paragraph">
+<p>The data flow graph provides means to reason about <em>symbols</em>, <em>effects</em>, <em>data flow</em>, <em>aliases</em> and <em>guards</em> in the control flow graph.
+The main classes of the data flow API are <code>DataflowVisitor</code> and <code>Assumption</code>.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Symbol</dt>
+<dd>
+<p>Symbols represent a program variable in the sence that it represents all AST elements, that bind to the same variable declaration (according to scoping).
+The terms <em>symbol</em> and <em>variable</em> are used synonymously.</p>
+</dd>
+<dt class="hdlist1">Effect</dt>
+<dd>
+<p>Effects are reads, writes and declarations of symbols.
+For instance, a typical CF element with a write effect is an assignment such as <code>a = null;</code>.
+Every effect refers to a single symbol and graph node.
+The following effects are provided:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><em>Declaration</em>: is the declaration of a variable.</p>
+</li>
+<li>
+<p><em>Write</em>: is the definition of a variable&#8217;s value, which is typically done with an assignment.</p>
+</li>
+<li>
+<p><em>Read</em>: is the read of a variable&#8217;s value, which could happen when passing a variable as an argument to a method call.</p>
+</li>
+<li>
+<p><em>MethodCall</em>: is the call of a property method of a variable.</p>
+</li>
+</ul>
+</div>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>Note that the term <em>value use</em> means either write or method call of a variable.
+The term <em>value definition</em> means that a variable is written.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Data flow</dt>
+<dd>
+<p>The term data flow is used for assignments of all kind.
+For instance, the assigments <code>a = b</code>, <code>a = 1</code>, <code>a = null</code> or even <code>for (let [a] of [[0],[undefined]]);</code> are data flows.
+The data is always flowing from the right hand side to the left hand side.</p>
+</dd>
+<dt class="hdlist1">Alias</dt>
+<dd>
+<p>Due to data flow, other symbols can get important for an analysis.
+For instance, the data flow <code>a = b</code> makes <code>b</code> important when reasoning about <code>a</code> since the value of <code>b</code> is assigned to <code>a</code>.
+In the API is <code>b</code> therefore called an alias of <code>a</code>.</p>
+</dd>
+<dt class="hdlist1">Guard</dt>
+<dd>
+<p>Guards are conditions that appear in e.g. <code>it</code>-statements.
+For instance, a typical guard is the null-check in the following statement: <code>if (a == null) foo();</code>.
+For every CF element, guards can hold either <em>always</em>, <em>never</em> or <em>sometimes</em>.
+Note that the null-check-guard always holds at the method invocation <code>foo();</code>.</p>
+</dd>
+<dt class="hdlist1"><code>DataflowVisitor</code></dt>
+<dd>
+<p>The class <code>DataflowVisitor</code> provides means to visit all code locations where either effects happen or guards are declared.
+For instance, when a variable is written, the callback method <code>DataflowVisitor#visitEffect(EffectInfo effect, ControlFlowElement cfe)</code> gets called.
+In case a guard is declared, the callback method <code>visitGuard(Guard guard)</code> gets called.</p>
+</dd>
+<dt class="hdlist1"><code>Assumption</code></dt>
+<dd>
+<p>The class <code>Assumption</code> provides means to track the data flow of a specific symbol from a specific code location.
+For instance, assumptions are used to detect whether the symbol <code>s</code> in the property access <code>s.prop</code> is or may be undefined.
+In this example, the assumption symbol is <code>s</code> and its start location is the property access.
+From there, the data flow of <code>s</code> is tracked in backwards traverse direction.
+Also, (transitive) aliases of <code>s</code> are tracked.
+In case a data flow that happens on <code>s</code> or its aliases, the callback method <code>holdsOnDataflow(Symbol lhs, Symbol rSymbol, Expression rValue)</code> is called.
+For every effect that affects <code>s</code> or one of its aliases, the callback method <code>holdsOnEffect(EffectInfo effect, ControlFlowElement container)</code> is called.
+And finally, for all guards that hold always/never at the start location regarding symbol <code>s</code>, the callback method <code>holdsOnGuards(Multimap&lt;GuardType, Guard&gt; neverHolding, Multimap&lt;GuardType, Guard&gt; alwaysHolding)</code> is called.</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_dataflow-analyses"><a class="anchor" href="#_dataflow-analyses"></a><a class="link" href="#_dataflow-analyses">22.2.2. Dataflow analyses</a></h4>
+<div class="sect4">
+<h5 id="_def-def-def-nothing-analysis"><a class="anchor" href="#_def-def-def-nothing-analysis"></a><a class="link" href="#_def-def-def-nothing-analysis">22.2.2.1. Def&#8594;Def / Def&#8594;Nothing analysis</a></h5>
+<div class="paragraph">
+<p>A Def&#8594;Def analysis finds all defintions of a variable that are always a predecessor of another definition.
+Its result is a set of all obsolete definition sites.</p>
+</div>
+<div class="paragraph">
+<p>A Def&#8594;!Use analysis finds all definitions of a variable that are not followed by either a read or a method call.
+These definition are therefore obsolete and can be removed.</p>
+</div>
+<div class="paragraph">
+<p>Both of these analyses are performed in traverse direction <em>Forward</em>.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_def-use-decl-analysis"><a class="anchor" href="#_def-use-decl-analysis"></a><a class="link" href="#_def-use-decl-analysis">22.2.2.2. Def|Use&#8592;Decl analysis</a></h5>
+<div class="paragraph">
+<p>A Def|Use&#8592;Decl analysis finds all preceding <em>def</em> or <em>use</em> sites of a declarations of a specific variable.
+The paths might contain other <em>defs</em> or <em>uses</em> of the same variable.
+In case such paths exists, the variable is used before it is declared.
+This analysis is done in traverse direction <em>Backward</em>.</p>
+</div>
+<div id="img:usedBeforeDeclaredAnalysis" class="imageblock">
+<div class="content">
+<img src="chapters/30_flowgraphs/images/usedBeforeDeclaredAnalysis.png" alt="usedBeforeDeclaredAnalysis">
+</div>
+<div class="title">Figure 60. Finding use or def sites can be done using the graph visitor in traverse direction <em>Backward</em>.</div>
+</div>
+<div class="paragraph">
+<p>In the <a href="#img:usedBeforeDeclaredAnalysis">above figure</a> a graph visitor would visit all CF elements.
+When it visits the declaration in line 8 (<code>let w</code>), it will activate a graph explorer (star 1 in the figure) for variable <code>w</code>.
+Now, the first branch walker <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>b</mi><mn>1</mn></msub></math> is created and walks the control in backward traverse direction.
+When <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>b</mi><mn>1</mn></msub></math> encounters the exit node of the <code>if</code>-statement, it will create two forked branches <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>b</mi><mn>2</mn></msub></math> and <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>b</mi><mn>3</mn></msub></math>.
+Now, <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>b</mi><mn>2</mn></msub></math> enters then the branch of the <code>if</code>-statement (star 2), while <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>b</mi><mn>3</mn></msub></math> traverses directly to the condition of the <code>if</code>-statement.
+Next, <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>b</mi><mn>2</mn></msub></math> visits the def site of variable <code>w</code> (star 3).
+This means, that there exist a def site of <code>w</code> before <code>w</code> was declared and hence, an error should be shown.
+Since there could exist more cases like this, neither the branch walker nor the graph explorer are terminated.
+When reaching star 4, the two branch walkers <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>b</mi><mn>2</mn></msub></math> and <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>b</mi><mn>3</mn></msub></math> are joined and the follow-up branch walker <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>b</mi><mn>4</mn></msub></math> is created.
+At star 5, the end the CF container is reached and the <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>b</mi><mn>4</mn></msub></math> will be terminated.
+After all branch walkers are terminated, the graph explorer for the declaration site of variable <code>w</code> is evaluated:
+All use or def sites, that were reachable should be marked with an error saying that the declaration has to be located before the use of a variable.</p>
+</div>
+<div class="paragraph">
+<p>Note this analysis is currently implemented as a control flow analysis since it does not rely on guards, aliases.
+Also, it only relies on local variables and hence does not need the symbols that are provided by the data flow API.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Version 0.9<br>
+Last updated 2019-08-07 15:02:40 CEST
+</div>
+</div>
+<!-- ************* docinfo-footer *************************************************************** -->
+<div class="Grid social" style="color:#d5dfea">
+  <div class="Cell Cell--2-12 m-Cell--withMargin">
+    <h2>Quick Links</h2>
+    <ul>
+      <li><a href="../downloads.html">Download</a></li>
+      <li><a href="../userguides/index.html">Documentation</a></li>
+      <li><a href="https://github.com/eclipse/n4js/">Source</a></li>
+      <li><a href="https://github.com/eclipse/n4js/issues">Issues</a></li>
+    </ul>
+  </div>
+  <div class="Cell Cell--2-12 m-Cell--withMargin">
+    <br/><br/>
+    <ul>
+      <li><a href="https://www.eclipse.org/forums/index.php/f/365/">Forum</a></li>
+      <li><a href="http://n4js.blogspot.de/">Blog</a></li>
+      <li><a href="https://dev.eclipse.org/mailman/listinfo/n4js-dev">Mailing List</a></li>
+      <li><a href="https://projects.eclipse.org/projects/technology.n4js">Eclipse Project Page</a></li>
+      <li><a href="https://twitter.com/n4jsdev">Tweets by n4jsdev</a></li>
+    </ul>
+  </div>
+  <div class="Cell Cell--2-12 m-Cell--withMargin">
+    <br/><br/>
+    <ul>
+      <li><a href="http://www.eclipse.org/">Eclipse Home</a></li>
+      <li><a href="http://www.eclipse.org/legal/privacy.php">Privacy Policy</a></li>
+      <li><a href="http://www.eclipse.org/legal/termsofuse.php">Terms of Use</a></li>
+      <li><a href="http://www.eclipse.org/legal/copyright.php">Copyright Agent</a></li>
+      <li><a href="http://www.eclipse.org/legal/">Legal</a></li>
+    </ul>
+  </div>
+  <div style="clear: both; height: 0; overflow: hidden;"></div>
+</div>
+
+<!-- ************* UI Scripts ************* -->
+<script type="text/javascript" src="scripts/back-to-top.js"></script>
+
+<script type="text/javascript" src="scripts/treeview.js"></script>
+<script type="text/javascript" src="scripts/toc.js"></script>
+
+<!-- ************* Prism.js Syntax Highlighting ************* -->
+<script src="scripts/prism.js"></script>
+
+<script type="text/javascript">
+	// Add the 'toclist' id for search function
+	$(".toc2 > ul").attr('id', 'toclist');
+	// Generate a Search input form
+	$("#toclist > li:first-of-type").before('<input type="text" id="pagesearch" onkeyup="search()" placeholder="Search for section...">');
+	$("#toclist > li:first-of-type").before('<i id="clear" class="fa fa-times-circle-o"></i>');
+	$("#clear").click(function(){
+	    $("#pagesearch").val('');
+	    search();
+	    $('.toc2 > ul').treeView('collapseAll');
+	});
+	// intialize Treeview.js
+	$(".toc2 > ul").treeView();
+	// Initialize Scrollspy
+</script>
+<!-- ************* docinfo-footer *************************************************************** -->
+</body>
+</html>

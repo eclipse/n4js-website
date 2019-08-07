@@ -1,0 +1,1881 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 1.5.5">
+<meta name="author" content="2019-08-07 15:02:40 CEST">
+<title>N4JS Language Specification</title>
+<link rel="stylesheet" href="styles/spec.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
+<!-- ************* docinfo ******************************************************************* -->
+
+
+<!-- ************* Favicon ************-->
+<link rel="icon" href="images/favicon.ico" />
+
+<!-- ************* Back-to-top JQuery ************* -->
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
+
+
+<link href="styles/prism.min.css" rel="stylesheet" />
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+<!-- ************* Styles ************* -->
+<link rel="stylesheet" type="text/css" href="styles/n4jsspec-adoc.css">
+
+
+<!-- ****************** NavBar ****************** -->
+<div id="menubar">
+	<div class="banner">
+        <a href="https://www.eclipse.org/n4js/#"><img id="logo" src="images/n4js-logo.png" alt="Eclipse N4JS"></a>
+    </div>
+<ul>
+  <li><a href="index.html">Index</a></li>
+</ul>
+</div>
+<!-- ************* docinfo ******************************************************************* -->
+<style>
+      .admonitionblock td.icon .icon-todo:before{content:"\f249";color:#f4ee42}
+    </style>
+</head>
+<body class="book toc2 toc-left">
+<div id="header">
+<h1>N4JS Language Specification</h1>
+<div class="details">
+<span id="author" class="author">2019-08-07 15:02:40 CEST</span><br>
+<span id="revnumber">version 0.9</span>
+</div>
+<div id="toc" class="toc2">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="introduction.html#_introduction">1. Introduction</a>
+<ul class="sectlevel2">
+<li><a href="introduction.html#_notation">1.1. Notation</a>
+<ul class="sectlevel3">
+<li><a href="introduction.html#_grammar-notation">1.1.1. Grammar Notation</a></li>
+<li><a href="introduction.html#_type-judgments-and-rules-and-constraints-notation">1.1.2. Type Judgments and Rules and Constraints Notation</a>
+<ul class="sectlevel4">
+<li><a href="introduction.html#_typing-rules-and-judgments">1.1.2.1. Typing Rules and Judgments</a></li>
+<li><a href="introduction.html#_types-of-an-element">1.1.2.2. Types of an Element</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="introduction.html#_auxiliary-functions">1.2. Auxiliary Functions</a>
+<ul class="sectlevel3">
+<li><a href="introduction.html#_binding">1.2.1. Binding</a></li>
+<li><a href="introduction.html#_merging-types">1.2.2. Merging Types</a>
+<ul class="sectlevel4">
+<li><a href="introduction.html#_logic-formulas">1.2.2.1. Logic Formulas</a></li>
+</ul>
+</li>
+<li><a href="introduction.html#_symbols-and-font-convention">1.2.3. Symbols and Font Convention</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="grammar.html#_grammar">2. Grammar</a>
+<ul class="sectlevel2">
+<li><a href="grammar.html#_lexical-conventions">2.1. Lexical Conventions</a>
+<ul class="sectlevel3">
+<li><a href="grammar.html#_identifier-names-and-identifiers">2.1.1. Identifier Names and Identifiers</a></li>
+<li><a href="grammar.html#_this-keyword">2.1.2. This Keyword</a></li>
+<li><a href="grammar.html#_regular-expression-literals">2.1.3. Regular Expression Literals</a></li>
+<li><a href="grammar.html#_automatic-semicolon-insertion">2.1.4. Automatic Semicolon Insertion</a></li>
+<li><a href="grammar.html#_jsdoc">2.1.5. JSDoc</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#_names">3. Names</a>
+<ul class="sectlevel2">
+<li><a href="#_access-control">3.1. Access Control</a></li>
+<li><a href="#_accessibility-of-types-top-level-variables-and-function-declarations">3.2. Accessibility of Types, Top-Level Variables and Function Declarations</a>
+<ul class="sectlevel3">
+<li><a href="#_accessibility-of-members">3.2.1. Accessibility of Members</a></li>
+<li><a href="#_valid-names">3.2.2. Valid Names</a></li>
+<li><a href="#_qualified-names">3.2.3. Qualified Names</a></li>
+<li><a href="#_name-duplicates">3.2.4. Name Duplicates</a>
+<ul class="sectlevel4">
+<li><a href="#_lexical-environment">3.2.4.1. Lexical Environment</a></li>
+<li><a href="#_duplicates-and-shadowing">3.2.4.2. Duplicates and Shadowing</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="types.html#_types">4. Types</a>
+<ul class="sectlevel2">
+<li><a href="types.html#_overview">4.1. Overview</a></li>
+<li><a href="types.html#_type-expressions">4.2. Type Expressions</a>
+<ul class="sectlevel3">
+<li><a href="types.html#_syntax">4.2.1. Syntax</a></li>
+<li><a href="types.html#_properties">4.2.2. Properties</a></li>
+<li><a href="types.html#_semantics">4.2.3. Semantics</a></li>
+</ul>
+</li>
+<li><a href="types.html#_type-inference">4.3. Type Inference</a></li>
+<li><a href="types.html#_generic-and-parameterized-types">4.4. Generic and Parameterized Types</a>
+<ul class="sectlevel3">
+<li><a href="types.html#_generic-types">4.4.1. Generic Types</a></li>
+<li><a href="types.html#_type-variables">4.4.2. Type Variables</a></li>
+<li><a href="types.html#_parameterized-types">4.4.3. Parameterized Types</a></li>
+</ul>
+</li>
+<li><a href="types.html#_primitive-ecmascript-types">4.5. Primitive ECMAScript Types</a>
+<ul class="sectlevel3">
+<li><a href="types.html#_undefined-type">4.5.1. Undefined Type</a></li>
+<li><a href="types.html#_null-type">4.5.2. Null Type</a></li>
+<li><a href="types.html#_primitive-boolean-type">4.5.3. Primitive Boolean Type</a></li>
+<li><a href="types.html#_primitive-string-type">4.5.4. Primitive String Type</a></li>
+<li><a href="types.html#_primitive-number-type">4.5.5. Primitive Number Type</a></li>
+<li><a href="types.html#_primitive-type-int">4.5.6. Primitive Type int</a></li>
+<li><a href="types.html#_primitive-symbol-type">4.5.7. Primitive Symbol Type</a></li>
+</ul>
+</li>
+<li><a href="types.html#_primitive-n4js-types">4.6. Primitive N4JS Types</a>
+<ul class="sectlevel3">
+<li><a href="types.html#_any-type">4.6.1. Any Type</a>
+<ul class="sectlevel4">
+<li><a href="types.html#any-type-semantics">4.6.1.1. Semantics</a></li>
+<li><a href="types.html#any-type-type-inference">4.6.1.2. Type Inference</a>
+<ul class="sectlevel5">
+<li><a href="types.html#_default-type-of-variables">4.6.1.2.1. Default Type of Variables</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="types.html#_void-type">4.6.2. Void Type</a>
+<ul class="sectlevel4">
+<li><a href="types.html#void-type-semantics">4.6.2.1. Semantics</a></li>
+</ul>
+</li>
+<li><a href="types.html#_unknown-type">4.6.3. Unknown Type</a></li>
+<li><a href="types.html#_primitive-pathselector-and-i18nkey">4.6.4. Primitive Pathselector and I18nKey</a>
+<ul class="sectlevel4">
+<li><a href="types.html#pathselector-semantics">4.6.4.1. Semantics</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="types.html#_built-in-ecmascript-object-types">4.7. Built-in ECMAScript Object Types</a>
+<ul class="sectlevel3">
+<li><a href="types.html#ECMAScript-objects-semantics">4.7.1. Semantics</a></li>
+<li><a href="types.html#_object-type">4.7.2. Object Type</a></li>
+<li><a href="types.html#_function-object-type">4.7.3. Function-Object-Type</a></li>
+<li><a href="types.html#_array-object-type">4.7.4. Array Object Type</a></li>
+<li><a href="types.html#_string-object-type">4.7.5. String Object Type</a></li>
+<li><a href="types.html#_boolean-object-type">4.7.6. Boolean Object Type</a></li>
+<li><a href="types.html#_number-object-type">4.7.7. Number Object Type</a></li>
+<li><a href="types.html#_global-object-type">4.7.8. Global Object Type</a></li>
+<li><a href="types.html#_symbol">4.7.9. Symbol</a></li>
+<li><a href="types.html#_promise">4.7.10. Promise</a></li>
+<li><a href="types.html#_iterator-interface">4.7.11. Iterator Interface</a></li>
+<li><a href="types.html#_iterable-interface">4.7.12. Iterable Interface</a></li>
+</ul>
+</li>
+<li><a href="types.html#_built-in-n4js-types">4.8. Built-In N4JS Types</a>
+<ul class="sectlevel3">
+<li><a href="types.html#_n4object">4.8.1. N4Object</a>
+<ul class="sectlevel4">
+<li><a href="types.html#N4Object-semantics">4.8.1.1. Semantics</a></li>
+</ul>
+</li>
+<li><a href="types.html#_n4class">4.8.2. N4Class</a></li>
+<li><a href="types.html#IterableN">4.8.3. IterableN</a></li>
+</ul>
+</li>
+<li><a href="types.html#_type-modifiers">4.9. Type Modifiers</a>
+<ul class="sectlevel3">
+<li><a href="types.html#Type_Modifiers_Dynamic">4.9.1. Dynamic</a></li>
+<li><a href="types.html#_optional-return-types">4.9.2. Optional Return Types</a></li>
+</ul>
+</li>
+<li><a href="types.html#_union-and-intersection-type-composed-types">4.10. Union and Intersection Type (Composed Types)</a>
+<ul class="sectlevel3">
+<li><a href="types.html#_union-type">4.10.1. Union Type</a>
+<ul class="sectlevel4">
+<li><a href="types.html#union-type-syntax">4.10.1.1. Syntax</a></li>
+<li><a href="types.html#union-type-semantics">4.10.1.2. Semantics</a></li>
+<li><a href="types.html#_warnings">4.10.1.3. Warnings</a></li>
+</ul>
+</li>
+<li><a href="types.html#_intersection-type">4.10.2. Intersection Type</a>
+<ul class="sectlevel4">
+<li><a href="types.html#intersection-type-syntax">4.10.2.1. Syntax</a></li>
+<li><a href="types.html#intersection-type-semantics">4.10.2.2. Semantics</a></li>
+<li><a href="types.html#_warnings-2">4.10.2.3. Warnings</a></li>
+</ul>
+</li>
+<li><a href="types.html#_composed-types-in-wildcards">4.10.3. Composed Types in Wildcards</a></li>
+<li><a href="types.html#_property-access-for-composed-types">4.10.4. Property Access for Composed Types</a>
+<ul class="sectlevel4">
+<li><a href="types.html#_properties-of-union-type">4.10.4.1. Properties of Union Type</a>
+<ul class="sectlevel5">
+<li><a href="types.html#_remarks-on-union-type-s-members">4.10.4.1.1. Remarks on union type’s members:</a></li>
+</ul>
+</li>
+<li><a href="types.html#_properties-of-intersection-type">4.10.4.2. Properties of Intersection Type</a>
+<ul class="sectlevel5">
+<li><a href="types.html#_remarks-on-intersection-type-s-methods">4.10.4.2.1. Remarks on intersection type’s methods:</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="types.html#_constructor-and-classifier-type">4.11. Constructor and Classifier Type</a>
+<ul class="sectlevel3">
+<li><a href="types.html#_syntax-3">4.11.1. Syntax</a></li>
+<li><a href="types.html#_semantics-2">4.11.2. Semantics</a></li>
+<li><a href="types.html#_constructors-and-prototypes-in-ecmascript-2015">4.11.3. Constructors and Prototypes in ECMAScript 2015</a></li>
+</ul>
+</li>
+<li><a href="types.html#_this-type">4.12. This Type</a>
+<ul class="sectlevel3">
+<li><a href="types.html#this-type-syntax">4.12.1. Syntax</a></li>
+<li><a href="types.html#this-keyword-semantics">4.12.2. Semantics</a></li>
+</ul>
+</li>
+<li><a href="types.html#_enums">4.13. Enums</a>
+<ul class="sectlevel3">
+<li><a href="types.html#_enums-n4js">4.13.1. Enums (N4JS)</a>
+<ul class="sectlevel4">
+<li><a href="types.html#enums-syntax">4.13.1.1. Syntax</a></li>
+<li><a href="types.html#enums-semantics">4.13.1.2. Semantics</a></li>
+</ul>
+</li>
+<li><a href="types.html#_string-based-enums">4.13.2. String-Based Enums</a></li>
+</ul>
+</li>
+<li><a href="types.html#_short-hand-syntax">4.14. Short-Hand Syntax</a>
+<ul class="sectlevel3">
+<li><a href="types.html#_array-short-hand-syntax">4.14.1. Array Short-Hand Syntax</a></li>
+<li><a href="types.html#_iterablen-short-hand-syntax">4.14.2. IterableN Short-Hand Syntax</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="classifiers.html#_classifiers">5. Classifiers</a>
+<ul class="sectlevel2">
+<li><a href="classifiers.html#_n4js-specific-classifiers">5.1. N4JS Specific Classifiers</a>
+<ul class="sectlevel3">
+<li><a href="classifiers.html#_properties-2">5.1.1. Properties</a></li>
+<li><a href="classifiers.html#_common-semantics-of-classifiers">5.1.2. Common Semantics of Classifiers</a></li>
+<li><a href="classifiers.html#_classes">5.1.3. Classes</a>
+<ul class="sectlevel4">
+<li><a href="classifiers.html#_definition-of-classes">5.1.3.1. Definition of Classes</a>
+<ul class="sectlevel5">
+<li><a href="classifiers.html#class-syntax">5.1.3.1.1. Syntax</a></li>
+<li><a href="classifiers.html#class-properties">5.1.3.1.2. Properties</a></li>
+<li><a href="classifiers.html#class-type-inference">5.1.3.1.3. Type Inference</a></li>
+</ul>
+</li>
+<li><a href="classifiers.html#class-semantics">5.1.3.2. Semantics</a></li>
+<li><a href="classifiers.html#_final-modifier">5.1.3.3. Final Modifier</a></li>
+<li><a href="classifiers.html#_abstract-classes">5.1.3.4. Abstract Classes</a></li>
+<li><a href="classifiers.html#_non-instantiable-classes">5.1.3.5. Non-Instantiable Classes</a></li>
+<li><a href="classifiers.html#_superclass">5.1.3.6. Superclass</a></li>
+</ul>
+</li>
+<li><a href="classifiers.html#_interfaces">5.1.4. Interfaces</a>
+<ul class="sectlevel4">
+<li><a href="classifiers.html#_definition-of-interfaces">5.1.4.1. Definition of Interfaces</a>
+<ul class="sectlevel5">
+<li><a href="classifiers.html#interfaces-syntax">5.1.4.1.1. Syntax</a></li>
+<li><a href="classifiers.html#interfaces-properties">5.1.4.1.2. Properties</a></li>
+<li><a href="classifiers.html#interfaces-type-inference">5.1.4.1.3. Type Inference</a></li>
+<li><a href="classifiers.html#interfaces-semantics">5.1.4.1.4. Semantics</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="classifiers.html#_generic-classifiers">5.1.5. Generic Classifiers</a></li>
+<li><a href="classifiers.html#sec:definition-site-variance">5.1.6. Definition-Site Variance</a></li>
+</ul>
+</li>
+<li><a href="classifiers.html#_members">5.2. Members</a>
+<ul class="sectlevel3">
+<li><a href="classifiers.html#_syntax-4">5.2.1. Syntax</a>
+<ul class="sectlevel4">
+<li><a href="classifiers.html#_properties-3">5.2.1.1. Properties</a></li>
+</ul>
+</li>
+<li><a href="classifiers.html#_semantics-3">5.2.2. Semantics</a></li>
+<li><a href="classifiers.html#_methods">5.2.3. Methods</a>
+<ul class="sectlevel4">
+<li><a href="classifiers.html#_syntax-5">5.2.3.1. Syntax</a></li>
+<li><a href="classifiers.html#_properties-4">5.2.3.2. Properties</a></li>
+<li><a href="classifiers.html#_semantics-4">5.2.3.3. Semantics</a></li>
+<li><a href="classifiers.html#_final-methods">5.2.3.4. Final Methods</a></li>
+<li><a href="classifiers.html#_abstract-methods">5.2.3.5. Abstract Methods</a></li>
+<li><a href="classifiers.html#_generic-methods">5.2.3.6. Generic Methods</a></li>
+</ul>
+</li>
+<li><a href="classifiers.html#_default-methods-in-interfaces">5.2.4. Default Methods in Interfaces</a>
+<ul class="sectlevel4">
+<li><a href="classifiers.html#_asynchronous-methods">5.2.4.1. Asynchronous Methods</a></li>
+</ul>
+</li>
+<li><a href="classifiers.html#_constructors">5.2.5. Constructors</a>
+<ul class="sectlevel4">
+<li><a href="classifiers.html#_structural-this-type-in-constructor">5.2.5.1. Structural This Type in Constructor</a></li>
+<li><a href="classifiers.html#spec-constructor">5.2.5.2. @Spec Constructor</a></li>
+<li><a href="classifiers.html#_callable-constructors">5.2.5.3. Callable Constructors</a></li>
+<li><a href="classifiers.html#_covariant-constructors">5.2.5.4. Covariant Constructors</a></li>
+</ul>
+</li>
+<li><a href="classifiers.html#_data-fields">5.2.6. Data Fields</a>
+<ul class="sectlevel4">
+<li><a href="classifiers.html#data-fields-syntax">5.2.6.1. Syntax</a></li>
+<li><a href="classifiers.html#data-fields-properties">5.2.6.2. Properties</a>
+<ul class="sectlevel5">
+<li><a href="classifiers.html#data-fields-semantics">5.2.6.2.1. Semantics</a></li>
+<li><a href="classifiers.html#data-fields-type-inference">5.2.6.2.2. Type Inference</a></li>
+</ul>
+</li>
+<li><a href="classifiers.html#_assignment-modifiers">5.2.6.3. Assignment Modifiers</a></li>
+<li><a href="classifiers.html#_field-accessors-getter-setter">5.2.6.4. Field Accessors (Getter/Setter)</a>
+<ul class="sectlevel5">
+<li><a href="classifiers.html#field-acessors-syntax">5.2.6.4.1. Syntax</a></li>
+<li><a href="classifiers.html#field-acessors-properties">5.2.6.4.2. Properties</a></li>
+<li><a href="classifiers.html#field-accessors-semantics">5.2.6.4.3. Semantics</a></li>
+</ul>
+</li>
+<li><a href="classifiers.html#optional-fields">5.2.6.5. Optional Fields</a>
+<ul class="sectlevel5">
+<li><a href="classifiers.html#_syntax-6">5.2.6.5.1. Syntax</a></li>
+<li><a href="classifiers.html#_semantics-5">5.2.6.5.2. Semantics</a></li>
+<li><a href="classifiers.html#_background">5.2.6.5.3. Background</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="classifiers.html#_static-members">5.2.7. Static Members</a>
+<ul class="sectlevel4">
+<li><a href="classifiers.html#_access-from-and-to-static-members">5.2.7.1. Access From and To Static Members</a></li>
+<li><a href="classifiers.html#_generic-static-methods">5.2.7.2. Generic static methods</a></li>
+<li><a href="classifiers.html#_static-members-of-interfaces">5.2.7.3. Static Members of Interfaces</a></li>
+</ul>
+</li>
+<li><a href="classifiers.html#_redefinition-of-members">5.2.8. Redefinition of Members</a>
+<ul class="sectlevel4">
+<li><a href="classifiers.html#_overriding-of-members">5.2.8.1. Overriding of Members</a></li>
+<li><a href="classifiers.html#_implementation-of-members">5.2.8.2. Implementation of Members</a>
+<ul class="sectlevel5">
+<li><a href="classifiers.html#_member-consumption">5.2.8.2.1. Member Consumption</a></li>
+<li><a href="classifiers.html#_member-implementation">5.2.8.2.2. Member Implementation</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="classifiers.html#_structural-typing">5.3. Structural Typing</a>
+<ul class="sectlevel3">
+<li><a href="classifiers.html#_syntax-7">5.3.1. Syntax</a></li>
+<li><a href="classifiers.html#_definition-site-structural-typing">5.3.2. Definition Site Structural Typing</a></li>
+<li><a href="classifiers.html#_use-site-structural-typing">5.3.3. Use-Site Structural Typing</a></li>
+<li><a href="classifiers.html#structural-readWriteInit-field-typing">5.3.4. Structural Read-only, Write-only and Initializer Field Typing</a></li>
+<li><a href="classifiers.html#_public-setter-annotated-with-code-providesinitializer-code">5.3.5. Public Setter Annotated With <code>ProvidesInitializer</code></a></li>
+<li><a href="classifiers.html#_structural-types-with-optional-fields">5.3.6. Structural Types With Optional Fields</a></li>
+<li><a href="classifiers.html#_structural-types-with-access-modifier">5.3.7. Structural Types With Access Modifier</a></li>
+<li><a href="classifiers.html#_structural-types-with-additional-members">5.3.8. Structural Types With Additional Members</a>
+<ul class="sectlevel4">
+<li><a href="classifiers.html#_syntax-8">5.3.8.1. Syntax</a>
+<ul class="sectlevel5">
+<li><a href="classifiers.html#_semantics-6">5.3.8.1.1. Semantics</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="functions.html#_functions">6. Functions</a>
+<ul class="sectlevel2">
+<li><a href="functions.html#_function-type">6.1. Function Type</a>
+<ul class="sectlevel3">
+<li><a href="functions.html#_properties-5">6.1.1. Properties</a></li>
+<li><a href="functions.html#function-type-inference">6.1.2. Type Inference</a></li>
+<li><a href="functions.html#_autoboxing-of-function-type">6.1.3. Autoboxing of Function Type</a></li>
+<li><a href="functions.html#_arguments-object">6.1.4. Arguments Object</a></li>
+</ul>
+</li>
+<li><a href="functions.html#_ecmascript-5-function-definition">6.2. ECMAScript 5 Function Definition</a>
+<ul class="sectlevel3">
+<li><a href="functions.html#_function-declaration">6.2.1. Function Declaration</a>
+<ul class="sectlevel4">
+<li><a href="functions.html#_syntax-9">6.2.1.1. Syntax</a></li>
+<li><a href="functions.html#_semantics-8">6.2.1.2. Semantics</a></li>
+</ul>
+</li>
+<li><a href="functions.html#_function-expression">6.2.2. Function Expression</a>
+<ul class="sectlevel4">
+<li><a href="functions.html#function-expression-syntax">6.2.2.1. Syntax</a></li>
+<li><a href="functions.html#_semantics-and-type-inference">6.2.2.2. Semantics and Type Inference</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="functions.html#_ecmascript-2015-function-definition">6.3. ECMAScript 2015 Function Definition</a>
+<ul class="sectlevel3">
+<li><a href="functions.html#_formal-parameters">6.3.1. Formal Parameters</a>
+<ul class="sectlevel4">
+<li><a href="functions.html#Type_Modifiers_Optional">6.3.1.1. Optional Parameters</a></li>
+<li><a href="functions.html#Type_Modifiers_Default">6.3.1.2. Default Parameters</a></li>
+<li><a href="functions.html#Type_Modifiers_Variadic">6.3.1.3. Variadic</a></li>
+</ul>
+</li>
+<li><a href="functions.html#_generator-functions">6.3.2. Generator Functions</a>
+<ul class="sectlevel4">
+<li><a href="functions.html#generator-functions-syntax">6.3.2.1. Syntax</a></li>
+<li><a href="functions.html#generator-functions-semantics">6.3.2.2. Semantics</a></li>
+<li><a href="functions.html#_generator-arrow-functions">6.3.2.3. Generator Arrow Functions</a></li>
+</ul>
+</li>
+<li><a href="functions.html#_arrow-function-expression">6.3.3. Arrow Function Expression</a>
+<ul class="sectlevel4">
+<li><a href="functions.html#arrow-function-expression-syntax">6.3.3.1. Syntax</a></li>
+<li><a href="functions.html#arrow-function-expression-semantics-and-type-inference">6.3.3.2. Semantics and Type Inference</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="functions.html#_ecmascript-proposals-function-definition">6.4. ECMAScript Proposals Function Definition</a>
+<ul class="sectlevel3">
+<li><a href="functions.html#_asynchronous-functions">6.4.1. Asynchronous Functions</a>
+<ul class="sectlevel4">
+<li><a href="functions.html#asynchronous-functions-syntax">6.4.1.1. Syntax</a></li>
+<li><a href="functions.html#asynchronous-functions-semantics">6.4.1.2. Semantics</a></li>
+<li><a href="functions.html#_asynchronous-arrow-functions">6.4.1.3. Asynchronous Arrow Functions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="functions.html#_n4js-extended-function-definition">6.5. N4JS Extended Function Definition</a>
+<ul class="sectlevel3">
+<li><a href="functions.html#_generic-functions">6.5.1. Generic Functions</a></li>
+<li><a href="functions.html#_promisifiable-functions">6.5.2. Promisifiable Functions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="conversions_and_reflection.html#_conversions-and-reflection">7. Conversions and Reflection</a>
+<ul class="sectlevel2">
+<li><a href="conversions_and_reflection.html#_autoboxing-and-coercing">7.1. Autoboxing and Coercing</a>
+<ul class="sectlevel3">
+<li><a href="conversions_and_reflection.html#_coercing">7.1.1. Coercing</a></li>
+<li><a href="conversions_and_reflection.html#_autoboxing-of-primitives">7.1.2. Autoboxing of Primitives</a></li>
+<li><a href="conversions_and_reflection.html#_autoboxing-of-function-expressions-and-declarations">7.1.3. Autoboxing of Function Expressions and Declarations</a></li>
+</ul>
+</li>
+<li><a href="conversions_and_reflection.html#_auto-conversion-of-objects">7.2. Auto-Conversion of Objects</a>
+<ul class="sectlevel3">
+<li><a href="conversions_and_reflection.html#_auto-conversion-of-class-instances">7.2.1. Auto-Conversion of Class Instances</a>
+<ul class="sectlevel4">
+<li><a href="conversions_and_reflection.html#_auto-conversion-of-interface-instances">7.2.1.1. Auto-Conversion of Interface Instances</a></li>
+</ul>
+</li>
+<li><a href="conversions_and_reflection.html#_auto-conversion-of-enum-literals">7.2.2. Auto-Conversion of Enum Literals</a></li>
+</ul>
+</li>
+<li><a href="conversions_and_reflection.html#_type-cast-and-type-check">7.3. Type Cast and Type Check</a>
+<ul class="sectlevel3">
+<li><a href="conversions_and_reflection.html#_type-cast">7.3.1. Type Cast</a></li>
+<li><a href="conversions_and_reflection.html#_type-check">7.3.2. Type Check</a></li>
+</ul>
+</li>
+<li><a href="conversions_and_reflection.html#_reflection-meta-information">7.4. Reflection meta-information</a>
+<ul class="sectlevel3">
+<li><a href="conversions_and_reflection.html#_reflection-for-classes">7.4.1. Reflection for Classes</a></li>
+<li><a href="conversions_and_reflection.html#_reflection-for-interfaces">7.4.2. Reflection for Interfaces</a></li>
+<li><a href="conversions_and_reflection.html#_reflection-for-enumerations">7.4.3. Reflection for Enumerations</a></li>
+</ul>
+</li>
+<li><a href="conversions_and_reflection.html#_conversion-of-primitive-types">7.5. Conversion of primitive types</a></li>
+</ul>
+</li>
+<li><a href="expressions.html#_expressions">8. Expressions</a>
+<ul class="sectlevel2">
+<li><a href="expressions.html#_ecmascript-5-expressions">8.1. ECMAScript 5 Expressions</a>
+<ul class="sectlevel3">
+<li><a href="expressions.html#_the-this-literal">8.1.1. The this Literal</a></li>
+<li><a href="expressions.html#_identifier">8.1.2. Identifier</a></li>
+<li><a href="expressions.html#_literals">8.1.3. Literals</a>
+<ul class="sectlevel4">
+<li><a href="expressions.html#_integer-literals">8.1.3.1. Integer Literals</a></li>
+</ul>
+</li>
+<li><a href="expressions.html#_array-literal">8.1.4. Array Literal</a></li>
+<li><a href="expressions.html#_object-literal">8.1.5. Object Literal</a>
+<ul class="sectlevel4">
+<li><a href="expressions.html#_properties-6">8.1.5.1. Properties</a></li>
+<li><a href="expressions.html#_scoping-and-linking">8.1.5.2. Scoping and linking</a></li>
+</ul>
+</li>
+<li><a href="expressions.html#_parenthesized-expression-and-grouping-operator">8.1.6. Parenthesized Expression and Grouping Operator</a></li>
+<li><a href="expressions.html#_property-accessors">8.1.7. Property Accessors</a>
+<ul class="sectlevel4">
+<li><a href="expressions.html#properties-1">8.1.7.1. Properties</a></li>
+</ul>
+</li>
+<li><a href="expressions.html#_new-expression">8.1.8. New Expression</a></li>
+<li><a href="expressions.html#_function-expression-2">8.1.9. Function Expression</a></li>
+<li><a href="expressions.html#_function-calls">8.1.10. Function Calls</a></li>
+<li><a href="expressions.html#_postfix-expression">8.1.11. Postfix Expression</a></li>
+<li><a href="expressions.html#_unary-expression">8.1.12. Unary Expression</a></li>
+<li><a href="expressions.html#_multiplicative-expression">8.1.13. Multiplicative Expression</a></li>
+<li><a href="expressions.html#_additive-expression">8.1.14. Additive Expression</a>
+<ul class="sectlevel4">
+<li><a href="expressions.html#type-inference-10">8.1.14.1. Type Inference</a></li>
+</ul>
+</li>
+<li><a href="expressions.html#_bitwise-shift-expression">8.1.15. Bitwise Shift Expression</a></li>
+<li><a href="expressions.html#_relational-expression">8.1.16. Relational Expression</a></li>
+<li><a href="expressions.html#_equality-expression">8.1.17. Equality Expression</a></li>
+<li><a href="expressions.html#_binary-bitwise-expression">8.1.18. Binary Bitwise Expression</a></li>
+<li><a href="expressions.html#_binary-logical-expression">8.1.19. Binary Logical Expression</a></li>
+<li><a href="expressions.html#_conditional-expression">8.1.20. Conditional Expression</a></li>
+<li><a href="expressions.html#_assignment-expression">8.1.21. Assignment Expression</a></li>
+<li><a href="expressions.html#_comma-expression">8.1.22. Comma Expression</a></li>
+</ul>
+</li>
+<li><a href="expressions.html#_ecmascript-6-expressions">8.2. ECMAScript 6 Expressions</a>
+<ul class="sectlevel3">
+<li><a href="expressions.html#_the-super-keyword">8.2.1. The super Keyword</a></li>
+</ul>
+</li>
+<li><a href="expressions.html#_ecmascript-7-expressions">8.3. ECMAScript 7 Expressions</a>
+<ul class="sectlevel3">
+<li><a href="expressions.html#_await-expression">8.3.1. Await Expression</a></li>
+</ul>
+</li>
+<li><a href="expressions.html#_n4js-specific-expressions">8.4. N4JS Specific Expressions</a>
+<ul class="sectlevel3">
+<li><a href="expressions.html#_class-expression">8.4.1. Class Expression</a></li>
+<li><a href="expressions.html#_cast-as-expression">8.4.2. Cast (As) Expression</a>
+<ul class="sectlevel4">
+<li><a href="expressions.html#cast-as-expression-semantics-type-inference">8.4.2.1. Semantics and Type Inference</a></li>
+</ul>
+</li>
+<li><a href="expressions.html#Import_Calls">8.4.3. Import Calls</a></li>
+</ul>
+</li>
+<li><a href="expressions.html#compile-time-expressions">8.5. Compile-Time Expressions</a></li>
+</ul>
+</li>
+<li><a href="statements.html#_statements">9. Statements</a>
+<ul class="sectlevel2">
+<li><a href="statements.html#_ecmascript-5-statements">9.1. ECMAScript 5 Statements</a>
+<ul class="sectlevel3">
+<li><a href="statements.html#_function-or-field-accessor-bodies">9.1.1. Function or Field Accessor Bodies</a></li>
+<li><a href="statements.html#_variable-statement">9.1.2. Variable Statement</a></li>
+<li><a href="statements.html#_if-statement">9.1.3. If Statement</a></li>
+<li><a href="statements.html#_iteration-statements">9.1.4. Iteration Statements</a></li>
+<li><a href="statements.html#_return-statement">9.1.5. Return Statement</a></li>
+<li><a href="statements.html#_with-statement">9.1.6. With Statement</a></li>
+<li><a href="statements.html#_switch-statement">9.1.7. Switch Statement</a></li>
+<li><a href="statements.html#_throw-try-and-catch-statements">9.1.8. Throw, Try, and Catch Statements</a></li>
+<li><a href="statements.html#_debugger-statement">9.1.9. Debugger Statement</a></li>
+</ul>
+</li>
+<li><a href="statements.html#_ecmascript-6-statements">9.2. ECMAScript 6 Statements</a>
+<ul class="sectlevel3">
+<li><a href="statements.html#_let">9.2.1. Let</a></li>
+<li><a href="statements.html#_const">9.2.2. Const</a></li>
+<li><a href="statements.html#_for-of-statement">9.2.3. <code>for &#8230;&#8203; of</code> statement</a></li>
+<li><a href="statements.html#_import-statement">9.2.4. Import Statement</a>
+<ul class="sectlevel4">
+<li><a href="statements.html#Dynamic_Imports">9.2.4.1. Dynamic Imports</a></li>
+<li><a href="statements.html#_immutabilaty-of-imports">9.2.4.2. Immutabilaty of Imports</a></li>
+</ul>
+</li>
+<li><a href="statements.html#_export-statement">9.2.5. Export Statement</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="annotations.html#_annotations">10. Annotations</a>
+<ul class="sectlevel2">
+<li><a href="annotations.html#_introduction-2">10.1. Introduction</a>
+<ul class="sectlevel3">
+<li><a href="annotations.html#_syntax-13">10.1.1. Syntax</a></li>
+<li><a href="annotations.html#_properties-7">10.1.2. Properties</a></li>
+<li><a href="annotations.html#_element-specific-annotations">10.1.3. Element-Specific Annotations</a></li>
+<li><a href="annotations.html#_general-annotations">10.1.4. General Annotations</a>
+<ul class="sectlevel4">
+<li><a href="annotations.html#_idebug">10.1.4.1. IDEBUG</a></li>
+</ul>
+</li>
+<li><a href="annotations.html#idebug-syntax">10.1.5. Syntax</a>
+<ul class="sectlevel4">
+<li><a href="annotations.html#_semantics-11">10.1.5.1. Semantics</a></li>
+<li><a href="annotations.html#_suppress-warnings">10.1.5.2. Suppress Warnings</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="annotations.html#_declaration-of-annotations">10.2. Declaration of Annotations</a></li>
+</ul>
+</li>
+<li><a href="extended_fetaures.html#_extended-fetaures">11. Extended Fetaures</a>
+<ul class="sectlevel2">
+<li><a href="extended_fetaures.html#_array-and-object-destructuring">11.1. Array and Object Destructuring</a>
+<ul class="sectlevel3">
+<li><a href="extended_fetaures.html#_syntax-14">11.1.1. Syntax</a></li>
+<li><a href="extended_fetaures.html#_semantics-12">11.1.2. Semantics</a></li>
+</ul>
+</li>
+<li><a href="extended_fetaures.html#_dependency-injection">11.2. Dependency Injection</a>
+<ul class="sectlevel3">
+<li><a href="extended_fetaures.html#_di-components-and-injectors">11.2.1. DI Components and Injectors</a>
+<ul class="sectlevel4">
+<li><a href="extended_fetaures.html#_dicomponent-relations">11.2.1.1. DIComponent Relations</a></li>
+</ul>
+</li>
+<li><a href="extended_fetaures.html#_binders-and-bindings">11.2.2. Binders and Bindings</a></li>
+<li><a href="extended_fetaures.html#_injection-points">11.2.3. Injection Points</a>
+<ul class="sectlevel4">
+<li><a href="extended_fetaures.html#_field-injection">11.2.3.1. Field Injection</a></li>
+<li><a href="extended_fetaures.html#_constructor-injection">11.2.3.2. Constructor Injection</a></li>
+<li><a href="extended_fetaures.html#_method-injection">11.2.3.3. Method Injection</a>
+<ul class="sectlevel5">
+<li><a href="extended_fetaures.html#_provider">11.2.3.3.1. Provider</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="extended_fetaures.html#_n4js-di-life-cycle-and-scopes">11.2.4. N4JS DI Life Cycle and Scopes</a>
+<ul class="sectlevel4">
+<li><a href="extended_fetaures.html#_injection-cylces">11.2.4.1. Injection Cylces</a></li>
+<li><a href="extended_fetaures.html#_default-scope">11.2.4.2. Default Scope</a></li>
+<li><a href="extended_fetaures.html#_singleton-scope">11.2.4.3. Singleton Scope</a></li>
+<li><a href="extended_fetaures.html#_per-injection-chain-singleton">11.2.4.4. Per Injection Chain Singleton</a></li>
+</ul>
+</li>
+<li><a href="extended_fetaures.html#_validation-of-callsites-targeting-n4injector-methods">11.2.5. Validation of callsites targeting N4Injector methods</a></li>
+<li><a href="extended_fetaures.html#_n4js-di-annotations">11.2.6. N4JS DI Annotations</a>
+<ul class="sectlevel4">
+<li><a href="extended_fetaures.html#_n4js-di-generateinjector">11.2.6.1. N4JS DI @GenerateInjector</a></li>
+<li><a href="extended_fetaures.html#_n4js-di-withparentinjector">11.2.6.2. N4JS DI @WithParentInjector</a></li>
+<li><a href="extended_fetaures.html#_n4js-di-usebinder">11.2.6.3. N4JS DI @UseBinder</a></li>
+<li><a href="extended_fetaures.html#_n4js-di-binder">11.2.6.4. N4JS DI @Binder</a></li>
+<li><a href="extended_fetaures.html#_n4js-di-bind">11.2.6.5. N4JS DI @Bind</a></li>
+<li><a href="extended_fetaures.html#_n4js-di-provides">11.2.6.6. N4JS DI @Provides</a></li>
+<li><a href="extended_fetaures.html#_n4js-di-inject">11.2.6.7. N4JS DI @Inject</a></li>
+<li><a href="extended_fetaures.html#_n4js-di-singleton">11.2.6.8. N4JS DI @Singleton</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="extended_fetaures.html#_test-support">11.3. Test Support</a></li>
+<li><a href="extended_fetaures.html#_polyfill-definitions">11.4. Polyfill Definitions</a>
+<ul class="sectlevel3">
+<li><a href="extended_fetaures.html#_runtime-polyfill-definitions">11.4.1. Runtime Polyfill Definitions</a></li>
+<li><a href="extended_fetaures.html#_static-polyfill-definitions">11.4.2. Static Polyfill Definitions</a></li>
+<li><a href="extended_fetaures.html#_transpiling-static-polyfilled-classes">11.4.3. Transpiling static polyfilled classes</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="components.html#_components">12. Components</a>
+<ul class="sectlevel2">
+<li><a href="components.html#_overview-2">12.1. Overview</a></li>
+<li><a href="components.html#Component_Types">12.2. Component Types</a>
+<ul class="sectlevel3">
+<li><a href="components.html#_libraries">12.2.1. Libraries</a></li>
+<li><a href="components.html#_runtime-environment-and-runtime-libraries">12.2.2. Runtime Environment and Runtime Libraries</a></li>
+<li><a href="components.html#_tests">12.2.3. Tests</a></li>
+<li><a href="components.html#_type-definitions">12.2.4. Type Definitions</a></li>
+</ul>
+</li>
+<li><a href="components.html#package-json">12.3. Package.json File</a>
+<ul class="sectlevel3">
+<li><a href="components.html#_basic-properties">12.3.1. Basic Properties</a></li>
+<li><a href="components.html#_n4js-properties">12.3.2. N4JS Properties</a></li>
+<li><a href="components.html#_constraints">12.3.3. Constraints</a></li>
+</ul>
+</li>
+<li><a href="components.html#_support-for-npm-scopes">12.4. Support for NPM Scopes</a></li>
+<li><a href="components.html#sec:N4JS-Type-Definitions">12.5. N4JS Type Definitions</a>
+<ul class="sectlevel3">
+<li><a href="components.html#_specify-type-definition">12.5.1. Specify Type Definition</a></li>
+<li><a href="components.html#_name-conventions">12.5.2. Name Conventions</a></li>
+<li><a href="components.html#_version-conventions">12.5.3. Version Conventions</a>
+<ul class="sectlevel4">
+<li><a href="components.html#_define-a-new-type-definition-package">12.5.3.1. Define a New Type Definition Package</a></li>
+<li><a href="components.html#_using-a-type-definition-package">12.5.3.2. Using a Type Definition Package</a></li>
+<li><a href="components.html#_rational">12.5.3.3. Rational</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="components.html#_modules">12.6. Modules</a></li>
+<li><a href="components.html#_api-and-implementation-component">12.7. API and Implementation Component</a>
+<ul class="sectlevel3">
+<li><a href="components.html#_execution-of-api-and-implementation-components">12.7.1. Execution of API and Implementation Components</a></li>
+<li><a href="components.html#_api-and-implementation-with-di">12.7.2. API and Implementation With DI</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="plainjs.html#_plainjs">13. PlainJS</a>
+<ul class="sectlevel2">
+<li><a href="plainjs.html#_type-inference-and-validation-for-plain-js">13.1. Type Inference and Validation for Plain JS</a></li>
+<li><a href="plainjs.html#_external-declarations">13.2. External Declarations</a>
+<ul class="sectlevel3">
+<li><a href="plainjs.html#_declaring-externals">13.2.1. Declaring externals</a></li>
+<li><a href="plainjs.html#_instantiating-external-classes">13.2.2. Instantiating external classes</a></li>
+<li><a href="plainjs.html#_implementation-of-external-declarations">13.2.3. Implementation of External Declarations</a></li>
+<li><a href="plainjs.html#_example">13.2.4. Example</a></li>
+</ul>
+</li>
+<li><a href="plainjs.html#_global-definitions">13.3. Global Definitions</a></li>
+<li><a href="plainjs.html#_runtime-definitions">13.4. Runtime Definitions</a></li>
+<li><a href="plainjs.html#_applying-polyfills">13.5. Applying Polyfills</a></li>
+</ul>
+</li>
+<li><a href="jsdoc.html#_jsdoc-2">14. JSDoc</a>
+<ul class="sectlevel2">
+<li><a href="jsdoc.html#_general-n4jsdoc-features">14.1. General N4JSDoc Features</a>
+<ul class="sectlevel3">
+<li><a href="jsdoc.html#_provided-inline-tags">14.1.1. Provided Inline Tags</a>
+<ul class="sectlevel4">
+<li><a href="jsdoc.html#jsdoc_tag__code">14.1.1.1. @code</a></li>
+<li><a href="jsdoc.html#jsdoc_tag__link">14.1.1.2. @link</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="jsdoc.html#_n4jsdoc-for-user-projects">14.2. N4JSdoc for User Projects</a>
+<ul class="sectlevel3">
+<li><a href="jsdoc.html#_standard-tags">14.2.1. Standard Tags</a>
+<ul class="sectlevel4">
+<li><a href="jsdoc.html#_-author">14.2.1.1. @author</a></li>
+<li><a href="jsdoc.html#jsdoc_tag_param">14.2.1.2. @param</a></li>
+<li><a href="jsdoc.html#jsdoc_tag_return">14.2.1.3. @return</a></li>
+</ul>
+</li>
+<li><a href="jsdoc.html#_test-related-tags">14.2.2. Test Related Tags</a>
+<ul class="sectlevel4">
+<li><a href="jsdoc.html#jsdoc_tag__testee">14.2.2.1. @testee</a></li>
+<li><a href="jsdoc.html#jsdoc_tag__testeeFromType">14.2.2.2. @testeeFromType</a></li>
+<li><a href="jsdoc.html#_testeeType_and__testeeMember">14.2.2.3. @testeeType and @testeeMember</a></li>
+<li><a href="jsdoc.html#jsdoc_tag_reqid_in_Tests">14.2.2.4. @reqid in Tests</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="jsdoc.html#_n4jsdoc-for-api-and-implementation-projects">14.3. N4JSDoc for API and Implementation Projects</a>
+<ul class="sectlevel3">
+<li><a href="jsdoc.html#jsdoc_tag__apiNote">14.3.1. @apiNote</a></li>
+<li><a href="jsdoc.html#API_Project_Tags">14.3.2. API Project Tags</a>
+<ul class="sectlevel4">
+<li><a href="jsdoc.html#jsdoc_tag_apiState">14.3.2.1. @apiState</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="jsx.html#_jsx">15. JSX</a>
+<ul class="sectlevel2">
+<li><a href="jsx.html#_jsx-support">15.1. JSX Support</a></li>
+<li><a href="jsx.html#_jsx-backend">15.2. JSX Backend</a></li>
+</ul>
+</li>
+<li><a href="grammars.html#_grammars">16. Grammars</a>
+<ul class="sectlevel2">
+<li><a href="grammars.html#_type-expressions-grammar">16.1. Type Expressions Grammar</a></li>
+<li><a href="grammars.html#_n4js-language-grammar">16.2. N4JS Language Grammar</a></li>
+</ul>
+</li>
+<li><a href="jsobjects.html#_jsobjects">17. JSObjects</a>
+<ul class="sectlevel2">
+<li><a href="jsobjects.html#_object">17.1. Object</a></li>
+<li><a href="jsobjects.html#_string">17.2. String</a></li>
+<li><a href="jsobjects.html#_boolean">17.3. Boolean</a></li>
+<li><a href="jsobjects.html#_number">17.4. Number</a>
+<ul class="sectlevel3">
+<li><a href="jsobjects.html#_static-attributes">17.4.1. Static Attributes</a></li>
+</ul>
+</li>
+<li><a href="jsobjects.html#function">17.5. Function</a></li>
+<li><a href="jsobjects.html#_error">17.6. Error</a></li>
+<li><a href="jsobjects.html#_array">17.7. Array</a></li>
+<li><a href="jsobjects.html#_date">17.8. Date</a></li>
+<li><a href="jsobjects.html#_math">17.9. Math</a>
+<ul class="sectlevel3">
+<li><a href="jsobjects.html#static-attributes-1">17.9.1. Static Attributes</a></li>
+</ul>
+</li>
+<li><a href="jsobjects.html#_regexp">17.10. RegExp</a></li>
+<li><a href="jsobjects.html#_json">17.11. JSON</a></li>
+</ul>
+</li>
+<li><a href="n4js_objects.html#_n4js-objects">18. N4JS Objects</a>
+<ul class="sectlevel2">
+<li><a href="n4js_objects.html#_reflection-model">18.1. Reflection Model</a></li>
+<li><a href="n4js_objects.html#_error-types">18.2. Error Types</a>
+<ul class="sectlevel3">
+<li><a href="n4js_objects.html#_n4apinotimplemented">18.2.1. N4ApiNotImplemented</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="appendix_a_acronyms.html#_acronyms">Appendix A: Acronyms</a></li>
+<li><a href="appendix_b_license.html#sec:License">Appendix B: License</a></li>
+<li><a href="appendix_c_bibliography.html#_bibliography">Appendix C: Bibliography</a></li>
+</ul>
+</div>
+</div>
+<div id="content"><div class="sect1">
+<h2 id="_names"><a class="anchor" href="#_names"></a><a class="link" href="#_names">3. Names</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><em>Visibility</em> defines the scope in which a declaration is visible, that is in which context references can be bound to the declaration.
+<em>Access control</em> defines the extent to which types and members are accessible beyond their immediate context.
+Access control may, therefore, restrict the visibility of a declaration by limiting its scope.</p>
+</div>
+<div class="paragraph">
+<p><em>Extensibility</em> refers to whether a given type can be subtyped, or in the case of members, whether they can be overridden.
+Access control is a prerequisite for extensibility which is further explained in <a href="classifiers.html#_n4js-specific-classifiers">N4JS Specific Classifiers</a></p>
+</div>
+<div class="sect2 language-n4js">
+<h3 id="_access-control"><a class="anchor" href="#_access-control"></a><a class="link" href="#_access-control">3.1. Access Control</a></h3>
+<div class="paragraph">
+<p>Types from one project may or may not be made accessible to another project.
+Likewise, members from a given type may or may not be made accessible to members existing outside that type.
+For example, if a developer writes an application which uses a library, which types within that library can the application see?
+Given a type that is set as visible, which members of that type can the application see?</p>
+</div>
+<div class="paragraph">
+<p>Accessing a type or member actually means that a reference is bound to a
+declaration with the same identifier.</p>
+</div>
+<div class="paragraph">
+<p>We distinguish the following contexts from which an element is accessed
+as follows:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>Module or type</strong>: access from elements in the same module or type.</p>
+</li>
+<li>
+<p><strong>Subtype</strong>: access from a subtype.</p>
+</li>
+<li>
+<p><strong>Project</strong>: access from the same project.</p>
+</li>
+<li>
+<p><strong>Vendor</strong>: access from different project of the same vendor.</p>
+</li>
+<li>
+<p><strong>World</strong>: access from anything else.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Accessibility is defined by modifiers on types and members, e.g <code>public</code>, <code>protected</code>, <code>project</code>, <code>private</code>, via the <code>export</code> statement, and by the <code>@Internal</code> annotation.
+Extensibility is defined by the <code>@Final</code> annotation respectively.</p>
+</div>
+</div>
+<div class="sect2 language-n4js">
+<h3 id="_accessibility-of-types-top-level-variables-and-function-declarations"><a class="anchor" href="#_accessibility-of-types-top-level-variables-and-function-declarations"></a><a class="link" href="#_accessibility-of-types-top-level-variables-and-function-declarations">3.2. Accessibility of Types, Top-Level Variables and Function Declarations</a></h3>
+<div class="paragraph">
+<p>We define types (classes, interfaces, enums) whereby each type has members (fields and methods, depending on the kind of type).
+When we define a type, we need to define whether it is visible only for the specifying module, project or whether that type should be accessible from outside of that project.</p>
+</div>
+<div class="paragraph">
+<p>The same is true for variable declarations and function declarations defined as top-level elements of a module.</p>
+</div>
+<div class="paragraph">
+<p>The following type access modifiers are supported by N4JS:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xtext" data-lang="xtext">enum TypeAccessModifier:      project
+                            | public;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If a type is not exported, its visibility is private.
+If a type has declared visibility <code>public</code>, it may additionally be marked as internal via the annotation <code>@Internal</code>.
+Thus, we have the following set of type access modifiers:</p>
+</div>
+<div class="paragraph">
+<p>TAM = <code>private</code> <code>project</code> <code>public@Internal</code> <code>public</code></p>
+</div>
+<div class="paragraph">
+<p>That is, in N4JS, only the type access modifiers and are available.
+The redundant <code>project</code> modifier serves only documentation purpose and can be synthesized if the <code>export</code> modifier is preset.</p>
+</div>
+<div class="paragraph">
+<p>All other modifiers used here are synthesized as shown in the next example:</p>
+</div>
+<div class="listingblock">
+<div class="title">Synthesized Type Access Modifiers in N4JS</div>
+<div class="content">
+<pre class="highlight"><code class="language-n4js" data-lang="n4js">class C0 {}                         // private
+export class C1 {}                  // project
+export project class C1 {}          // project
+export @Internal public class C1 {} // public@Internal
+export public class C2 {}           // public
+
+var v0;                             // private
+export var v1;                      // project
+export project var v1;              // project
+export @Internal public var v3;     // public@Internal
+export public var v2;               // public
+
+
+function f0() {}                    // private
+export function f1() {}             // project
+export project function f1() {}     // project
+export @Internal public function f3() {} // public@Internal
+export public function f2() {}      // public</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The access control levels are defined as listed in <a href="#tab:type-access-control">Type Access Control</a>.</p>
+</div>
+<table id="tab:type-access-control" class="tableblock frame-all grid-all spread">
+<caption class="title">Table 1. Type Access Control</caption>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 20%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-center valign-top" colspan="5"><strong>Type Access</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th class="tableblock halign-center valign-top"><p class="tableblock">Modifier</p></th>
+<th class="tableblock halign-center valign-top"><p class="tableblock">Module</p></th>
+<th class="tableblock halign-center valign-top"><p class="tableblock">Project</p></th>
+<th class="tableblock halign-center valign-top"><p class="tableblock">Vendor</p></th>
+<th class="tableblock halign-center valign-top"><p class="tableblock">World</p></th>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><code>private</code></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">yes</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">no</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">no</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">no</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><code>project</code></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">yes</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">yes</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">no</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">no</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><code>public@Internal</code></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">yes</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">yes</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">yes</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">no</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><code>public</code></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">yes</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">yes</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">yes</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">yes</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><code>TAM</code> is a totally ordered set:</p>
+</div>
+<div class="openblock">
+<div class="content">
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mstyle mathvariant="monospace"><mtext>private</mtext></mstyle><mo>&lt;</mo><mstyle mathvariant="monospace"><mtext>project</mtext></mstyle><mo>&lt;</mo><mstyle mathvariant="monospace"><mtext>public@Internal</mtext></mstyle><mo>&lt;</mo><mstyle mathvariant="monospace"><mtext>public</mtext></mstyle></math>
+</div>
+</div>
+<div class="openblock requirement">
+<div class="content">
+<div class="paragraph">
+<p><a id="Req-IDE-3"></a><strong>Req. IDE-3:</strong> <a href="#Req-IDE-3">Type Access Modifiers</a> (ver. 1)</p>
+</div>
+<div class="paragraph">
+<p>The following constraints for type access modifiers for a given type <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>T</mi></math> (which may be a classifier declaration, a function or a variable) must hold:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>It is an error if <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>T</mi></math> is not exported but defined as <code>project</code>, <code>public</code> or <code>public@Internal</code>.</p>
+</li>
+<li>
+<p>It is an error if an annotation <code>@Internal</code> is present on a module private or <code>project</code> visible type.</p>
+</li>
+<li>
+<p>The type modifier for all built-in ECMAScript types is <code>public</code>.</p>
+</li>
+<li>
+<p>The <em>default modifier</em> for user declared exported declarations is <code>project</code>.
+That is, this modifier is assumed if no modifier is explicitly specified.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="openblock definition">
+<div class="content">
+<div class="paragraph">
+<p><a id="type_accessibility_t"></a><strong>Definition:</strong> <a href="#type_accessibility_t">Type Accessibility T</a></p>
+</div>
+<div class="paragraph">
+<p>The function <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>α</mi><mi>T</mi></msub><mi>:</mi><mi>T</mi><mi>y</mi><mi>p</mi><mi>e</mi><mi>R</mi><mi>e</mi><mi>f</mi><mi>e</mi><mi>r</mi><mi>e</mi><mi>n</mi><mi>c</mi><mi>e</mi><mo>×</mo><mi>T</mi><mi>y</mi><mi>p</mi><mi>e</mi><mi>D</mi><mi>e</mi><mi>c</mi><mi>l</mi><mi>a</mi><mi>r</mi><mi>a</mi><mi>t</mi><mi>i</mi><mi>o</mi><mi>n</mi><mo>⇒</mo><mi>B</mi><mi>o</mi><mi>o</mi><mi>l</mi><mi>e</mi><mi>a</mi><mi>n</mi></math> computes whether a given type, (top-level) variable or function
+reference can access the declaration that it references.
+<math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>α</mi><mi>T</mi></msub></math> is defined with <a href="#tab:type-access-control">Type Access Control</a>.</p>
+</div>
+<div class="paragraph">
+<p>Formally, we define <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>α</mi><mi>T</mi></msub></math> for a given reference <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>r</mi></math> and a module top level variable, function or type declaration <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>D</mi></math> as follows <sup class="footnote">[<a id="_footnoteref_4" class="footnote" href="appendix_c_bibliography.html#_footnote_4" title="View footnote.">4</a>]</sup>:</p>
+</div>
+<div class="paragraph">
+<p><math xmlns="http://www.w3.org/1998/Math/MathML"><mfrac><mrow><mi>D</mi><mo>.</mo><mi>a</mi><mi>c</mi><mi>c</mi><mo>=</mo><mstyle mathvariant="monospace"><mtext>public</mtext></mstyle></mrow><mrow><msub><mi>α</mi><mi>T</mi></msub><mfenced close=")" open="("><mi>r</mi><mi>D</mi></mfenced></mrow></mfrac></math><br>
+<math xmlns="http://www.w3.org/1998/Math/MathML"><mfrac><mrow><mi>D</mi><mo>.</mo><mi>a</mi><mi>c</mi><mi>c</mi><mo>=</mo><mstyle mathvariant="monospace"><mtext>public@Internal</mtext></mstyle><mspace width="3.0mm"/><mi>r</mi><mo>.</mo><mi>v</mi><mi>e</mi><mi>n</mi><mi>d</mi><mi>o</mi><mi>r</mi><mo>=</mo><mi>D</mi><mo>.</mo><mi>v</mi><mi>e</mi><mi>n</mi><mi>d</mi><mi>o</mi><mi>r</mi></mrow><mrow><msub><mi>α</mi><mi>T</mi></msub><mfenced close=")" open="("><mi>r</mi><mi>D</mi></mfenced></mrow></mfrac></math><br>
+<math xmlns="http://www.w3.org/1998/Math/MathML"><mfrac><mrow><mi>D</mi><mo>.</mo><mi>a</mi><mi>c</mi><mi>c</mi><mo>=</mo><mstyle mathvariant="monospace"><mtext>project</mtext></mstyle><mspace width="3.0mm"/><mi>r</mi><mo>.</mo><mi>p</mi><mi>r</mi><mi>o</mi><mi>j</mi><mi>e</mi><mi>c</mi><mi>t</mi><mo>=</mo><mi>D</mi><mo>.</mo><mi>p</mi><mi>r</mi><mi>o</mi><mi>j</mi><mi>e</mi><mi>c</mi><mi>t</mi></mrow><mrow><msub><mi>α</mi><mi>T</mi></msub><mfenced close=")" open="("><mi>r</mi><mi>D</mi></mfenced></mrow></mfrac></math><br>
+<math xmlns="http://www.w3.org/1998/Math/MathML"><mfrac><mrow><mi>D</mi><mo>.</mo><mi>a</mi><mi>c</mi><mi>c</mi><mo>=</mo><mstyle mathvariant="monospace"><mtext>private</mtext></mstyle><mspace width="3.0mm"/><mi>r</mi><mo>.</mo><mi>m</mi><mi>o</mi><mi>d</mi><mi>u</mi><mi>l</mi><mi>e</mi><mo>=</mo><mi>D</mi><mo>.</mo><mi>m</mi><mi>o</mi><mi>d</mi><mi>u</mi><mi>l</mi><mi>e</mi></mrow><mrow><msub><mi>α</mi><mi>T</mi></msub><mfenced close=")" open="("><mi>r</mi><mi>D</mi></mfenced></mrow></mfrac></math></p>
+</div>
+<div class="paragraph">
+<p>If the type of the arguments is clear from the context, we simply write <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>α</mi><mfenced close=")" open="("><mi>r</mi><mi>D</mi></mfenced></math> instead of <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>α</mi><mi>T</mi></msub><mfenced close=")" open="("><mi>r</mi><mi>D</mi></mfenced></math>.</p>
+</div>
+<div class="paragraph">
+<p>Accessibility for types is only checked for types that manifest themselves in the concrete syntax of the N4JS file.
+Types that do not have to be written to concrete syntax may be used even if they are generally not accessible.
+This is illustrated by <a href="#ex:implicit-type-references">Implicit, allowed type references in N4JS</a>:</p>
+</div>
+<div id="ex:implicit-type-references" class="exampleblock">
+<div class="title">Example 1. Implicit, allowed type references in N4JS</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-n4js" data-lang="n4js">export public class D {
+    public takeC(): C { .. }
+    public acceptC(c: C): void { .. }
+}
+/* private */ class C {}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-n4js" data-lang="n4js">var d: D = new D()
+d.acceptC( d.takeC() )</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_accessibility-of-members"><a class="anchor" href="#_accessibility-of-members"></a><a class="link" href="#_accessibility-of-members">3.2.1. Accessibility of Members</a></h4>
+<div class="paragraph">
+<p>Accessibility at the member level is only applicable when the type itself is accessible.
+If you cannot access the type, you cannot access any of its members.
+Note that inherited members (from an interface or class) become members of a class.
+For example, if <code>B extends A</code>, and if <code>A</code> is not accessible to some client <code>C</code> but <code>B</code> is, then the members of <code>A</code> are indirectly accessible to <code>C</code> in so far as they are accessed via <code>B</code>.
+This is true in particular for interfaces, as their properties are possibly merged into the consuming class (cf. <a href="classifiers.html#_implementation-of-members">Implementation of Members</a>).</p>
+</div>
+<div class="paragraph">
+<p>The following member access modifiers are supported by N4JS:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xtext" data-lang="xtext">enum MemberAccessModifier:    private
+                            | project
+                            | protected
+                            | public;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The modifiers <code>protected</code> and <code>public</code> may be annotated with <code>@Internal</code>.
+Thus, we can define the following set of member access modifiers:</p>
+</div>
+<div class="openblock">
+<div class="content">
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mtable><mtr><mtd><mi>M</mi><mi>A</mi><mi>M</mi><mo>=</mo><mrow><mo>{</mo><mspace width="3.0mm"/></mrow></mtd></mtr><mtr><mtd><mstyle mathvariant="monospace"><mtext>private</mtext></mstyle><mo>,</mo><mstyle mathvariant="monospace"><mtext>protected@Internal</mtext></mstyle><mo>,</mo><mstyle mathvariant="monospace"><mtext>protected</mtext></mstyle><mo>,</mo></mtd></mtr><mtr><mtd><mstyle mathvariant="monospace"><mtext>project</mtext></mstyle><mo>,</mo><mstyle mathvariant="monospace"><mtext>public@Internal</mtext></mstyle><mo>,</mo><mstyle mathvariant="monospace"><mtext>public</mtext></mstyle></mtd></mtr><mtr><mtd><mrow><mo>}</mo></mrow></mtd></mtr></mtable></math>
+</div>
+</div>
+<div class="paragraph">
+<p><code>protected@Internal</code> and <code>public@Internal</code> are synthesized tags and were introduced as shorthand notation for the <code>@Internal</code> annotation together with <code>protected</code> or <code>public</code> access modifiers.
+The <code>project</code> modifier is the default one and it can be omitted.
+As with the type access modifiers, not all member access modifiers are available in N4JS.
+Instead, they are synthesized from different construct as shown in the next example.</p>
+</div>
+<div class="exampleblock">
+<div class="title">Example 2. Synthesized Member Access Modifiers in N4JS</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-n4js" data-lang="n4js">export @Internal public class C {
+
+    private f0;                 // private
+    f1;                         // project
+    project f2;                 // project
+    @Internal protected f3;     // protected@Internal
+    protected f4;               // protected
+    @Internal public f5;        // public@Internal
+    public f6;                  // public
+
+    private m0() {}             // private
+    m1() {}                     // project
+    project m2() {}             // project
+    @Internal protected m3() {} // protected@Internal
+    protected m4() {}           // protected
+    @Internal public m5() {}    // public@Internal
+    public  m6() {}             // public
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p><code>MAM</code> does not define a totally ordered set. However, its subset</p>
+</div>
+<div class="openblock">
+<div class="content">
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mi>M</mi><mi>A</mi><mi>M</mi><mo>\</mo><mfenced close="}" open="{"><mstyle mathvariant="monospace"><mtext>public@Internal</mtext></mstyle></mfenced></math>
+</div>
+</div>
+<div class="paragraph">
+<p>is a totally ordered set <sup class="footnote">[<a id="_footnoteref_5" class="footnote" href="appendix_c_bibliography.html#_footnote_5" title="View footnote.">5</a>]</sup> :</p>
+</div>
+<div class="openblock">
+<div class="content">
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mstyle mathvariant="monospace"><mtext>private</mtext></mstyle><mo>&lt;</mo><mstyle mathvariant="monospace"><mtext>project</mtext></mstyle><mo>&lt;</mo><mstyle mathvariant="monospace"><mtext>protected@Internal</mtext></mstyle><mo>&lt;</mo><mstyle mathvariant="monospace"><mtext>protected</mtext></mstyle><mo>&lt;</mo><mstyle mathvariant="monospace"><mtext>public</mtext></mstyle></math>
+</div>
+</div>
+<div class="paragraph">
+<p><a href="#tab:Member-Access-Controls">Member Access Control</a> shows which members are accessible from where.</p>
+</div>
+<table id="tab:Member-Access-Controls" class="tableblock frame-all grid-all spread">
+<caption class="title">Table 2. Member Access Control</caption>
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 12.5%;">
+<col style="width: 12.5%;">
+<col style="width: 12.5%;">
+<col style="width: 12.5%;">
+<col style="width: 12.5%;">
+<col style="width: 12.5%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Access Modifier</th>
+<th class="tableblock halign-center valign-top">Inside Module</th>
+<th class="tableblock halign-center valign-top">Inside Project</th>
+<th class="tableblock halign-center valign-top">Vendor</th>
+<th class="tableblock halign-center valign-top">Vendor Subtypes</th>
+<th class="tableblock halign-center valign-top">Other Projects</th>
+<th class="tableblock halign-center valign-top">Everywhere</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>private</code></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">yes</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">no</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">no</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">no</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">no</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">no</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>project</code></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">yes</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">yes</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">no</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">no</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">no</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">no</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>protected@Internal</code></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">yes</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">yes</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">yes</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">no</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">no</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">no</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>protected</code></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">yes</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">yes</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">yes</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">no</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">yes</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">no</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>public@Internal</code></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">yes</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">yes</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">yes</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">yes</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">no</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">no</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>public</code></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">yes</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">yes</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">yes</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">yes</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">yes</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">yes</p></td>
+</tr>
+</tbody>
+</table>
+<div class="openblock definition">
+<div class="content">
+<div class="paragraph">
+<p><a id="type_and_member_accessibility_relation"></a><strong>Definition:</strong> <a href="#type_and_member_accessibility_relation">Type and Member Accessibility Relation</a></p>
+</div>
+<div class="paragraph">
+<p>We define the relation</p>
+</div>
+<div class="openblock">
+<div class="content">
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mo>=</mo><mspace width="1.0em"/><mi>:</mi><mspace width="1.0em"/><mi>T</mi><mi>A</mi><mi>M</mi><mo>×</mo><mi>M</mi><mi>A</mi><mi>M</mi></math>
+</div>
+</div>
+<div class="paragraph">
+<p>as follows:</p>
+</div>
+<div class="openblock">
+<div class="content">
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mtable><mtr><mtd><mo>=</mo><mspace width="1.0em"/><mi>:</mi><mi>:</mi><mo>=</mo><mrow><mo>{</mo></mrow></mtd><mtd><mfenced close=")" open="("><mstyle mathvariant="monospace"><mtext>private</mtext></mstyle><mstyle mathvariant="monospace"><mtext>private</mtext></mstyle></mfenced><mo>,</mo><mfenced close=")" open="("><mstyle mathvariant="monospace"><mtext>project</mtext></mstyle><mstyle mathvariant="monospace"><mtext>project</mtext></mstyle></mfenced><mo>,</mo></mtd></mtr><mtr><mtd/><mtd><mrow><mfenced close=")" open="("><mstyle mathvariant="monospace"><mtext>public@Internal</mtext></mstyle><mstyle mathvariant="monospace"><mtext>public@Internal</mtext></mstyle></mfenced><mo>,</mo><mfenced close=")" open="("><mstyle mathvariant="monospace"><mtext>public</mtext></mstyle><mstyle mathvariant="monospace"><mtext>public</mtext></mstyle></mfenced><mo>}</mo></mrow></mtd></mtr></mtable></math>
+</div>
+</div>
+<div class="paragraph">
+<p>We further define the relation <math xmlns="http://www.w3.org/1998/Math/MathML"><mo>≥</mo><mi>:</mi><mi>T</mi><mi>A</mi><mi>M</mi><mo>×</mo><mi>M</mi><mi>A</mi><mi>M</mi></math> as follows:</p>
+</div>
+<div class="openblock">
+<div class="content">
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mfrac><mrow><mo>∃</mo><mi>m</mi><mi>a</mi><msup><mi>m</mi><mi>'</mi></msup><mo>∈</mo><mi>M</mi><mi>A</mi><mi>M</mi><mi>:</mi><mi>t</mi><mi>a</mi><mi>m</mi><mo>=</mo><mi>m</mi><mi>a</mi><msup><mi>m</mi><mi>'</mi></msup><mo>∧</mo><mi>m</mi><mi>a</mi><msup><mi>m</mi><mi>'</mi></msup><mo>≥</mo><mi>m</mi><mi>a</mi><mi>m</mi></mrow><mrow><mi>t</mi><mi>a</mi><mi>m</mi><mo>≥</mo><mi>m</mi><mi>a</mi><mi>m</mi></mrow></mfrac></math>
+</div>
+</div>
+<div class="paragraph">
+<p>Less, greater then etc. are defined accordingly.</p>
+</div>
+</div>
+</div>
+<div class="openblock definition">
+<div class="content">
+<div class="paragraph">
+<p><a id="member_accessibility"></a><strong>Definition:</strong> <a href="#member_accessibility">Member Accessibility</a></p>
+</div>
+<div class="paragraph">
+<p>The function</p>
+</div>
+<div class="openblock">
+<div class="content">
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><msub><mi>α</mi><mi>m</mi></msub><mi>:</mi><mi>M</mi><mi>e</mi><mi>m</mi><mi>b</mi><mi>e</mi><mi>r</mi><mi>R</mi><mi>e</mi><mi>f</mi><mi>e</mi><mi>r</mi><mi>e</mi><mi>n</mi><mi>c</mi><mi>e</mi><mo>×</mo><mi>M</mi><mi>e</mi><mi>m</mi><mi>b</mi><mi>e</mi><mi>r</mi><mi>D</mi><mi>e</mi><mi>c</mi><mi>l</mi><mi>a</mi><mi>r</mi><mi>a</mi><mi>t</mi><mi>i</mi><mi>o</mi><mi>n</mi><mo>⇒</mo><mi>B</mi><mi>o</mi><mi>o</mi><mi>l</mi><mi>e</mi><mi>a</mi><mi>n</mi></math>
+</div>
+</div>
+<div class="paragraph">
+<p>computes if a given reference can access the member declaration that it
+references.</p>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>Note that <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>α</mi><mi>m</mi></msub></math> and <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>b</mi><mi>i</mi><mi>n</mi><mi>d</mi></math> are different functions.
+A reference can only bind to a declaration if it can access the declaration.
+However, bind requires more condition to work (correct metatypes, no shadowing etc).</p>
+</div>
+<div class="paragraph">
+<p>Formally, we define <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>α</mi><mi>m</mi></msub></math> for a given reference <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>r</mi></math> and member declaration <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>M</mi></math> as follows: <sup class="footnote">[<a id="_footnoteref_6" class="footnote" href="appendix_c_bibliography.html#_footnote_6" title="View footnote.">6</a>]</sup> <sup class="footnote">[<a id="_footnoteref_7" class="footnote" href="appendix_c_bibliography.html#_footnote_7" title="View footnote.">7</a>]</sup></p>
+</div>
+<div class="paragraph">
+<p><math xmlns="http://www.w3.org/1998/Math/MathML"><mfrac><mrow><mi>M</mi><mo>.</mo><mi>a</mi><mi>c</mi><mi>c</mi><mo>=</mo><mstyle mathvariant="monospace"><mtext>public</mtext></mstyle></mrow><mrow><msub><mi>α</mi><mi>m</mi></msub><mfenced close=")" open="("><mi>r</mi><mi>M</mi></mfenced></mrow></mfrac></math><br>
+<math xmlns="http://www.w3.org/1998/Math/MathML"><mfrac><mrow><mi>r</mi><mo>.</mo><mi>v</mi><mi>e</mi><mi>n</mi><mi>d</mi><mi>o</mi><mi>r</mi><mo>=</mo><mi>M</mi><mo>.</mo><mi>v</mi><mi>e</mi><mi>n</mi><mi>d</mi><mi>o</mi><mi>r</mi><mspace width="3.0mm"/><mi>M</mi><mo>.</mo><mi>a</mi><mi>c</mi><mi>c</mi><mo>=</mo><mstyle mathvariant="monospace"><mtext>public@Internal</mtext></mstyle></mrow><mrow><msub><mi>α</mi><mi>m</mi></msub><mfenced close=")" open="("><mi>r</mi><mi>M</mi></mfenced></mrow></mfrac></math><br>
+<math xmlns="http://www.w3.org/1998/Math/MathML"><mfrac><mrow><mi>r</mi><mo>.</mo><mi>o</mi><mi>w</mi><mi>n</mi><mi>e</mi><mi>r</mi><mo>∈</mo><mi>r</mi><mo>.</mo><mi>r</mi><mi>e</mi><mi>c</mi><mi>e</mi><mi>i</mi><mi>v</mi><mi>e</mi><mi>r</mi><mo>.</mo><mi>s</mi><mi>u</mi><mi>p</mi><mi>e</mi><msup><mi>r</mi><mo>*</mo></msup><mspace width="3.0mm"/><mi>M</mi><mo>.</mo><mi>a</mi><mi>c</mi><mi>c</mi><mo>=</mo><mstyle mathvariant="monospace"><mtext>protected</mtext></mstyle></mrow><mrow><msub><mi>α</mi><mi>m</mi></msub><mfenced close=")" open="("><mi>r</mi><mi>M</mi></mfenced></mrow></mfrac></math><br>
+<math xmlns="http://www.w3.org/1998/Math/MathML"><mfrac><mrow><mi>r</mi><mo>.</mo><mi>o</mi><mi>w</mi><mi>n</mi><mi>e</mi><mi>r</mi><mo>∈</mo><mi>r</mi><mo>.</mo><mi>r</mi><mi>e</mi><mi>c</mi><mi>e</mi><mi>i</mi><mi>v</mi><mi>e</mi><mi>r</mi><mo>.</mo><mi>s</mi><mi>u</mi><mi>p</mi><mi>e</mi><msup><mi>r</mi><mo>*</mo></msup><mspace width="3.0mm"/><mi>r</mi><mo>.</mo><mi>v</mi><mi>e</mi><mi>n</mi><mi>d</mi><mi>o</mi><mi>r</mi><mo>=</mo><mi>M</mi><mo>.</mo><mi>v</mi><mi>e</mi><mi>n</mi><mi>d</mi><mi>o</mi><mi>r</mi><mspace width="3.0mm"/><mi>M</mi><mo>.</mo><mi>a</mi><mi>c</mi><mi>c</mi><mo>=</mo><mstyle mathvariant="monospace"><mtext>protected@Internal</mtext></mstyle></mrow><mrow><msub><mi>α</mi><mi>m</mi></msub><mfenced close=")" open="("><mi>r</mi><mi>M</mi></mfenced></mrow></mfrac></math><br>
+<math xmlns="http://www.w3.org/1998/Math/MathML"><mfrac><mrow><mi>r</mi><mo>.</mo><mi>p</mi><mi>r</mi><mi>o</mi><mi>j</mi><mi>e</mi><mi>c</mi><mi>t</mi><mo>=</mo><mi>M</mi><mo>.</mo><mi>p</mi><mi>r</mi><mi>o</mi><mi>j</mi><mi>e</mi><mi>c</mi><mi>t</mi><mspace width="3.0mm"/><mi>M</mi><mo>.</mo><mi>a</mi><mi>c</mi><mi>c</mi><mo>=</mo><mstyle mathvariant="monospace"><mtext>project</mtext></mstyle></mrow><mrow><msub><mi>α</mi><mi>m</mi></msub><mfenced close=")" open="("><mi>r</mi><mi>M</mi></mfenced></mrow></mfrac></math><br>
+<math xmlns="http://www.w3.org/1998/Math/MathML"><mfrac><mrow><mi>r</mi><mo>.</mo><mi>m</mi><mi>o</mi><mi>d</mi><mi>u</mi><mi>l</mi><mi>e</mi><mo>=</mo><mi>r</mi><mo>.</mo><mi>m</mi><mi>o</mi><mi>d</mi><mi>u</mi><mi>l</mi><mi>e</mi><mspace width="3.0mm"/><mi>M</mi><mo>.</mo><mi>a</mi><mi>c</mi><mi>c</mi><mo>=</mo><mstyle mathvariant="monospace"><mtext>private</mtext></mstyle></mrow><mrow><msub><mi>α</mi><mi>m</mi></msub><mfenced close=")" open="("><mi>r</mi><mi>M</mi></mfenced></mrow></mfrac></math></p>
+</div>
+<div class="paragraph">
+<p>If the type of the arguments is clear from the context, we simply write <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>α</mi><mfenced close=")" open="("><mi>r</mi><mi>M</mi></mfenced></math> instead of <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>α</mi><mi>m</mi></msub><mfenced close=")" open="("><mi>r</mi><mi>M</mi></mfenced></math>.</p>
+</div>
+<div class="paragraph">
+<p>Although private members are accessible inside a module, it is not possible to redefine (override etc.) these members (see <a href="classifiers.html#_redefinition-of-members">Redefinition of Members</a>).</p>
+</div>
+<div class="openblock requirement">
+<div class="content">
+<div class="paragraph">
+<p><a id="Req-IDE-4"></a><strong>Req. IDE-4:</strong> <a href="#Req-IDE-4">Default Member Access Modifiers</a> (ver. 1)</p>
+</div>
+<div class="paragraph">
+<p>The following constraints for member access modifiers must hold:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>The <em>default modifier</em> for members of user-declared classes is <code>project</code>.</p>
+</li>
+<li>
+<p>The <em>default modifier</em> for members of interfaces is the same as the visibility of the interface itself, except for private interfaces.
+For private interfaces, the default modifier for members is <code>project</code>.</p>
+</li>
+<li>
+<p>The modifier for enum literals is always <code>public</code>.</p>
+</li>
+<li>
+<p>Private members of a classifier are visible and accessible within a module, i.e. you can access the private method of a class, for instance,
+when the use of the class as receiver is in the same module where the class has been defined.
+In case of inheritance, private members are visible if the host (e.g. the class) is in the same module as the provider (the extended class).
+This also means that abstract members of a class are allowed to be defined private as they may be overridden within a module.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="exampleblock">
+<div class="title">Example 3. Type and Member Access Modifiers</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-n4js" data-lang="n4js">export project interface I {
+    project foo();
+}
+
+// This interface may be used publicly, but since the inherited method foo() is project visible only,
+// it is not possible to implement that interface in other projects.
+export public interface J extends I {
+}
+
+// Since the visibility of foo is set to public here, it is possible to implement this interface in other projects.
+export public interface K extends I {
+    @Override public foo();
+}
+
+// Since foo is private, it is not possible to subclass the class in other modules. Still, it
+// is possible to use it in other projects.
+// XPECT noerrors --&gt;
+export public abstract class C {
+    private abstract foo();
+
+    public static C instance() {
+        // return some default instance
+        ...
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>As demonstrated in the following snippet, class <code>C</code> can be used but not subclassed in other modules:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-n4js" data-lang="n4js">import C from "C"
+
+// XPECT errors --&gt; "Cannot extend class C: cannot implement one or more non-accessible abstract members: method C.foo." at "C"
+export public abstract class Sub extends C {
+}
+
+// XPECT noerrors --&gt;
+var c: C = C.instance();</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>Members of non-visible types are, in general, not visible for a client.
+Members may become visible, however, if they are accessed via a visible type which inherits these members.
+The following examples demonstrate two different scenarios:</p>
+</div>
+<div class="exampleblock">
+<div class="title">Example 4. Declaring type vs receiver type</div>
+<div class="content">
+<div class="paragraph">
+<p>It is especially noteworthy that the declaring type of a member is
+generally not considered for the accessibility of that member but only
+the receiver type is relevant.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-n4js" data-lang="n4js">class Base {
+    public m(b: Base): void {}
+}
+export public class ApiType extends Base {
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-n4js" data-lang="n4js">import * as N from "Base";
+
+var t = new N.ApiType();
+// member can be accessed although type Base is not exported:
+t.m(t);</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>The property access to the member <code>m</code> is valid because it fulfills the constraints for accessibility.
+The receiver of the property access is <code>t</code> of type <code>ApiType</code>.
+That type is exported and accessible.
+Therefore, the inherited member <code>m</code> is also considered valid since it is also defined <code>public</code>.</p>
+</div>
+<div class="paragraph">
+<p>This rule allows for defining a common functionality in module or project visible types that becomes accessible via exported, visible subtypes.</p>
+</div>
+<div class="exampleblock">
+<div class="title">Example 5. Member Access and Type Access Interplay</div>
+<div class="content">
+<div class="paragraph">
+<p>The following example demonstrates the behavior when
+non-visible types are used as return types. In this case, all the
+members of the non-visible types are not accessible, even if they have a
+public access modifier.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-n4js" data-lang="n4js">class A {
+    foo(): void{}
+}
+export public class C {
+    public getHidden(): A { return new A() };
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-n4js" data-lang="n4js">import * as Nfrom "A"
+
+class Client {
+    f(): void {
+        var c = new N.C();
+        // XPECT noerrors --&gt; Getting an instance the hidden type is possible
+        var hidden = c.getHidden();
+        // XPECT errors --&gt; "The method foo is not visible." at "foo"
+        hidden.foo();
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_valid-names"><a class="anchor" href="#_valid-names"></a><a class="link" href="#_valid-names">3.2.2. Valid Names</a></h4>
+<div class="paragraph">
+<p>For identifier and property names, the same constraints as in ECMAScript
+[<a href="appendix_c_bibliography.html#ECMA11a">ECMA11a(p.S7.6)</a>]
+[<a href="appendix_c_bibliography.html#ECMA11a">ECMA11a(p.S7.6.1.2)</a>]
+[<a href="appendix_c_bibliography.html#ECMA11a">ECMA11a(p.S11.6)</a>] are applied.</p>
+</div>
+<div class="paragraph">
+<p>Identifier names in N4JS are defined similar to [<a href="appendix_c_bibliography.html#ECMA11a">ECMA11a(p.S11.6)</a>], making it possible to even use reserved words (keywords etc.).
+For some element types, errors or warnings are issued in order to prevent problems when using these names.</p>
+</div>
+<div class="openblock requirement">
+<div class="content">
+<div class="paragraph">
+<p><a id="Req-IDE-5"></a><strong>Req. IDE-5:</strong> <a href="#Req-IDE-5">Forbidden Identifier Names in N4JS</a> (ver. 1)</p>
+</div>
+<div class="paragraph">
+<p>In N4JS mode, errors are generated in the following cases:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>A name of a type equals</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>an access modifier</p>
+</li>
+<li>
+<p><code>set</code> or <code>get</code></p>
+</li>
+<li>
+<p>an ECMAScript keyword</p>
+</li>
+<li>
+<p>a boolean literal</p>
+</li>
+<li>
+<p>the name of a base type</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>The name of a function or function expression equals (but not the method)</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>an ECMAScript keyword</p>
+</li>
+<li>
+<p>a reserved future ECMAScript word</p>
+</li>
+</ol>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="openblock requirement">
+<div class="content">
+<div class="paragraph">
+<p><a id="Req-IDE-6"></a><strong>Req. IDE-6:</strong> <a href="#Req-IDE-6">Undesired Identifier Names in N4JS</a> (ver. 1)</p>
+</div>
+<div class="paragraph">
+<p>In N4JS mode, warnings are generated in the following cases:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>The name of a member (of a non external type)</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>equals the name of a base type <sup class="footnote">[<a id="_footnoteref_8" class="footnote" href="appendix_c_bibliography.html#_footnote_8" title="View footnote.">8</a>]</sup> but the type of the variable is different from that type</p>
+</li>
+<li>
+<p>is not static nor const but starts with an upper case letter</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>The name of a non-external N4 types (class, interface, enum) starts with a lower case letter</p>
+</li>
+<li>
+<p>The name of a variable (incl. formal parameter or catch variable and fields)</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>equals an N4JS keyword</p>
+</li>
+<li>
+<p>equals the name of a base type but the type of the variable is different from that type</p>
+</li>
+<li>
+<p>is not const but starts with an upper case letter</p>
+</li>
+</ol>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_qualified-names"><a class="anchor" href="#_qualified-names"></a><a class="link" href="#_qualified-names">3.2.3. Qualified Names</a></h4>
+<div class="paragraph">
+<p>In N4JS source code, types can only be referenced using their simple name.
+There is no such thing as a fully-qualified type name in N4JS or ECMAScript.
+Types are uniquely identified by their simple name, maybe together with an import and the module specifier given there.
+Clashes between simple names of imported type and locally declared types can be resolved by importing the type under an alias.</p>
+</div>
+<div class="paragraph">
+<p>In some cases, however, we need to define references to types or even members.
+For example, if we want to reference certain members in JSDoc comments or for unambiguous error messages.
+For this reason, we formally define qualified names even if they cannot occur in source code.</p>
+</div>
+<div class="paragraph">
+<p><a href="#tab:typenames">Different forms of module and type specifiers.</a> shows the different names of a given type <code>C</code>, defined in a module
+<code>M.n4js</code>, defined in a package <code>p</code> of a project <code>MyProject</code>.</p>
+</div>
+<div class="paragraph">
+<p>Simple type names are used throughout N4JS code in order to refer to types.
+The different forms of module specifiers are only used in import declarations in the string following the <code>from</code> keyword.</p>
+</div>
+<table id="tab:typenames" class="tableblock frame-all grid-all spread">
+<caption class="title">Table 3. Different forms of module and type specifiers.</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-center valign-top">Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Simple Type Name</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><code>C</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(Plain) Module Specifier</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><code>p/M</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Complete Module Specifier</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><code>MyProject/p/M</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Complete Type Specifier</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><code>MyProject/p/M.C</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_name-duplicates"><a class="anchor" href="#_name-duplicates"></a><a class="link" href="#_name-duplicates">3.2.4. Name Duplicates</a></h4>
+<div class="paragraph">
+<p>There might be cases where two (or more) scopes created by different entities with the same (simple) name overlap.
+Those situations can be referred to as shadowing, hiding, or obscuring.
+While they are not the same, many of those cases are not allowed in N4JS.
+For simplicity we refer to them all as shadowing or duplication (see below).
+Rule of thumb is that N4JS allows everything that is allowed in JavaScript StrictMode.</p>
+</div>
+<div class="sect4">
+<h5 id="_lexical-environment"><a class="anchor" href="#_lexical-environment"></a><a class="link" href="#_lexical-environment">3.2.4.1. Lexical Environment</a></h5>
+<div class="paragraph">
+<p>N4JS handles scopes similar to ECMAScript, so that function scope is applied to variables declared with <code>var</code> (and parameters), and block scope for variables is declared with <code>let</code> or <code>const</code>.
+In general, ECMAScript defines <em>Lexical Environments</em> as a specification type used to define the association of Identifiers to specific variables and functions based upon the lexical nesting structure of ECMAScript code [<a href="appendix_c_bibliography.html#ECMA11a">ECMA11a(p.10.2)</a>].</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Elements that introduce lexical environments: </dt>
+<dd>
+<p><code>FunctionDefinition</code>, <code>VariableDeclaration</code>, <code>CatchBlock</code>, <code>WithStatement</code>, <code>ImportDeclaration</code></p>
+</dd>
+<dt class="hdlist1">N4JS specific declarations: </dt>
+<dd>
+<p><code>N4ClassDeclaration</code>, <code>N4InterfaceDeclaration</code>,
+<code>N4EnumDeclaration</code>, <code>N4MethodDeclaration</code>.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>Additionally, a built-in lexical environment that defines global scope exists for every <code>Script</code>.</p>
+</div>
+<div class="paragraph">
+<p>Since N4JS is extended (and a bit more strict) JS strict mode, <em>Object environment record</em>s created by <code>WithStatement</code> are not taken into account when resolving duplicates.
+This applies to both N4JS mode and JS strict mode.
+In unrestricted JS the <code>WithStatement</code> is allowed but duplicates are not validated.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title=""></i>
+</td>
+<td class="content">
+In case of names introduced by <code>ImportDeclaration</code>s only <code>NamedImportSpecifiers</code>s are taken into account (their import name or its alias if available).
+<code>WildcardImportSpecifiers</code>s are not taken into account.
+Potential optimizations by compiler or user annotation are also not currently taken into account during analysis.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_duplicates-and-shadowing"><a class="anchor" href="#_duplicates-and-shadowing"></a><a class="link" href="#_duplicates-and-shadowing">3.2.4.2. Duplicates and Shadowing</a></h5>
+<div class="openblock definition">
+<div class="content">
+<div class="paragraph">
+<p><a id="shadowing_overriding_duplicates"></a><strong>Definition:</strong> <a href="#shadowing_overriding_duplicates">Shadowing Overriding Duplicates</a></p>
+</div>
+<div class="paragraph">
+<p>Two elements with the same name declared in the same lexical environment (cf. [<a href="appendix_c_bibliography.html#ECMA11a">ECMA11a(p.S10.2.2.1)</a>] are called <em>duplicates</em>.
+An element defined in an environment <em>shadows</em> all elements with the same name in outer environments.</p>
+</div>
+<div class="paragraph">
+<p>In class hierarchies, a member with the same name as a member defined in a supertype is said to override the latter.
+Overriding is discussed in <a href="classifiers.html#_redefinition-of-members">Redefinition of Members</a>.</p>
+</div>
+<div class="paragraph">
+<p>For the following constraints, we make the following assumptions:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Names of function expressions or declarations are handles similar to locally declared elements in the function.
+Function declarations are additionally declaring a name in their outer scope.</p>
+</li>
+<li>
+<p>The implicit formal parameter <code>arguments</code> is treated similar to declared formal parameters.</p>
+</li>
+<li>
+<p>Formal parameters are defined in the lexical environment of a function, that is, they are defined in the same lexical environment as local <code>var</code>-variables or other declarations in that function.</p>
+</li>
+<li>
+<p>The "global" environment contains objects globally defined by the execution environment.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="openblock requirement">
+<div class="content">
+<div class="paragraph">
+<p><a id="Req-IDE-7"></a><strong>Req. IDE-7:</strong> <a href="#Req-IDE-7">Forbidden Duplicates</a> (ver. 1)</p>
+</div>
+<div class="paragraph">
+<p>There must be no two elements defined in the same lexical environment with the same name,
+that is, there must be no duplicates.</p>
+</div>
+</div>
+</div>
+<div class="openblock requirement">
+<div class="content">
+<div class="paragraph">
+<p><a id="Req-IDE-8"></a><strong>Req. IDE-8:</strong> <a href="#Req-IDE-8">Forbidden Shadowing</a> (ver. 1)</p>
+</div>
+<div class="paragraph">
+<p>In general, shadowing is allowed in N4JS.
+But it is not allowed in the following cases:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>No element defined in the standard global scope must be shadowed.</p>
+</li>
+<li>
+<p>There must be no function shadowing another function.</p>
+</li>
+<li>
+<p>Elements defined in catch blocks must not shadow elements defined all parent non-catch-block environments.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="openblock requirement">
+<div class="content">
+<div class="paragraph">
+<p><a id="Req-IDE-9"></a><strong>Req. IDE-9:</strong> <a href="#Req-IDE-9">Forbidden Names</a> (ver. 1)</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>In the script environment, it is not allowed to use the name
+’arguments’.<sup class="footnote">[<a id="_footnoteref_9" class="footnote" href="appendix_c_bibliography.html#_footnote_9" title="View footnote.">9</a>]</sup></p>
+<div class="paragraph">
+<p><a href="#fig-forbidden-shadowing">Forbidden Shadowing</a> shows nested lexical environments with named elements declared inside (all named <code>x</code> here), the forbidden cases are marked with arrows
+(the numbers at the left side refer to the numbers in <a href="#Req-IDE-8">[Req-IDE-8]</a>.</p>
+</div>
+</li>
+</ol>
+</div>
+<div id="fig-forbidden-shadowing" class="imageblock" style="text-align: center">
+<div class="content">
+<img src="chapters/03_names/fig/shadowing.png" alt="shadowing" width="50%">
+</div>
+<div class="title">Figure 1. Forbidden Shadowing</div>
+</div>
+<div class="paragraph">
+<p>Rationale:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>We expect only few named nested functions.
+Since this is expected to be a rare case, no shadowing should occur there as this is maybe not expected by the programmer.</p>
+</li>
+<li>
+<p>It is typical that nested environments define local variables.
+In particular helper variables (such as <code>i: number i</code> or <code>s: string</code> ) are expected to be used quite often.
+Since this is a typical case, we allow shadowing for local variables.</p>
+</li>
+<li>
+<p>Function declarations may shadow type declarations.
+However, both entities are to be handled completely differently, so that an error will occur if the shadowing is ignored by the programmer anyway.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Version 0.9<br>
+Last updated 2019-08-07 15:02:40 CEST
+</div>
+</div>
+<!-- ************* docinfo-footer *************************************************************** -->
+<div class="Grid social" style="color:#d5dfea">
+  <div class="Cell Cell--2-12 m-Cell--withMargin">
+    <h2>Quick Links</h2>
+    <ul>
+      <li><a href="../downloads.html">Download</a></li>
+      <li><a href="../userguides/index.html">Documentation</a></li>
+      <li><a href="https://github.com/eclipse/n4js/">Source</a></li>
+      <li><a href="https://github.com/eclipse/n4js/issues">Issues</a></li>
+    </ul>
+  </div>
+  <div class="Cell Cell--2-12 m-Cell--withMargin">
+    <br/><br/>
+    <ul>
+      <li><a href="https://www.eclipse.org/forums/index.php/f/365/">Forum</a></li>
+      <li><a href="http://n4js.blogspot.de/">Blog</a></li>
+      <li><a href="https://dev.eclipse.org/mailman/listinfo/n4js-dev">Mailing List</a></li>
+      <li><a href="https://projects.eclipse.org/projects/technology.n4js">Eclipse Project Page</a></li>
+      <li><a href="https://twitter.com/n4jsdev">Tweets by n4jsdev</a></li>
+    </ul>
+  </div>
+  <div class="Cell Cell--2-12 m-Cell--withMargin">
+    <br/><br/>
+    <ul>
+      <li><a href="http://www.eclipse.org/">Eclipse Home</a></li>
+      <li><a href="http://www.eclipse.org/legal/privacy.php">Privacy Policy</a></li>
+      <li><a href="http://www.eclipse.org/legal/termsofuse.php">Terms of Use</a></li>
+      <li><a href="http://www.eclipse.org/legal/copyright.php">Copyright Agent</a></li>
+      <li><a href="http://www.eclipse.org/legal/">Legal</a></li>
+    </ul>
+  </div>
+  <div style="clear: both; height: 0; overflow: hidden;"></div>
+</div>
+
+<!-- ************* UI Scripts ************* -->
+<script type="text/javascript" src="scripts/back-to-top.js"></script>
+
+<script type="text/javascript" src="scripts/treeview.js"></script>
+<script type="text/javascript" src="scripts/toc.js"></script>
+
+<!-- ************* Prism.js Syntax Highlighting ************* -->
+<script src="scripts/prism.js"></script>
+
+<script type="text/javascript">
+	// Add the 'toclist' id for search function
+	$(".toc2 > ul").attr('id', 'toclist');
+	// Generate a Search input form
+	$("#toclist > li:first-of-type").before('<input type="text" id="pagesearch" onkeyup="search()" placeholder="Search for section...">');
+	$("#toclist > li:first-of-type").before('<i id="clear" class="fa fa-times-circle-o"></i>');
+	$("#clear").click(function(){
+	    $("#pagesearch").val('');
+	    search();
+	    $('.toc2 > ul').treeView('collapseAll');
+	});
+	// intialize Treeview.js
+	$(".toc2 > ul").treeView();
+	// Initialize Scrollspy
+</script>
+<!-- ************* docinfo-footer *************************************************************** -->
+</body>
+</html>

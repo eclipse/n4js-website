@@ -5,15 +5,12 @@
 <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 1.5.5">
-<meta name="author" content="2018-11-06 16:56:07 CET">
+<meta name="author" content="2019-08-07 15:02:40 CEST">
 <title>N4JS Language Specification</title>
 <link rel="stylesheet" href="styles/spec.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
-<!-- ************* Meta ************* -->
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+<!-- ************* docinfo ******************************************************************* -->
 
-<!-- ************* OpenGraph ************-->
-<meta name="description" content="N4JS Language Specification">
 
 <!-- ************* Favicon ************-->
 <link rel="icon" href="images/favicon.ico" />
@@ -22,19 +19,26 @@
 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
 
-<link href="styles/prism.min.css" rel="stylesheet" />
 
+<link href="styles/prism.min.css" rel="stylesheet" />
 <script type="text/javascript" async
-  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=MML_CHTML">
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML">
 </script>
+
+<!-- ************* Styles ************* -->
+<link rel="stylesheet" type="text/css" href="styles/n4jsspec-adoc.css">
 
 
 <!-- ****************** NavBar ****************** -->
 <div id="menubar">
-	<ul class="fa-ul">
-		<li><a href="N4JSSpec.pdf">Download as PDF</a></li>
-	</ul>
+	<div class="banner">
+        <a href="https://www.eclipse.org/n4js/#"><img id="logo" src="images/n4js-logo.png" alt="Eclipse N4JS"></a>
+    </div>
+<ul>
+  <li><a href="index.html">Index</a></li>
+</ul>
 </div>
+<!-- ************* docinfo ******************************************************************* -->
 <style>
       .admonitionblock td.icon .icon-todo:before{content:"\f249";color:#f4ee42}
     </style>
@@ -43,8 +47,8 @@
 <div id="header">
 <h1>N4JS Language Specification</h1>
 <div class="details">
-<span id="author" class="author">2018-11-06 16:56:07 CET</span><br>
-<span id="revnumber">version 0.4</span>
+<span id="author" class="author">2019-08-07 15:02:40 CEST</span><br>
+<span id="revnumber">version 0.9</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
@@ -184,12 +188,12 @@
 </ul>
 </li>
 <li><a href="#_n4class">4.8.2. N4Class</a></li>
-<li><a href="#_iterablen">4.8.3. IterableN</a></li>
+<li><a href="#IterableN">4.8.3. IterableN</a></li>
 </ul>
 </li>
 <li><a href="#_type-modifiers">4.9. Type Modifiers</a>
 <ul class="sectlevel3">
-<li><a href="#_dynamic">4.9.1. Dynamic</a></li>
+<li><a href="#Type_Modifiers_Dynamic">4.9.1. Dynamic</a></li>
 <li><a href="#_optional-return-types">4.9.2. Optional Return Types</a></li>
 </ul>
 </li>
@@ -248,6 +252,12 @@
 </ul>
 </li>
 <li><a href="#_string-based-enums">4.13.2. String-Based Enums</a></li>
+</ul>
+</li>
+<li><a href="#_short-hand-syntax">4.14. Short-Hand Syntax</a>
+<ul class="sectlevel3">
+<li><a href="#_array-short-hand-syntax">4.14.1. Array Short-Hand Syntax</a></li>
+<li><a href="#_iterablen-short-hand-syntax">4.14.2. IterableN Short-Hand Syntax</a></li>
 </ul>
 </li>
 </ul>
@@ -551,8 +561,12 @@
 <li><a href="#_n4js-specific-expressions">8.4. N4JS Specific Expressions</a>
 <ul class="sectlevel3">
 <li><a href="#_class-expression">8.4.1. Class Expression</a></li>
-<li><a href="#_cast-as-expression">8.4.2. Cast (As) Expression</a></li>
-<li><a href="#cast-as-expression-semantics-type-inference">8.4.3. Semantics and Type Inference</a></li>
+<li><a href="#_cast-as-expression">8.4.2. Cast (As) Expression</a>
+<ul class="sectlevel4">
+<li><a href="#cast-as-expression-semantics-type-inference">8.4.2.1. Semantics and Type Inference</a></li>
+</ul>
+</li>
+<li><a href="#Import_Calls">8.4.3. Import Calls</a></li>
 </ul>
 </li>
 <li><a href="#compile-time-expressions">8.5. Compile-Time Expressions</a></li>
@@ -580,7 +594,7 @@
 <li><a href="#_for-of-statement">9.2.3. <code>for &#8230;&#8203; of</code> statement</a></li>
 <li><a href="#_import-statement">9.2.4. Import Statement</a>
 <ul class="sectlevel4">
-<li><a href="#_dynamic-imports">9.2.4.1. Dynamic Imports</a></li>
+<li><a href="#Dynamic_Imports">9.2.4.1. Dynamic Imports</a></li>
 <li><a href="#_immutabilaty-of-imports">9.2.4.2. Immutabilaty of Imports</a></li>
 </ul>
 </li>
@@ -674,12 +688,8 @@
 </li>
 <li><a href="#_components">12. Components</a>
 <ul class="sectlevel2">
-<li><a href="#_n4js-platform-architecture">12.1. N4JS Platform Architecture</a>
-<ul class="sectlevel3">
-<li><a href="#_overview-2">12.1.1. Overview</a></li>
-</ul>
-</li>
-<li><a href="#_component-types">12.2. Component Types</a>
+<li><a href="#_overview-2">12.1. Overview</a></li>
+<li><a href="#Component_Types">12.2. Component Types</a>
 <ul class="sectlevel3">
 <li><a href="#_libraries">12.2.1. Libraries</a></li>
 <li><a href="#_runtime-environment-and-runtime-libraries">12.2.2. Runtime Environment and Runtime Libraries</a></li>
@@ -687,46 +697,34 @@
 <li><a href="#_type-definitions">12.2.4. Type Definitions</a></li>
 </ul>
 </li>
-<li><a href="#_component-content">12.3. Component Content</a></li>
-<li><a href="#package-json">12.4. Package.json File</a>
+<li><a href="#package-json">12.3. Package.json File</a>
 <ul class="sectlevel3">
-<li><a href="#_basic-properties">12.4.1. Basic Properties</a></li>
-<li><a href="#_n4js-properties">12.4.2. N4JS Properties</a></li>
-<li><a href="#_constraints">12.4.3. Constraints</a></li>
+<li><a href="#_basic-properties">12.3.1. Basic Properties</a></li>
+<li><a href="#_n4js-properties">12.3.2. N4JS Properties</a></li>
+<li><a href="#_constraints">12.3.3. Constraints</a></li>
 </ul>
 </li>
-<li><a href="#_support-for-npm-scopes">12.5. Support for NPM Scopes</a></li>
-<li><a href="#_component-dependencies">12.6. Component Dependencies</a>
+<li><a href="#_support-for-npm-scopes">12.4. Support for NPM Scopes</a></li>
+<li><a href="#sec:N4JS-Type-Definitions">12.5. N4JS Type Definitions</a>
 <ul class="sectlevel3">
-<li><a href="#_runtime-environment-resolution">12.6.1. Runtime Environment Resolution</a></li>
-</ul>
-</li>
-<li><a href="#sec:N4JS-Type-Definitions">12.7. N4JS Type Definitions</a>
-<ul class="sectlevel3">
-<li><a href="#_specify-type-definition">12.7.1. Specify Type Definition</a></li>
-<li><a href="#_name-conventions">12.7.2. Name Conventions</a></li>
-<li><a href="#_version-conventions">12.7.3. Version Conventions</a>
+<li><a href="#_specify-type-definition">12.5.1. Specify Type Definition</a></li>
+<li><a href="#_name-conventions">12.5.2. Name Conventions</a></li>
+<li><a href="#_version-conventions">12.5.3. Version Conventions</a>
 <ul class="sectlevel4">
-<li><a href="#_define-a-new-type-definition-package">12.7.3.1. Define a New Type Definition Package</a></li>
-<li><a href="#_using-a-type-definition-package">12.7.3.2. Using a Type Definition Package</a></li>
-<li><a href="#_rational">12.7.3.3. Rational</a></li>
+<li><a href="#_define-a-new-type-definition-package">12.5.3.1. Define a New Type Definition Package</a></li>
+<li><a href="#_using-a-type-definition-package">12.5.3.2. Using a Type Definition Package</a></li>
+<li><a href="#_rational">12.5.3.3. Rational</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#_modules">12.8. Modules</a></li>
-<li><a href="#_properties-files">12.9. Properties Files</a>
+<li><a href="#_modules">12.6. Modules</a></li>
+<li><a href="#_api-and-implementation-component">12.7. API and Implementation Component</a>
 <ul class="sectlevel3">
-<li><a href="#property-file-syntax">12.9.1. Syntax</a></li>
-<li><a href="#_constraints-2">12.9.2. Constraints</a></li>
+<li><a href="#_execution-of-api-and-implementation-components">12.7.1. Execution of API and Implementation Components</a></li>
+<li><a href="#_api-and-implementation-with-di">12.7.2. API and Implementation With DI</a></li>
 </ul>
 </li>
-<li><a href="#_api-and-implementation-components">12.10. API and Implementation Components</a>
-<ul class="sectlevel3">
-<li><a href="#_execution-of-api-and-implementation-components">12.10.1. Execution of API and Implementation Components</a></li>
-</ul>
-</li>
-<li><a href="#_api-and-implementation-with-di">12.11. API and Implementation With DI</a></li>
 </ul>
 </li>
 <li><a href="#_plainjs">13. PlainJS</a>
@@ -834,386 +832,25 @@
 </ul>
 </li>
 <li><a href="#_acronyms">Appendix A: Acronyms</a></li>
-<li><a href="#_bibliography">Appendix B: Bibliography</a></li>
+<li><a href="#sec:License">Appendix B: License</a></li>
+<li><a href="#_bibliography">Appendix C: Bibliography</a></li>
 </ul>
 </div>
 </div>
 <div id="content">
 <div id="preamble">
 <div class="sectionbody">
-<div class="imageblock n4jslogo" style="text-align: center">
-<div class="content">
-<img src="images/n4jslogo.png" alt="400" width="400">
-</div>
-</div>
 <div class="paragraph center">
-<p><strong>Last Updated: 2018-11-06</strong></p>
+<p><strong>Last Updated: 2019-08-07</strong></p>
 </div>
 <div class="paragraph center">
 <p><strong>Authors:</strong><br>
-Jens von Pilgrim, Jakub Siberski, Mark-Oliver Reiser,<br>
-Torsten Krämer, Ákos Kitta, Sebastian Zarnekow, Lorenzo Bettini, Jörg Reichert, Kristian Duske, Marcus Mews, Minh Quang Tran, Luca Beurer-Kellner</p>
+Jens von Pilgrim, Jakub Siberski, Mark-Oliver Reiser, Torsten Krämer, Ákos Kitta, Sebastian Zarnekow, Lorenzo Bettini, Jörg Reichert, Kristian Duske, Marcus Mews, Minh Quang Tran, Luca Beurer-Kellner</p>
 </div>
 <div style="page-break-after: always;"></div>
 <h2 id="_abstract" class="discrete">Abstract</h2>
 <div class="paragraph">
 <p>This document contains the N4JS Specification.</p>
-</div>
-<h2 id="_revision-history" class="discrete">Revision History</h2>
-<table class="tableblock frame-all grid-all spread language-n4js">
-<colgroup>
-<col style="width: 16.6666%;">
-<col style="width: 16.6666%;">
-<col style="width: 66.6668%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-center valign-top">Date</th>
-<th class="tableblock halign-center valign-top">Author</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><em>2013-03-21</em></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><strong>v.Pilgrim</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">initial commit</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><em>2016-03-13</em></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><strong>v.Pilgrim</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">public release, version 0.3 (alpha)</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><em>2016-05-31</em></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><strong>mor</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">support for definition-site variance, cf. <a href="#sec:definition-site-variance">Definition-Site Variance</a></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><em>2016-07-18</em></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><strong>mor</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">rename manifest property <code>artifactId</code> to <code>projectId</code>; remove <code>projectName</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><em>2016-09-09</em></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><strong>mor</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">add <code>@CovariantConstructor</code>, cf. <a href="#_covariant-constructors">Covariant Constructors</a>, plus related adjustments</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><em>2016-11-09</em></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><strong>bsmith</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">convert from <code>LaTeX</code> to AsciiDoc</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><em>2017-07-03</em></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><strong>qtran</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Describe semantics of optional fields in ternay expressions <a href="#optional-fields">Optional Fields</a></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><em>2018-09-13</em></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><strong>mmews</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">add subsection <a href="#sec:N4JS-Type-Definitions">N4JS Type Definitions</a></p></td>
-</tr>
-</tbody>
-</table>
-<h2 id="_licence" class="discrete">Licence</h2>
-<div class="paragraph">
-<p>This specification and the accompanying materials is made available
-under the terms of the Eclipse Public License v1.0 which accompanies
-this distribution, and is available at <a href="http://www.eclipse.org/legal/epl-v10.html" class="bare">http://www.eclipse.org/legal/epl-v10.html</a></p>
-</div>
-<h3 id="_eclipse-public-license-v-1-0" class="discrete">Eclipse Public License - v 1.0</h3>
-<div class="paragraph">
-<p>THE ACCOMPANYING PROGRAM IS PROVIDED UNDER THE TERMS OF THIS ECLIPSE
-PUBLIC LICENSE (<code>AGREEMENT</code>). ANY USE, REPRODUCTION OR DISTRIBUTION OF
-THE PROGRAM CONSTITUTES RECIPIENT’S ACCEPTANCE OF THIS AGREEMENT.</p>
-</div>
-<h4 id="_1-definitions" class="discrete">1. DEFINITIONS</h4>
-<div class="dlist">
-<dl>
-<dt class="hdlist1"><code>Contribution</code> means: </dt>
-<dd>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>in the case of the initial Contributor, the initial code and
-documentation distributed under this Agreement, and</p>
-</li>
-<li>
-<p>in the case of each subsequent Contributor:</p>
-<div class="olist loweralpha">
-<ol class="loweralpha" type="a">
-<li>
-<p>changes to the Program, and</p>
-</li>
-<li>
-<p>additions to the Program;</p>
-<div class="paragraph">
-<p>where such changes and/or additions to the Program originate from and
-are distributed by that particular Contributor. A Contribution
-’originates’ from a Contributor if it was added to the Program by such
-Contributor itself or anyone acting on such Contributor’s behalf.
-Contributions do not include additions to the Program which:</p>
-</div>
-<div class="olist lowerroman">
-<ol class="lowerroman" type="i">
-<li>
-<p>are separate modules of software distributed in conjunction with the Program
-under their own license agreement, and</p>
-</li>
-<li>
-<p>are not derivative works of the Program.</p>
-</li>
-</ol>
-</div>
-</li>
-</ol>
-</div>
-</li>
-</ol>
-</div>
-</dd>
-<dt class="hdlist1"><code>Contributor</code></dt>
-<dd>
-<p>means any person or entity that distributes the Program.</p>
-</dd>
-<dt class="hdlist1"><code>Licensed Patents</code> </dt>
-<dd>
-<p>mean patent claims licensable by a Contributor
-which are necessarily infringed by the use or sale of its Contribution
-alone or when combined with the Program.</p>
-</dd>
-<dt class="hdlist1"><code>Program</code> </dt>
-<dd>
-<p>means the Contributions distributed in accordance with this
-Agreement.</p>
-</dd>
-<dt class="hdlist1"><code>Recipient</code> </dt>
-<dd>
-<p>means anyone who receives the Program under this
-Agreement, including all Contributors.</p>
-</dd>
-</dl>
-</div>
-<h4 id="_2-grant-of-rights" class="discrete">2. GRANT OF RIGHTS</h4>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Subject to the terms of this Agreement, each Contributor hereby
-grants Recipient a non-exclusive, worldwide, royalty-free copyright
-license to reproduce, prepare derivative works of, publicly display,
-publicly perform, distribute and sublicense the Contribution of such
-Contributor, if any, and such derivative works, in source code and
-object code form.</p>
-</li>
-<li>
-<p>Subject to the terms of this Agreement, each Contributor hereby
-grants Recipient a non-exclusive, worldwide, royalty-free patent license
-under Licensed Patents to make, use, sell, offer to sell, import and
-otherwise transfer the Contribution of such Contributor, if any, in
-source code and object code form. This patent license shall apply to the
-combination of the Contribution and the Program if, at the time the
-Contribution is added by the Contributor, such addition of the
-Contribution causes such combination to be covered by the Licensed
-Patents. The patent license shall not apply to any other combinations
-which include the Contribution. No hardware per se is licensed
-hereunder.</p>
-</li>
-<li>
-<p>Recipient understands that although each Contributor grants the
-licenses to its Contributions set forth herein, no assurances are
-provided by any Contributor that the Program does not infringe the
-patent or other intellectual property rights of any other entity. Each
-Contributor disclaims any liability to Recipient for claims brought by
-any other entity based on infringement of intellectual property rights
-or otherwise. As a condition to exercising the rights and licenses
-granted hereunder, each Recipient hereby assumes sole responsibility to
-secure any other intellectual property rights needed, if any. For
-example, if a third party patent license is required to allow Recipient
-to distribute the Program, it is Recipient’s responsibility to acquire
-that license before distributing the Program.</p>
-</li>
-<li>
-<p>Each Contributor represents that to its knowledge it has sufficient
-copyright rights in its Contribution, if any, to grant the copyright
-license set forth in this Agreement.</p>
-</li>
-</ol>
-</div>
-<h4 id="_3-requirements" class="discrete">3. REQUIREMENTS</h4>
-<div class="paragraph">
-<p>A Contributor may choose to distribute the Program in object code form
-under its own license agreement, provided that:</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>it complies with the terms and conditions of this Agreement; and</p>
-</li>
-<li>
-<p>its license agreement:</p>
-<div class="olist loweralpha">
-<ol class="loweralpha" type="a">
-<li>
-<p>effectively disclaims on behalf of all Contributors all warranties
-and conditions, express and implied, including warranties or conditions
-of title and non-infringement, and implied warranties or conditions of
-merchantability and fitness for a particular purpose;</p>
-</li>
-<li>
-<p>effectively excludes on behalf of all Contributors all liability for
-damages, including direct, indirect, special, incidental and
-consequential damages, such as lost profits;</p>
-</li>
-<li>
-<p>states that any provisions which differ from this Agreement are
-offered by that Contributor alone and not by any other party; and</p>
-</li>
-<li>
-<p>states that source code for the Program is available from such
-Contributor, and informs licensees how to obtain it in a reasonable
-manner on or through a medium customarily used for software exchange.</p>
-</li>
-</ol>
-</div>
-</li>
-</ol>
-</div>
-<div class="paragraph">
-<p>When the Program is made available in source code form:</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>it must be made available under this Agreement; and</p>
-</li>
-<li>
-<p>a copy of this Agreement must be included with each copy of the
-Program.</p>
-</li>
-</ol>
-</div>
-<div class="paragraph">
-<p>Contributors may not remove or alter any copyright notices contained
-within the Program.</p>
-</div>
-<div class="paragraph">
-<p>Each Contributor must identify itself as the originator of its
-Contribution, if any, in a manner that reasonably allows subsequent
-Recipients to identify the originator of the Contribution.</p>
-</div>
-<h4 id="_4-commercial-distribution" class="discrete">4. COMMERCIAL DISTRIBUTION</h4>
-<div class="paragraph">
-<p>Commercial distributors of software may accept certain responsibilities
-with respect to end users, business partners and the like. While this
-license is intended to facilitate the commercial use of the Program, the
-Contributor who includes the Program in a commercial product offering
-should do so in a manner which does not create potential liability for
-other Contributors. Therefore, if a Contributor includes the Program in
-a commercial product offering, such Contributor (<code>Commercial
-Contributor</code>) hereby agrees to defend and indemnify every other
-Contributor (<code>Indemnified Contributor</code>) against any losses, damages
-and costs (collectively <code>Losses</code>) arising from claims, lawsuits and
-other legal actions brought by a third party against the Indemnified
-Contributor to the extent caused by the acts or omissions of such
-Commercial Contributor in connection with its distribution of the
-Program in a commercial product offering. The obligations in this
-section do not apply to any claims or Losses relating to any actual or
-alleged intellectual property infringement. In order to qualify, an
-Indemnified Contributor must: a) promptly notify the Commercial
-Contributor in writing of such claim, and b) allow the Commercial
-Contributor to control, and cooperate with the Commercial Contributor
-in, the defense and any related settlement negotiations. The Indemnified
-Contributor may participate in any such claim at its own expense.</p>
-</div>
-<div class="paragraph">
-<p>For example, a Contributor might include the Program in a commercial
-product offering, Product X. That Contributor is then a Commercial
-Contributor. If that Commercial Contributor then makes performance
-claims, or offers warranties related to Product X, those performance
-claims and warranties are such Commercial Contributor’s responsibility
-alone. Under this section, the Commercial Contributor would have to
-defend claims against the other Contributors related to those
-performance claims and warranties, and if a court requires any other
-Contributor to pay any damages as a result, the Commercial Contributor
-must pay those damages.</p>
-</div>
-<h4 id="_5-no-warranty" class="discrete">5. NO WARRANTY</h4>
-<div class="paragraph">
-<p>EXCEPT AS EXPRESSLY SET FORTH IN THIS AGREEMENT, THE PROGRAM IS PROVIDED
-ON AN <code>AS IS</code> BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
-EITHER EXPRESS OR IMPLIED INCLUDING, WITHOUT LIMITATION, ANY WARRANTIES
-OR CONDITIONS OF TITLE, NON-INFRINGEMENT, MERCHANTABILITY OR FITNESS FOR
-A PARTICULAR PURPOSE. Each Recipient is solely responsible for
-determining the appropriateness of using and distributing the Program
-and assumes all risks associated with its exercise of rights under this
-Agreement , including but not limited to the risks and costs of program
-errors, compliance with applicable laws, damage to or loss of data,
-programs or equipment, and unavailability or interruption of operations.</p>
-</div>
-<h4 id="_6-disclaimer-of-liability" class="discrete">6. DISCLAIMER OF LIABILITY</h4>
-<div class="paragraph">
-<p>EXCEPT AS EXPRESSLY SET FORTH IN THIS AGREEMENT, NEITHER RECIPIENT NOR
-ANY CONTRIBUTORS SHALL HAVE ANY LIABILITY FOR ANY DIRECT, INDIRECT,
-INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING
-WITHOUT LIMITATION LOST PROFITS), HOWEVER CAUSED AND ON ANY THEORY OF
-LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OR
-DISTRIBUTION OF THE PROGRAM OR THE EXERCISE OF ANY RIGHTS GRANTED
-HEREUNDER, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.</p>
-</div>
-<h4 id="_7-general" class="discrete">7. GENERAL</h4>
-<div class="paragraph">
-<p>If any provision of this Agreement is invalid or unenforceable under
-applicable law, it shall not affect the validity or enforceability of
-the remainder of the terms of this Agreement, and without further action
-by the parties hereto, such provision shall be reformed to the minimum
-extent necessary to make such provision valid and enforceable.</p>
-</div>
-<div class="paragraph">
-<p>If Recipient institutes patent litigation against any entity (including
-a cross-claim or counterclaim in a lawsuit) alleging that the Program
-itself (excluding combinations of the Program with other software or
-hardware) infringes such Recipient’s patent(s), then such Recipient’s
-rights granted under Section 2(b) shall terminate as of the date such
-litigation is filed.</p>
-</div>
-<div class="paragraph">
-<p>All Recipient’s rights under this Agreement shall terminate if it fails
-to comply with any of the material terms or conditions of this Agreement
-and does not cure such failure in a reasonable period of time after
-becoming aware of such noncompliance. If all Recipient’s rights under
-this Agreement terminate, Recipient agrees to cease use and distribution
-of the Program as soon as reasonably practicable. However, Recipient’s
-obligations under this Agreement and any licenses granted by Recipient
-relating to the Program shall continue and survive.</p>
-</div>
-<div class="paragraph">
-<p>Everyone is permitted to copy and distribute copies of this Agreement,
-but in order to avoid inconsistency the Agreement is copyrighted and may
-only be modified in the following manner. The Agreement Steward reserves
-the right to publish new versions (including revisions) of this
-Agreement from time to time. No one other than the Agreement Steward has
-the right to modify this Agreement. The Eclipse Foundation is the
-initial Agreement Steward. The Eclipse Foundation may assign the
-responsibility to serve as the Agreement Steward to a suitable separate
-entity. Each new version of the Agreement will be given a distinguishing
-version number. The Program (including Contributions) may always be
-distributed subject to the version of the Agreement under which it was
-received. In addition, after a new version of the Agreement is
-published, Contributor may elect to distribute the Program (including
-its Contributions) under the new version. Except as expressly stated in
-Sections 2(a) and 2(b) above, Recipient receives no rights or licenses
-to the intellectual property of any Contributor under this Agreement,
-whether expressly, by implication, estoppel or otherwise. All rights in
-the Program not expressly granted under this Agreement are reserved.</p>
-</div>
-<div class="paragraph">
-<p>This Agreement is governed by the laws of the State of New York and the
-intellectual property laws of the United States of America. No party to
-this Agreement will bring a legal action under this Agreement more than
-one year after the cause of action arose. Each party waives its rights
-to a jury trial in any resulting litigation.</p>
 </div>
 </div>
 </div>
@@ -4696,7 +4333,7 @@ It is a subtype of <code>Object</code>.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_iterablen"><a class="anchor" href="#_iterablen"></a><a class="link" href="#_iterablen">4.8.3. IterableN</a></h4>
+<h4 id="IterableN"><a class="anchor" href="#IterableN"></a><a class="link" href="#IterableN">4.8.3. IterableN</a></h4>
 <div class="paragraph todo">
 <p>Work in progress.</p>
 </div>
@@ -4730,7 +4367,7 @@ Type modifiers can not be used in type arguments.</p>
 Optional and variadic modifiers can only be applied for formal parameters.</p>
 </div>
 <div class="sect3">
-<h4 id="_dynamic"><a class="anchor" href="#_dynamic"></a><a class="link" href="#_dynamic">4.9.1. Dynamic</a></h4>
+<h4 id="Type_Modifiers_Dynamic"><a class="anchor" href="#Type_Modifiers_Dynamic"></a><a class="link" href="#Type_Modifiers_Dynamic">4.9.1. Dynamic</a></h4>
 <div class="paragraph">
 <p>The dynamic type modifier marks a type as being dynamic.
 A dynamic type behaves like a normal JavaScript object, so you can read/write any property and call any method on it.
@@ -6707,6 +6344,91 @@ public function process(req: XMLHttpRequest) : void {
 </div>
 </div>
 </div>
+<div class="sect2 language-n4js">
+<h3 id="_short-hand-syntax"><a class="anchor" href="#_short-hand-syntax"></a><a class="link" href="#_short-hand-syntax">4.14. Short-Hand Syntax</a></h3>
+<div class="paragraph">
+<p>Short-hand syntax is available for a number of built-in types.</p>
+</div>
+<div class="sect3">
+<h4 id="_array-short-hand-syntax"><a class="anchor" href="#_array-short-hand-syntax"></a><a class="link" href="#_array-short-hand-syntax">4.14.1. Array Short-Hand Syntax</a></h4>
+<div class="paragraph">
+<p>For the built-in type <code>Array</code> a convenience short form is available. Thus, writing</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-n4js" data-lang="n4js">let arr: string[];</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>is equivalent to</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-n4js" data-lang="n4js">let arr: Array&lt;string&gt;;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Multi-dimensional arrays can be declared as such:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-n4js" data-lang="n4js">let arr: string[][][];</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>which is equivalent to</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-n4js" data-lang="n4js">let arr: Array&lt;Array&lt;Array&lt;string&gt;&gt;&gt;;</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_iterablen-short-hand-syntax"><a class="anchor" href="#_iterablen-short-hand-syntax"></a><a class="link" href="#_iterablen-short-hand-syntax">4.14.2. IterableN Short-Hand Syntax</a></h4>
+<div class="paragraph">
+<p>The built-in IterableN types (i.e. <code>Iterable2</code>, <code>Iterable3</code>, &#8230;&#8203; <code>Iterable9</code>, see <a href="#IterableN">IterableN</a>) are
+also provided with a short-hand syntax. For example, writing</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-n4js" data-lang="n4js">let i3: [string,number,string[]];</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>would be equivalent to</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-n4js" data-lang="n4js">let i3: Iterable3&lt;string,number,Array&lt;string&gt;&gt;;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Note the following special cases:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-n4js" data-lang="n4js">let i0: [];
+let i1: [string];
+let union: string|number[];</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>which is equivalent to</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-n4js" data-lang="n4js">let i0: Iterable&lt;?&gt;;
+let i1: Iterable&lt;string&gt;;
+let union: union{string,Array&lt;number&gt;}; // not: Array&lt;union{string,number}&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Further note: while this syntax is very similar to TypeScript&#8217;s tuple syntax, the semantics
+of tuples and IterableN are very different.</p>
+</div>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -7238,6 +6960,14 @@ Note that a class may implement fields with field accessors and vice versa.</p>
 <div class="paragraph">
 <p><a id="Req-IDE-46"></a><strong>Req. IDE-46:</strong> <a href="#Req-IDE-46">Abstract Member</a> (ver. 1)</p>
 </div>
+<div class="paragraph">
+<p></p>
+</div>
+<div class="sidebarblock">
+<div class="content">
+<a href="https://github.com/eclipse/n4js/issues/1047" class="gray" title="GitHub Issues"><span class="image"><img src="images/issue.svg" alt=""></span> #1047</a>
+</div>
+</div>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
@@ -7250,14 +6980,43 @@ Note that a class may implement fields with field accessors and vice versa.</p>
 <p>It is not possible to inherit from an abstract class which contains abstract members which are not visible in the subclass.</p>
 </li>
 <li>
-<p>An abstract member cannot be set to final (with annotation @Final).</p>
+<p>An abstract member must not be set to final (with annotation <code>@Final</code>).</p>
 </li>
 <li>
-<p>Static members may not be declared abstract.</p>
+<p>Static members must not be declared abstract.</p>
 </li>
 </ol>
 </div>
 </div>
+</div>
+<div class="paragraph">
+<p>Remarks:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>We decided to disallow abstract static members, since we cannot guarantee that a static members is not accessed in all cases</p>
+</li>
+<li>
+<p>Only static members can override static members and only instance members can override other instance members of course.</p>
+</li>
+<li>
+<p>An abstract member must not be declared in a final class (i.e. a class annotated with <code>@Final</code>). This is not explicitly defined as constraint in <a href="#Req-IDE-46">[Req-IDE-46]</a> since abstract classes must not defined final anyway. We also do not produce error message for abstract members in final classes since these errors would be consequential errors.</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title=""></i>
+</td>
+<td class="content">
+Abstract members might be declared private, as they can be accessed from within the module.
+This is to be changed in order to be aligned with TypeScript, cf. <a href="https://github.com/eclipse/n4js/issues/1221" class="gray" title="GitHub Issues"><span class="image"><img src="images/issue.svg" alt=""></span> #1221</a>. However we also want to add class expressions&#8201;&#8212;&#8201;and then the abstract members may be accessed (and overridden) in nested classes created by means of class expressions.
+</td>
+</tr>
+</table>
 </div>
 </div>
 <div class="sect4">
@@ -14146,7 +13905,7 @@ The applied conversions are described in <a href="#_auto-conversion-of-class-ins
 <p>Autoboxing is not directly supported in N4JS. Instead, primitive types virtually have the same members as their corresponding object types.
 It is then possible to use the Autoboxing feature when calling a member.
 In general, Autoboxing is only supported for accessing built-in read-only (immutable) properties.
-For example, <code>"some string value".split(" ");</code> is supported but <code>"some string value".foo=1;</code> will be rejected as String does not allow properties to be added (cf. <code>String</code> vs. <code>String+</code>, see <a href="#_dynamic">Dynamic</a>).</p>
+For example, <code>"some string value".split(" ");</code> is supported but <code>"some string value".foo=1;</code> will be rejected as String does not allow properties to be added (cf. <code>String</code> vs. <code>String+</code>, see <a href="#_dynamic">[_dynamic]</a>).</p>
 </div>
 <div class="paragraph">
 <p>Autoboxing often leads to problems, in particular in combination with dynamic types – this is why it is not directly supported in N4JS.</p>
@@ -15574,6 +15333,9 @@ An important exception; if a type expectation exists for the empty array literal
 </div>
 <div class="sect3">
 <h4 id="_object-literal"><a class="anchor" href="#_object-literal"></a><a class="link" href="#_object-literal">8.1.5. Object Literal</a></h4>
+<div class="paragraph">
+<p>In addition to ordinary Javascript object literals, N4JS supports the spread operator within object literals as introduced in [<a href="#ECMA18a">ECMA18a</a>].</p>
+</div>
 <h5 id="object-literal-syntax" class="discrete">Syntax</h5>
 <div class="paragraph">
 <p>Cf. [<a href="#ECMA11a">ECMA11a(p.S11.1.5, p.p.65ff)</a>]
@@ -15595,6 +15357,7 @@ PropertyAssignment &lt;Yield&gt;:
     | PropertySetterDeclaration&lt;Yield&gt;
     | PropertyMethodDeclaration&lt;Yield&gt;
     | PropertyNameValuePairSingleName&lt;Yield&gt;
+    | PropertySpread&lt;Yield&gt;
 ;
 
 
@@ -15646,6 +15409,10 @@ PropertySetterDeclaration &lt;Yield&gt;:
         -&gt;LiteralOrComputedPropertyName &lt;Yield&gt;
     )
     '(' fpar=FormalParameter&lt;Yield&gt; ')' body=Block&lt;Yield=false&gt;
+;
+
+PropertySpread &lt;Yield&gt;:
+	'...' expression=AssignmentExpression&lt;In=true,Yield&gt;
 ;</code></pre>
 </div>
 </div>
@@ -17705,9 +17472,8 @@ TypeRefForCast returns StaticBaseTypeRef:
     | IntersectionTypeExpression</code></pre>
 </div>
 </div>
-</div>
-<div class="sect3">
-<h4 id="cast-as-expression-semantics-type-inference"><a class="anchor" href="#cast-as-expression-semantics-type-inference"></a><a class="link" href="#cast-as-expression-semantics-type-inference">8.4.3. Semantics and Type Inference</a></h4>
+<div class="sect4">
+<h5 id="cast-as-expression-semantics-type-inference"><a class="anchor" href="#cast-as-expression-semantics-type-inference"></a><a class="link" href="#cast-as-expression-semantics-type-inference">8.4.2.1. Semantics and Type Inference</a></h5>
 <div class="paragraph">
 <p>The inferred type of the type cast expression is the target type:</p>
 </div>
@@ -17723,6 +17489,31 @@ Type casts are simply removed during compilation so there will be no exceptions 
 <div class="paragraph">
 <p>An error is issued if the cast is either unnecessary or cannot succeed.
 See further details in <a href="#_type-cast">Type Cast</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="Import_Calls"><a class="anchor" href="#Import_Calls"></a><a class="link" href="#Import_Calls">8.4.3. Import Calls</a></h4>
+<div class="paragraph">
+<p>Import calls as specified by the corresponding <a href="https://github.com/tc39/proposal-dynamic-import">ECMA TC39 proposal</a> are
+available in N4JS. Such an import call has the form</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-n4js" data-lang="n4js">import(moduleSpecifier)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>and may appear in the source code wherever an expression may appear. It&#8217;s argument need not be a string literal, as is
+the case with module specifiers of ordinary imports; instead, any expression that evaluates to a string at runtime is
+accepted. Hence, it can be used to import from a target module that is not yet known at compile time.</p>
+</div>
+<div class="paragraph">
+<p>A note on terminology: import calls covered in this section are sometimes referred to as "dynamic import". In N4JS
+that term is already used for imports of the form <code>import * as N+ from "&#8230;&#8203;"</code>, i.e. compile-time imports that do not
+require type information of the module imported from, see <a href="#Dynamic_Imports">Dynamic Imports</a>, and stems from the term "dynamic type"
+(see <a href="#Type_Modifiers_Dynamic">Dynamic</a>). To avoid confusion, we will usually avoid referring to import calls as a "dynamic
+import".</p>
 </div>
 </div>
 </div>
@@ -18439,7 +18230,7 @@ This is similar to constant data fields (cf. <a href="#_assignment-modifiers">As
 <div class="sect3">
 <h4 id="_for-of-statement"><a class="anchor" href="#_for-of-statement"></a><a class="link" href="#_for-of-statement">9.2.3. <code>for &#8230;&#8203; of</code> statement</a></h4>
 <div class="paragraph">
-<p>ES6 introduced a new form of <code>for</code> statement: <code>for &#8230;&#8203; of</code> to iterate over the elements of an  <code>Iterable</code>, cf. <a href="#_iterablen">IterableN</a>.</p>
+<p>ES6 introduced a new form of <code>for</code> statement: <code>for &#8230;&#8203; of</code> to iterate over the elements of an  <code>Iterable</code>, cf. <a href="#_iterablen">[_iterablen]</a>.</p>
 </div>
 <h5 id="for-of-statement-syntax" class="discrete">Syntax</h5>
 <div class="paragraph">
@@ -18869,10 +18660,11 @@ var a2_correct: C;// A2/A2 is accessible via alias C</code></pre>
 </div>
 </div>
 <div class="sect4">
-<h5 id="_dynamic-imports"><a class="anchor" href="#_dynamic-imports"></a><a class="link" href="#_dynamic-imports">9.2.4.1. Dynamic Imports</a></h5>
+<h5 id="Dynamic_Imports"><a class="anchor" href="#Dynamic_Imports"></a><a class="link" href="#Dynamic_Imports">9.2.4.1. Dynamic Imports</a></h5>
 <div class="paragraph">
 <p>N4JS extends the ES6 module import in order that modules without a <code>n4jsd</code> or <code>n4js</code> file (plain <code>js</code> modules) can be imported.
-This is done by adding <code>+</code> to the name of the named import.</p>
+This is done by adding <code>+</code> to the name of the named import. This form of compile-time import without type information is not
+to be confused with import calls as described in <a href="#Import_Calls">Import Calls</a>, which are sometimes referred to as "dynamic import" as well.</p>
 </div>
 <div class="openblock requirement">
 <div class="content">
@@ -21360,7 +21152,7 @@ There are no constraints defined for that annotation at the moment.</p>
 <p>In plain JavaScript, so called <em>polyfill</em> (or sometimes called <em>shim</em>) libraries are provided in order to modify existing classes which are only prototypes in plain JavaScript.
 In N4JS, this can be defined for declarations via the annotation <code>@Polyfill</code> or <code>@StaticPolyfill</code>.
 One of these annotations can be added to class declarations which do not look that much different from normal classes.
-In the case of polyfill classes, the extended class is modified (or filled) instead of being subclassed.</p>
+In the case of polyfill classes, the extended class is modified (or filled) instead of being subclassed. It is therefore valid to polyfill a class even if it is declared <code>@Final</code>.</p>
 </div>
 <div class="paragraph">
 <p>We distinguish two flavours of polyfill classes: runtime and static.</p>
@@ -21743,96 +21535,97 @@ The following pre-transpilation steps handle this situation:</p>
 <h2 id="_components"><a class="anchor" href="#_components"></a><a class="link" href="#_components">12. Components</a></h2>
 <div class="sectionbody">
 <div class="sect2 language-n4js">
-<h3 id="_n4js-platform-architecture"><a class="anchor" href="#_n4js-platform-architecture"></a><a class="link" href="#_n4js-platform-architecture">12.1. N4JS Platform Architecture</a></h3>
-<div class="sect3">
-<h4 id="_overview-2"><a class="anchor" href="#_overview-2"></a><a class="link" href="#_overview-2">12.1.1. Overview</a></h4>
+<h3 id="_overview-2"><a class="anchor" href="#_overview-2"></a><a class="link" href="#_overview-2">12.1. Overview</a></h3>
 <div class="paragraph">
-<p><a href="#fig-cmpd_components_in_n4js">N4JS Component Overview</a> shows the N4JS components described in detail in this
-chapter.<sup class="footnote">[<a id="_footnoteref_60" class="footnote" href="#_footnote_60" title="View footnote.">60</a>]</sup></p>
+<p>For modularization purposes, N4JS code is managed in so-called <em>components</em>. These components correspond to what
+node and npm call <em>packages</em>, what OSGi calls <em>bundle</em>, and what Eclipse calls <em>project</em>.</p>
+</div>
+<div class="paragraph">
+<p>N4JS distinguishes several types of such components. <a href="#fig-cmpd_components_in_n4js">Overview of N4JS Components (OLD)</a> shows the N4JS component types
+described in detail in this chapter. <a href="#fig-cmp_components">Overview of N4JS Components and Dependencies (NEW)</a> shows a recently updated diagram, which is not yet fully
+reflected in the implementation.</p>
 </div>
 <div id="fig-cmpd_components_in_n4js" class="imageblock" style="text-align: center">
 <div class="content">
 <img src="chapters/12_components/fig/cmpd_components_in_n4js.svg" alt="cmpd components in n4js">
 </div>
-<div class="title">Figure 10. N4JS Component Overview</div>
+<div class="title">Figure 10. Overview of N4JS Components (OLD)</div>
+</div>
+<div id="fig-cmp_components" class="imageblock" style="text-align: center">
+<div class="content">
+<img src="chapters/12_components/fig/cmp_components.svg" alt="cmp components">
+</div>
+<div class="title">Figure 11. Overview of N4JS Components and Dependencies (NEW)</div>
 </div>
 <div class="paragraph">
-<p>The N4JS platform distinguishes several types of components. The
-following components can only be created by internal developers:</p>
+<p>The following types of components can only be created by internal developers:</p>
 </div>
 <div class="dlist">
 <dl>
 <dt class="hdlist1">Runtime Environment</dt>
 <dd>
-<p>Definition of a runtime environment such as ECMAScript 5.
-A Runtime Environment describes the base types provided by the runtime directly which are usually globally available.
-Other components do not directly rely on runtime environments, but on runtime libraries.</p>
+<p>Definition of a runtime environment such as ECMAScript 5, node.js, or Chrome.
+A Runtime Environment provides a number of base types which are usually globally available.
+Other components do not directly rely on runtime environments, but on runtime libraries.
+NOTE: runtime environments are not fully implemented at this time (see GH-1291).</p>
 </dd>
 <dt class="hdlist1">Runtime Library</dt>
 <dd>
-<p>Collections of types provided by the runtime.
+<p>Contains type definitions for the base types provided by one or more runtime environments.
 These types may be extensions to certain language specifications.
 E.g., the ECMAScript 6 collection classes are already provided by some environments otherwise only supporting ECMAScript 5.
 The collections are defined in terms of a runtime library which can then be provided by these environments.
-Runtime libraries may also contain polyfils to alter types predefined in the environment.</p>
-</dd>
-<dt class="hdlist1">Test Environment</dt>
-<dd>
-<p>Not yet clear. Environments defined for tests.</p>
-</dd>
-<dt class="hdlist1">Test Library</dt>
-<dd>
-<p>Not yet clear. Libraries defined for tests supported by the to enable running tests and viewing test reports directly within the , such as <em>Mangelhaft</em>.</p>
+Runtime libraries may also contain polyfills to alter types predefined in the environment.</p>
 </dd>
 </dl>
 </div>
 <div class="paragraph">
 <p>The following components can be created by external developers:</p>
 </div>
-<div id="Apps" class="dlist">
+<div id="App" class="dlist">
 <dl>
-<dt class="hdlist1">Apps</dt>
+<dt class="hdlist1">App</dt>
 <dd>
-<p>User-written N4JS applications running in a web browser (the reference browser is Chrome).</p>
+<p>User-written N4JS applications.</p>
 </dd>
-<dt class="hdlist1">Processors</dt>
+<dt class="hdlist1">Processor</dt>
 <dd>
-<p>User-written N4JS processors running on Node.js.</p>
+<p>User-written N4JS code running server-side on the N4 platform. Not implemented yet.</p>
 </dd>
-<dt class="hdlist1">Libraries</dt>
+<dt class="hdlist1">Library</dt>
 <dd>
-<p>User-written libraries used by apps, processors or other libraries.</p>
+<p>User-written libraries used by apps, processors, or other libraries.</p>
 </dd>
 </dl>
 </div>
 <div class="paragraph">
-<p>These components are described in detail later.</p>
+<p>The available component types are described in more detail in <a href="#Component_Types">Component Types</a>.</p>
 </div>
 <div class="paragraph">
-<p>A component is similar to a single project in the N4JS IDE. Generally, it contains the following:</p>
+<p>A component corresponds to a single project in the N4JS IDE. Generally, it contains the following:</p>
 </div>
 <div class="dlist">
 <dl>
 <dt class="hdlist1">Package.json File</dt>
 <dd>
-<p>The <code>package.json</code> file describing the components, dependencies and metadata.</p>
+<p>The <code>package.json</code> file describing the contents, dependencies and metadata.</p>
 </dd>
 <dt class="hdlist1">Resources</dt>
 <dd>
-<p>Resources such as images, N4ML files etc.</p>
+<p>Resources such as images, data files etc.</p>
 </dd>
 <dt class="hdlist1">Sources</dt>
 <dd>
-<p>Source files of modules - actual N4JS files used in a project.</p>
+<p>Source files containing either N4JS code or plain Javascript. The actual code used in a project.</p>
 </dd>
-<dt class="hdlist1">Compilation</dt>
+<dt class="hdlist1">Output Code</dt>
 <dd>
-<p>Compiled, minified and concatenated versions of the N4JS files and
-other JS files.</p>
+<p>Compiled and possibly adjusted (e.g. minified, concatenated) versions of the N4JS source files and
+plain Javascript files.</p>
 </dd>
 <dt class="hdlist1">Tests</dt>
 <dd>
-<p>Optional test sources and compiled tests.</p>
+<p>Optional test sources and compiled output code.</p>
 </dd>
 <dt class="hdlist1">Source Maps</dt>
 <dd>
@@ -21847,16 +21640,17 @@ other JS files.</p>
 <div class="content">
 <img src="chapters/12_components/fig/cmpd_component_content.svg" alt="cmpd component content">
 </div>
-<div class="title">Figure 11. Content of a Component</div>
+<div class="title">Figure 12. Content of a Component</div>
 </div>
+<div class="paragraph">
+<p>At both compile time and runtime, all components defined as dependency have to be available. Since dependencies
+are defined in <code>package.json</code> files in a form compliant to node/npm, this can be fully managed by npm (or yarn).</p>
 </div>
 </div>
 <div class="sect2 language-n4js">
-<h3 id="_component-types"><a class="anchor" href="#_component-types"></a><a class="link" href="#_component-types">12.2. Component Types</a></h3>
+<h3 id="Component_Types"><a class="anchor" href="#Component_Types"></a><a class="link" href="#Component_Types">12.2. Component Types</a></h3>
 <div class="paragraph">
-<p>Different N4JS component types are described in this section.
-At compile time and runtime, dependent components have to be available.
-This is the responsibility of the user interface (<a href="#AC">IDE</a> or <a href="#AC">CLI</a>) and described in the <a href="#AC">N4IDE</a> specification.</p>
+<p>Different N4JS component types are described in this section.</p>
 </div>
 <div class="sect3">
 <h4 id="_libraries"><a class="anchor" href="#_libraries"></a><a class="link" href="#_libraries">12.2.1. Libraries</a></h4>
@@ -21866,6 +21660,18 @@ This is the responsibility of the user interface (<a href="#AC">IDE</a> or <a hr
 </div>
 <div class="sect3">
 <h4 id="_runtime-environment-and-runtime-libraries"><a class="anchor" href="#_runtime-environment-and-runtime-libraries"></a><a class="link" href="#_runtime-environment-and-runtime-libraries">12.2.2. Runtime Environment and Runtime Libraries</a></h4>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title=""></i>
+</td>
+<td class="content">
+runtime environments are not fully implemented at this time (see GH-1291).
+</td>
+</tr>
+</table>
+</div>
 <div class="paragraph">
 <p>Runtime environments and libraries define globally available elements (types, variables, functions) provided by the JavaScript engine.
 Both must contain <em>only</em> definition files (n4jsd) of which all elements are marked as <code>@ProvidedByRuntime</code> (<a href="#_runtime-definitions">Runtime Definitions</a>) and <code>@Global</code> (<a href="#_global-definitions">Global Definitions</a>).</p>
@@ -21955,31 +21761,19 @@ As a consequence, type definition projects may only provide partial type informa
 </div>
 </div>
 <div class="sect2 language-n4js">
-<h3 id="_component-content"><a class="anchor" href="#_component-content"></a><a class="link" href="#_component-content">12.3. Component Content</a></h3>
-<div class="paragraph">
-<p>A component is similar to a project in the N4JS IDE. It consists of sources and test sources.
-These items are contained in separate folders alongside output folders and settings specified in the <code>package.json</code> file.
-The <code>package.json</code> file serves as the project description file and is stored at the root of the project (see <a href="#package-json">Package.json File</a> for details).</p>
-</div>
-<div class="paragraph">
-<p>For build and production purposes, other files such as <code>pom.xml</code> or <code>.project</code> files are automatically derived from the <code>package.json</code>.
-These files are not to be added manually.</p>
-</div>
-</div>
-<div class="sect2 language-n4js">
-<h3 id="package-json"><a class="anchor" href="#package-json"></a><a class="link" href="#package-json">12.4. Package.json File</a></h3>
+<h3 id="package-json"><a class="anchor" href="#package-json"></a><a class="link" href="#package-json">12.3. Package.json File</a></h3>
 <div class="paragraph">
 <p>A folder is a "component" if and only if it contains a <code>package.json</code> file. Being a component means
 that this folder is recognized by all N4JS-related tools but does not necessarily mean the component
 contains N4JS code (it could just contain plain Javascript). The main benefit of being a component
-in this sense is that this unit of code can be used from N4JS components as a dependency.</p>
+in this sense is that this unit of code can be used by other N4JS components as a dependency.</p>
 </div>
 <div class="paragraph">
 <p>For example, a plain npm project containing only plain Javascript can be a component and
-can therefore be used as a project dependency of a full-blown N4JS project.</p>
+can therefore be used as a project dependency of a full-blown N4JS component.</p>
 </div>
 <div class="sect3">
-<h4 id="_basic-properties"><a class="anchor" href="#_basic-properties"></a><a class="link" href="#_basic-properties">12.4.1. Basic Properties</a></h4>
+<h4 id="_basic-properties"><a class="anchor" href="#_basic-properties"></a><a class="link" href="#_basic-properties">12.3.1. Basic Properties</a></h4>
 <div class="paragraph">
 <p>The following standard <code>package.json</code> properties are used by N4JS tooling. Unless otherwise
 noted, all these properties have the exact same format and meaning as usual in <code>package.json</code>
@@ -22024,11 +21818,24 @@ other than a <code>.js</code> file, it will be ignored. In particular, it cannot
 used for <code>.n4js</code> files; in that case, property "mainModule" has to be used
 (see below).</p>
 </dd>
+<dt class="hdlist1">workspaces </dt>
+<dd>
+<p>(array of strings) Property used by package management tool <code>yarn</code> to denote
+that a project serves as a "yarn workspace" and to denote the other projects
+that form the members of this yarn workspace. For details, see
+<a href="https://yarnpkg.com/lang/en/docs/workspaces">here</a>.
+In N4JS, a project is called a "yarn workspace root" if and only if its
+<code>package.json</code> file contains top-level property "workspaces", no matter the property&#8217;s
+value (i.e. it will be called "yarn workspace root" even if the value of property
+"workspaces" is the empty array or an invalid value such as a number). The nested
+projects referred to via the strings in this property&#8217;s array value are called
+"member projects" of the yarn workspace.</p>
+</dd>
 </dl>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_n4js-properties"><a class="anchor" href="#_n4js-properties"></a><a class="link" href="#_n4js-properties">12.4.2. N4JS Properties</a></h4>
+<h4 id="_n4js-properties"><a class="anchor" href="#_n4js-properties"></a><a class="link" href="#_n4js-properties">12.3.2. N4JS Properties</a></h4>
 <div class="paragraph">
 <p>In addition to the standard properties above, there is a single N4JS-specific
 top-level property called "n4js". The value of this property must always be
@@ -22043,7 +21850,7 @@ an object that may have any combination of the following properties:</p>
 <dl>
 <dt class="hdlist1">application</dt>
 <dd>
-<p>An application. See <a href="#Apps">[Apps]</a>.</p>
+<p>An application. See <a href="#App">[App]</a>.</p>
 </dd>
 <dt class="hdlist1">library</dt>
 <dd>
@@ -22061,11 +21868,13 @@ via property "testedProjects".</p>
 <dt class="hdlist1">api</dt>
 <dd>
 <p>For N4JS projects that contain only API (in <code>.n4jsd</code> files) to be implemented by other,
-so-called implementation projects. See properties "implementationId", "implementedProjects".</p>
+so-called implementation projects. See properties "implementationId", "implementedProjects".
+NOTE: the API/Implementation concept is not fully implemented at this time (see GH-1291).</p>
 </dd>
 <dt class="hdlist1">runtimeEnvironment</dt>
 <dd>
-<p>Runtime environments. See <a href="#_runtime-environment-resolution">Runtime Environment Resolution</a>.</p>
+<p>Runtime environments. See <a href="#Runtime Environment Resolution">[Runtime Environment Resolution]</a>.
+NOTE: runtime environments are not fully implemented at this time (see GH-1291).</p>
 </dd>
 <dt class="hdlist1">runtimeLibrary</dt>
 <dd>
@@ -22103,7 +21912,7 @@ will put the <code>.js</code> files created for each <code>.n4js</code> file.</p
 <dt class="hdlist1">sources</dt>
 <dd>
 <p>(object) Defines various sub-folders where sources, etc. are located. All properties
-of the given object must have to following format: the name must be "source", "external",
+of the given object must have the following format: the name must be "source", "external",
 or "test"; the value must be an array of strings, with each string defining a
 path relative to the component&#8217;s root folder, pointing to a folder where
 source files of the corresponding type are located. For example, paths given via name
@@ -22132,11 +21941,6 @@ If they are contained in source or test source fragments, it must be possible to
 to declarations inside these modules.
 Note that switching off validation for n4js files is disallowed.</p>
 </dd>
-<dt class="hdlist1">noModuleWrap</dt>
-<dd>
-<p>Files matching this filter are not wrapped into modules and they are not semantically validated.
-Since they are assumed to be wrapped into modules, declarations inside these modules cannot be referenced by n4js code.</p>
-</dd>
 </dl>
 </div>
 </dd>
@@ -22157,9 +21961,6 @@ Since they are assumed to be wrapped into modules, declarations inside these mod
 			"module": "xyz*",
 			"sourceContainer": "src/n4js"
 		}
-	],
-	"noModuleWrap": [
-		// syntax same as for noValidate above
 	]
 }</code></pre>
 </div>
@@ -22190,7 +21991,7 @@ projects must all be of the same project type and must not be of type "test" the
 <dd>
 <p>(string) If this property is defined, this component is called an "implementation project" and the string value
   provides a unique identifier for the implementation provided in this component. If this is defined, property
-  "implementedProjects" must be defined as well. For details, see <a href="#_api-and-implementation-components">API and Implementation Components</a>.</p>
+  "implementedProjects" must be defined as well. For details, see <a href="#API and Implementation Components">[API and Implementation Components]</a>.</p>
 <div class="paragraph">
 <p>Only projects of type "application", "processor", "library", "api" or "validation" may declare this property.</p>
 </div>
@@ -22203,7 +22004,7 @@ projects must all be of the same project type and must not be of type "test" the
 <dd>
 <p>(array) A list of API components (components of type "api") that are implemented by this component. If this
 is defined, property "implementationId" must be defined as well. For details, see
-<a href="#_api-and-implementation-components">API and Implementation Components</a>. Only components of type  "application", "processor", "library", "api"
+<a href="#API and Implementation Components">[API and Implementation Components]</a>. Only components of type  "application", "processor", "library", "api"
 or "validation" may declare this property.</p>
 </dd>
 </dl>
@@ -22217,30 +22018,6 @@ or "validation" may declare this property.</p>
  required runtime library must also be specified as a dependency using one of the top-level
  properties <code>dependencies</code> or <code>devDependencies</code>.</p>
 </dd>
-<dt class="hdlist1">moduleLoader</dt>
-<dd>
-<p>(string) This property defines what module loaders are supported by the modules in this component. Possible values are the following:</p>
-<div class="dlist">
-<dl>
-<dt class="hdlist1">n4js</dt>
-<dd>
-<p>(default) The modules in this component can be loaded with SystemJS or with CommonJS.</p>
-</dd>
-<dt class="hdlist1">commonjs</dt>
-<dd>
-<p>Modules in this component must be loaded with CommonJS. When these modules are referenced in
-generated code (i.e. when importing from these modules), the module specifier will be prefixed
-with <code>@@cjs/</code>.</p>
-</dd>
-<dt class="hdlist1">node_builtin</dt>
-<dd>
-<p>Modules in this component represent node built-in modules such as fs or https. When these modules
-are referenced in generated code (i.e. when importing from these modules), the module specifier will
-be prefixed with <code>@node/</code>.</p>
-</dd>
-</dl>
-</div>
-</dd>
 <dt class="hdlist1">extendedRuntimeEnvironment</dt>
 <dd>
 <p>(string) The name of the runtime environment project that is extended by this component. Only components of
@@ -22250,22 +22027,6 @@ type "runtime environment" may declare this property.</p>
 <dd>
 <p>(array) The list of runtime library components that are provided by this component. Only components of
 type "runtime environment" may declare this property.</p>
-</dd>
-<dt class="hdlist1">initModules</dt>
-<dd>
-<p>(array) A list of modules in terms of module specifiers (strings), that are executed when the component
-is initialized. This property may only be declared by components of type "runtime environment" and "runtime library".</p>
-<div class="paragraph">
-<p>These init modules are executed right before the execution of a user-specified module starts. They may be used to initialize
- polyfills or perform other initialization work with regard to the execution environment (e.g. define global properties).</p>
-</div>
-</dd>
-<dt class="hdlist1">execModule</dt>
-<dd>
-<p>(string) The module specifier of the exec module of a runtime environment. This property may only be declared by components
-of type "runtime environment" and "runtime library". The exec module of a runtime environment is executed as the entry-point
-to the execution of a user-specified module. The underlying script must interpret the execution data and trigger the actual
-module execution in the runtime environment.</p>
 </dd>
 </dl>
 </div>
@@ -22316,12 +22077,14 @@ module execution in the runtime environment.</p>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">sources</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">a single source-container of type "source" with path "."</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">a single source-container of type "source" with path "." (except for yarn workspace roots, see below)</p></td>
 </tr>
 </tbody>
 </table>
 <div class="paragraph">
-<p>All other properties are undefined if not given in the <code>package.json</code> file.</p>
+<p>All other properties are undefined if not given in the <code>package.json</code> file. The default source folder of "." does not
+apply to projects that represent the root folder of a yarn workspace; those projects do not have any source folder,
+by default.</p>
 </div>
 <div class="exampleblock">
 <div class="title">Example 103. A package.json file with N4JS-specific properties.</div>
@@ -22368,9 +22131,6 @@ module execution in the runtime environment.</p>
 					"module": "xyz*",
 					"sourceContainer": "src/n4js"
 				}
-			],
-			"noModuleWrap": [
-				// syntax same as for noValidate above
 			]
 		},
 		"requiredRuntimeLibraries": [
@@ -22384,7 +22144,7 @@ module execution in the runtime environment.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_constraints"><a class="anchor" href="#_constraints"></a><a class="link" href="#_constraints">12.4.3. Constraints</a></h4>
+<h4 id="_constraints"><a class="anchor" href="#_constraints"></a><a class="link" href="#_constraints">12.3.3. Constraints</a></h4>
 <div class="paragraph">
 <p>The following constraints apply.</p>
 </div>
@@ -22519,7 +22279,7 @@ way:</p>
 </div>
 </div>
 <div class="sect2 language-n4js">
-<h3 id="_support-for-npm-scopes"><a class="anchor" href="#_support-for-npm-scopes"></a><a class="link" href="#_support-for-npm-scopes">12.5. Support for NPM Scopes</a></h3>
+<h3 id="_support-for-npm-scopes"><a class="anchor" href="#_support-for-npm-scopes"></a><a class="link" href="#_support-for-npm-scopes">12.4. Support for NPM Scopes</a></h3>
 <div class="paragraph">
 <p>NPM supports a namespace concept for npm packages. Such namespaces are called "scopes". For details see
 <a href="https://docs.npmjs.com/misc/scope" class="bare">https://docs.npmjs.com/misc/scope</a> and <a href="https://docs.npmjs.com/getting-started/scoped-packages" class="bare">https://docs.npmjs.com/getting-started/scoped-packages</a>.
@@ -22604,113 +22364,8 @@ the project&#8217;s "scope name", including the leading <code>@</code>.</p>
 </div>
 </div>
 </div>
-<div class="sect2 language-n4js">
-<h3 id="_component-dependencies"><a class="anchor" href="#_component-dependencies"></a><a class="link" href="#_component-dependencies">12.6. Component Dependencies</a></h3>
-<div class="paragraph">
-<p>There are several dependencies between components.
-We can distinguish between <em>require</em> dependencies and <em>provide</em> dependencies.</p>
-</div>
-<div class="dlist">
-<dl>
-<dt class="hdlist1">require</dt>
-<dd>
-<p><em>N4JS Components</em> require:</p>
-<div class="ulist">
-<ul>
-<li>
-<p><em>APIs</em></p>
-</li>
-<li>
-<p><em>RuntimeLiberaries</em> and</p>
-</li>
-<li>
-<p><em>Libraries</em></p>
-</li>
-</ul>
-</div>
-</dd>
-<dt class="hdlist1">provide</dt>
-<dd>
-<div class="ulist">
-<ul>
-<li>
-<p><em>Runtime Environments</em> provide <em>Runtime Libraries</em> and maybe extend other <em>Runtime Environments</em> (which means they provide the same runtime libraries as the extended environments and the same base types).</p>
-</li>
-<li>
-<p><em>SysLibs</em> implement (<em>provide implementations</em> of) <em>APIs</em></p>
-</li>
-</ul>
-</div>
-</dd>
-</dl>
-</div>
-<div class="sect3">
-<h4 id="_runtime-environment-resolution"><a class="anchor" href="#_runtime-environment-resolution"></a><a class="link" href="#_runtime-environment-resolution">12.6.1. Runtime Environment Resolution</a></h4>
-<div class="paragraph">
-<p>In order to execute (run, debug, or test) an <em>N4JS Component</em>, an actual <em>runner</em> has to be determined.
-Since runners support runtime environments, this basically means calculating runtime environments which provide all necessary runtime libraries needed by the component.
-This is done by computing the transitive closure of required runtime libraries and by comparing that with the transitive closure of runtime libraries provided by an environment.</p>
-</div>
-<div class="openblock definition">
-<div class="content">
-<div class="paragraph">
-<p><a id="transitive_component_dependencies"></a><strong>Definition:</strong> <a href="#transitive_component_dependencies">Transitive Component Dependencies</a></p>
-</div>
-<div class="paragraph">
-<p>We defined the following transitive closures of dependencies:</p>
-</div>
-<div class="paragraph">
-<p>For a given N4JS Component <code>C</code> we define</p>
-</div>
-<div class="openblock">
-<div class="content">
-<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mtable><mtr><mtd><mi>C</mi><mo>.</mo><mi>r</mi><mi>e</mi><mi>q</mi><mi>u</mi><mi>i</mi><mi>r</mi><mi>e</mi><mi>d</mi><mi>A</mi><mi>P</mi><mi>I</mi><msup><mi>s</mi><mo>*</mo></msup></mtd><mtd><mo>=</mo><mi>C</mi><mo>.</mo><mi>r</mi><mi>e</mi><mi>q</mi><mi>u</mi><mi>i</mi><mi>r</mi><mi>e</mi><mi>d</mi><mi>P</mi><mi>I</mi><mi>s</mi></mtd></mtr><mtr><mtd/><mtd><mspace width="4.0em"/><mo>∪</mo></mtd></mtr><mtr><mtd/><mtd><munder><mo>⋃</mo><mrow><mi>L</mi><mo>∈</mo><mi>C</mi><mo>.</mo><mi>r</mi><mi>e</mi><mi>q</mi><mi>u</mi><mi>i</mi><mi>r</mi><mi>e</mi><mi>d</mi><mi>L</mi><mi>i</mi><mi>b</mi><mi>s</mi></mrow></munder><mi>C</mi><mo>.</mo><mi>r</mi><mi>e</mi><mi>q</mi><mi>u</mi><mi>i</mi><mi>r</mi><mi>e</mi><mi>d</mi><mi>P</mi><mi>I</mi><msup><mi>s</mi><mo>*</mo></msup></mtd></mtr><mtr><mtd/><mtd><mspace width="4.0em"/><mo>∪</mo></mtd></mtr><mtr><mtd/><mtd><munder><mo>⋃</mo><mrow><mi>S</mi><mo>∈</mo><mi>C</mi><mo>.</mo><mi>r</mi><mi>e</mi><mi>q</mi><mi>u</mi><mi>i</mi><mi>r</mi><mi>e</mi><mi>d</mi><mi>A</mi><mi>P</mi><mi>I</mi><mi>s</mi></mrow></munder><mi>S</mi><mo>.</mo><mi>r</mi><mi>e</mi><mi>q</mi><mi>u</mi><mi>i</mi><mi>r</mi><mi>e</mi><mi>d</mi><mi>A</mi><mi>P</mi><mi>I</mi><msup><mi>s</mi><mo>*</mo></msup></mtd></mtr><mtr><mtd><mi>C</mi><mo>.</mo><mi>r</mi><mi>e</mi><mi>q</mi><mi>u</mi><mi>i</mi><mi>r</mi><mi>e</mi><mi>d</mi><mi>L</mi><mi>i</mi><mi>b</mi><msup><mi>s</mi><mo>*</mo></msup></mtd><mtd><mo>=</mo><mi>C</mi><mo>.</mo><mi>r</mi><mi>e</mi><mi>q</mi><mi>u</mi><mi>i</mi><mi>r</mi><mi>e</mi><mi>d</mi><mi>R</mi><mi>T</mi><mi>L</mi><mi>i</mi><mi>b</mi><mi>s</mi></mtd></mtr><mtr><mtd/><mtd><mspace width="4.0em"/><mo>∪</mo></mtd></mtr><mtr><mtd/><mtd><munder><mo>⋃</mo><mrow><mi>L</mi><mo>∈</mo><mi>C</mi><mo>.</mo><mi>r</mi><mi>e</mi><mi>q</mi><mi>u</mi><mi>i</mi><mi>r</mi><mi>e</mi><mi>d</mi><mi>L</mi><mi>i</mi><mi>b</mi><mi>s</mi></mrow></munder><mi>L</mi><mo>.</mo><mi>r</mi><mi>e</mi><mi>q</mi><mi>u</mi><mi>i</mi><mi>r</mi><mi>e</mi><mi>d</mi><mi>R</mi><mi>T</mi><mi>L</mi><mi>i</mi><mi>b</mi><msup><mi>s</mi><mo>*</mo></msup></mtd></mtr></mtable></math>
-</div>
-</div>
-<div class="paragraph">
-<p>For a given Runtime Environment <code>E</code> we define</p>
-</div>
-<div class="openblock">
-<div class="content">
-<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mtable><mtr><mtd><mi>E</mi><mo>.</mo><mi>p</mi><mi>r</mi><mi>o</mi><mi>v</mi><mi>i</mi><mi>d</mi><mi>e</mi><mi>d</mi><mi>R</mi><mi>T</mi><mi>L</mi><mi>i</mi><mi>b</mi><msup><mi>s</mi><mo>*</mo></msup></mtd><mtd><mo>=</mo><mi>E</mi><mo>.</mo><mi>p</mi><mi>r</mi><mi>o</mi><mi>v</mi><mi>i</mi><mi>d</mi><mi>e</mi><mi>d</mi><mi>R</mi><mi>T</mi><mi>L</mi><mi>i</mi><mi>b</mi><mi>s</mi></mtd></mtr><mtr><mtd/><mtd><mspace width="4.0em"/><mo>∪</mo></mtd></mtr><mtr><mtd/><mtd><munder><mo>⋃</mo><mrow><mi>E</mi><mi>S</mi><mo>∈</mo><mi>E</mi><mo>.</mo><mi>e</mi><mi>x</mi><mi>t</mi><mi>e</mi><mi>n</mi><mi>d</mi><mi>e</mi><mi>d</mi><mi>R</mi><mi>T</mi><mi>E</mi><mi>n</mi><mi>v</mi><mi>s</mi></mrow></munder><mi>E</mi><mi>S</mi><mo>.</mo><mi>E</mi><mo>.</mo><mi>p</mi><mi>r</mi><mi>o</mi><mi>v</mi><mi>i</mi><mi>d</mi><mi>e</mi><mi>d</mi><mi>R</mi><mi>T</mi><mi>L</mi><mi>i</mi><mi>b</mi><msup><mi>s</mi><mo>*</mo></msup></mtd></mtr></mtable></math>
-</div>
-</div>
-</div>
-</div>
-<div class="openblock requirement">
-<div class="content">
-<div class="paragraph">
-<p><a id="Req-IDE-162"></a><strong>Req. IDE-162:</strong> <a href="#Req-IDE-162">Runtime Environment Resolution</a> (ver. 1)</p>
-</div>
-<div class="paragraph">
-<p>An N4JS Component <code>C</code> can be executed in an runtime environment <code>E</code>, written as <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>E</mi><mo>⊨</mo><mi>C</mi></math> if the following constraints hold:<br></p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>The environment must provide all runtime libraries transitively required by the component:</p>
-<div class="openblock">
-<div class="content">
-<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mo>∀</mo><mi>R</mi><mo>∈</mo><mi>C</mi><mo>.</mo><mi>r</mi><mi>e</mi><mi>q</mi><mi>u</mi><mi>i</mi><mi>r</mi><mi>e</mi><mi>d</mi><mi>R</mi><mi>T</mi><mi>L</mi><mi>i</mi><mi>b</mi><msup><mi>s</mi><mo>*</mo></msup><mi>:</mi><mi>R</mi><mo>∈</mo><mi>E</mi><mo>.</mo><mi>p</mi><mi>r</mi><mi>o</mi><mi>v</mi><mi>i</mi><mi>d</mi><mi>e</mi><mi>d</mi><mi>R</mi><mi>T</mi><mi>L</mi><mi>i</mi><mi>b</mi><msup><mi>s</mi><mo>*</mo></msup></math>
-</div>
-</div>
-</li>
-<li>
-<p>There exist libraries which can be executed by the environment, so that all APIs are implemented:</p>
-<div class="openblock">
-<div class="content">
-<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mo>∀</mo><mi>S</mi><mo>∈</mo><mi>C</mi><mo>.</mo><mi>r</mi><mi>e</mi><mi>q</mi><mi>u</mi><mi>i</mi><mi>r</mi><mi>e</mi><mi>d</mi><mi>A</mi><mi>P</mi><mi>I</mi><msup><mi>s</mi><mo>*</mo></msup><mi>:</mi><mo>∃</mo><mi>I</mi><mi>:</mi><mi>S</mi><mo>∈</mo><mi>I</mi><mo>.</mo><mi>i</mi><mi>m</mi><mi>p</mi><mi>l</mi><mi>e</mi><mi>m</mi><mi>e</mi><mi>n</mi><mi>t</mi><mi>e</mi><mi>d</mi><mi>A</mi><mi>P</mi><mi>I</mi><mi>s</mi><mo>∧</mo><mi>E</mi><mo>⊨</mo><mi>I</mi></math>
-</div>
-</div>
-</li>
-</ol>
-</div>
-</div>
-</div>
-</div>
-</div>
 <div class="sect2">
-<h3 id="sec:N4JS-Type-Definitions"><a class="anchor" href="#sec:N4JS-Type-Definitions"></a><a class="link" href="#sec:N4JS-Type-Definitions">12.7. N4JS Type Definitions</a></h3>
+<h3 id="sec:N4JS-Type-Definitions"><a class="anchor" href="#sec:N4JS-Type-Definitions"></a><a class="link" href="#sec:N4JS-Type-Definitions">12.5. N4JS Type Definitions</a></h3>
 <div class="paragraph">
 <p>N4JS projects can depend on ordinary JavaScript projects by including them in the package.json file.
 From there on, modules of those JavaScript projects can be imported when writing N4JS code.
@@ -22720,7 +22375,7 @@ Type definition projects do only contain n4jsd files that reflect the classes an
 To refer to a JavaScript npm, the term <em>plain-JS project</em> will be used.</p>
 </div>
 <div class="sect3">
-<h4 id="_specify-type-definition"><a class="anchor" href="#_specify-type-definition"></a><a class="link" href="#_specify-type-definition">12.7.1. Specify Type Definition</a></h4>
+<h4 id="_specify-type-definition"><a class="anchor" href="#_specify-type-definition"></a><a class="link" href="#_specify-type-definition">12.5.1. Specify Type Definition</a></h4>
 <div class="paragraph">
 <p>A type definition project is structured like a normal npm.
 The major difference is that it provides n4jsd files instead of js files.
@@ -22743,13 +22398,17 @@ Besides the usual properties the package.json file usually needs to specify the 
 <div class="paragraph">
 <p>The project type declares this project to be a type definition projects.
 Consequently, it has to also declare the name for which plain-JS project its type definitions are provided (using <code>definesPackage</code>).
-Lastly, the main module has to be specified since this information will not be taken from the package.json of the plain-JS project.
-In case the plain-JS project does not have a main module or the main module is located at the package root,
-the mainModule property can be omitted.</p>
+Lastly, the main module has to be specified since this information will not be taken from the package.json of the plain-JS project.</p>
+</div>
+<div class="paragraph">
+<p>A type definition project may only define a main module if the corresponding plain-JS project defines a main module. In this case,
+the main module of the type definition project may have a different fully-qualified name / module specifier (but should, of course,
+define the types provided by the plain-JS project&#8217;s main module). This is possible, because in client code the import of a main
+module will always look the same, no matter the main module&#8217;s fully-qualified name / module specifier.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_name-conventions"><a class="anchor" href="#_name-conventions"></a><a class="link" href="#_name-conventions">12.7.2. Name Conventions</a></h4>
+<h4 id="_name-conventions"><a class="anchor" href="#_name-conventions"></a><a class="link" href="#_name-conventions">12.5.2. Name Conventions</a></h4>
 <div class="paragraph">
 <p>A type definition package can have an arbitrary name and define an arbitrary npm package.
 This can be handy for testing purposes or just creating some temporary type definitions for a local package.
@@ -22760,7 +22419,7 @@ our related type definitions are called <code>@n4jsd/express</code>.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_version-conventions"><a class="anchor" href="#_version-conventions"></a><a class="link" href="#_version-conventions">12.7.3. Version Conventions</a></h4>
+<h4 id="_version-conventions"><a class="anchor" href="#_version-conventions"></a><a class="link" href="#_version-conventions">12.5.3. Version Conventions</a></h4>
 <div class="paragraph">
 <p>Since the plain-JS project will evolve over time and publish different versions, the need arises to also
 publish the type definition project in different versions that reflect this evolution.
@@ -22774,7 +22433,7 @@ To keep the distinct versioning of both of the projects manageable,
 we propose the following conventions to partially align the type definition project&#8217;s version to that of the plain-JS project.</p>
 </div>
 <div class="sect4">
-<h5 id="_define-a-new-type-definition-package"><a class="anchor" href="#_define-a-new-type-definition-package"></a><a class="link" href="#_define-a-new-type-definition-package">12.7.3.1. Define a New Type Definition Package</a></h5>
+<h5 id="_define-a-new-type-definition-package"><a class="anchor" href="#_define-a-new-type-definition-package"></a><a class="link" href="#_define-a-new-type-definition-package">12.5.3.1. Define a New Type Definition Package</a></h5>
 <div class="paragraph">
 <p>We use the following convention to compute the version of type definition packages.</p>
 </div>
@@ -22806,7 +22465,7 @@ adjusted to new language features, only the patch number increases to e.g. Major
 </div>
 </div>
 <div class="sect4">
-<h5 id="_using-a-type-definition-package"><a class="anchor" href="#_using-a-type-definition-package"></a><a class="link" href="#_using-a-type-definition-package">12.7.3.2. Using a Type Definition Package</a></h5>
+<h5 id="_using-a-type-definition-package"><a class="anchor" href="#_using-a-type-definition-package"></a><a class="link" href="#_using-a-type-definition-package">12.5.3.2. Using a Type Definition Package</a></h5>
 <div class="paragraph">
 <p>On the client side, a type definition package is listed among the dependency section.
 Here we use the following convention to specify the required version of a type definition package.</p>
@@ -22841,7 +22500,7 @@ it is recommended to plain copy the non SemVer version when possible.</p>
 </div>
 </div>
 <div class="sect4">
-<h5 id="_rational"><a class="anchor" href="#_rational"></a><a class="link" href="#_rational">12.7.3.3. Rational</a></h5>
+<h5 id="_rational"><a class="anchor" href="#_rational"></a><a class="link" href="#_rational">12.5.3.3. Rational</a></h5>
 <div class="paragraph">
 <p>The rational behind this convention reflects the idea of semantic versioning:</p>
 </div>
@@ -22886,9 +22545,9 @@ this convention guarantees that a compatible version of the type definition proj
 </div>
 </div>
 <div class="sect2 language-n4js">
-<h3 id="_modules"><a class="anchor" href="#_modules"></a><a class="link" href="#_modules">12.8. Modules</a></h3>
+<h3 id="_modules"><a class="anchor" href="#_modules"></a><a class="link" href="#_modules">12.6. Modules</a></h3>
 <div class="paragraph">
-<p>All N4JS files are modules, sometimes also called compilation unit (CU).
+<p>Each N4JS source file defines a module in the sense of ECMAScript2015, [<a href="#ECMA15a">ECMA15a(p.S14)</a>].
 This is the overall structure of a module, based on [<a href="#ECMA15a">ECMA15a(p.S14)</a>].</p>
 </div>
 <div class="listingblock">
@@ -22919,111 +22578,21 @@ ScriptElement:
 module under the given alias (which is similar to the original name if no alias is defined).
 The name of the module is its project’s source folder’s relative path without any extension, see <a href="#_qualified-names">Qualified Names</a> for details.</p>
 </div>
-<div class="paragraph">
-<p>This are the properties of script, which can be specified by the user:</p>
-</div>
-<div class="dlist">
-<dl>
-<dt class="hdlist1"><code>annotations</code> </dt>
-<dd>
-<p>Arbitrary annotations, see <a href="#_annotations">Annotations</a> and below for details.</p>
-</dd>
-<dt class="hdlist1"><code>scriptElements</code></dt>
-<dd>
-<p>The content of the script.</p>
-</dd>
-</dl>
-</div>
-<div class="paragraph">
-<p>And we additionally define the following pseudo properties:</p>
-</div>
-<div class="dlist">
-<dl>
-<dt class="hdlist1"><code>path</code> </dt>
-<dd>
-<p>File system path (path delimiter is always <code>’/’</code>) relative to the source fragment of the file without the extension.
-E.g.: given a source folder <code>src</code>, <code>path</code> of a module located at:</p>
-<div class="ulist">
-<ul>
-<li>
-<p><code>src/n4/lang/List.js</code> is <code>n4/lang/List</code></p>
-</li>
-<li>
-<p><code>src/n4/lang/Objects.prototypes</code> is <code>n4/lang/Objects</code></p>
-</li>
-</ul>
-</div>
-</dd>
-<dt class="hdlist1"><code>expandedPath</code> </dt>
-<dd>
-<p>Pseudo property consists of the project name and project version of the module followed by the path,
-the concrete syntax is: <code>&lt;project.name&gt;-&lt;project.version&gt;/&lt;module.path&gt;</code> where project version includes all version parts except the qualifier.</p>
-<div class="paragraph">
-<p>E.g. given a module with path <code>n4/lang/List</code> in a project <code>lib</code> with
-version <code>1.0.0</code>, the <code>expandedPath</code> is <code>lib-1.0.0/n4/lang/List</code>.</p>
-</div>
-</dd>
-<dt class="hdlist1"><code>loadtimeDeps</code> </dt>
-<dd>
-<p>Pseudo property contains all load time dependencies of this module.</p>
-</dd>
-<dt class="hdlist1"><code>runtimeDeps</code> </dt>
-<dd>
-<p>Pseudo property contains all runtime dependencies of this module.</p>
-</dd>
-<dt class="hdlist1"><code>allDeps</code> </dt>
-<dd>
-<p>Pseudo property contains all dependencies of this module.
-This is the union of <em>loadtimeDeps</em> and <em>runtimeDeps</em> which maintains the ordering of both lists, with the <em>loadtimeDeps</em> at the front.</p>
-</dd>
-</dl>
-</div>
-<div class="paragraph">
-<p>Pseudo properties to be set via annotations are explained in <a href="#_annotations">Annotations</a>.</p>
-</div>
 </div>
 <div class="sect2 language-n4js">
-<h3 id="_properties-files"><a class="anchor" href="#_properties-files"></a><a class="link" href="#_properties-files">12.9. Properties Files</a></h3>
-<div class="paragraph">
-<p>Properties files have the file extension <code>properties</code> and describe how to localize text in a project.
-They basically define keys <a href="#_primitive-pathselector-and-i18nkey">Primitive Pathselector and I18nKey</a> with their values.
-The key is used during runtime to retrieve text localized to the user’s locale.</p>
+<h3 id="_api-and-implementation-component"><a class="anchor" href="#_api-and-implementation-component"></a><a class="link" href="#_api-and-implementation-component">12.7. API and Implementation Component</a></h3>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title=""></i>
+</td>
+<td class="content">
+the API/Implementation concept is not fully implemented at this time (see GH-1291).
+</td>
+</tr>
+</table>
 </div>
-<div class="sect3">
-<h4 id="property-file-syntax"><a class="anchor" href="#property-file-syntax"></a><a class="link" href="#property-file-syntax">12.9.1. Syntax</a></h4>
-<div class="paragraph">
-<p>The syntax of a resource file is defined as:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-xtext" data-lang="xtext">ResourceFile:   Comment* | $entry+=$ Entry*;
-Comment:        'pass:[#]' .* EOL;
-Entry:          $key$ = KeyIdentifier '=' $value$ = .* EOL;
-KeyIdentifier:  LETTER (DIGIT | LETTER | '.')*;</code></pre>
-</div>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_constraints-2"><a class="anchor" href="#_constraints-2"></a><a class="link" href="#_constraints-2">12.9.2. Constraints</a></h4>
-<div class="paragraph">
-<p>Properties files have to be stored in source fragment of type source.
-The <em>base folder</em> for storing the properties files of a project <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>p</mi></math> is <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>p</mi><mo>.</mo><mi>n</mi><mi>a</mi><mi>m</mi><mi>e</mi><mstyle mathvariant="monospace"><mtext>/nls</mtext></mstyle></math>.
-The language-specific resource files are stored in subfolders of the base folder.
-The base language (normally english) has to be located in a subfolder of the base folder.
-The resource files for other languages have to be located in a subfolder with the name given by syntax <code>&lt;ISO Language Code&gt;_&lt;ISO Country Code&gt;</code>,
-where ISO Language Code is given by the ISO-639 standard and ISO Country Code is given by the ISO-3166 standard.</p>
-</div>
-<div class="paragraph">
-<p>All resource files stored in a language folder are compiled to a JavaScript file which exports all resource keys as an object literal.</p>
-</div>
-<div class="paragraph">
-<p>The resource files of a project are automatically loaded.
-To access a resource key <code>key</code> stored in a resource file <code>my.properties</code>, you have to use the file name as a prefix (e.g. you have to use the key <code>my.key</code>).</p>
-</div>
-</div>
-</div>
-<div class="sect2 language-n4js">
-<h3 id="_api-and-implementation-components"><a class="anchor" href="#_api-and-implementation-components"></a><a class="link" href="#_api-and-implementation-components">12.10. API and Implementation Components</a></h3>
 <div class="paragraph">
 <p>Instead of providing an implementation, N4JS components may only define an API by way of one or more n4jsd files which is then implemented by separate implementation projects.
 For one such API project, several implementation projects may be provided.
@@ -23080,7 +22649,7 @@ For concrete classes, we want all members in <code>C</code> in order to be compl
 </ul>
 </div>
 <div class="sect3">
-<h4 id="_execution-of-api-and-implementation-components"><a class="anchor" href="#_execution-of-api-and-implementation-components"></a><a class="link" href="#_execution-of-api-and-implementation-components">12.10.1. Execution of API and Implementation Components</a></h4>
+<h4 id="_execution-of-api-and-implementation-components"><a class="anchor" href="#_execution-of-api-and-implementation-components"></a><a class="link" href="#_execution-of-api-and-implementation-components">12.7.1. Execution of API and Implementation Components</a></h4>
 <div class="paragraph">
 <p>When launching an N4JS component <em>C</em> under runtime environment <a href="#AC">RE</a>, the user may(!) provide an implementation ID <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>I</mi><mspace width="-0.167em"/><mi>I</mi><mspace width="-0.167em"/><mi>D</mi></math> to run.
 Then, for each API project <em>A</em> in the direct or indirect dependencies of <em>C</em> an implementation project is chosen as follows:</p>
@@ -23129,9 +22698,8 @@ Then, for each API project <em>A</em> in the direct or indirect dependencies of 
 output folder (esp. when constructing a <code>class path</code>) and when loading or importing a type from <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>A</mi><mi>n</mi></msub></math> return the corresponding type with the same fully-qualified name from <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>I</mi><mi>n</mi></msub></math>.</p>
 </div>
 </div>
-</div>
-<div class="sect2 language-n4js">
-<h3 id="_api-and-implementation-with-di"><a class="anchor" href="#_api-and-implementation-with-di"></a><a class="link" href="#_api-and-implementation-with-di">12.11. API and Implementation With DI</a></h3>
+<div class="sect3 language-n4js">
+<h4 id="_api-and-implementation-with-di"><a class="anchor" href="#_api-and-implementation-with-di"></a><a class="link" href="#_api-and-implementation-with-di">12.7.2. API and Implementation With DI</a></h4>
 <div class="paragraph">
 <p>API projects may use N4JS DI (<a href="#_dependency-injection">Dependency Injection</a>) language features which require Implementation projects to provide DI-compatible behaviour
 in order to allow a Client (implemented against an API project) to be executed with a given Implementation project.
@@ -23144,7 +22712,7 @@ This is essential for normal execution and for test execution.</p>
 <div class="content">
 <img src="chapters/12_components/fig/diag_ApiTestsDI_Overview.svg" alt="diag ApiTestsDI Overview">
 </div>
-<div class="title">Figure 12. Overview of API tests with DI</div>
+<div class="title">Figure 13. Overview of API tests with DI</div>
 </div>
 <div class="paragraph">
 <p>Static DI mechanisms in N4JS allow an API project to enforce Implementation projects to provide all necessary information.
@@ -23157,7 +22725,7 @@ This allows clients to work seamlessly with various implementations without spec
 <div class="content">
 <img src="chapters/12_components/fig/diag_ApiTestsDI_StaticDI.svg" alt="diag ApiTestsDI StaticDI">
 </div>
-<div class="title">Figure 13. API tests with static DI</div>
+<div class="title">Figure 14. API tests with static DI</div>
 </div>
 <div class="paragraph">
 <p>During Client execution, weather it is test execution or not, N4JS mechanisms will replace the API project with a proper Implementation project.
@@ -23170,7 +22738,8 @@ During runtime DI mechanisms will take care of providing proper instances of imp
 <div class="content">
 <img src="chapters/12_components/fig/diag_ApiTestsDI_Views.svg" alt="diag ApiTestsDI Views">
 </div>
-<div class="title">Figure 14. Types view and Instances view</div>
+<div class="title">Figure 15. Types view and Instances view</div>
+</div>
 </div>
 </div>
 </div>
@@ -23393,7 +22962,7 @@ Publicly exporting the class definition and providing a public constructor is go
 A possible approach is to use a structurally typed interface instead of a class to link to the implementation.</p>
 </div>
 <div class="paragraph">
-<p>In case of API-definitions (see <a href="#_api-and-implementation-components">API and Implementation Components</a>), it might be useful to limit the visibility of classes to narrower scopes such as package or private.</p>
+<p>In case of API-definitions (see <a href="#_api-and-implementation-components">[_api-and-implementation-components]</a>), it might be useful to limit the visibility of classes to narrower scopes such as package or private.</p>
 </div>
 <div class="paragraph">
 <p>External declarations can be instantiated if the following three requirements are fulfilled (not a constraint!):</p>
@@ -23454,7 +23023,7 @@ For that reason, it is possible to disable validation of implementations complet
 </div>
 <div class="paragraph">
 <p>For a given external declaration <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>D</mi></math> but not for
-API-definitions <sup class="footnote">[<a id="_footnoteref_61" class="footnote" href="#_footnote_61" title="View footnote.">61</a>]</sup>, the
+API-definitions <sup class="footnote">[<a id="_footnoteref_60" class="footnote" href="#_footnote_60" title="View footnote.">60</a>]</sup>, the
 following constraints must hold:</p>
 </div>
 <div class="olist arabic">
@@ -23479,7 +23048,7 @@ will be related to modules of the same name in the external folders. This is sho
 <div class="content">
 <img src="chapters/13_plainJS/fig/externalClassImplementation_naming.svg" alt="externalClassImplementation naming">
 </div>
-<div class="title">Figure 15. External Class Implementation, Naming Convention</div>
+<div class="title">Figure 16. External Class Implementation, Naming Convention</div>
 </div>
 </div>
 </div>
@@ -23580,7 +23149,7 @@ Although it is not recommended to use global definitions, this cannot always be 
 <div class="paragraph">
 <p>N4JS supports global definitions via the annotation <code>Global</code>.
 This annotation can only be defined on modules (via <code>@@Global</code>) – this means that all declarations in the module are
-globally defined.<sup class="footnote">[<a id="_footnoteref_62" class="footnote" href="#_footnote_62" title="View footnote.">62</a>]</sup></p>
+globally defined.<sup class="footnote">[<a id="_footnoteref_61" class="footnote" href="#_footnote_61" title="View footnote.">61</a>]</sup></p>
 </div>
 <div class="paragraph">
 <p>We introduce a new pseudo property <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>g</mi><mi>l</mi><mi>o</mi><mi>b</mi><mi>a</mi><mi>l</mi></math> on all declared elements accordingly:</p>
@@ -25922,7 +25491,7 @@ Elision:
 <h3 id="_object"><a class="anchor" href="#_object"></a><a class="link" href="#_object">17.1. Object</a></h3>
 <div class="paragraph">
 <p><code>Object</code> is the super type of all declared types and <code>N4Object</code>. It is almost similar to the JavaScript type <code>Object</code> except that no properties may be dynamically added to it. In order to declare a variable to which properties can be dynamically added, the <code>Object+</code> type has to be declared (cf.
-<a href="#_dynamic">Dynamic</a>).</p>
+<a href="#_dynamic">[_dynamic]</a>).</p>
 </div>
 <h4 id="_attributes" class="discrete">Attributes</h4>
 <div class="dlist">
@@ -26908,7 +26477,7 @@ performance reasons, the actual structure may vary from the model.</p>
 <div class="content">
 <img src="chapters/a03_n4jsobjects/fig/cd_reflectionModel.svg" alt="cd reflectionModel">
 </div>
-<div class="title">Figure 16. N4JS Reflection Classes</div>
+<div class="title">Figure 17. N4JS Reflection Classes</div>
 </div>
 <div class="paragraph">
 <p>Remark: This section is work in progress. The final goal is to provide a
@@ -27413,12 +26982,315 @@ public class N4ApiNotImplementedError extends Error {  }</code></pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_bibliography"><a class="anchor" href="#_bibliography"></a><a class="link" href="#_bibliography">Appendix B: Bibliography</a></h2>
+<h2 id="sec:License"><a class="anchor" href="#sec:License"></a><a class="link" href="#sec:License">Appendix B: License</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This specification and the accompanying materials is made available
+under the terms of the Eclipse Public License v1.0 which accompanies
+this distribution, and is available at <a href="http://www.eclipse.org/legal/epl-v10.html" class="bare">http://www.eclipse.org/legal/epl-v10.html</a></p>
+</div>
+<h3 id="_eclipse-public-license-v-1-0" class="discrete">Eclipse Public License - v 1.0</h3>
+<div class="paragraph">
+<p>THE ACCOMPANYING PROGRAM IS PROVIDED UNDER THE TERMS OF THIS ECLIPSE
+PUBLIC LICENSE (<code>AGREEMENT</code>). ANY USE, REPRODUCTION OR DISTRIBUTION OF
+THE PROGRAM CONSTITUTES RECIPIENT’S ACCEPTANCE OF THIS AGREEMENT.</p>
+</div>
+<h4 id="_1-definitions" class="discrete">1. DEFINITIONS</h4>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>Contribution</code> means: </dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>in the case of the initial Contributor, the initial code and
+documentation distributed under this Agreement, and</p>
+</li>
+<li>
+<p>in the case of each subsequent Contributor:</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>changes to the Program, and</p>
+</li>
+<li>
+<p>additions to the Program;</p>
+<div class="paragraph">
+<p>where such changes and/or additions to the Program originate from and
+are distributed by that particular Contributor. A Contribution
+’originates’ from a Contributor if it was added to the Program by such
+Contributor itself or anyone acting on such Contributor’s behalf.
+Contributions do not include additions to the Program which:</p>
+</div>
+<div class="olist lowerroman">
+<ol class="lowerroman" type="i">
+<li>
+<p>are separate modules of software distributed in conjunction with the Program
+under their own license agreement, and</p>
+</li>
+<li>
+<p>are not derivative works of the Program.</p>
+</li>
+</ol>
+</div>
+</li>
+</ol>
+</div>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1"><code>Contributor</code></dt>
+<dd>
+<p>means any person or entity that distributes the Program.</p>
+</dd>
+<dt class="hdlist1"><code>Licensed Patents</code> </dt>
+<dd>
+<p>mean patent claims licensable by a Contributor
+which are necessarily infringed by the use or sale of its Contribution
+alone or when combined with the Program.</p>
+</dd>
+<dt class="hdlist1"><code>Program</code> </dt>
+<dd>
+<p>means the Contributions distributed in accordance with this
+Agreement.</p>
+</dd>
+<dt class="hdlist1"><code>Recipient</code> </dt>
+<dd>
+<p>means anyone who receives the Program under this
+Agreement, including all Contributors.</p>
+</dd>
+</dl>
+</div>
+<h4 id="_2-grant-of-rights" class="discrete">2. GRANT OF RIGHTS</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Subject to the terms of this Agreement, each Contributor hereby
+grants Recipient a non-exclusive, worldwide, royalty-free copyright
+license to reproduce, prepare derivative works of, publicly display,
+publicly perform, distribute and sublicense the Contribution of such
+Contributor, if any, and such derivative works, in source code and
+object code form.</p>
+</li>
+<li>
+<p>Subject to the terms of this Agreement, each Contributor hereby
+grants Recipient a non-exclusive, worldwide, royalty-free patent license
+under Licensed Patents to make, use, sell, offer to sell, import and
+otherwise transfer the Contribution of such Contributor, if any, in
+source code and object code form. This patent license shall apply to the
+combination of the Contribution and the Program if, at the time the
+Contribution is added by the Contributor, such addition of the
+Contribution causes such combination to be covered by the Licensed
+Patents. The patent license shall not apply to any other combinations
+which include the Contribution. No hardware per se is licensed
+hereunder.</p>
+</li>
+<li>
+<p>Recipient understands that although each Contributor grants the
+licenses to its Contributions set forth herein, no assurances are
+provided by any Contributor that the Program does not infringe the
+patent or other intellectual property rights of any other entity. Each
+Contributor disclaims any liability to Recipient for claims brought by
+any other entity based on infringement of intellectual property rights
+or otherwise. As a condition to exercising the rights and licenses
+granted hereunder, each Recipient hereby assumes sole responsibility to
+secure any other intellectual property rights needed, if any. For
+example, if a third party patent license is required to allow Recipient
+to distribute the Program, it is Recipient’s responsibility to acquire
+that license before distributing the Program.</p>
+</li>
+<li>
+<p>Each Contributor represents that to its knowledge it has sufficient
+copyright rights in its Contribution, if any, to grant the copyright
+license set forth in this Agreement.</p>
+</li>
+</ol>
+</div>
+<h4 id="_3-requirements" class="discrete">3. REQUIREMENTS</h4>
+<div class="paragraph">
+<p>A Contributor may choose to distribute the Program in object code form
+under its own license agreement, provided that:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>it complies with the terms and conditions of this Agreement; and</p>
+</li>
+<li>
+<p>its license agreement:</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>effectively disclaims on behalf of all Contributors all warranties
+and conditions, express and implied, including warranties or conditions
+of title and non-infringement, and implied warranties or conditions of
+merchantability and fitness for a particular purpose;</p>
+</li>
+<li>
+<p>effectively excludes on behalf of all Contributors all liability for
+damages, including direct, indirect, special, incidental and
+consequential damages, such as lost profits;</p>
+</li>
+<li>
+<p>states that any provisions which differ from this Agreement are
+offered by that Contributor alone and not by any other party; and</p>
+</li>
+<li>
+<p>states that source code for the Program is available from such
+Contributor, and informs licensees how to obtain it in a reasonable
+manner on or through a medium customarily used for software exchange.</p>
+</li>
+</ol>
+</div>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>When the Program is made available in source code form:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>it must be made available under this Agreement; and</p>
+</li>
+<li>
+<p>a copy of this Agreement must be included with each copy of the
+Program.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Contributors may not remove or alter any copyright notices contained
+within the Program.</p>
+</div>
+<div class="paragraph">
+<p>Each Contributor must identify itself as the originator of its
+Contribution, if any, in a manner that reasonably allows subsequent
+Recipients to identify the originator of the Contribution.</p>
+</div>
+<h4 id="_4-commercial-distribution" class="discrete">4. COMMERCIAL DISTRIBUTION</h4>
+<div class="paragraph">
+<p>Commercial distributors of software may accept certain responsibilities
+with respect to end users, business partners and the like. While this
+license is intended to facilitate the commercial use of the Program, the
+Contributor who includes the Program in a commercial product offering
+should do so in a manner which does not create potential liability for
+other Contributors. Therefore, if a Contributor includes the Program in
+a commercial product offering, such Contributor (<code>Commercial
+Contributor</code>) hereby agrees to defend and indemnify every other
+Contributor (<code>Indemnified Contributor</code>) against any losses, damages
+and costs (collectively <code>Losses</code>) arising from claims, lawsuits and
+other legal actions brought by a third party against the Indemnified
+Contributor to the extent caused by the acts or omissions of such
+Commercial Contributor in connection with its distribution of the
+Program in a commercial product offering. The obligations in this
+section do not apply to any claims or Losses relating to any actual or
+alleged intellectual property infringement. In order to qualify, an
+Indemnified Contributor must: a) promptly notify the Commercial
+Contributor in writing of such claim, and b) allow the Commercial
+Contributor to control, and cooperate with the Commercial Contributor
+in, the defense and any related settlement negotiations. The Indemnified
+Contributor may participate in any such claim at its own expense.</p>
+</div>
+<div class="paragraph">
+<p>For example, a Contributor might include the Program in a commercial
+product offering, Product X. That Contributor is then a Commercial
+Contributor. If that Commercial Contributor then makes performance
+claims, or offers warranties related to Product X, those performance
+claims and warranties are such Commercial Contributor’s responsibility
+alone. Under this section, the Commercial Contributor would have to
+defend claims against the other Contributors related to those
+performance claims and warranties, and if a court requires any other
+Contributor to pay any damages as a result, the Commercial Contributor
+must pay those damages.</p>
+</div>
+<h4 id="_5-no-warranty" class="discrete">5. NO WARRANTY</h4>
+<div class="paragraph">
+<p>EXCEPT AS EXPRESSLY SET FORTH IN THIS AGREEMENT, THE PROGRAM IS PROVIDED
+ON AN <code>AS IS</code> BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+EITHER EXPRESS OR IMPLIED INCLUDING, WITHOUT LIMITATION, ANY WARRANTIES
+OR CONDITIONS OF TITLE, NON-INFRINGEMENT, MERCHANTABILITY OR FITNESS FOR
+A PARTICULAR PURPOSE. Each Recipient is solely responsible for
+determining the appropriateness of using and distributing the Program
+and assumes all risks associated with its exercise of rights under this
+Agreement , including but not limited to the risks and costs of program
+errors, compliance with applicable laws, damage to or loss of data,
+programs or equipment, and unavailability or interruption of operations.</p>
+</div>
+<h4 id="_6-disclaimer-of-liability" class="discrete">6. DISCLAIMER OF LIABILITY</h4>
+<div class="paragraph">
+<p>EXCEPT AS EXPRESSLY SET FORTH IN THIS AGREEMENT, NEITHER RECIPIENT NOR
+ANY CONTRIBUTORS SHALL HAVE ANY LIABILITY FOR ANY DIRECT, INDIRECT,
+INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING
+WITHOUT LIMITATION LOST PROFITS), HOWEVER CAUSED AND ON ANY THEORY OF
+LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OR
+DISTRIBUTION OF THE PROGRAM OR THE EXERCISE OF ANY RIGHTS GRANTED
+HEREUNDER, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.</p>
+</div>
+<h4 id="_7-general" class="discrete">7. GENERAL</h4>
+<div class="paragraph">
+<p>If any provision of this Agreement is invalid or unenforceable under
+applicable law, it shall not affect the validity or enforceability of
+the remainder of the terms of this Agreement, and without further action
+by the parties hereto, such provision shall be reformed to the minimum
+extent necessary to make such provision valid and enforceable.</p>
+</div>
+<div class="paragraph">
+<p>If Recipient institutes patent litigation against any entity (including
+a cross-claim or counterclaim in a lawsuit) alleging that the Program
+itself (excluding combinations of the Program with other software or
+hardware) infringes such Recipient’s patent(s), then such Recipient’s
+rights granted under Section 2(b) shall terminate as of the date such
+litigation is filed.</p>
+</div>
+<div class="paragraph">
+<p>All Recipient’s rights under this Agreement shall terminate if it fails
+to comply with any of the material terms or conditions of this Agreement
+and does not cure such failure in a reasonable period of time after
+becoming aware of such noncompliance. If all Recipient’s rights under
+this Agreement terminate, Recipient agrees to cease use and distribution
+of the Program as soon as reasonably practicable. However, Recipient’s
+obligations under this Agreement and any licenses granted by Recipient
+relating to the Program shall continue and survive.</p>
+</div>
+<div class="paragraph">
+<p>Everyone is permitted to copy and distribute copies of this Agreement,
+but in order to avoid inconsistency the Agreement is copyrighted and may
+only be modified in the following manner. The Agreement Steward reserves
+the right to publish new versions (including revisions) of this
+Agreement from time to time. No one other than the Agreement Steward has
+the right to modify this Agreement. The Eclipse Foundation is the
+initial Agreement Steward. The Eclipse Foundation may assign the
+responsibility to serve as the Agreement Steward to a suitable separate
+entity. Each new version of the Agreement will be given a distinguishing
+version number. The Program (including Contributions) may always be
+distributed subject to the version of the Agreement under which it was
+received. In addition, after a new version of the Agreement is
+published, Contributor may elect to distribute the Program (including
+its Contributions) under the new version. Except as expressly stated in
+Sections 2(a) and 2(b) above, Recipient receives no rights or licenses
+to the intellectual property of any Contributor under this Agreement,
+whether expressly, by implication, estoppel or otherwise. All rights in
+the Program not expressly granted under this Agreement are reserved.</p>
+</div>
+<div class="paragraph">
+<p>This Agreement is governed by the laws of the State of New York and the
+intellectual property laws of the United States of America. No party to
+this Agreement will bring a legal action under this Agreement more than
+one year after the cause of action arose. Each party waives its rights
+to a jury trial in any resulting litigation.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_bibliography"><a class="anchor" href="#_bibliography"></a><a class="link" href="#_bibliography">Appendix C: Bibliography</a></h2>
 <div class="sectionbody">
 <div class="openblock bibliography">
 <div class="content">
 <div class="paragraph">
-<p><a id="ECMA15a"></a>ECMA. (2015). <em>ECMAScript 2015 Language Specification</em>. Retrieved from <a href="http://www.ecma-international.org/publications/files/ECMA-ST/Ecma-262.pdf" class="bare">http://www.ecma-international.org/publications/files/ECMA-ST/Ecma-262.pdf</a></p>
+<p><a id="ECMA15a"></a>ECMA. (2015). <em>ECMAScript 2015 Language Specification</em>. Retrieved from <a href="http://www.ecma-international.org/ecma-262/6.0/index.html" class="bare">http://www.ecma-international.org/ecma-262/6.0/index.html</a></p>
 </div>
 <div class="paragraph">
 <p><a id="ECMA11a"></a>(2011). <em>ECMAScript Language Specification</em>. Retrieved from <a href="http://www.ecma-international.org/publications/standards/Ecma-262.htm" class="bare">http://www.ecma-international.org/publications/standards/Ecma-262.htm</a></p>
@@ -27482,6 +27354,9 @@ public class N4ApiNotImplementedError extends Error {  }</code></pre>
 </div>
 <div class="paragraph">
 <p><a id="West06a"></a>West, Mike. (2006). <em>Scope in JavaScript</em>. Retrieved from <a href="http://www.digital-web.com/articles/scope_in_javascript/" class="bare">http://www.digital-web.com/articles/scope_in_javascript/</a></p>
+</div>
+<div class="paragraph">
+<p><a id="ECMA18a"></a>ECMA. (2018). <em>ECMAScript 2018 Language Specification</em>. Retrieved from <a href="http://www.ecma-international.org/ecma-262/9.0/index.html" class="bare">http://www.ecma-international.org/ecma-262/9.0/index.html</a></p>
 </div>
 <div class="paragraph">
 <p><a id="MozillaJSRef"></a><em>JavaScript Reference</em>. Retrieved from <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference" class="bare">https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference</a></p>
@@ -27701,26 +27576,52 @@ public class N4ApiNotImplementedError extends Error {  }</code></pre>
 <a href="#_footnoteref_59">59</a>. This restriction has two reasons: Firstly, user-defined types with implementations would require to ’bootstrap’ the polyfill, which is impossible to do automatically without serious constraints on bootstrap code in general. Secondly, instead of filling user-defined types, they can be subclasses. Mechanisms such as dependency injection could then solve almost all remaining problems.
 </div>
 <div class="footnote" id="_footnote_60">
-<a href="#_footnoteref_60">60</a>. Note that this diagram does not necessarily reflect the actual internal implementation but only the external view.
+<a href="#_footnoteref_60">60</a>. <a href="#_api-and-implementation-components">[_api-and-implementation-components]</a>
 </div>
 <div class="footnote" id="_footnote_61">
-<a href="#_footnoteref_61">61</a>. <a href="#_api-and-implementation-components">API and Implementation Components</a>
-</div>
-<div class="footnote" id="_footnote_62">
-<a href="#_footnoteref_62">62</a>. Global basically means that the module defines no namespace on its own. Thus the annotation is a script/module related annotation.
+<a href="#_footnoteref_61">61</a>. Global basically means that the module defines no namespace on its own. Thus the annotation is a script/module related annotation.
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 0.4<br>
-Last updated 2018-11-06 16:56:07 CET
+Version 0.9<br>
+Last updated 2019-08-07 15:02:40 CEST
 </div>
 </div>
-<div class="social">
-	<ul class="fa-ul">
-		<li><a href="https://github.com/eclipse/n4js"><i class="fa-li fa fa-github"></i>N4JS Repository</a></li>
-	</ul>
+<!-- ************* docinfo-footer *************************************************************** -->
+<div class="Grid social" style="color:#d5dfea">
+  <div class="Cell Cell--2-12 m-Cell--withMargin">
+    <h2>Quick Links</h2>
+    <ul>
+      <li><a href="../downloads.html">Download</a></li>
+      <li><a href="../userguides/index.html">Documentation</a></li>
+      <li><a href="https://github.com/eclipse/n4js/">Source</a></li>
+      <li><a href="https://github.com/eclipse/n4js/issues">Issues</a></li>
+    </ul>
+  </div>
+  <div class="Cell Cell--2-12 m-Cell--withMargin">
+    <br/><br/>
+    <ul>
+      <li><a href="https://www.eclipse.org/forums/index.php/f/365/">Forum</a></li>
+      <li><a href="http://n4js.blogspot.de/">Blog</a></li>
+      <li><a href="https://dev.eclipse.org/mailman/listinfo/n4js-dev">Mailing List</a></li>
+      <li><a href="https://projects.eclipse.org/projects/technology.n4js">Eclipse Project Page</a></li>
+      <li><a href="https://twitter.com/n4jsdev">Tweets by n4jsdev</a></li>
+    </ul>
+  </div>
+  <div class="Cell Cell--2-12 m-Cell--withMargin">
+    <br/><br/>
+    <ul>
+      <li><a href="http://www.eclipse.org/">Eclipse Home</a></li>
+      <li><a href="http://www.eclipse.org/legal/privacy.php">Privacy Policy</a></li>
+      <li><a href="http://www.eclipse.org/legal/termsofuse.php">Terms of Use</a></li>
+      <li><a href="http://www.eclipse.org/legal/copyright.php">Copyright Agent</a></li>
+      <li><a href="http://www.eclipse.org/legal/">Legal</a></li>
+    </ul>
+  </div>
+  <div style="clear: both; height: 0; overflow: hidden;"></div>
 </div>
+
 <!-- ************* UI Scripts ************* -->
 <script type="text/javascript" src="scripts/back-to-top.js"></script>
 
@@ -27745,5 +27646,6 @@ Last updated 2018-11-06 16:56:07 CET
 	$(".toc2 > ul").treeView();
 	// Initialize Scrollspy
 </script>
+<!-- ************* docinfo-footer *************************************************************** -->
 </body>
 </html>
