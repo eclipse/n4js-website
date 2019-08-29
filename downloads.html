@@ -55,27 +55,26 @@
     <article class="Grid" id="download">
       <div class="Cell Cell--12-12">
         <br/>
-        <h1 id="_download">Download</h1>
+        <h1 id="_download">Downloads</h1>
       </div>
 
       <div class="Cell Cell--12-12 GettingStarted-u-paddingLeft">
-        <h2 id ="_eclipse_installer">Eclipse Nightly Builds</h2>
+        <h2 id ="_eclipse_installer">N4JS IDE</h2>
         <p>
           If you just want to use the Eclipse N4JS IDE, you probably want to download the product directly.
         </p>
+        <h3 id ="_eclipse_installer">Eclipse Nightly Builds</h3>
         <p>
           Since the Eclipse N4JS project is in incubation phase, we do not provide release versions yet.
           You can find links to nightly builds (update site and products for Windows, Linux and macos) at the
           <a href="https://projects.eclipse.org/projects/technology.n4js/downloads" target="_blank">N4JS Eclipse project's download page</a>.
         </p>
         <p>
-          In order to run the product, i.e. the Eclipse N4JS IDE, you need Java (version 11), to be installed on your machine.
+          In order to run the product, i.e. the Eclipse N4JS IDE, you need Java (version see below), to be installed on your machine.
         </p>
         <p />
-      </div>
 
-      <div class="Cell Cell--12-12 GettingStarted-u-paddingLeft">
-        <h2 id ="_eclipse_installer">Third Party Nightly Builds (bundled Java JRE)</h2>
+        <h3 id ="_eclipse_installer">Third Party Nightly Builds (bundled Java JRE)</h3>
         <p>
           <a href="https://www.enfore.com" target="_blank">Enfore AG</a> originally introduced N4JS and hosts nightly builds that include Java JRE.
           You can find links to nightly builds (update site and products for Windows, Linux and macos) at the
@@ -85,58 +84,138 @@
       </div>
 
       <div class="Cell Cell--12-12 GettingStarted-u-paddingLeft">
-        <p/>
-        <h2 id ="_eclipse_installer">Eclipse Installer (Oomph)</h2>
+        <h2 id ="_eclipse_installer">Developer Environment</h2>
         <p>
           For developing extensions for the N4JS language (or simply to fix bugs ;-) ), the recommended way to install the Eclipse IDE and set up the N4JS Java sources in a developer workspace is to use the Eclipse Installer.
           This installer is available from <a href="https://wiki.eclipse.org/Eclipse_Installer">Eclipse.org</a>.
           Run the installer and follow these steps (click on the images to enlarge):
-        </p>    
+        </p> 
+        <p/>
+        <h3 id ="_eclipse_installer">Eclipse Installer (Oomph)</h3>   
         <ol>
-          <li><a href="images/oomph/eclipseInstallerMode.png"><img src="images/oomph/eclipseInstallerMode.png" alt="Screenshot 1" title="Screenshot Eclipse Installer, Select Mode (Click to see large version)" style="width:100px;float:right" /></a>
-          Switch to <b>Advanced Mode</b> via the menu located in the upper-right corner. This will let you select the product with version and a specific project (N4JS).
+          <li>
+            <a href="images/oomph/eclipseInstallerMode.png">
+              <img src="images/oomph/eclipseInstallerMode.png" alt="Screenshot 1" title="Screenshot Eclipse Installer, Select Mode (Click to see large version)" style="width:100px;float:right" />
+            </a>
+            Switch to <b>Advanced Mode</b> via the menu located in the upper-right corner.
+            This will let you select the product with version and a specific project (N4JS).
           </li>
-          <li><a href="images/oomph/eclipseInstallerProductSelection.png"><img src="images/oomph/eclipseInstallerProductSelection.png" alt="Screenshot 2" title="Screenshot Eclipse Installer, Select Product (Click to see large version)" style="width:100px;height:50px;float:right" /></a>
-            Select a product, e.g. "Eclipse IDE for Eclipse Committers" with a product version (usually latest version)
+          <li>
+            <a href="images/oomph/eclipseInstallerProductSelection.png">
+              <img src="images/oomph/eclipseInstallerProductSelection.png" alt="Screenshot 2" title="Screenshot Eclipse Installer, Select Product (Click to see large version)" style="width:100px;height:50px;float:right" />
+            </a>
+            Select a product and the product version.
+            We recommend "Eclipse IDE for Eclipse Committers" (product version see below).
+            Click "Next".
           </li>
-          <li><a href="images/oomph/eclipseInstallerProjectSelection.png"><img src="images/oomph/eclipseInstallerProjectSelection.png" alt="Screenshot 3" title="Screenshot Eclipse Installer, Select Project (Click to see large version)" style="width:100px;height:50px;float:right" /></a>
-          Double-click the entry <b>Eclipse Projects/N4JS</b> so that it is shown in the catalog view
+          <li>
+            <a href="images/oomph/eclipseInstallerProjectSelection.png">
+              <img src="images/oomph/eclipseInstallerProjectSelection.png" alt="Screenshot 3" title="Screenshot Eclipse Installer, Select Project (Click to see large version)" style="width:100px;height:50px;float:right" />
+            </a>
+            Check the entry <b>N4JS</b> in the category "Eclipse Projects" so that it is shown in the catalog view below.
+            Click "Next".
           </li>
-          <li>On the next page, configure your desired paths for the installation and workspace directories. You may want to use git with https instead of ssh</li>
-          <li>Begin installation</li>
+          <li>
+            Configure your desired paths for the installation and workspace directories.
+            Check "Show all variables" if not checked already.
+            Regarding "N4JS Github repository" you have the choices GIT, HTTPS read/write, and HTTPS read-only.
+            In case you chose GIT, mind the trouble shooting hints below.
+            Click "Next" and then "Finish".
+          </li>
+          <li>
+            Automatic installation by the Eclipse installer and the setup tasks
+            <ol>
+              <li>
+                The Eclipse Installer will download and install the Eclipse IDE and all its plugins.
+              </li>
+              <li>
+                The installed Eclipse IDE is started by the installer.
+              </li>
+              <li>
+                <a href="images/oomph/ideExecutingStartupTasks.png">
+                  <img src="images/oomph/ideExecutingStartupTasks.png" alt="Screenshot 4" title="Screenshot Installer Scripts (Click to see large version)" style="width:100px;float:right" />
+                </a>
+                The installation continues inside the IDE by running all setup tasks.
+                You can see the running setup tasks by clicking on the animated yellow/blue arrow icon in the status bar at the bottom of the IDE window.
+                In this step, the workspace is configured automatically.
+                This includes fetching the necessary git repository.
+                If you have selected GIT and run into an error, mind the hints below.
+              </li>
+              <li>
+                <a href="images/oomph/ideInstallerFinished.png">
+                  <img src="images/oomph/ideInstallerFinished.png" alt="Screenshot 5" title="Screenshot Installer Scripts Done (Click to see large version)" style="width:100px;height:50px;float:right" />
+                </a>
+                Eventually the setup tasks are done, that means the git repository has been cloned and the workspace has been configured (including the project set setup).
+              </li>
+              <li>
+                Now the automatical build kicks in as you can see in the status bar.
+                The build will show a lot of errors while still working.
+                Eventually the whole project should have been compiled without any errors.
+                <a href="images/oomph/ideBuild.png">
+                  <img src="images/oomph/ideBuild.png" alt="Screenshot 6" title="Screenshot Automatic Build (Click to see large version)" style="width:100px;float:right" />
+                </a>
+              </li>
+            </ol>
+          </li>
+          <li>
+            Unfortunately, at the moment there will be a few compile errors after everything is finished completely.
+            Please consult the <a href="https://github.com/eclipse/n4js/issues/1373">Github issue 1373</a> to fix it.             
+          </li>
         </ol>
-        <p> 
-          Once Eclipse with all plugins is downloaded, it is automatically started by the installer.
-          The Eclipse installer application is the finished, but additional installer scripts are run within the downloaded and automatically started IDE.
-          You can see the installer scripts by clicking on the icon next to the startup tasks report in the status bar.
-          <a href="images/oomph/ideExecutingStartupTasks.png">
-            <img src="images/oomph/ideExecutingStartupTasks.png" alt="Screenshot 4" title="Screenshot Installer Scripts (Click to see large version)" style="width:100px;float:right" />
-          </a>
-        </p>
+
+
+
+        <h3 id ="_eclipse_installer">Trouble Shooting</h3>
         <p>
-          The workspace is configured automatically.
-          This includes fetching the necessary git repository.
-          If you have selected git with SSH you may run into problems.
-          In this case you can re-run the scripts and select HTTPS instead, this should work in any case.
-        </p>
-        <p>
-          <a href="images/oomph/ideInstallerFinished.png">
-            <img src="images/oomph/ideInstallerFinished.png" alt="Screenshot 5" title="Screenshot Installer Scripts Done (Click to see large version)" style="width:100px;height:50px;float:right" />
-          </a>
-          Eventually the installer scripts are done, that means the git repository has been cloned and the workspace has been configured (including the project set setup).
-        </p>
-        <p>
-          Now the automatical build kicks in as you can see in the status bar.
-          <a href="images/oomph/ideBuild.png">
-            <img src="images/oomph/ideBuild.png" alt="Screenshot 6" title="Screenshot Automatic Build (Click to see large version)" style="width:100px;float:right" />
-          </a>
+          <ul>
+
+            <li>
+              <b>Compile errors after installation or clean-build</b>
+              <p>
+                Unfortunately, due to <a href="https://github.com/eclipse/n4js/issues/1373">Github issue 1373</a>, two problems exists which cause some compile errors to show up.
+                Please have a look at the linked issue on how to fix that (it is quite easy).
+              </p>
+            </li>
+
+            <li>
+              <b>SSH error when downloading a file 'content.xml'</b>              
+              <p>
+                This error happens when your Java version is outdated.
+                The reason is that Java comes with its own set of SSH certificates which might get incomplete or partly revoked over time.
+              </p>
+            </li>
+
+            <li>             
+              <b>Error "No more authentication methods available"</b>              
+              <p>
+                This error is related to your choice of the git protocol ("N4JS Github repository"):
+                <ul>
+                  <li>
+                    GIT: Make sure that you have your public/private key pair in your .ssh directory, otherwise the installer will say "No more authentication methods available".
+                    In that case, there are two fixes:
+                    <ul>
+                      <li>
+                        Either quit the installer, go to the Eclipse preferences, search for SSH2, and point to your keys.
+                        Afterwards, restart the installer by Help->Perform Setup Tasks.
+                      </li>
+                      <li>
+                        Alternativily, chose the button "Back" in the setup tasks wizard and go back to the beginning, click on "Show all Variables" and then change the git repository to HTTPS.
+                        Afterwards, click finish to execute the setup tasks again.   
+                      </li>
+                    </ul>              
+                  </li>
+                  <li>
+                    HTTPS read/write: you need to specify your github user ID below.
+                  </li>
+                  <li>
+                    HTTPS read-only: works always but you cannot push changes.
+                  </li>
+                </ul> 
+              </p>
+            </li>
+          </ul>
         </p>
 
-        <p>
-          The build will show a lot of erros while still working.
-          Eventually the whole project should have been compiled without any errors.
-          Unfortunately, due to a <a href="https://github.com/eclipse/n4js/issues/1373">known issue</a>, two problems exists. Please have a look at the linked issue on how to fix that (it is quite easy).
-        </p>
       </div>
 
       <div class="Cell Cell--12-12 Downloads-u-paddingLeft Downloads-u-paddingRight">
