@@ -48,7 +48,12 @@
 <ul class="sectlevel1">
 <li><a href="#_overview">Overview</a></li>
 <li><a href="#_repository">Repository</a></li>
-<li><a href="#_developer_setup_and_generate_folder_src_gen">Developer Setup and generate folder <code>src-gen</code></a></li>
+<li><a href="#_developer_setup_and_generate_folder_src_gen">Developer Setup and generate folder <code>src-gen</code></a>
+<ul class="sectlevel2">
+<li><a href="#_use_command_line_only">Use command line only</a></li>
+<li><a href="#_use_n4js_eclipse_ide">Use N4JS Eclipse IDE</a></li>
+</ul>
+</li>
 <li><a href="#_create_the_application">Create the application</a></li>
 <li><a href="#_start_local_web_server">Start local web server</a></li>
 <li><a href="#_n4js_type_definitions_of_react">N4JS type definitions of React</a></li>
@@ -109,8 +114,23 @@ In this tutorial, we will develop a simple and yet fun (!) chess game with N4JS 
 <h2 id="_developer_setup_and_generate_folder_src_gen">Developer Setup and generate folder <code>src-gen</code></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Follow the following steps to import the app into N4JS IDE.</p>
+<p>There are two alternatives for the developer setup and the generation of the <code>src-gen</code> folder:
+to use either the N4JS Eclipse IDE or use the command line only.</p>
 </div>
+<div class="sect2">
+<h3 id="_use_command_line_only">Use command line only</h3>
+<div class="paragraph">
+<p>Open the project folder in a shell and execute the following commands:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">npm install      # download node_modules
+npm run build    # generate js files in folder src-gen</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_use_n4js_eclipse_ide">Use N4JS Eclipse IDE</h3>
 <div class="dlist">
 <dl>
 <dt class="hdlist1">Step 1</dt>
@@ -123,14 +143,6 @@ In this tutorial, we will develop a simple and yet fun (!) chess game with N4JS 
 Hence, you can simply import it into the N4JS IDE workspace via <code>File &#8658; Import &#8658; Existing Projects into Workspace</code>.
 The IDE may complain that npm dependencies declared in <code>package.json</code> are missing.
 Use the quickfix <code>run npm/yarn in this project</code> to fix this issue.</p>
-<div class="paragraph">
-<p>Alternativily, the following command can be executed in the root folder of the project <code>chess-react</code> to install all dependencies:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">npm install</code></pre>
-</div>
-</div>
 </dd>
 <dt class="hdlist1">Step 3</dt>
 <dd>
@@ -139,12 +151,13 @@ Use the quickfix <code>run npm/yarn in this project</code> to fix this issue.</p
 <dt class="hdlist1">Step 4</dt>
 <dd>
 <p>Clean &amp; Build the project. After this step, the project has no compilation errors anymore.</p>
-</dd>
-</dl>
-</div>
 <div class="paragraph">
 <p>Now, the folder <code>src-gen</code> should have been created and populated with <code>.js</code> files of the project.
 The <code>.js</code> files will be used in the next step by webpack.</p>
+</div>
+</dd>
+</dl>
+</div>
 </div>
 </div>
 </div>
@@ -152,12 +165,12 @@ The <code>.js</code> files will be used in the next step by webpack.</p>
 <h2 id="_create_the_application">Create the application</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The <code>package.json</code> defines a script <code>build</code> to run webpack and create the application <code>chess-app.js</code>.
+<p>The <code>package.json</code> defines a script <code>webpack</code> to create the application <code>chess-app.js</code>.
 Run it with:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">npm build</code></pre>
+<pre class="highlight"><code class="language-bash" data-lang="bash">npm run webpack</code></pre>
 </div>
 </div>
 </div>
