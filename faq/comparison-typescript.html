@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="generator" content="Asciidoctor 1.5.7.1">
+<meta name="generator" content="Asciidoctor 2.0.15">
 <title>N4JS and TypeScript</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <!-- ************* Meta ************* -->
@@ -198,6 +198,9 @@ This so-called <strong>dynamic type modifier</strong> allows for accessing arbit
 </tr>
 </tbody>
 </table>
+<div class="paragraph">
+<p>TypeScript 3 introduced the <code>unknown</code> type which behaves like N4JS&#8217;s <code>any</code> type, with the exception that it isn&#8217;t currently being used by default and has to be declared explicitly.</p>
+</div>
 </div>
 <div class="sect2">
 <h3 id="_type_errors_are_show_stoppers_in_n4js"><a class="link" href="#_type_errors_are_show_stoppers_in_n4js">Type Errors Are Show-Stoppers in N4JS</a></h3>
@@ -613,7 +616,7 @@ N4JS is using different defaults for access modifiers, e.g. <code>public</code> 
 </dl>
 </div>
 <div class="paragraph">
-<p>The difference between structural and nominal typing is described in further detail in the <a href="features/nominal-vs-structural-typing.html#nominal_vs_structural_typing">nominal vs. structural subtyping feature</a>.</p>
+<p>The difference between structural and nominal typing is described in further detail in the <a href="features/nominal-vs-structural-typing.html.html#nominal_vs_structural_typing">nominal vs. structural subtyping feature</a>.</p>
 </div>
 </div>
 <div class="sect2">

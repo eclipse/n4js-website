@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="generator" content="Asciidoctor 1.5.7.1">
+<meta name="generator" content="Asciidoctor 2.0.15">
 <title>N4JS Tutorial</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <!-- ************* Meta ************* -->
@@ -80,6 +80,9 @@
 <li><a href="#_storage_using_mongodb">Storage using MongoDB</a></li>
 <li><a href="#_dependency_injection">Dependency Injection</a></li>
 <li><a href="#_web_ui_module">Web UI module</a></li>
+<li><a href="#_export_as_npm">Export as npm</a></li>
+<li><a href="#_run_from_command_line_with_node_js">Run from command line with Node.js</a></li>
+<li><a href="#_bibliography">Bibliography</a></li>
 </ul>
 </li>
 </ul>
@@ -1474,6 +1477,119 @@ and clear the storage.</p>
 <div class="paragraph">
 <p>All of the fundamental elements of our model are completed and we have a functioning Task Manager with a
 simple Web UI.</p>
+</div>
+</div>
+</div>
+<div class="sect1 language-n4js">
+<h2 id="_export_as_npm"><a class="link" href="#_export_as_npm">Export as npm</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Finally, we can export our project as an npm package to integrate it into other Node.js projects or to
+launch from command line.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>You can export one or multiple projects by selecting them in the Project Explorer and opening the
+"Export &#8230;&#8203;" wizard by right-clicking on them. On the first page select "N4JS Exports / N4JS npm Export". For
+the purpose of this example, only export project <code>n4js.example.tasks</code>.</p>
+</li>
+<li>
+<p>On the second page you have to choose a target folder to export to.</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+Export to a folder outside your Eclipse workspace!
+</td>
+</tr>
+</table>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>By default, the exporter exports as a directory. Optionally, you can export as a versioned tarball by
+checking the option "Compress the contents of the file".</p>
+</li>
+<li>
+<p>The last page of the wizard shows a preview of the package.json file that will be created in the
+exported npm package, together with a comparison to an existing package.json file in your N4JS project, if
+present. You can place such a package.json file next to your <code>manifest.n4mf</code> file (optional), in case you
+need
+to define more <a href="https://docs.npmjs.com/files/package.json">specifics in the package.json</a>, that
+are not covered by the N4JS export wizard.</p>
+</li>
+</ul>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="images/npmexport.png" alt="npmexport">
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_run_from_command_line_with_node_js"><a class="link" href="#_run_from_command_line_with_node_js">Run from command line with Node.js</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Once you&#8217;ve exported your project, you can either publish it to
+<a href="https://www.npmjs.com/">npmjs.com</a> or install directly from your hard disk and call the launch
+module, for example</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ npm install -g n4js.example.tasks
+$ node -r n4js.example.tasks/launch
+HTTP server listening on http://localhost:4000/</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In case you want to install dependencies and run it right away in the exported npm folder, you have to
+manually set up the <code>NODE_PATH</code> to the folder hosting the exported npms, otherwise node cannot resolve the
+project/npm IDs.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ export NODE_PATH=`pwd`
+$ pushd n4js.example.tasks; npm install; popd
+n4js.example.tasks@0.0.1 /Users/me/prj/n4js.example.tasks
+├─┬ express@4.13.4
+...
+$ node n4js.example.tasks/launch.js
+HTML server listening on http://localhost:4000/</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>So far we&#8217;ve been loading all code via node&#8217;s <code>require()</code> function.
+In case you want to load your modules via <a href="https://github.com/systemjs/systemjs">SystemJS</a>,
+which has more support to resolve cyclic dependencies across modules, you could use a handy starter
+executable called <code>n4js</code>. The <code>n4js</code> starter is part of the <code>n4js-node</code> runtime environment npm (a default
+dependency of any exported npm) and is therefore already installed:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ export NODE_PATH=`pwd`
+$ cd n4js.example.tasks; npm install
+n4js.example.tasks@0.0.1 /Users/me/prj/n4js.example.tasks
+├─┬ express@4.13.4
+...
+$ ./node_modules/.bin/n4js n4js.example.tasks/launch
+HTTP server listening on http://localhost:4000/</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_bibliography"><a class="link" href="#_bibliography">Bibliography</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>bibliography::[]</p>
 </div>
 </div>
 </div>
